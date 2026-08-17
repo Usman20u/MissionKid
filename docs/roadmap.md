@@ -12,18 +12,18 @@ MVP v1 contains the complete core MissionKid flow:
 
 - English, German, and Russian UI, with English as the default.
 - Minimal parent setup without accounts or authentication.
-- Age range selection for children aged 4–10 without birth dates or sensitive profile data. Exact selectable age bands will be defined later in the relevant feature specification.
+- Age-band selection for children aged 4–10 using the inclusive bands 4–6, 7–8, and 9–10 without birth dates or sensitive profile data.
 - Mission Category Selection for Movement, Creativity, Helping at Home, Learning, and Calm.
-- Three reviewed, age-appropriate, real-life mission suggestions per selection.
-- One chosen mission, a Mission Session, and a mission timer.
+- Three reviewed, age-appropriate, real-life mission suggestions from a controlled predefined catalog per selection.
+- One chosen mission, a guided Mission Break transition, a Mission Session, and a simple mission timer without device blocking.
 - Self-reported mission completion without photo, video, or other proof.
 - A positive Reward Card after completion.
 - Private Mission History for completed missions.
 - Monthly Goal progress toward 20 completed missions.
-- A suggestion at `20/20` that the parent choose a real-life reward.
+- One suggestion at `20 / 20` that the parent choose an optional, parent-approved real-life reward.
 - Safety and privacy boundaries applied across the full flow.
 
-MVP v1 is complete only when the documented flow works end to end in all three MVP languages, saves one completion consistently, updates monthly progress once, and respects the safety boundaries. These are acceptance targets, not claims about the current repository.
+MVP v1 is complete only when the documented flow works end to end in all three MVP languages, applies each completion once, caps displayed monthly progress at `20 / 20`, and respects the safety boundaries. These are acceptance targets, not claims about the current repository.
 
 ## v1.1 — refinement and limited parent overview
 

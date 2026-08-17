@@ -2,19 +2,20 @@
 
 MissionKid helps families turn children's screen time into useful real-life missions.
 
-The MVP serves families with children aged 4–10. Exact selectable age bands will be defined later in the relevant feature specification.
+The MVP serves families with children aged 4–10 using the inclusive age bands 4–6, 7–8, and 9–10.
 
 ## MVP v1
 
 MissionKid gives families a simple path from screen time to real-world action:
 
-1. A parent selects a child's age range.
+1. A parent selects a child's age band.
 2. A parent or child selects one Mission Category: Movement, Creativity, Helping at Home, Learning, or Calm.
 3. MissionKid presents three short real-life missions.
-4. The child chooses a mission, starts its timer, and completes it away from the screen.
-5. The child marks the mission as done and receives a Reward Card.
-6. Mission History records the completion, while Monthly Goal tracks progress toward 20 missions.
-7. At 20 completed missions, MissionKid suggests that the parent choose a real-life reward.
+4. The child chooses one mission and reviews its ready-to-start information.
+5. The child deliberately starts the timer and completes the mission away from the screen.
+6. The child marks the mission as done and receives a Reward Card.
+7. Mission History records the completion, while Monthly Goal tracks progress toward 20 missions.
+8. At 20 completed missions, MissionKid shows one suggestion that the parent choose an optional, parent-approved real-life reward.
 
 ## Language
 

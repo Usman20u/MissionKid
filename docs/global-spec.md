@@ -2,7 +2,7 @@
 
 ## Status
 
-This document defines the MissionKid MVP v1 product behavior. The project is currently at the planning and specification foundation stage; no runtime product or UI implementation exists yet.
+This document defines the MissionKid MVP v1 product behavior. The project is currently at the feature-specification stage; no runtime product or UI implementation exists yet.
 
 ## Product purpose
 
@@ -12,16 +12,16 @@ MissionKid is a global, parent-guided family product. It is not country-specific
 
 ## Core user flow
 
-1. The parent selects the interface language and the child's age range.
+1. The parent selects the interface language and the child's age band.
 2. The parent or child selects a Mission Category: Movement, Creativity, Helping at Home, Learning, or Calm.
 3. MissionKid presents exactly three short, predefined real-life missions.
 4. The child chooses one mission.
-5. The mission timer starts.
+5. The child reviews the mission in its `ready` state and deliberately starts it; the guidance timer begins.
 6. The child leaves the screen and completes the mission in real life.
 7. The child marks the mission as done.
 8. MissionKid shows a Reward Card.
 9. The completed mission is added to Mission History.
-10. Monthly Goal progress increases. At 20 completed missions, MissionKid suggests that the parent may choose a real-life reward.
+10. The completion is applied once to Monthly Goal, whose display increases until `20 / 20`. At 20 completed missions, MissionKid shows one suggestion that the family choose an optional, parent-approved real-life reward.
 
 ## Language and global requirements
 
@@ -37,15 +37,15 @@ These entities and relationships are conceptual product definitions only; they d
 
 ### Child Profile
 
-A Child Profile represents the minimal child context required for mission selection and belongs to the family/parent context. It is not a child account. In the MVP it contains the selected age range for a child aged 4–10 and must not require a child's name, exact birth date, contact information, precise location, photo, video, credentials, or other sensitive or identifying personal data. Exact selectable age bands will be defined later in the relevant feature specification.
+A Child Profile represents the minimal child context required for mission selection and belongs to the family/parent context. It is not a child account. In the MVP it contains one inclusive age band—4–6, 7–8, or 9–10—and must not require a child's name, exact birth date, contact information, precise location, photo, video, credentials, or other sensitive or identifying personal data.
 
 ### Mission
 
-A predefined, short real-life activity intended to be completed away from the screen. Each Mission belongs to one Mission Category and has age suitability, a concise instruction, an expected duration for timer use, and any necessary safety guidance. The five MVP Mission Categories are Movement, Creativity, Helping at Home, Learning, and Calm.
+A predefined, short real-life activity from a controlled predefined mission catalog, intended to be completed away from the screen. Each Mission belongs to one Mission Category and has age suitability, a concise instruction, an expected duration for timer use, and any necessary safety guidance. The five MVP Mission Categories are Movement, Creativity, Helping at Home, Learning, and Calm.
 
 ### Mission Session
 
-A Mission Session represents one selected Mission being performed. It references one Child Profile and one Mission, and tracks the mission lifecycle through selected, started, and completed states. A session becomes eligible for history and goal progress only when the child marks it as done. The timer supports the activity but does not monitor the child or control the device.
+A Mission Session represents one selected Mission being performed. It references one Child Profile and one Mission, and follows the lifecycle `selected → ready → active → completed`. A session becomes eligible for history and goal progress only when the child marks it as done. The timer supports the activity but does not monitor the child or control the device.
 
 ### Reward Card
 
@@ -57,21 +57,21 @@ A private history view of completed Mission Sessions for the Child Profile. It i
 
 ### Monthly Goal
 
-The aggregation of completed Mission Sessions for the Child Profile during the current monthly goal period, against an MVP target of 20. It is displayed as progress such as `3 / 20 missions`. When the goal is reached, MissionKid may prompt the family to choose a parent-approved real-life reward. MissionKid does not deliver a real prize, initiate a purchase, or assign a reward automatically in the MVP.
+The aggregation of completed Mission Sessions for the Child Profile during the current monthly goal period, against an MVP target of 20. It is displayed as progress such as `3 / 20 missions` and caps at `20 / 20 missions`. When the goal is reached, MissionKid shows one encouraging prompt for the family to choose an optional, parent-approved real-life reward. MissionKid does not deliver a real prize, initiate a purchase, or assign a reward automatically in the MVP.
 
 ## MVP features
 
 - Interface language selection for English, German, and Russian, defaulting to English.
 - Parent-guided setup without authentication.
-- Child age-range selection for the 4–10 target without sensitive data; exact selectable age bands will be defined later in the relevant feature specification.
+- Child age-band selection using 4–6, 7–8, or 9–10 without sensitive data.
 - Selection of one Mission Category—Movement, Creativity, Helping at Home, Learning, or Calm—by the parent or child.
-- Three predefined, age-appropriate mission suggestions per selection.
+- Three age-appropriate suggestions from a controlled predefined mission catalog per selection.
 - Selection of one mission and a simple mission timer.
 - Manual mission completion.
 - A Reward Card after completion.
 - Private Mission History containing completed missions.
 - Monthly Goal progress toward 20 completed missions.
-- A parent-directed real-life reward suggestion after 20 completions.
+- One parent-directed suggestion for an optional, parent-approved real-life reward after 20 completions.
 - Safety-conscious, globally suitable mission content.
 
 ## Out of scope for MVP v1
@@ -87,7 +87,7 @@ The aggregation of completed Mission Sessions for the Child Profile during the c
 - AI mission generation.
 - Device blocking, screen-time enforcement, surveillance, or background monitoring.
 - Sensitive child-data collection, including exact birth dates, contact details, and precise location.
-- Any product or UI implementation as part of the Day 1 foundation.
+- Any product or UI implementation during the current documentation-only phase.
 
 ## Safety requirements
 
@@ -108,9 +108,9 @@ The interface must help users understand and act, not merely look attractive. La
 
 The MVP specification is satisfied when:
 
-- A family with a child aged 4–10 can complete the full flow from language and age-range selection through Mission Category selection, one of three mission choices, timer use, manual completion, Reward Card, History, and Monthly Goal progress.
-- Completing a mission adds exactly one completion to History and exactly one unit to the current monthly count.
-- Progress is visible against a target of 20, and reaching 20 produces an optional, parent-directed real-life reward suggestion.
+- A family with a child aged 4–10 can complete the full flow from language and age-band selection through Mission Category selection, one of three mission choices, deliberate timer start, manual completion, Reward Card, History, and Monthly Goal progress.
+- Completing a mission adds exactly one completion to History and applies that completion exactly once to its monthly period; displayed goal progress increases only while below `20 / 20`.
+- Progress is visible against a target of 20, and reaching 20 produces one suggestion for an optional, parent-approved real-life reward.
 - The complete interface is available in English, German, and Russian, with English used by default and safety meaning preserved across languages.
 - The flow directs the child to a real-world activity and does not require ongoing in-app engagement or completion proof.
 - No MVP behavior depends on authentication, payments, social interaction, child accounts, public rankings, child media, native apps, AI generation, device blocking, or sensitive child data.

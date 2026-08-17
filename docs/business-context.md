@@ -13,7 +13,7 @@ MissionKid serves families globally with children aged 4–10:
 
 The parent remains responsible for setup, suitability, supervision, and any real-life reward. Children do not receive accounts in the MVP.
 
-Exact selectable age bands will be defined later in the relevant feature specification.
+The MVP uses the inclusive selectable age bands 4–6, 7–8, and 9–10.
 
 ## User pain
 
@@ -21,7 +21,7 @@ Parents may face decision fatigue, repeated negotiation, and difficulty suggesti
 
 ## Product value
 
-MissionKid provides a small, structured choice: three short missions suited to a selected age range and Mission Category. A child chooses one, completes it away from the screen, and returns only to record completion. A Reward Card, private history, and monthly progress make the transition understandable and encouraging without turning it into a social competition.
+MissionKid provides a small, structured choice: three short missions suited to a selected age band and Mission Category. A child chooses one, completes it away from the screen, and returns only to record completion. A Reward Card, private history, and monthly progress make the transition understandable and encouraging without turning it into a social competition.
 
 The five MVP Mission Categories are Movement, Creativity, Helping at Home, Learning, and Calm. This gives parents useful prompts while preserving the child's sense of choice. Monthly Goal is a separate progress concept, not a Mission Category.
 
@@ -41,14 +41,14 @@ The interface must help families understand and act, not merely look attractive.
 
 ## MVP boundaries
 
-The MVP covers a parent-guided flow for selecting an age range and Mission Category, presenting three predefined real-life missions, choosing and timing one mission, marking it complete, showing a Reward Card, saving completion in Mission History, and tracking progress toward a Monthly Goal of 20 missions. At 20 completed missions, MissionKid suggests that the parent may choose a real-life reward.
+The MVP covers a parent-guided flow for selecting an age band and Mission Category, presenting three controlled predefined real-life missions, choosing and timing one mission, marking it complete, showing a Reward Card, saving completion in Mission History, and tracking progress toward a Monthly Goal of 20 missions. At 20 completed missions, MissionKid shows one suggestion that the parent choose an optional, parent-approved real-life reward.
 
 The MVP must not contain infinite feeds, manipulative engagement loops, pressure to remain inside the app, likes, public leaderboards, public child profiles, gambling or loot-box mechanics, paid competition, child photos or videos, or unnecessary sensitive or identifying child data. It also does not include authentication, payments, social features, chat, child accounts, native mobile applications, AI-generated missions, or device blocking. Day 1 is limited to planning and specifications; no product or UI implementation is included.
 
 ## Safety principles
 
 - Parent guidance comes first. Parents decide whether a mission is suitable, supervise where needed, and control and approve any real-life reward.
-- Child data is minimized. The MVP uses an age range rather than a birth date and does not require a child name, contact details, precise location, account, photo, or video.
+- Child data is minimized. The MVP uses an age band rather than a birth date and does not require a child name, contact details, precise location, account, photo, or video.
 - Missions must be age-appropriate, short, understandable, and possible without dangerous physical actions, unsafe equipment, unsupervised travel, purchases, or contact with strangers.
 - The experience should encourage the child to leave the screen to complete the mission and must not pressure the child to remain in the app.
 - Completion never requires photographic or video proof. History and goal progress remain private and are not ranked publicly.

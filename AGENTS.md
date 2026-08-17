@@ -10,7 +10,7 @@
 
 ## Product foundation
 
-- The MVP serves families with children aged 4–10. Do not define or infer exact selectable age bands until the relevant feature specification defines them.
+- The MVP serves families with children aged 4–10. Use the inclusive age bands `4–6`, `7–8`, and `9–10` defined in the parent setup and localization specification.
 - Use `Mission Category` as the canonical product term. The five MVP Mission Categories are exactly `Movement`, `Creativity`, `Helping at Home`, `Learning`, and `Calm`.
 - Do not introduce alternative labels for `Mission Category`. `Monthly Goal` is a separate concept from `Mission Category`.
 
