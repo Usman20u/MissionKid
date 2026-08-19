@@ -118,3 +118,24 @@ Review the resulting file list and content against every acceptance criterion an
 - The unnecessary multi-tab concurrency architecture was removed, and the focused technical cleanup passed re-audit.
 - Both technical documents passed final manual review; the Technical Specification Layer is complete, and implementation guessing is no longer required for this technical layer.
 - The overall foundation plan remains `Active` because later specification layers remain.
+
+## Day 4 Mission Catalog & Safety specification layer
+
+**Status:** Complete — passed specification audit and final manual review
+
+### Deliverable
+
+- `docs/specs/mission-catalog-and-safety.md`
+
+### Completion criteria
+
+- The specification defines a Mission around the approved screen-to-real-world product problem and preserves the exact five Mission Categories and age bands `4–6`, `7–8`, and `9–10`.
+- Mission content shape remains aligned with the Technical Architecture and Data and State Model without redefining storage or runtime algorithms.
+- Content-writing, age-scaling, child-safety, adult-involvement, materials/environment, category-specific, privacy, reward/engagement, and English/German/Russian localization rules are explicit and non-diagnostic.
+- Catalog eligibility, invalid or incomplete content exclusion, existing-session safety, and conceptual exactly-three coverage are defined without creating Mission entries or inventing a catalog size.
+- Source-of-truth ownership is explicit: feature specifications own interaction behavior; Technical Architecture owns runtime implementation; Data and State Model owns conceptual data and state; this specification owns content eligibility, safety, age suitability, and writing rules; later visual specifications own presentation.
+- No actual Mission catalog, product code, runtime AI, CMS or moderation platform, backend, package, runtime tooling, database, deployment configuration, or new product feature is added.
+- `docs/specs/mission-catalog-and-safety.md` passed strict specification audit, the targeted manual-review fix, and final manual confirmation.
+- The adult-involvement ambiguity was resolved, and exact interaction/presentation timing was returned to the relevant interaction and later Visual/Ergonomic specification layers.
+- The Mission Catalog & Safety Layer is complete; no actual Mission catalog or Mission entries, product code, or runtime tooling were added.
+- The overall foundation plan remains `Active` because later specification layers remain.
