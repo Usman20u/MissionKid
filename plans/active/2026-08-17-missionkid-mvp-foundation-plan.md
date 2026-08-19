@@ -90,3 +90,31 @@ Review the resulting file list and content against every acceptance criterion an
 - Documentation terminology and safety boundaries remain consistent.
 - No product code, runtime tooling, packages, or UI implementation are added.
 - Required consistency and diff checks pass.
+
+## Day 3 technical-spec layer
+
+**Status:** Complete — passed cleanup re-audit and final manual review
+
+### Deliverables
+
+- `docs/technical-architecture.md` — complete
+- `docs/data-and-state-model.md` — complete
+- One locked, minimal MVP web stack and deployment boundary
+- Browser-local persistence, recovery, and versioning strategy
+- Conceptual application data, state, invariants, and recovery rules
+
+### Completion criteria
+
+- The architecture selects React, TypeScript, Vite, a root-only single-route responsive static web application, browser-local persistence, a static controlled Mission catalog, and static English, German, and Russian localization dictionaries.
+- Application boundaries and the complete setup-to-Monthly-Goal technical data flow distinguish persisted, temporary runtime, bundled static, and derived state.
+- Persistence behavior covers refresh, browser restart, temporary in-memory degradation, write failure, invalid or corrupted data, unsupported schema versions, reset, and one simplified versioned `localStorage` snapshot without claiming cloud or offline support.
+- MVP supports one active tab at a time; concurrent multi-tab use and multi-writer coordination are explicitly unsupported rather than implemented through locking, lease, takeover, or stale-write protocols.
+- Mission catalog behavior uses deterministic ordering, bounded set advancement, defensive invalid-record exclusion, and controlled insufficient-content handling.
+- Documentation ownership is explicit: the feature specifications own Mission Catalog discovery and timer product behavior, the Technical Architecture owns stack, module, flow, and deployment decisions, and the Data and State Model owns conceptual state and persistence representation without duplicating those rules.
+- Localization, backward-clock-safe timer guidance, deterministic recovery, privacy, child safety, security, accessibility, responsive behavior, performance, deployment, testing, and future-only boundaries are defined.
+- The data and state model preserves the exact Mission Session lifecycle and uses completed Mission Sessions as the sole source for derived Reward Cards, Mission History, Monthly Goal progress, and the one goal-complete prompt identity.
+- Technical tests cover the supported one-active-tab flow, deterministic catalog behavior, storage and version recovery, static-SPA hydration, and backward-clock anomalies in addition to the core product flow.
+- No backend, authentication, product code, database migration, package, runtime tooling, UI implementation, deployment configuration, or secret is added.
+- The unnecessary multi-tab concurrency architecture was removed, and the focused technical cleanup passed re-audit.
+- Both technical documents passed final manual review; the Technical Specification Layer is complete, and implementation guessing is no longer required for this technical layer.
+- The overall foundation plan remains `Active` because later specification layers remain.
