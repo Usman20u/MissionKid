@@ -3,6 +3,7 @@
 ## Workflow
 
 - Work specs-first. Read the relevant specifications and active plan before making changes.
+- Detailed Function Specifications live in `docs/specs/functions/` and use stable `F001`–`F004` identifiers; Technical Specifications live in `docs/specs/technical/`. `docs/specs/mission-catalog-and-safety.md` remains the separate cross-cutting Mission content and safety specification.
 - Do not write product code unless an active plan explicitly authorizes it. The current foundation plan does not authorize product code.
 - Do not change architecture without first updating the relevant specifications and aligning the active plan.
 - Do not make generic or unrelated redesigns. Every design change must address a documented product need.

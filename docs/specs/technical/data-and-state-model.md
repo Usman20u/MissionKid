@@ -4,7 +4,7 @@
 
 This document defines the conceptual application data and state needed to support MissionKid MVP v1. It is an implementation-planning specification, not product code, a database schema, a storage table design, or an API contract.
 
-The four feature specifications under [`docs/specs/`](specs/) remain the source of truth for product behavior. This document describes how the MVP can represent that behavior without adding a backend, authentication, child accounts, or redundant sources of truth.
+The four Function Specifications under [`docs/specs/functions/`](../functions/) remain the source of truth for product behavior. This document describes how the MVP can represent that behavior without adding a backend, authentication, child accounts, or redundant sources of truth.
 
 ## Model principles
 

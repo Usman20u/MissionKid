@@ -4,7 +4,7 @@
 
 This document locks the implementation architecture for MissionKid MVP v1. It is a technical specification, not product code, a UI design, a package manifest, a deployment configuration, or a database design.
 
-The four feature specifications under [docs/specs/](specs/) remain the source of truth for product behavior. This architecture explains how a small web application can support that behavior. If an implementation choice conflicts with a feature specification, the feature specification wins and the conflict must be resolved before code is written.
+The four Function Specifications under [docs/specs/functions/](../functions/) remain the source of truth for product behavior. This architecture explains how a small web application can support that behavior. If an implementation choice conflicts with a Function Specification, the Function Specification wins and the conflict must be resolved before code is written.
 
 ## Architecture goal
 

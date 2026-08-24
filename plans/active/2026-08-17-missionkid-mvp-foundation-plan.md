@@ -76,7 +76,7 @@ Review the resulting file list and content against every acceptance criterion an
 
 ### Deliverables
 
-- Four focused MVP feature specifications under `docs/specs/`
+- Four focused MVP Function Specifications under `docs/specs/functions/`
 - Concise parent and child user stories in `docs/user-stories.md`
 - Capability-to-spec traceability in `docs/functional-map.md`
 - Product-level alignment for the approved age bands, controlled predefined mission catalog, and Mission Session lifecycle
@@ -97,8 +97,8 @@ Review the resulting file list and content against every acceptance criterion an
 
 ### Deliverables
 
-- `docs/technical-architecture.md` — complete
-- `docs/data-and-state-model.md` — complete
+- `docs/specs/technical/technical-architecture.md` — complete
+- `docs/specs/technical/data-and-state-model.md` — complete
 - One locked, minimal MVP web stack and deployment boundary
 - Browser-local persistence, recovery, and versioning strategy
 - Conceptual application data, state, invariants, and recovery rules
@@ -110,7 +110,7 @@ Review the resulting file list and content against every acceptance criterion an
 - Persistence behavior covers refresh, browser restart, temporary in-memory degradation, write failure, invalid or corrupted data, unsupported schema versions, reset, and one simplified versioned `localStorage` snapshot without claiming cloud or offline support.
 - MVP supports one active tab at a time; concurrent multi-tab use and multi-writer coordination are explicitly unsupported rather than implemented through locking, lease, takeover, or stale-write protocols.
 - Mission catalog behavior uses deterministic ordering, bounded set advancement, defensive invalid-record exclusion, and controlled insufficient-content handling.
-- Documentation ownership is explicit: the feature specifications own Mission Catalog discovery and timer product behavior, the Technical Architecture owns stack, module, flow, and deployment decisions, and the Data and State Model owns conceptual state and persistence representation without duplicating those rules.
+- Documentation ownership is explicit: the Function Specifications own Mission Catalog discovery and timer product behavior, the Technical Architecture owns stack, module, flow, and deployment decisions, and the Data and State Model owns conceptual state and persistence representation without duplicating those rules.
 - Localization, backward-clock-safe timer guidance, deterministic recovery, privacy, child safety, security, accessibility, responsive behavior, performance, deployment, testing, and future-only boundaries are defined.
 - The data and state model preserves the exact Mission Session lifecycle and uses completed Mission Sessions as the sole source for derived Reward Cards, Mission History, Monthly Goal progress, and the one goal-complete prompt identity.
 - Technical tests cover the supported one-active-tab flow, deterministic catalog behavior, storage and version recovery, static-SPA hydration, and backward-clock anomalies in addition to the core product flow.
@@ -133,9 +133,26 @@ Review the resulting file list and content against every acceptance criterion an
 - Mission content shape remains aligned with the Technical Architecture and Data and State Model without redefining storage or runtime algorithms.
 - Content-writing, age-scaling, child-safety, adult-involvement, materials/environment, category-specific, privacy, reward/engagement, and English/German/Russian localization rules are explicit and non-diagnostic.
 - Catalog eligibility, invalid or incomplete content exclusion, existing-session safety, and conceptual exactly-three coverage are defined without creating Mission entries or inventing a catalog size.
-- Source-of-truth ownership is explicit: feature specifications own interaction behavior; Technical Architecture owns runtime implementation; Data and State Model owns conceptual data and state; this specification owns content eligibility, safety, age suitability, and writing rules; later visual specifications own presentation.
+- Source-of-truth ownership is explicit: Function Specifications own interaction behavior; Technical Architecture owns runtime implementation; Data and State Model owns conceptual data and state; this specification owns content eligibility, safety, age suitability, and writing rules; later visual specifications own presentation.
 - No actual Mission catalog, product code, runtime AI, CMS or moderation platform, backend, package, runtime tooling, database, deployment configuration, or new product feature is added.
 - `docs/specs/mission-catalog-and-safety.md` passed strict specification audit, the targeted manual-review fix, and final manual confirmation.
 - The adult-involvement ambiguity was resolved, and exact interaction/presentation timing was returned to the relevant interaction and later Visual/Ergonomic specification layers.
 - The Mission Catalog & Safety Layer is complete; no actual Mission catalog or Mission entries, product code, or runtime tooling were added.
 - The overall foundation plan remains `Active` because later specification layers remain.
+
+## Specification structure normalization
+
+**Status:** Complete — Specification Structure Audit passed with no blockers
+
+### Structural changes
+
+- The four approved Function Specifications now use stable identifiers `F001`–`F004` and numbered paths under `docs/specs/functions/`.
+- Technical Architecture and Data and State Model now live under `docs/specs/technical/`.
+- Mission Catalog and Safety remains separate at `docs/specs/mission-catalog-and-safety.md` as a cross-cutting content and safety specification.
+- The Functional Map and all User Stories trace correctly to `F001`–`F004` at their normalized paths.
+- The repository stale-path and Markdown-link audit passed with no broken or incorrect specification links.
+- Function Specification contents remained semantically unchanged, Technical Specification meaning remained unchanged, and Mission Catalog and Safety remained unchanged.
+- No approved product behavior or technical behavior changed.
+- No product implementation, actual Mission catalog, package, runtime tooling, backend, database, deployment configuration, or secret was added.
+- The Specification Structure Audit passed with no blockers.
+- The overall foundation plan remains `Active`.

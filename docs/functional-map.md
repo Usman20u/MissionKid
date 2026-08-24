@@ -57,13 +57,13 @@ This document defines the planned MissionKid MVP v1 functions for families with 
 - Future real-life rewards remain parent-controlled and parent-approved.
 - Any missing content, timer, age-band, retention, or localization detail must be specified before product implementation rather than guessed.
 
-## Feature-spec traceability
+## Function Specification traceability
 
-| MVP capabilities | Feature specification |
-| --- | --- |
-| Language selection, parent setup, age band selection | [`specs/parent-setup-and-localization.md`](specs/parent-setup-and-localization.md) |
-| Mission Category Selection, mission suggestions, mission selection | [`specs/mission-discovery-and-selection.md`](specs/mission-discovery-and-selection.md) |
-| Mission Break, Mission Session lifecycle, timer, mission completion | [`specs/mission-session-and-completion.md`](specs/mission-session-and-completion.md) |
-| Reward Card, Mission History, Monthly Goal | [`specs/rewards-history-and-monthly-goal.md`](specs/rewards-history-and-monthly-goal.md) |
+| Function ID | MVP capabilities | Function Specification |
+| --- | --- | --- |
+| `F001` | Language selection, parent setup, age band selection | [Parent Setup and Localization](specs/functions/001-parent-setup-and-localization.md) |
+| `F002` | Mission Category Selection, mission suggestions, mission selection | [Mission Discovery and Selection](specs/functions/002-mission-discovery-and-selection.md) |
+| `F003` | Mission Break, Mission Session lifecycle, timer, mission completion | [Mission Session and Completion](specs/functions/003-mission-session-and-completion.md) |
+| `F004` | Reward Card, Mission History, Monthly Goal | [Rewards, History, and Monthly Goal](specs/functions/004-rewards-history-and-monthly-goal.md) |
 
-Safety boundaries apply across all four feature specifications.
+Safety boundaries apply across all four Function Specifications (`F001`–`F004`).
