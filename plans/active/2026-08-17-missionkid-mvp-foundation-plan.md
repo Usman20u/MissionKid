@@ -156,3 +156,29 @@ Review the resulting file list and content against every acceptance criterion an
 - No product implementation, actual Mission catalog, package, runtime tooling, backend, database, deployment configuration, or secret was added.
 - The Specification Structure Audit passed with no blockers.
 - The overall foundation plan remains `Active`.
+
+## Day 5 Visual & Ergonomic specification layer
+
+**Status:** Complete — focused re-audit passed 10/10 with no blockers and final manual approval passed
+
+### Deliverable
+
+- `docs/specs/visual-and-ergonomic.md`
+
+### Approved scope
+
+- Defines documentation-only visual hierarchy, ergonomic clarity, mobile-first responsive presentation, accessibility presentation, safety prominence, parent/child presentation tone, localization resilience, and anti-manipulation rules for the approved MVP.
+- Covers only the presentation of behavior owned by Function Specifications `F001`–`F004` and preserves the mechanics and rules owned by the Technical Specifications and Mission Catalog and Safety.
+- Introduces no new Function ID, product behavior, actual Mission entry, mockup, design system, product code, package, or runtime tooling.
+- The Visual & Ergonomic Specification is approved and complete.
+- The overall foundation plan remains `Active`.
+
+### Completion record
+
+- The strict source-of-truth audit found exactly two targeted blockers.
+- Timer/recovery scope was narrowed to valid active Mission Sessions, without changing recovery mechanics or product behavior.
+- Ergonomic review coverage was corrected to every approved MVP view or state that is implemented before it is considered polished.
+- The focused re-audit passed with a score of 10/10 and no blockers.
+- Final manual document review and approval passed.
+- Final Mission Catalog link and recovery-table Markdown formatting corrections were completed without semantic change.
+- The Visual & Ergonomic Layer is complete; no product or technical behavior changed, and no design system, mockups, actual Mission entries, product code, packages, or runtime tooling were added.
