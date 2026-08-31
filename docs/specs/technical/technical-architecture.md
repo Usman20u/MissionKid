@@ -411,7 +411,7 @@ Before release, verify:
 - Reward Card, empty/non-empty History, Monthly Goal boundary, and new-month behavior;
 - calm, non-technical child-facing errors;
 - no media, location, account, payment, social, AI, device-control, or secret path; and
-- the six-question ergonomic review in AGENTS.md for each screen before polish.
+- the ergonomic review required by the [Visual & Ergonomic Specification](../visual-and-ergonomic.md) for every approved MVP view or state that is implemented before it is considered polished.
 
 Tests prove only the behavior they execute. Release reporting must distinguish automated checks from manual checks and must not claim browser coverage that did not run.
 

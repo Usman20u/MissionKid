@@ -182,3 +182,43 @@ Review the resulting file list and content against every acceptance criterion an
 - Final manual document review and approval passed.
 - Final Mission Catalog link and recovery-table Markdown formatting corrections were completed without semantic change.
 - The Visual & Ergonomic Layer is complete; no product or technical behavior changed, and no design system, mockups, actual Mission entries, product code, packages, or runtime tooling were added.
+
+## AGENTS execution-contract finalization
+
+**Status:** Complete — `AGENTS.md` approved after final manual confirmation
+
+### Finalization record
+
+- The AGENTS / AI Execution Rules Audit completed, and the targeted repository execution-contract finalization was performed.
+- No `SKILL.md` was created because the audit determined `NO SKILL NEEDED`.
+- The stale Technical Architecture ergonomic reference was corrected to the approved Visual & Ergonomic Specification without changing technical meaning.
+- Approved product behavior and specification meaning remained unchanged; no product code or runtime tooling was added.
+- The execution-contract layer passed focused re-audit and remained awaiting final manual review at that stage; it was not yet complete or approved.
+- The overall foundation plan remains `Active`; implementation remains unauthorized pending User Story / traceability validation, Full Specification Audit, explicit `SPEC COMPLETE`, and a future approved active implementation plan.
+
+### Durable authorization correction
+
+- The full AGENTS final audit scored `9/10` and found one remaining blocker: transient AGENTS project-state wording and undefined durable `SPEC COMPLETE` evidence and current-status authority.
+- Transient live project status was removed from `AGENTS.md`; the repository plan system now owns current execution status.
+- A truthfully completed specification/foundation plan under `plans/completed/` is now defined as the durable owner of explicit `SPEC COMPLETE` evidence after passed traceability validation, passed Full Specification Audit, and resolved completion blockers.
+- A later approved implementation plan must become the sole active plan and reference that completed gate evidence; the specification/foundation plan and implementation plan cannot remain active together.
+- Technical Specification ownership wording was narrowed from generic recovery to technical recovery without changing technical or product behavior.
+- No `SKILL.md`, product code, runtime tooling, or new project-management file was added.
+
+### Focused authorization re-audit
+
+- The focused read-only re-audit confirmed that the transient-state blocker was resolved, durable `SPEC COMPLETE` evidence and implementation authorization are unambiguous, scenarios A–F passed, and no source-of-truth conflict or technical behavior change occurred; it also confirmed `NO SKILL NEEDED`.
+- At that stage, AGENTS remained awaiting final manual review and was not yet approved; the overall foundation plan remained `Active`.
+
+### Post-`SPEC COMPLETE` validity guard
+
+- Final manual AGENTS review found one post-`SPEC COMPLETE` validity edge case: completed gate evidence could otherwise be read as automatically authorizing affected implementation after a material change to its approved specification basis.
+- A targeted validity guard was added so material approved-specification changes affecting product behavior, architecture or technical boundaries, Mission eligibility or safety, state or interaction rules, or other implementation requirements invalidate automatic reliance on stale gate evidence for affected implementation; the applicable specification, traceability, and Full Specification Audit stages must be revalidated, and renewed authorization must be explicit.
+- Typo corrections, Markdown formatting, reference or path fixes, and other clearly non-semantic documentation corrections do not trigger revalidation.
+- No product behavior or technical behavior changed; AGENTS remains awaiting final manual confirmation and is not yet approved, and the overall foundation plan remains `Active`.
+
+### Completion record
+
+- Final manual confirmation passed; `AGENTS.md` is approved, and the AI Execution Contract Layer is complete.
+- `NO SKILL NEEDED` remains the final decision; no product behavior, technical behavior, product code, packages or runtime tooling, or Mission content changed.
+- The overall foundation plan remains `Active`; `SPEC COMPLETE` has not been declared, and no implementation plan was created.
