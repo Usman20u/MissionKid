@@ -235,3 +235,54 @@ Review the resulting file list and content against every acceptance criterion an
 - No implementation-level product-behavior guessing is required, and no User Story, specification, product behavior, or technical behavior change was necessary.
 - No new traceability file is needed; the User Story / Traceability Validation gate is complete with no remaining blockers.
 - The overall foundation plan remains `Active`; the next required gate is Full Specification Audit, `SPEC COMPLETE` has not been declared, and no implementation plan was created.
+
+## Full Specification Audit
+
+**Status:** Complete — passed 10/10 with no specification blockers
+
+### Initial audit and correction record
+
+- The Full Specification Audit completed with a score of `9/10`; product consistency, `F001`–`F004`, Technical Architecture, Data & State, timer, persistence and recovery, Mission Catalog & Safety, Visual & Ergonomic, traceability regression, and acceptance-criteria checks passed.
+- The audit found one blocker: `B7 — stale authoritative status/reference` in `docs/global-spec.md`, where transient feature-specification-stage wording duplicated plan-owned live execution status.
+- The stale current-stage wording was removed, leaving durable Global Product Specification role wording only; no product behavior or specification behavior changed.
+- Actual Mission entries remain a non-blocking later controlled content deliverable and do not block `SPEC COMPLETE` eligibility at the specification level.
+- The Full Specification Audit is awaiting focused re-audit after this targeted correction and is not yet recorded as passed.
+- The overall foundation plan remains `Active`; `SPEC COMPLETE` has not been declared, and no implementation plan or product implementation was created.
+
+### Focused re-audit and remaining B7 corrections
+
+- The focused Full Specification re-audit found three remaining `B7` live-status statements in the Global Product Specification, Functional Map, and `F002` Mission Discovery and Selection Specification.
+- All three statements were removed or generalized to durable product, capability, behavior, and plan-system ownership wording without changing product behavior, technical behavior, capability ownership, `F002` interaction behavior, or acceptance criteria.
+- The previous product, technical, traceability, and acceptance-criteria audit passes remain valid, and no implementation-level product-behavior guessing is required.
+- Actual Mission entries remain a later controlled content deliverable and do not block `SPEC COMPLETE` at the specification level.
+- The Full Specification Audit remains awaiting a focused stale-status and gate re-audit and is not yet recorded as passed.
+- The overall foundation plan remains `Active`; `SPEC COMPLETE` has not been declared, and no implementation plan or product implementation was created.
+
+### Roadmap B7 corrections
+
+- The subsequent authoritative stale-status scan found two remaining `B7` live-status statements in the Roadmap: a top-level current-stage and implementation claim, and an MVP v1 `not implemented` status.
+- Both Roadmap statements were generalized to durable phased-scope, intended-sequence, baseline-release, and plan-system ownership wording without changing Roadmap scope, phase ordering, or MVP and future-phase boundaries.
+- The previously corrected Global Product Specification, Functional Map, and `F002` semantics remain unchanged, and all prior Full Specification Audit product, technical, traceability, and acceptance-criteria passes remain valid.
+- Actual Mission entries remain a later controlled content deliverable and do not block `SPEC COMPLETE` at the specification level.
+- The Full Specification Audit awaits one final focused stale-status and eligibility re-audit and is not yet recorded as passed.
+- The overall foundation plan remains `Active`; `SPEC COMPLETE` has not been declared, and no implementation plan or product implementation was created.
+
+### README B7 correction
+
+- The authoritative stale-status scan after the Roadmap correction found one remaining `B7` live-status statement in the README.
+- The README's transient planning-stage and implementation-status wording was generalized to durable repository-orientation wording without making README a source of product behavior.
+- README orientation remained intact, and no product, technical, functional, safety, visual, Roadmap, or execution-authorization behavior changed.
+- All previous Full Specification Audit semantic passes remain valid, and User Story / Traceability Validation remains valid at `10/10` with no implementation-level product-behavior guessing required.
+- Actual Mission entries remain a later controlled content deliverable and do not block `SPEC COMPLETE` at the specification level.
+- The Full Specification Audit awaits the final focused stale-status and eligibility re-audit and is not yet recorded as passed.
+- The overall foundation plan remains `Active`; `SPEC COMPLETE` has not been declared, and no implementation plan or product implementation was created.
+
+### Final focused gate re-audit
+
+- The final focused Full Specification gate re-audit passed with a score of `10/10`; the `B7` status-authority blocker is fully resolved, and no stale authoritative live-status wording remains.
+- Core product, `F001`–`F004`, Technical Architecture, Data & State, timer, persistence and recovery, Mission Catalog & Safety, Visual & Ergonomic, localization, privacy and safety, traceability, acceptance-criteria, and source-of-truth checks all passed.
+- User Story / Traceability Validation remains passed at `10/10`, covering all 13 existing User Stories.
+- Remaining specification blockers are `NONE`, and blocking implementation guessing is not required.
+- Actual Mission entries remain controlled later content-production work required before discovery and release are complete; they do not block specification completion.
+- The Full Specification Audit gate is `COMPLETE / PASSED`, and the repository is eligible for a later explicit `SPEC COMPLETE` declaration.
+- The overall foundation plan remains `Active`; `SPEC COMPLETE` has not been declared, and no implementation plan or product implementation was created.

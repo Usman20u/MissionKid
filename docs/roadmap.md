@@ -1,12 +1,12 @@
 # MissionKid Roadmap
 
-## Roadmap status
+## Roadmap role
 
-MissionKid is currently in the planning and specification foundation stage. The phases below describe intended direction, not completed functionality or delivery commitments. No product or runtime implementation has been added.
+This roadmap defines MissionKid's phased product scope and intended sequence. It does not authorize implementation or make delivery commitments; current execution status is owned by the repository plan system.
 
 ## MVP v1 — complete core family flow
 
-**Status: planned; not implemented.**
+**MVP v1 is the baseline release scope.**
 
 MVP v1 contains the complete core MissionKid flow:
 

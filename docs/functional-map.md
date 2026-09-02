@@ -2,7 +2,7 @@
 
 ## Status
 
-This document defines the planned MissionKid MVP v1 functions for families with children aged 4–10. It is a functional specification only; no product or runtime implementation exists yet.
+This document defines the approved MissionKid MVP v1 capability structure for families with children aged 4–10. Implementation status is owned by the repository plan system.
 
 ## End-to-end flow
 

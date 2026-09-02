@@ -2,7 +2,7 @@
 
 ## Status
 
-Planned for MissionKid MVP v1; not implemented.
+This specification defines the approved MissionKid MVP v1 behavior for `F002` and does not itself authorize implementation.
 
 ## Purpose
 
