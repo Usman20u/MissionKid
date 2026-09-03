@@ -22,8 +22,43 @@ body {
   margin: 0;
 }
 
-main {
+.app-shell {
+  min-height: 100vh;
+}
+
+.app-shell__header,
+.app-shell__main {
   width: min(100%, 48rem);
   margin: 0 auto;
+  padding-right: 1rem;
+  padding-left: 1rem;
+}
+
+.app-shell__header {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.app-shell__brand,
+.app-view__context,
+.app-view__title {
+  margin: 0;
+}
+
+.app-shell__brand {
+  font-weight: 700;
+}
+
+.app-shell__main {
   padding: 2rem 1rem;
+}
+
+.app-view__context {
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.app-view__title {
+  font-size: clamp(1.75rem, 7vw, 2.5rem);
+  line-height: 1.15;
 }
