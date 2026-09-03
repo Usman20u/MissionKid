@@ -7,24 +7,38 @@ import {
   type PropsWithChildren,
 } from 'react';
 
+import {
+  DEFAULT_LANGUAGE,
+  type SupportedLanguage,
+} from './localization';
+
+type LocalizedAppState = Readonly<{
+  language: SupportedLanguage;
+}>;
+
 export type AppState =
-  | { status: 'pending' }
-  | { status: 'ready'; setupStatus: 'fresh' | 'incomplete' }
-  | {
+  | (LocalizedAppState & { status: 'pending' })
+  | (LocalizedAppState & {
+      status: 'ready';
+      setupStatus: 'fresh' | 'incomplete';
+    })
+  | (LocalizedAppState & {
       status: 'ready';
       setupStatus: 'complete';
       setupView: 'editing' | 'handoff';
-    }
-  | { status: 'degraded' }
-  | { status: 'blocked-recovery' };
+    })
+  | (LocalizedAppState & { status: 'degraded' })
+  | (LocalizedAppState & { status: 'blocked-recovery' });
 
 export type ResolvedAppState = Exclude<AppState, { status: 'pending' }>;
 
 export type AppStateAction =
   | { type: 'state-load-started' }
-  | { type: 'validated-state-received'; state: ResolvedAppState };
+  | { type: 'validated-state-received'; state: ResolvedAppState }
+  | { type: 'language-changed'; language: SupportedLanguage };
 
 export const FRESH_APP_STATE: AppState = {
+  language: DEFAULT_LANGUAGE,
   status: 'ready',
   setupStatus: 'fresh',
 };
@@ -35,9 +49,11 @@ export function appStateReducer(
 ): AppState {
   switch (action.type) {
     case 'state-load-started':
-      return { status: 'pending' };
+      return { language: _state.language, status: 'pending' };
     case 'validated-state-received':
       return action.state;
+    case 'language-changed':
+      return { ..._state, language: action.language };
   }
 }
 

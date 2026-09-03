@@ -1,6 +1,12 @@
 import { Component, type PropsWithChildren } from 'react';
 
 import { useAppState, type AppState } from './appState';
+import {
+  DEFAULT_LANGUAGE,
+  translateMessage,
+  type MessageKey,
+  type SupportedLanguage,
+} from './localization';
 
 export type AppView =
   | 'pending'
@@ -12,38 +18,38 @@ export type AppView =
   | 'setup-complete-handoff';
 
 type ViewContent = Readonly<{
-  context: string;
-  title: string;
+  context: MessageKey;
+  title: MessageKey;
 }>;
 
 const VIEW_CONTENT: Record<AppView, ViewContent> = {
   pending: {
-    context: 'MissionKid',
-    title: 'Preparing MissionKid',
+    context: 'app.brand',
+    title: 'view.pending.title',
   },
   'setup-first-use': {
-    context: 'Parent area',
-    title: 'Parent setup',
+    context: 'area.parent',
+    title: 'view.setupFirstUse.title',
   },
   'setup-incomplete': {
-    context: 'Parent area',
-    title: 'Parent setup needs attention',
+    context: 'area.parent',
+    title: 'view.setupIncomplete.title',
   },
   'setup-editing': {
-    context: 'Parent area',
-    title: 'Setup settings',
+    context: 'area.parent',
+    title: 'view.setupEditing.title',
   },
   'temporary-mode': {
-    context: 'Parent area',
-    title: 'Temporary mode',
+    context: 'area.parent',
+    title: 'view.temporaryMode.title',
   },
   recovery: {
-    context: 'Parent area',
-    title: 'Recovery needed',
+    context: 'area.parent',
+    title: 'view.recovery.title',
   },
   'setup-complete-handoff': {
-    context: 'Parent area',
-    title: 'Setup complete',
+    context: 'area.parent',
+    title: 'view.setupCompleteHandoff.title',
   },
 };
 
@@ -79,13 +85,17 @@ export function AppShell() {
   return (
     <div className="app-shell">
       <header className="app-shell__header">
-        <p className="app-shell__brand">MissionKid</p>
+        <p className="app-shell__brand">
+          {translateMessage(state.language, 'app.brand')}
+        </p>
       </header>
       <main className="app-shell__main">
         <section aria-labelledby={headingId} data-view={view}>
-          <p className="app-view__context">{content.context}</p>
+          <p className="app-view__context">
+            {translateMessage(state.language, content.context)}
+          </p>
           <h1 className="app-view__title" id={headingId}>
-            {content.title}
+            {translateMessage(state.language, content.title)}
           </h1>
         </section>
       </main>
@@ -97,8 +107,12 @@ type ErrorBoundaryState = {
   failed: boolean;
 };
 
+type ApplicationErrorBoundaryProps = PropsWithChildren<{
+  language?: SupportedLanguage;
+}>;
+
 export class ApplicationErrorBoundary extends Component<
-  PropsWithChildren,
+  ApplicationErrorBoundaryProps,
   ErrorBoundaryState
 > {
   state: ErrorBoundaryState = { failed: false };
@@ -109,12 +123,16 @@ export class ApplicationErrorBoundary extends Component<
 
   render() {
     if (this.state.failed) {
+      const language = this.props.language ?? DEFAULT_LANGUAGE;
+
       return (
         <main className="app-shell__main">
           <section aria-labelledby="application-error-heading">
-            <p className="app-view__context">MissionKid</p>
+            <p className="app-view__context">
+              {translateMessage(language, 'app.brand')}
+            </p>
             <h1 className="app-view__title" id="application-error-heading">
-              MissionKid needs attention
+              {translateMessage(language, 'error.unexpected.title')}
             </h1>
           </section>
         </main>

@@ -1,10 +1,12 @@
-import { render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
 import { App } from './App';
-import { ApplicationErrorBoundary } from './AppShell';
+import { ApplicationErrorBoundary, AppShell } from './AppShell';
 import {
+  AppStateProvider,
   appStateReducer,
+  useAppState,
   type AppState,
   type ResolvedAppState,
 } from './appState';
@@ -19,19 +21,20 @@ type ShellScenario = {
 const shellScenarios: ShellScenario[] = [
   {
     name: 'fresh setup',
-    state: { status: 'ready', setupStatus: 'fresh' },
+    state: { language: 'en', status: 'ready', setupStatus: 'fresh' },
     view: 'setup-first-use',
     title: 'Parent setup',
   },
   {
     name: 'incomplete setup',
-    state: { status: 'ready', setupStatus: 'incomplete' },
+    state: { language: 'en', status: 'ready', setupStatus: 'incomplete' },
     view: 'setup-incomplete',
     title: 'Parent setup needs attention',
   },
   {
     name: 'valid hydrated setup',
     state: {
+      language: 'en',
       status: 'ready',
       setupStatus: 'complete',
       setupView: 'handoff',
@@ -42,6 +45,7 @@ const shellScenarios: ShellScenario[] = [
   {
     name: 'setup editing',
     state: {
+      language: 'en',
       status: 'ready',
       setupStatus: 'complete',
       setupView: 'editing',
@@ -51,19 +55,19 @@ const shellScenarios: ShellScenario[] = [
   },
   {
     name: 'pending state',
-    state: { status: 'pending' },
+    state: { language: 'en', status: 'pending' },
     view: 'pending',
     title: 'Preparing MissionKid',
   },
   {
     name: 'degraded state',
-    state: { status: 'degraded' },
+    state: { language: 'en', status: 'degraded' },
     view: 'temporary-mode',
     title: 'Temporary mode',
   },
   {
     name: 'blocked recovery',
-    state: { status: 'blocked-recovery' },
+    state: { language: 'en', status: 'blocked-recovery' },
     view: 'recovery',
     title: 'Recovery needed',
   },
@@ -84,6 +88,67 @@ describe('application shell', () => {
     expect(
       screen.getByRole('region', { name: 'Parent setup' }),
     ).toBeTruthy();
+  });
+
+  it('re-resolves presentation when the supported language changes', () => {
+    let changeLanguage = () => undefined;
+
+    function LanguageChangeHarness() {
+      const { dispatch } = useAppState();
+
+      changeLanguage = () => {
+        dispatch({ type: 'language-changed', language: 'de' });
+      };
+
+      return <AppShell />;
+    }
+
+    render(
+      <AppStateProvider
+        initialState={{
+          language: 'en',
+          status: 'ready',
+          setupStatus: 'complete',
+          setupView: 'handoff',
+        }}
+      >
+        <LanguageChangeHarness />
+      </AppStateProvider>,
+    );
+
+    expect(
+      screen.getByRole('region', { name: 'Setup complete' }),
+    ).toBeTruthy();
+
+    act(() => {
+      changeLanguage();
+    });
+
+    const localizedRegion = screen.getByRole('region', {
+      name: 'Einrichtung abgeschlossen',
+    });
+
+    expect(localizedRegion.getAttribute('data-view')).toBe(
+      'setup-complete-handoff',
+    );
+  });
+
+  it('renders Russian shell text with matching document language', () => {
+    render(
+      <App
+        initialState={{
+          language: 'ru',
+          status: 'ready',
+          setupStatus: 'fresh',
+        }}
+      />,
+    );
+
+    expect(
+      screen.getByRole('region', { name: 'Настройка для родителей' }),
+    ).toBeTruthy();
+    expect(screen.getByText('Раздел для родителей')).toBeTruthy();
+    expect(document.documentElement.lang).toBe('ru');
   });
 
   it('contains no later-function interface', () => {
@@ -126,13 +191,14 @@ describe('application shell', () => {
 describe('application state reducer', () => {
   it('publishes only a validated resolved application state', () => {
     const resolvedState: ResolvedAppState = {
+      language: 'en',
       status: 'ready',
       setupStatus: 'fresh',
     };
 
     expect(
       appStateReducer(
-        { status: 'pending' },
+        { language: 'en', status: 'pending' },
         { type: 'validated-state-received', state: resolvedState },
       ),
     ).toEqual(resolvedState);
@@ -141,9 +207,9 @@ describe('application state reducer', () => {
   it('returns to pending while application state is loading', () => {
     expect(
       appStateReducer(
-        { status: 'ready', setupStatus: 'fresh' },
+        { language: 'ru', status: 'ready', setupStatus: 'fresh' },
         { type: 'state-load-started' },
       ),
-    ).toEqual({ status: 'pending' });
+    ).toEqual({ language: 'ru', status: 'pending' });
   });
 });
