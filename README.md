@@ -31,6 +31,6 @@ Missions must be age-appropriate, short, and understandable; avoid dangerous phy
 
 Child accounts, social features, chat, authentication, payments, native mobile apps, AI mission generation, and device blocking are also outside the MVP. Secrets must never be stored in the repository.
 
-## Status
+## Repository contents
 
-MissionKid is currently at the planning and specifications foundation stage. No product or runtime implementation has been added.
+This repository is the home for MissionKid MVP v1 product specifications, execution rules, plans, and implementation artifacts.

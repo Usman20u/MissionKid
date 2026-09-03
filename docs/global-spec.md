@@ -2,7 +2,7 @@
 
 ## Status
 
-This document defines the MissionKid MVP v1 product behavior. The project is currently at the feature-specification stage; no runtime product or UI implementation exists yet.
+This document defines the MissionKid MVP v1 product behavior.
 
 ## Product purpose
 
@@ -87,7 +87,6 @@ The aggregation of completed Mission Sessions for the Child Profile during the c
 - AI mission generation.
 - Device blocking, screen-time enforcement, surveillance, or background monitoring.
 - Sensitive child-data collection, including exact birth dates, contact details, and precise location.
-- Any product or UI implementation during the current documentation-only phase.
 
 ## Safety requirements
 
