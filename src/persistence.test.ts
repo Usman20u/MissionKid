@@ -146,7 +146,8 @@ describe('snapshot hydration', () => {
   it.each([
     { localProfileId: 'local-profile-1' },
     { localProfileId: 'local-profile-1', ageBand: '10–12' },
-  ])('treats missing or invalid age context as incomplete setup', (profile) => {
+    { localProfileId: 'local-profile-1', ageBand: null },
+  ])('preserves identity while treating missing or invalid age as incomplete', (profile) => {
     const rawSnapshot = JSON.stringify({
       ...createEmptySnapshot(),
       childProfile: profile,
@@ -154,10 +155,19 @@ describe('snapshot hydration', () => {
     const memory = createMemoryStorage(rawSnapshot);
     const adapter = createPersistenceAdapter(memory.storage);
 
-    expect(adapter.hydrate()).toEqual({
+    const hydration = adapter.hydrate();
+    expect(hydration).toEqual({
       status: 'hydrated',
-      snapshot: createEmptySnapshot(),
+      snapshot: {
+        ...createEmptySnapshot(),
+        childProfile: { localProfileId: 'local-profile-1', ageBand: null },
+      },
     });
+    if (hydration.status !== 'hydrated') throw new Error('Expected incomplete hydration.');
+    expect(adapter.persist(hydration.snapshot)).toEqual({
+      status: 'unconfirmed', reason: 'invalid-snapshot',
+    });
+    expect(memory.setCalls).toEqual([]);
     expect(memory.values.get(MISSIONKID_STORAGE_KEY)).toBe(rawSnapshot);
   });
 

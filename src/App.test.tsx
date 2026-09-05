@@ -10,6 +10,7 @@ import {
   type AppState,
   type ResolvedAppState,
 } from './appState';
+import { createEmptySnapshot } from './persistence';
 
 type ShellScenario = {
   name: string;
@@ -21,13 +22,27 @@ type ShellScenario = {
 const shellScenarios: ShellScenario[] = [
   {
     name: 'fresh setup',
-    state: { language: 'en', status: 'ready', setupStatus: 'fresh' },
+    state: {
+      language: 'en',
+      ageBand: null,
+      localProfileId: null,
+      status: 'ready',
+      setupView: 'first-use',
+      saveStatus: 'idle',
+    },
     view: 'setup-first-use',
     title: 'Parent setup',
   },
   {
     name: 'incomplete setup',
-    state: { language: 'en', status: 'ready', setupStatus: 'incomplete' },
+    state: {
+      language: 'en',
+      ageBand: null,
+      localProfileId: null,
+      status: 'ready',
+      setupView: 'incomplete',
+      saveStatus: 'idle',
+    },
     view: 'setup-incomplete',
     title: 'Parent setup needs attention',
   },
@@ -35,9 +50,11 @@ const shellScenarios: ShellScenario[] = [
     name: 'valid hydrated setup',
     state: {
       language: 'en',
+      ageBand: '7–8',
+      localProfileId: 'local-profile-1',
       status: 'ready',
-      setupStatus: 'complete',
       setupView: 'handoff',
+      saveStatus: 'idle',
     },
     view: 'setup-complete-handoff',
     title: 'Setup complete',
@@ -46,28 +63,45 @@ const shellScenarios: ShellScenario[] = [
     name: 'setup editing',
     state: {
       language: 'en',
+      ageBand: '7–8',
+      localProfileId: 'local-profile-1',
       status: 'ready',
-      setupStatus: 'complete',
       setupView: 'editing',
+      saveStatus: 'idle',
     },
     view: 'setup-editing',
     title: 'Setup settings',
   },
   {
     name: 'pending state',
-    state: { language: 'en', status: 'pending' },
+    state: {
+      language: 'en',
+      ageBand: null,
+      localProfileId: null,
+      status: 'pending',
+    },
     view: 'pending',
     title: 'Preparing MissionKid',
   },
   {
     name: 'degraded state',
-    state: { language: 'en', status: 'degraded' },
+    state: {
+      language: 'en',
+      ageBand: null,
+      localProfileId: null,
+      status: 'degraded',
+    },
     view: 'temporary-mode',
     title: 'Temporary mode',
   },
   {
     name: 'blocked recovery',
-    state: { language: 'en', status: 'blocked-recovery' },
+    state: {
+      language: 'en',
+      ageBand: null,
+      localProfileId: null,
+      status: 'blocked-recovery',
+    },
     view: 'recovery',
     title: 'Recovery needed',
   },
@@ -107,9 +141,11 @@ describe('application shell', () => {
       <AppStateProvider
         initialState={{
           language: 'en',
+          ageBand: '7–8',
+          localProfileId: 'local-profile-1',
           status: 'ready',
-          setupStatus: 'complete',
           setupView: 'handoff',
+          saveStatus: 'idle',
         }}
       >
         <LanguageChangeHarness />
@@ -138,8 +174,11 @@ describe('application shell', () => {
       <App
         initialState={{
           language: 'ru',
+          ageBand: null,
+          localProfileId: null,
           status: 'ready',
-          setupStatus: 'fresh',
+          setupView: 'first-use',
+          saveStatus: 'idle',
         }}
       />,
     );
@@ -154,7 +193,6 @@ describe('application shell', () => {
   it('contains no later-function interface', () => {
     render(<App />);
 
-    expect(screen.queryByRole('button')).toBeNull();
     expect(screen.queryByText('Mission Category')).toBeNull();
     expect(screen.queryByText('Mission done')).toBeNull();
     expect(screen.queryByText('Mission History')).toBeNull();
@@ -189,16 +227,38 @@ describe('application shell', () => {
 });
 
 describe('application state reducer', () => {
+  it('cannot treat a profile with identity but no valid age as completed setup', () => {
+    const state: AppState = {
+      language: 'en', ageBand: null, localProfileId: 'existing-profile',
+      status: 'ready', setupView: 'incomplete', saveStatus: 'unconfirmed',
+    };
+    expect(appStateReducer(state, {
+      type: 'setup-save-confirmed',
+      snapshot: {
+        ...createEmptySnapshot(),
+        childProfile: { localProfileId: 'existing-profile', ageBand: null },
+      },
+    })).toEqual(state);
+  });
+
   it('publishes only a validated resolved application state', () => {
     const resolvedState: ResolvedAppState = {
       language: 'en',
+      ageBand: null,
+      localProfileId: null,
       status: 'ready',
-      setupStatus: 'fresh',
+      setupView: 'first-use',
+      saveStatus: 'idle',
     };
 
     expect(
       appStateReducer(
-        { language: 'en', status: 'pending' },
+        {
+          language: 'en',
+          ageBand: null,
+          localProfileId: null,
+          status: 'pending',
+        },
         { type: 'validated-state-received', state: resolvedState },
       ),
     ).toEqual(resolvedState);
@@ -207,9 +267,21 @@ describe('application state reducer', () => {
   it('returns to pending while application state is loading', () => {
     expect(
       appStateReducer(
-        { language: 'ru', status: 'ready', setupStatus: 'fresh' },
+        {
+          language: 'ru',
+          ageBand: null,
+          localProfileId: null,
+          status: 'ready',
+          setupView: 'first-use',
+          saveStatus: 'idle',
+        },
         { type: 'state-load-started' },
       ),
-    ).toEqual({ language: 'ru', status: 'pending' });
+    ).toEqual({
+      language: 'ru',
+      ageBand: null,
+      localProfileId: null,
+      status: 'pending',
+    });
   });
 });

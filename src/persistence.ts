@@ -13,7 +13,8 @@ export type AgeBand = (typeof AGE_BANDS)[number];
 
 export type ChildProfile = Readonly<{
   localProfileId: string;
-  ageBand: AgeBand;
+  // Hydration can preserve trusted identity while age still needs selection.
+  ageBand: AgeBand | null;
 }>;
 
 export type MissionKidSnapshot = Readonly<{
@@ -164,7 +165,10 @@ function validateSnapshot(value: unknown): SnapshotValidationResult {
         ageBand: value.childProfile.ageBand,
       };
     } else {
-      childProfile = null;
+      childProfile = {
+        localProfileId: value.childProfile.localProfileId,
+        ageBand: null,
+      };
       normalized = true;
     }
   } else {

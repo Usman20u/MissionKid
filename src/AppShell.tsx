@@ -1,12 +1,25 @@
 import { Component, type PropsWithChildren } from 'react';
 
-import { useAppState, type AppState } from './appState';
+import {
+  isSetupContextComplete,
+  useAppState,
+  type AppState,
+} from './appState';
 import {
   DEFAULT_LANGUAGE,
   translateMessage,
   type MessageKey,
   type SupportedLanguage,
 } from './localization';
+import {
+  createLocalProfileId,
+  SetupFlow,
+  type LocalProfileIdFactory,
+} from './SetupFlow';
+import {
+  persistenceAdapter,
+  type PersistenceAdapter,
+} from './persistence';
 
 export type AppView =
   | 'pending'
@@ -62,21 +75,31 @@ export function selectAppView(state: AppState): AppView {
     case 'blocked-recovery':
       return 'recovery';
     case 'ready': {
-      switch (state.setupStatus) {
-        case 'fresh':
+      switch (state.setupView) {
+        case 'first-use':
           return 'setup-first-use';
         case 'incomplete':
           return 'setup-incomplete';
-        case 'complete':
-          return state.setupView === 'editing'
-            ? 'setup-editing'
-            : 'setup-complete-handoff';
+        case 'editing':
+          return 'setup-editing';
+        case 'handoff':
+          return isSetupContextComplete(state)
+            ? 'setup-complete-handoff'
+            : 'setup-incomplete';
       }
     }
   }
 }
 
-export function AppShell() {
+type AppShellProps = Readonly<{
+  adapter?: PersistenceAdapter;
+  createProfileId?: LocalProfileIdFactory;
+}>;
+
+export function AppShell({
+  adapter = persistenceAdapter,
+  createProfileId = createLocalProfileId,
+}: AppShellProps = {}) {
   const { state } = useAppState();
   const view = selectAppView(state);
   const content = VIEW_CONTENT[view];
@@ -97,6 +120,12 @@ export function AppShell() {
           <h1 className="app-view__title" id={headingId}>
             {translateMessage(state.language, content.title)}
           </h1>
+          {state.status === 'ready' ? (
+            <SetupFlow
+              adapter={adapter}
+              createProfileId={createProfileId}
+            />
+          ) : null}
         </section>
       </main>
     </div>

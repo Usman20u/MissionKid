@@ -15,6 +15,35 @@ const englishMessages = {
   'view.recovery.title': 'Recovery needed',
   'view.setupCompleteHandoff.title': 'Setup complete',
   'error.unexpected.title': 'MissionKid needs attention',
+  'setup.introduction':
+    'A parent or caregiver sets up the language and age context for this family.',
+  'setup.language.legend': 'Interface language',
+  'setup.language.help': 'Choose the language MissionKid uses on this screen.',
+  'setup.language.en': 'English',
+  'setup.language.de': 'Deutsch',
+  'setup.language.ru': 'Русский',
+  'setup.age.legend': "Child's age group",
+  'setup.age.help':
+    'This helps MissionKid use suitable activities. It is not an assessment, and you decide what is right for your child.',
+  'setup.age.required': 'Required: choose one age group to continue.',
+  'setup.privacy':
+    'No name, birth date, account, or contact details are needed.',
+  'setup.parentResponsibility':
+    'You remain responsible for deciding whether an activity suits your child and surroundings.',
+  'setup.action.complete': 'Complete setup',
+  'setup.action.saveChanges': 'Save changes',
+  'setup.edit.languageEffect':
+    'After saving, the chosen language applies to interface text and Mission presentation going forward.',
+  'setup.edit.ageEffect':
+    'After saving, the age group affects future Mission suggestions only. Existing selected, ready, or active Missions, completed history, and recorded progress remain unchanged.',
+  'setup.save.unconfirmed':
+    'Saving could not be confirmed. Choices on this page may be temporary and lost when you refresh or close it. Try again.',
+  'setup.complete.body':
+    'Your language and age group are saved on this device.',
+  'setup.complete.next': 'MissionKid is ready for the next step.',
+  'setup.complete.language': 'Language',
+  'setup.complete.age': 'Age group',
+  'setup.action.edit': 'Change setup',
 } as const;
 
 export type MessageKey = keyof typeof englishMessages;
@@ -36,6 +65,37 @@ export const INTERFACE_MESSAGES: CompleteInterfaceMessages = {
     'view.recovery.title': 'Wiederherstellung erforderlich',
     'view.setupCompleteHandoff.title': 'Einrichtung abgeschlossen',
     'error.unexpected.title': 'MissionKid benötigt Ihre Aufmerksamkeit',
+    'setup.introduction':
+      'Ein Elternteil oder eine Betreuungsperson richtet Sprache und Alterskontext für diese Familie ein.',
+    'setup.language.legend': 'Sprache der Benutzeroberfläche',
+    'setup.language.help':
+      'Wählen Sie die Sprache, die MissionKid auf diesem Bildschirm verwendet.',
+    'setup.language.en': 'English',
+    'setup.language.de': 'Deutsch',
+    'setup.language.ru': 'Русский',
+    'setup.age.legend': 'Altersgruppe des Kindes',
+    'setup.age.help':
+      'Damit kann MissionKid passende Aktivitäten verwenden. Dies ist keine Beurteilung; Sie entscheiden, was für Ihr Kind richtig ist.',
+    'setup.age.required':
+      'Erforderlich: Wählen Sie eine Altersgruppe aus, um fortzufahren.',
+    'setup.privacy':
+      'Name, Geburtsdatum, Konto oder Kontaktdaten sind nicht erforderlich.',
+    'setup.parentResponsibility':
+      'Sie entscheiden weiterhin, ob eine Aktivität zu Ihrem Kind und der Umgebung passt.',
+    'setup.action.complete': 'Einrichtung abschließen',
+    'setup.action.saveChanges': 'Änderungen speichern',
+    'setup.edit.languageEffect':
+      'Nach dem Speichern gilt die gewählte Sprache für die weitere Anzeige der Benutzeroberfläche und der Missionen.',
+    'setup.edit.ageEffect':
+      'Nach dem Speichern beeinflusst die Altersgruppe nur künftige Missionsvorschläge. Bereits ausgewählte, startbereite oder aktive Missionen, der Verlauf abgeschlossener Missionen und gespeicherte Fortschritte bleiben unverändert.',
+    'setup.save.unconfirmed':
+      'Das Speichern konnte nicht bestätigt werden. Die Auswahl auf dieser Seite kann vorübergehend sein und beim Aktualisieren oder Schließen verloren gehen. Versuchen Sie es erneut.',
+    'setup.complete.body':
+      'Ihre Sprache und Altersgruppe sind auf diesem Gerät gespeichert.',
+    'setup.complete.next': 'MissionKid ist bereit für den nächsten Schritt.',
+    'setup.complete.language': 'Sprache',
+    'setup.complete.age': 'Altersgruppe',
+    'setup.action.edit': 'Einrichtung ändern',
   },
   ru: {
     'app.brand': 'MissionKid',
@@ -48,6 +108,36 @@ export const INTERFACE_MESSAGES: CompleteInterfaceMessages = {
     'view.recovery.title': 'Требуется восстановление',
     'view.setupCompleteHandoff.title': 'Настройка завершена',
     'error.unexpected.title': 'MissionKid требует вашего внимания',
+    'setup.introduction':
+      'Родитель или другой взрослый выбирает язык и возрастную группу для этой семьи.',
+    'setup.language.legend': 'Язык интерфейса',
+    'setup.language.help': 'Выберите язык этого экрана MissionKid.',
+    'setup.language.en': 'English',
+    'setup.language.de': 'Deutsch',
+    'setup.language.ru': 'Русский',
+    'setup.age.legend': 'Возрастная группа ребёнка',
+    'setup.age.help':
+      'Это помогает MissionKid подбирать подходящие занятия. Это не оценка способностей: вы решаете, что подходит вашему ребёнку.',
+    'setup.age.required':
+      'Обязательно: выберите возрастную группу, чтобы продолжить.',
+    'setup.privacy':
+      'Имя, дата рождения, учётная запись и контактные данные не нужны.',
+    'setup.parentResponsibility':
+      'Вы по-прежнему решаете, подходит ли занятие вашему ребёнку и окружающим условиям.',
+    'setup.action.complete': 'Завершить настройку',
+    'setup.action.saveChanges': 'Сохранить изменения',
+    'setup.edit.languageEffect':
+      'После сохранения выбранный язык будет использоваться для дальнейшего отображения интерфейса и миссий.',
+    'setup.edit.ageEffect':
+      'После сохранения возрастная группа влияет только на будущие предложения миссий. Уже выбранные, готовые к началу или активные миссии, история завершённых миссий и сохранённый прогресс остаются без изменений.',
+    'setup.save.unconfirmed':
+      'Не удалось подтвердить сохранение. Выбор на этой странице может быть временным и потеряться после обновления или закрытия. Попробуйте ещё раз.',
+    'setup.complete.body':
+      'Язык и возрастная группа сохранены на этом устройстве.',
+    'setup.complete.next': 'MissionKid готов к следующему шагу.',
+    'setup.complete.language': 'Язык',
+    'setup.complete.age': 'Возрастная группа',
+    'setup.action.edit': 'Изменить настройку',
   },
 };
 
