@@ -15,6 +15,15 @@ type SetupChoices = Readonly<{
   localProfileId: string | null;
 }>;
 
+// Reset belongs to the F001 domain; only the adapter removes browser data.
+export function resetSetup(adapter: PersistenceAdapter) {
+  const before = adapter.hydrate();
+  const result = adapter.reset();
+  return result.status === 'confirmed'
+    ? { status: 'confirmed' as const }
+    : { status: 'unconfirmed' as const, before, recovery: adapter.hydrate() };
+}
+
 export type SaveSetupResult =
   | Readonly<{ status: 'confirmed'; snapshot: MissionKidSnapshot }>
   | Readonly<{
@@ -25,6 +34,7 @@ export type SaveSetupResult =
         | 'unsupported-version'
         | 'unavailable';
       localProfileId: string | null;
+      before: HydrationResult;
       recovery: HydrationResult;
     }>;
 
@@ -41,6 +51,7 @@ export function saveSetup(
       status: 'unconfirmed',
       reason: current.status,
       localProfileId: choices.localProfileId,
+      before: current,
       recovery: current,
     };
   }
@@ -53,6 +64,7 @@ export function saveSetup(
       status: 'unconfirmed',
       reason: 'invalid-snapshot',
       localProfileId: choices.localProfileId,
+      before: current,
       recovery: current,
     };
   }
@@ -75,6 +87,7 @@ export function saveSetup(
   return {
     ...result,
     localProfileId,
+    before: current,
     recovery: adapter.hydrate(),
   };
 }

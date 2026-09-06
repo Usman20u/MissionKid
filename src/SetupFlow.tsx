@@ -1,6 +1,7 @@
 import type { FormEvent } from 'react';
+import { flushSync } from 'react-dom';
 
-import { useAppState } from './appState';
+import { isSetupContextComplete, useAppState } from './appState';
 import {
   SUPPORTED_LANGUAGES,
   translateMessage,
@@ -34,11 +35,13 @@ type SetupFlowProps = Readonly<{
 export function SetupFlow({ adapter, createProfileId }: SetupFlowProps) {
   const { dispatch, state } = useAppState();
 
-  if (state.status !== 'ready') {
+  if (state.status !== 'ready' && state.status !== 'degraded') {
     return null;
   }
 
-  const { ageBand, language, localProfileId, saveStatus, setupView } = state;
+  const { ageBand, language, localProfileId } = state;
+  const saveStatus = state.status === 'ready' ? state.saveStatus : 'idle';
+  const setupView = state.status === 'ready' ? state.setupView : 'incomplete';
 
   if (setupView === 'handoff' && ageBand && localProfileId) {
     return (
@@ -76,9 +79,16 @@ export function SetupFlow({ adapter, createProfileId }: SetupFlowProps) {
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    if (!ageBand) {
+    if (!ageBand || state.operation) {
       return;
     }
+
+    if (state.status === 'degraded') {
+      dispatch({ type: 'temporary-setup-confirmed', localProfileId: localProfileId ?? createProfileId() });
+      return;
+    }
+
+    flushSync(() => dispatch({ type: 'operation-started', operation: 'save' }));
 
     const result = saveSetup(
       adapter,
@@ -92,6 +102,7 @@ export function SetupFlow({ adapter, createProfileId }: SetupFlowProps) {
       dispatch({
         type: 'setup-save-unconfirmed',
         localProfileId: result.localProfileId,
+        before: result.before,
         recovery: result.recovery,
       });
     }
@@ -183,6 +194,10 @@ export function SetupFlow({ adapter, createProfileId }: SetupFlowProps) {
         </p>
       ) : null}
 
+      {state.status === 'degraded' && state.temporaryComplete && isSetupContextComplete(state) ? (
+        <p role="status">{translateMessage(language, 'recovery.temporaryReady')}</p>
+      ) : null}
+
       <button
         aria-describedby={
           saveStatus === 'unconfirmed'
@@ -195,7 +210,8 @@ export function SetupFlow({ adapter, createProfileId }: SetupFlowProps) {
       >
         {translateMessage(
           language,
-          isEditing ? 'setup.action.saveChanges' : 'setup.action.complete',
+          state.status === 'degraded' ? 'recovery.useTemporary'
+            : isEditing ? 'setup.action.saveChanges' : 'setup.action.complete',
         )}
       </button>
     </form>

@@ -165,6 +165,7 @@ describe('F001 save operation', () => {
 
     expect(saveSetup(harness.adapter, choices, () => 'unused')).toEqual({
       status: 'unconfirmed', reason: 'write-failed', localProfileId: 'profile',
+      before: { status: 'hydrated', snapshot },
       recovery: { status: 'hydrated', snapshot },
     });
     expect(harness.storage.getItem).toHaveBeenCalledTimes(2);

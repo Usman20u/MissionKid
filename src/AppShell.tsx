@@ -1,4 +1,6 @@
 import { Component, type PropsWithChildren } from 'react';
+import { flushSync } from 'react-dom';
+import { resetSetup } from './setup';
 
 import {
   isSetupContextComplete,
@@ -100,10 +102,27 @@ export function AppShell({
   adapter = persistenceAdapter,
   createProfileId = createLocalProfileId,
 }: AppShellProps = {}) {
-  const { state } = useAppState();
+  const { state, dispatch } = useAppState();
   const view = selectAppView(state);
   const content = VIEW_CONTENT[view];
   const headingId = 'current-view-heading';
+  const t = (key: MessageKey) => translateMessage(state.language, key);
+  const busy = !!state.operation || state.status === 'pending';
+
+  function retry() {
+    if (busy) return;
+    flushSync(() => dispatch({ type: 'operation-started', operation: 'retry' }));
+    dispatch({ type: 'storage-retried', result: adapter.hydrate() });
+  }
+
+  function reset() {
+    if (busy || !state.resetConfirm) return;
+    flushSync(() => dispatch({ type: 'operation-started', operation: 'reset' }));
+    const result = resetSetup(adapter);
+    dispatch(result.status === 'confirmed'
+      ? { type: 'reset-confirmed' }
+      : { type: 'reset-unconfirmed', before: result.before, recovery: result.recovery });
+  }
 
   return (
     <div className="app-shell">
@@ -120,12 +139,45 @@ export function AppShell({
           <h1 className="app-view__title" id={headingId}>
             {translateMessage(state.language, content.title)}
           </h1>
-          {state.status === 'ready' ? (
+          {busy ? <p role="status">{t('recovery.pending')}</p> : null}
+          <fieldset role="presentation" className="recovery-controls" disabled={busy} aria-busy={busy}>
+          {state.status === 'degraded' ? <p className="save-feedback" role="alert">{t('recovery.temporary')}</p> : null}
+          {state.status === 'blocked-recovery' ? (
+            <p className="save-feedback" role="alert">
+              {t(state.resetUnconfirmed ? 'recovery.resetUnconfirmed' : 'recovery.blocked')}
+            </p>
+          ) : null}
+          {!state.resetConfirm && (state.status === 'ready' || state.status === 'degraded') ? (
             <SetupFlow
               adapter={adapter}
               createProfileId={createProfileId}
             />
           ) : null}
+          {state.status !== 'pending' ? (
+            <div className="recovery-actions">
+              {state.resetConfirm ? (
+                <section aria-labelledby="reset-heading" aria-describedby="reset-consequence">
+                  <h2 id="reset-heading">{t('recovery.resetTitle')}</h2>
+                  <p id="reset-consequence">{t('recovery.resetConsequence')}</p>
+                  <div className="recovery-actions__buttons">
+                    <button className="button button--secondary" type="button" onClick={() => dispatch({ type: 'reset-confirmation', open: false })}>{t('recovery.cancel')}</button>
+                    <button className="button button--destructive" type="button" onClick={reset}>{t('recovery.confirmReset')}</button>
+                  </div>
+                </section>
+              ) : (
+                <>
+                  {(state.status !== 'ready' || state.saveStatus === 'unconfirmed') ? (
+                    <>
+                      <p>{t('recovery.retryHelp')}</p>
+                      <button className="button button--secondary" type="button" onClick={retry}>{t('recovery.retry')}</button>
+                    </>
+                  ) : null}
+                  <button className="button button--secondary" type="button" onClick={() => dispatch({ type: 'reset-confirmation', open: true })}>{t('recovery.resetTitle')}</button>
+                </>
+              )}
+            </div>
+          ) : null}
+          </fieldset>
         </section>
       </main>
     </div>

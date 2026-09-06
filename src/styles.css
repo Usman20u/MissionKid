@@ -301,3 +301,29 @@ input {
     transition: none;
   }
 }
+.recovery-controls {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+
+.recovery-actions {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid currentColor;
+  display: grid;
+  gap: 1rem;
+}
+
+.recovery-actions__buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.button--destructive {
+  background: #fff;
+  color: #8b2828;
+  border: 2px solid #8b2828;
+}
