@@ -1,0 +1,380 @@
+:root {
+  color: #20302d;
+  background: #f4f6f1;
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-width: 320px;
+  min-height: 100%;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  overflow-wrap: break-word;
+  background:
+    radial-gradient(circle at 50% 0%, #e4eee7 0, transparent 28rem),
+    #f4f6f1;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+.app-shell {
+  min-height: 100vh;
+}
+
+.app-shell__header,
+.app-shell__main {
+  width: min(100%, 66rem);
+  margin: 0 auto;
+  padding-right: 1rem;
+  padding-left: 1rem;
+}
+
+.app-shell__header {
+  padding-top: 1.25rem;
+  padding-bottom: 1.25rem;
+}
+
+.app-shell__brand,
+.app-view__context,
+.app-view__title {
+  margin: 0;
+}
+
+.app-shell__brand {
+  color: #174c40;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.app-shell__main {
+  padding: 1.25rem 1rem 3rem;
+}
+
+.app-shell__main section {
+  padding: clamp(1.25rem, 4vw, 3rem);
+  border: 1px solid #d8e1da;
+  border-radius: 1.25rem;
+  background: rgb(255 255 255 / 92%);
+  box-shadow: 0 1.25rem 3rem rgb(32 48 45 / 8%);
+}
+
+.app-view__context {
+  margin-bottom: 0.5rem;
+  color: #4c625c;
+  font-size: 0.9rem;
+  font-weight: 650;
+}
+
+.app-view__title:focus-visible,
+.reset-panel__title:focus-visible {
+  outline: 3px solid #b4650c;
+  outline-offset: 4px;
+}
+
+.app-view__title {
+  max-width: 18ch;
+  font-size: clamp(1.75rem, 7vw, 2.5rem);
+  line-height: 1.15;
+  letter-spacing: -0.035em;
+}
+
+.setup-form,
+.setup-complete {
+  margin-top: 1.5rem;
+}
+
+.setup-form__introduction,
+.setup-complete__body {
+  max-width: 62ch;
+  margin: 0;
+  color: #445752;
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+
+.choice-group {
+  min-width: 0;
+  margin: 2rem 0 0;
+  padding: 0;
+  border: 0;
+}
+
+.choice-group legend {
+  padding: 0;
+  font-size: 1.125rem;
+  font-weight: 750;
+}
+
+.choice-group__help,
+.choice-group__required {
+  max-width: 64ch;
+  color: #536660;
+  line-height: 1.55;
+}
+
+.choice-group__help {
+  margin: 0.45rem 0 1rem;
+}
+
+.choice-group__required {
+  margin: 0.75rem 0 0;
+  font-size: 0.925rem;
+  font-weight: 650;
+}
+
+.choice-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+}
+
+.choice {
+  display: flex;
+  min-height: 3.35rem;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.8rem 1rem;
+  border: 2px solid #7d968d;
+  border-radius: 0.8rem;
+  background: #fff;
+  color: #233b35;
+  cursor: pointer;
+  font-weight: 700;
+  line-height: 1.35;
+  transition:
+    border-color 120ms ease,
+    background-color 120ms ease,
+    box-shadow 120ms ease;
+}
+
+.choice:hover {
+  border-color: #5f8377;
+}
+
+.choice:has(input:checked) {
+  border-color: #1d6654;
+  background: #edf7f1;
+  box-shadow: inset 0 0 0 1px #1d6654;
+}
+
+.choice input {
+  width: 1.2rem;
+  height: 1.2rem;
+  flex: 0 0 auto;
+  margin: 0;
+  accent-color: #1d6654;
+}
+
+.choice:has(input:focus-visible) {
+  outline: 3px solid #b4650c;
+  outline-offset: 2px;
+}
+
+.parent-note {
+  max-width: 64ch;
+  margin-top: 2rem;
+  padding: 1rem 1.1rem;
+  border-left: 4px solid #4d7d6d;
+  border-radius: 0 0.75rem 0.75rem 0;
+  background: #f1f7f3;
+  color: #3d514c;
+  line-height: 1.55;
+}
+
+.parent-note p {
+  margin: 0;
+}
+
+.parent-note p + p {
+  margin-top: 0.6rem;
+}
+
+.save-feedback {
+  max-width: 64ch;
+  margin: 1.25rem 0 0;
+  padding: 0.9rem 1rem;
+  border: 1px solid #be704f;
+  border-radius: 0.75rem;
+  background: #fff4ef;
+  color: #71361f;
+  line-height: 1.5;
+}
+
+.button {
+  min-height: 3.25rem;
+  margin-top: 1.5rem;
+  padding: 0.8rem 1.2rem;
+  border: 2px solid transparent;
+  border-radius: 0.8rem;
+  cursor: pointer;
+  font-weight: 750;
+  line-height: 1.3;
+}
+
+.button:focus-visible {
+  outline: 3px solid #b4650c;
+  outline-offset: 3px;
+}
+
+.button--primary {
+  width: 100%;
+  background: #195d4c;
+  color: #fff;
+  box-shadow: 0 0.55rem 1.2rem rgb(25 93 76 / 18%);
+}
+
+.button--primary:hover:not(:disabled) {
+  background: #124c3e;
+}
+
+.button--primary:disabled {
+  background: #d8dfdb;
+  color: #4c5955;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+.button--secondary {
+  border-color: #6b857d;
+  background: #fff;
+  color: #174c40;
+}
+
+.setup-summary {
+  display: grid;
+  max-width: 40rem;
+  gap: 0.75rem;
+  margin: 1.5rem 0;
+}
+
+.setup-summary div {
+  padding: 1rem;
+  border: 1px solid #d4dfd8;
+  border-radius: 0.75rem;
+  background: #f7faf8;
+}
+
+.setup-summary dt {
+  color: #5a6d67;
+  font-size: 0.85rem;
+  font-weight: 650;
+}
+
+.setup-summary dd {
+  margin: 0.25rem 0 0;
+  font-size: 1.05rem;
+  font-weight: 750;
+}
+
+.setup-complete > p:last-of-type {
+  color: #445752;
+  line-height: 1.55;
+}
+
+@media (min-width: 34rem) {
+  .choice-grid--languages,
+  .choice-grid--ages,
+  .setup-summary {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .setup-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .button--primary {
+    width: auto;
+    min-width: 13rem;
+  }
+
+  .recovery-actions > .button {
+    justify-self: start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .choice {
+    transition: none;
+  }
+}
+.recovery-controls {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+
+.recovery-actions {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid #cbd9d2;
+  display: grid;
+  gap: 1rem;
+}
+
+/* Grid gap owns recovery spacing; the shared button margin would double it. */
+.recovery-actions .button {
+  margin-top: 0;
+}
+
+.recovery-actions__help {
+  max-width: 64ch;
+  margin: 0;
+  color: #536660;
+  line-height: 1.55;
+}
+
+/* Reset is separated from routine recovery rather than promoted next to it.
+   When it is the only recovery action the container rule already separates it. */
+.recovery-actions__reset:not(:first-child) {
+  padding-top: 1rem;
+  border-top: 1px solid #cbd9d2;
+}
+
+.reset-panel p {
+  max-width: 64ch;
+}
+
+.reset-panel__title {
+  margin: 0 0 0.75rem;
+  font-size: 1.25rem;
+  line-height: 1.25;
+}
+
+.recovery-actions__buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.button--reset-entry {
+  padding-inline: 0;
+  border: 0;
+  background: none;
+  color: #8b2828;
+  text-align: left;
+  text-decoration: underline;
+  text-underline-offset: 0.25rem;
+}
+
+.button--destructive {
+  background: #fff;
+  color: #8b2828;
+  border: 2px solid #8b2828;
+}

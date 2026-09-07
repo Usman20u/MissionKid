@@ -1,0 +1,360 @@
+import {
+  DEFAULT_LANGUAGE,
+  resolveSupportedLanguage,
+  type SupportedLanguage,
+} from './localization';
+
+export const MISSIONKID_STORAGE_KEY = 'missionkid:snapshot';
+export const CURRENT_SNAPSHOT_VERSION = 1 as const;
+
+export const AGE_BANDS = ['4–6', '7–8', '9–10'] as const;
+
+export type AgeBand = (typeof AGE_BANDS)[number];
+
+export type ChildProfile = Readonly<{
+  localProfileId: string;
+  // Hydration can preserve trusted identity while age still needs selection.
+  ageBand: AgeBand | null;
+}>;
+
+export type MissionKidSnapshot = Readonly<{
+  snapshotVersion: typeof CURRENT_SNAPSHOT_VERSION;
+  settings: Readonly<{
+    language: SupportedLanguage;
+  }>;
+  childProfile: ChildProfile | null;
+  currentSession: null;
+  currentResultSessionId: null;
+  completedSessions: readonly [];
+}>;
+
+export type HydrationResult =
+  | Readonly<{ status: 'absent' }>
+  | Readonly<{ status: 'hydrated'; snapshot: MissionKidSnapshot }>
+  | Readonly<{ status: 'corrupted' }>
+  | Readonly<{ status: 'unsupported-version'; version: number }>
+  | Readonly<{ status: 'unavailable' }>;
+
+export type PersistFailureReason =
+  | 'invalid-snapshot'
+  | 'serialization-failed'
+  | 'write-failed'
+  | 'read-back-failed'
+  | 'read-back-invalid'
+  | 'read-back-mismatch';
+
+export type PersistResult =
+  | Readonly<{ status: 'confirmed'; snapshot: MissionKidSnapshot }>
+  | Readonly<{ status: 'unconfirmed'; reason: PersistFailureReason }>;
+
+export type ResetFailureReason =
+  | 'remove-failed'
+  | 'read-back-failed'
+  | 'snapshot-still-present';
+
+export type ResetResult =
+  | Readonly<{ status: 'confirmed' }>
+  | Readonly<{ status: 'unconfirmed'; reason: ResetFailureReason }>;
+
+export type SnapshotStorage = Pick<
+  Storage,
+  'getItem' | 'setItem' | 'removeItem'
+>;
+
+export type SnapshotSerializer = (snapshot: MissionKidSnapshot) => string;
+
+export type PersistenceAdapter = Readonly<{
+  hydrate: () => HydrationResult;
+  persist: (snapshot: MissionKidSnapshot) => PersistResult;
+  reset: () => ResetResult;
+}>;
+
+type SnapshotValidationResult =
+  | Readonly<{
+      status: 'valid';
+      snapshot: MissionKidSnapshot;
+      normalized: boolean;
+    }>
+  | Readonly<{ status: 'invalid' }>
+  | Readonly<{ status: 'unsupported-version'; version: number }>;
+
+const SNAPSHOT_KEYS = [
+  'snapshotVersion',
+  'settings',
+  'childProfile',
+  'currentSession',
+  'currentResultSessionId',
+  'completedSessions',
+] as const;
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function hasOwn(value: Record<string, unknown>, key: string): boolean {
+  return Object.prototype.hasOwnProperty.call(value, key);
+}
+
+function hasOnlyKeys(
+  value: Record<string, unknown>,
+  allowedKeys: readonly string[],
+): boolean {
+  return Object.keys(value).every((key) => allowedKeys.includes(key));
+}
+
+function hasExactKeys(
+  value: Record<string, unknown>,
+  expectedKeys: readonly string[],
+): boolean {
+  return (
+    Object.keys(value).length === expectedKeys.length &&
+    expectedKeys.every((key) => hasOwn(value, key))
+  );
+}
+
+function isAgeBand(value: unknown): value is AgeBand {
+  return AGE_BANDS.some((ageBand) => ageBand === value);
+}
+
+function isLocalProfileId(value: unknown): value is string {
+  return typeof value === 'string' && value.trim().length > 0;
+}
+
+function validateSnapshot(value: unknown): SnapshotValidationResult {
+  if (!isRecord(value) || !hasOwn(value, 'snapshotVersion')) {
+    return { status: 'invalid' };
+  }
+
+  if (typeof value.snapshotVersion !== 'number') {
+    return { status: 'invalid' };
+  }
+
+  if (value.snapshotVersion !== CURRENT_SNAPSHOT_VERSION) {
+    return {
+      status: 'unsupported-version',
+      version: value.snapshotVersion,
+    };
+  }
+
+  if (!hasExactKeys(value, SNAPSHOT_KEYS)) {
+    return { status: 'invalid' };
+  }
+
+  if (
+    !isRecord(value.settings) ||
+    !hasOnlyKeys(value.settings, ['language'])
+  ) {
+    return { status: 'invalid' };
+  }
+
+  const language = resolveSupportedLanguage(value.settings.language);
+  let normalized = value.settings.language !== language;
+  let childProfile: ChildProfile | null;
+
+  if (value.childProfile === null) {
+    childProfile = null;
+  } else if (
+    isRecord(value.childProfile) &&
+    hasOnlyKeys(value.childProfile, ['localProfileId', 'ageBand']) &&
+    hasOwn(value.childProfile, 'localProfileId') &&
+    isLocalProfileId(value.childProfile.localProfileId)
+  ) {
+    if (isAgeBand(value.childProfile.ageBand)) {
+      childProfile = {
+        localProfileId: value.childProfile.localProfileId,
+        ageBand: value.childProfile.ageBand,
+      };
+    } else {
+      childProfile = {
+        localProfileId: value.childProfile.localProfileId,
+        ageBand: null,
+      };
+      normalized = true;
+    }
+  } else {
+    return { status: 'invalid' };
+  }
+
+  if (
+    value.currentSession !== null ||
+    value.currentResultSessionId !== null ||
+    !Array.isArray(value.completedSessions) ||
+    value.completedSessions.length !== 0
+  ) {
+    return { status: 'invalid' };
+  }
+
+  return {
+    status: 'valid',
+    normalized,
+    snapshot: {
+      snapshotVersion: CURRENT_SNAPSHOT_VERSION,
+      settings: { language },
+      childProfile,
+      currentSession: null,
+      currentResultSessionId: null,
+      completedSessions: [],
+    },
+  };
+}
+
+function parseStoredSnapshot(rawSnapshot: string): SnapshotValidationResult {
+  try {
+    return validateSnapshot(JSON.parse(rawSnapshot));
+  } catch {
+    return { status: 'invalid' };
+  }
+}
+
+function snapshotsMatch(
+  expected: MissionKidSnapshot,
+  actual: MissionKidSnapshot,
+): boolean {
+  return (
+    expected.snapshotVersion === actual.snapshotVersion &&
+    expected.settings.language === actual.settings.language &&
+    expected.childProfile?.localProfileId ===
+      actual.childProfile?.localProfileId &&
+    expected.childProfile?.ageBand === actual.childProfile?.ageBand &&
+    expected.currentSession === actual.currentSession &&
+    expected.currentResultSessionId === actual.currentResultSessionId &&
+    expected.completedSessions.length === actual.completedSessions.length
+  );
+}
+
+function serializeSnapshot(snapshot: MissionKidSnapshot): string {
+  const serialized = JSON.stringify(snapshot);
+
+  if (typeof serialized !== 'string') {
+    throw new Error('MissionKid snapshot could not be serialized.');
+  }
+
+  return serialized;
+}
+
+export function createEmptySnapshot(): MissionKidSnapshot {
+  return {
+    snapshotVersion: CURRENT_SNAPSHOT_VERSION,
+    settings: { language: DEFAULT_LANGUAGE },
+    childProfile: null,
+    currentSession: null,
+    currentResultSessionId: null,
+    completedSessions: [],
+  };
+}
+
+export function createPersistenceAdapter(
+  storage: SnapshotStorage,
+  serialize: SnapshotSerializer = serializeSnapshot,
+): PersistenceAdapter {
+  return {
+    hydrate() {
+      let rawSnapshot: string | null;
+
+      try {
+        rawSnapshot = storage.getItem(MISSIONKID_STORAGE_KEY);
+      } catch {
+        return { status: 'unavailable' };
+      }
+
+      if (rawSnapshot === null) {
+        return { status: 'absent' };
+      }
+
+      const validation = parseStoredSnapshot(rawSnapshot);
+
+      switch (validation.status) {
+        case 'valid':
+          return { status: 'hydrated', snapshot: validation.snapshot };
+        case 'unsupported-version':
+          return validation;
+        case 'invalid':
+          return { status: 'corrupted' };
+      }
+    },
+
+    persist(snapshot) {
+      const intendedSnapshot = validateSnapshot(snapshot);
+
+      if (
+        intendedSnapshot.status !== 'valid' ||
+        intendedSnapshot.normalized ||
+        !snapshotsMatch(snapshot, intendedSnapshot.snapshot)
+      ) {
+        return { status: 'unconfirmed', reason: 'invalid-snapshot' };
+      }
+
+      let serialized: string;
+
+      try {
+        serialized = serialize(intendedSnapshot.snapshot);
+      } catch {
+        return { status: 'unconfirmed', reason: 'serialization-failed' };
+      }
+
+      try {
+        storage.setItem(MISSIONKID_STORAGE_KEY, serialized);
+      } catch {
+        return { status: 'unconfirmed', reason: 'write-failed' };
+      }
+
+      let rawReadBack: string | null;
+
+      try {
+        rawReadBack = storage.getItem(MISSIONKID_STORAGE_KEY);
+      } catch {
+        return { status: 'unconfirmed', reason: 'read-back-failed' };
+      }
+
+      if (rawReadBack === null) {
+        return { status: 'unconfirmed', reason: 'read-back-mismatch' };
+      }
+
+      const readBack = parseStoredSnapshot(rawReadBack);
+
+      if (readBack.status !== 'valid' || readBack.normalized) {
+        return { status: 'unconfirmed', reason: 'read-back-invalid' };
+      }
+
+      if (!snapshotsMatch(intendedSnapshot.snapshot, readBack.snapshot)) {
+        return { status: 'unconfirmed', reason: 'read-back-mismatch' };
+      }
+
+      return { status: 'confirmed', snapshot: readBack.snapshot };
+    },
+
+    reset() {
+      try {
+        storage.removeItem(MISSIONKID_STORAGE_KEY);
+      } catch {
+        return { status: 'unconfirmed', reason: 'remove-failed' };
+      }
+
+      let rawReadBack: string | null;
+
+      try {
+        rawReadBack = storage.getItem(MISSIONKID_STORAGE_KEY);
+      } catch {
+        return { status: 'unconfirmed', reason: 'read-back-failed' };
+      }
+
+      return rawReadBack === null
+        ? { status: 'confirmed' }
+        : { status: 'unconfirmed', reason: 'snapshot-still-present' };
+    },
+  };
+}
+
+const browserStorage: SnapshotStorage = {
+  getItem(key) {
+    return window.localStorage.getItem(key);
+  },
+  setItem(key, value) {
+    window.localStorage.setItem(key, value);
+  },
+  removeItem(key) {
+    window.localStorage.removeItem(key);
+  },
+};
+
+export const persistenceAdapter = createPersistenceAdapter(browserStorage);
