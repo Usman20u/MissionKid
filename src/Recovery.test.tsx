@@ -159,7 +159,7 @@ describe('F001 recovery and reset', () => {
     fireEvent.click(screen.getByRole('radio', { name: '9–10' }));
     click('Save changes');
     expect(screen.getByRole('alert').textContent).toMatch(/Saving could not be confirmed/);
-    expect(screen.queryByText(/saved on this device/)).toBeNull();
+    expect(screen.queryByText(/language and age group are saved/)).toBeNull();
     h.values.set(MISSIONKID_STORAGE_KEY, JSON.stringify(completed('de')));
     h.calls.length = 0;
     click('Retry browser storage');

@@ -51,7 +51,7 @@ const englishMessages = {
   'setup.save.unconfirmed':
     'Saving could not be confirmed. Choices on this page may be temporary and lost when you refresh or close it. Try again.',
   'setup.complete.body':
-    'Your language and age group are saved on this device.',
+    'Your language and age group are saved in this browser.',
   'setup.complete.next': 'MissionKid is ready for the next step.',
   'setup.complete.language': 'Language',
   'setup.complete.age': 'Age group',
@@ -115,7 +115,7 @@ export const INTERFACE_MESSAGES: CompleteInterfaceMessages = {
     'setup.save.unconfirmed':
       'Das Speichern konnte nicht bestätigt werden. Die Auswahl auf dieser Seite kann vorübergehend sein und beim Aktualisieren oder Schließen verloren gehen. Versuchen Sie es erneut.',
     'setup.complete.body':
-      'Ihre Sprache und Altersgruppe sind auf diesem Gerät gespeichert.',
+      'Ihre Sprache und Altersgruppe sind in diesem Browser gespeichert.',
     'setup.complete.next': 'MissionKid ist bereit für den nächsten Schritt.',
     'setup.complete.language': 'Sprache',
     'setup.complete.age': 'Altersgruppe',
@@ -169,7 +169,7 @@ export const INTERFACE_MESSAGES: CompleteInterfaceMessages = {
     'setup.save.unconfirmed':
       'Не удалось подтвердить сохранение. Выбор на этой странице может быть временным и потеряться после обновления или закрытия. Попробуйте ещё раз.',
     'setup.complete.body':
-      'Язык и возрастная группа сохранены на этом устройстве.',
+      'Язык и возрастная группа сохранены в этом браузере.',
     'setup.complete.next': 'MissionKid готов к следующему шагу.',
     'setup.complete.language': 'Язык',
     'setup.complete.age': 'Возрастная группа',

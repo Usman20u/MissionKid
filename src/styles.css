@@ -22,6 +22,7 @@ body,
 body {
   min-height: 100vh;
   margin: 0;
+  overflow-wrap: break-word;
   background:
     radial-gradient(circle at 50% 0%, #e4eee7 0, transparent 28rem),
     #f4f6f1;
@@ -38,7 +39,7 @@ input {
 
 .app-shell__header,
 .app-shell__main {
-  width: min(100%, 48rem);
+  width: min(100%, 66rem);
   margin: 0 auto;
   padding-right: 1rem;
   padding-left: 1rem;
@@ -66,7 +67,7 @@ input {
 }
 
 .app-shell__main section {
-  padding: clamp(1.25rem, 4vw, 2.5rem);
+  padding: clamp(1.25rem, 4vw, 3rem);
   border: 1px solid #d8e1da;
   border-radius: 1.25rem;
   background: rgb(255 255 255 / 92%);
@@ -76,10 +77,14 @@ input {
 .app-view__context {
   margin-bottom: 0.5rem;
   color: #4c625c;
-  font-size: 0.875rem;
+  font-size: 0.9rem;
   font-weight: 650;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+}
+
+.app-view__title:focus-visible,
+.reset-panel__title:focus-visible {
+  outline: 3px solid #b4650c;
+  outline-offset: 4px;
 }
 
 .app-view__title {
@@ -145,7 +150,7 @@ input {
   align-items: center;
   gap: 0.75rem;
   padding: 0.8rem 1rem;
-  border: 2px solid #c8d4cd;
+  border: 2px solid #7d968d;
   border-radius: 0.8rem;
   background: #fff;
   color: #233b35;
@@ -159,7 +164,7 @@ input {
 }
 
 .choice:hover {
-  border-color: #789d91;
+  border-color: #5f8377;
 }
 
 .choice:has(input:checked) {
@@ -176,15 +181,16 @@ input {
   accent-color: #1d6654;
 }
 
-.choice input:focus-visible {
-  outline: 3px solid #f2a84b;
-  outline-offset: 4px;
+.choice:has(input:focus-visible) {
+  outline: 3px solid #b4650c;
+  outline-offset: 2px;
 }
 
 .parent-note {
+  max-width: 64ch;
   margin-top: 2rem;
   padding: 1rem 1.1rem;
-  border-left: 4px solid #7aa798;
+  border-left: 4px solid #4d7d6d;
   border-radius: 0 0.75rem 0.75rem 0;
   background: #f1f7f3;
   color: #3d514c;
@@ -200,6 +206,7 @@ input {
 }
 
 .save-feedback {
+  max-width: 64ch;
   margin: 1.25rem 0 0;
   padding: 0.9rem 1rem;
   border: 1px solid #be704f;
@@ -221,7 +228,7 @@ input {
 }
 
 .button:focus-visible {
-  outline: 3px solid #f2a84b;
+  outline: 3px solid #b4650c;
   outline-offset: 3px;
 }
 
@@ -238,19 +245,20 @@ input {
 
 .button--primary:disabled {
   background: #d8dfdb;
-  color: #65736f;
+  color: #4c5955;
   box-shadow: none;
   cursor: not-allowed;
 }
 
 .button--secondary {
-  border-color: #8ba49d;
+  border-color: #6b857d;
   background: #fff;
   color: #174c40;
 }
 
 .setup-summary {
   display: grid;
+  max-width: 40rem;
   gap: 0.75rem;
   margin: 1.5rem 0;
 }
@@ -294,6 +302,10 @@ input {
     width: auto;
     min-width: 13rem;
   }
+
+  .recovery-actions > .button {
+    justify-self: start;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -311,15 +323,54 @@ input {
 .recovery-actions {
   margin-top: 1.5rem;
   padding-top: 1rem;
-  border-top: 1px solid currentColor;
+  border-top: 1px solid #cbd9d2;
   display: grid;
   gap: 1rem;
+}
+
+/* Grid gap owns recovery spacing; the shared button margin would double it. */
+.recovery-actions .button {
+  margin-top: 0;
+}
+
+.recovery-actions__help {
+  max-width: 64ch;
+  margin: 0;
+  color: #536660;
+  line-height: 1.55;
+}
+
+/* Reset is separated from routine recovery rather than promoted next to it.
+   When it is the only recovery action the container rule already separates it. */
+.recovery-actions__reset:not(:first-child) {
+  padding-top: 1rem;
+  border-top: 1px solid #cbd9d2;
+}
+
+.reset-panel p {
+  max-width: 64ch;
+}
+
+.reset-panel__title {
+  margin: 0 0 0.75rem;
+  font-size: 1.25rem;
+  line-height: 1.25;
 }
 
 .recovery-actions__buttons {
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
+}
+
+.button--reset-entry {
+  padding-inline: 0;
+  border: 0;
+  background: none;
+  color: #8b2828;
+  text-align: left;
+  text-decoration: underline;
+  text-underline-offset: 0.25rem;
 }
 
 .button--destructive {

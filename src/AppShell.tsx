@@ -1,4 +1,9 @@
-import { Component, type PropsWithChildren } from 'react';
+import {
+  Component,
+  useEffect,
+  useRef,
+  type PropsWithChildren,
+} from 'react';
 import { flushSync } from 'react-dom';
 import { resetSetup } from './setup';
 
@@ -109,14 +114,62 @@ export function AppShell({
   const t = (key: MessageKey) => translateMessage(state.language, key);
   const busy = !!state.operation || state.status === 'pending';
 
+  // One signal per materially different parent context. Language changes and
+  // in-place feedback deliberately keep the same signal so focus is not stolen.
+  const contextSignal = state.resetConfirm ? 'reset-confirmation' : view;
+  const viewHeading = useRef<HTMLHeadingElement>(null);
+  const resetHeading = useRef<HTMLHeadingElement>(null);
+  const resetEntry = useRef<HTMLButtonElement>(null);
+  const previousSignal = useRef(contextSignal);
+  const returnFocusToResetEntry = useRef(false);
+
+  useEffect(() => {
+    const previous = previousSignal.current;
+
+    if (previous === contextSignal) {
+      return;
+    }
+
+    previousSignal.current = contextSignal;
+
+    if (contextSignal === 'reset-confirmation') {
+      resetHeading.current?.focus();
+      return;
+    }
+
+    // Cancelling returns the parent to the control they opened. A confirmed
+    // reset does not: that control now belongs to a different context.
+    if (returnFocusToResetEntry.current) {
+      returnFocusToResetEntry.current = false;
+
+      if (resetEntry.current) {
+        resetEntry.current.focus();
+        return;
+      }
+    }
+
+    viewHeading.current?.focus();
+  }, [contextSignal]);
+
   function retry() {
     if (busy) return;
     flushSync(() => dispatch({ type: 'operation-started', operation: 'retry' }));
     dispatch({ type: 'storage-retried', result: adapter.hydrate() });
   }
 
+  function openResetConfirmation() {
+    returnFocusToResetEntry.current = false;
+    dispatch({ type: 'reset-confirmation', open: true });
+  }
+
+  function cancelReset() {
+    returnFocusToResetEntry.current = true;
+    dispatch({ type: 'reset-confirmation', open: false });
+  }
+
   function reset() {
     if (busy || !state.resetConfirm) return;
+    returnFocusToResetEntry.current = false;
     flushSync(() => dispatch({ type: 'operation-started', operation: 'reset' }));
     const result = resetSetup(adapter);
     dispatch(result.status === 'confirmed'
@@ -132,15 +185,21 @@ export function AppShell({
         </p>
       </header>
       <main className="app-shell__main">
-        <section aria-labelledby={headingId} data-view={view}>
+        <section aria-busy={busy} aria-labelledby={headingId} data-view={view}>
           <p className="app-view__context">
             {translateMessage(state.language, content.context)}
           </p>
-          <h1 className="app-view__title" id={headingId}>
+          <h1
+            className="app-view__title"
+            id={headingId}
+            ref={viewHeading}
+            tabIndex={-1}
+          >
             {translateMessage(state.language, content.title)}
           </h1>
           {busy ? <p role="status">{t('recovery.pending')}</p> : null}
-          <fieldset role="presentation" className="recovery-controls" disabled={busy} aria-busy={busy}>
+          {/* Presentational: exists only for the native disabled cascade. */}
+          <fieldset role="presentation" className="recovery-controls" disabled={busy}>
           {state.status === 'degraded' ? <p className="save-feedback" role="alert">{t('recovery.temporary')}</p> : null}
           {state.status === 'blocked-recovery' ? (
             <p className="save-feedback" role="alert">
@@ -156,11 +215,11 @@ export function AppShell({
           {state.status !== 'pending' ? (
             <div className="recovery-actions">
               {state.resetConfirm ? (
-                <section aria-labelledby="reset-heading" aria-describedby="reset-consequence">
-                  <h2 id="reset-heading">{t('recovery.resetTitle')}</h2>
+                <section className="reset-panel" aria-labelledby="reset-heading" aria-describedby="reset-consequence">
+                  <h2 className="reset-panel__title" id="reset-heading" ref={resetHeading} tabIndex={-1}>{t('recovery.resetTitle')}</h2>
                   <p id="reset-consequence">{t('recovery.resetConsequence')}</p>
                   <div className="recovery-actions__buttons">
-                    <button className="button button--secondary" type="button" onClick={() => dispatch({ type: 'reset-confirmation', open: false })}>{t('recovery.cancel')}</button>
+                    <button className="button button--primary" type="button" onClick={cancelReset}>{t('recovery.cancel')}</button>
                     <button className="button button--destructive" type="button" onClick={reset}>{t('recovery.confirmReset')}</button>
                   </div>
                 </section>
@@ -168,11 +227,13 @@ export function AppShell({
                 <>
                   {(state.status !== 'ready' || state.saveStatus === 'unconfirmed') ? (
                     <>
-                      <p>{t('recovery.retryHelp')}</p>
+                      <p className="recovery-actions__help">{t('recovery.retryHelp')}</p>
                       <button className="button button--secondary" type="button" onClick={retry}>{t('recovery.retry')}</button>
                     </>
                   ) : null}
-                  <button className="button button--secondary" type="button" onClick={() => dispatch({ type: 'reset-confirmation', open: true })}>{t('recovery.resetTitle')}</button>
+                  <div className="recovery-actions__reset">
+                    <button className="button button--reset-entry" type="button" ref={resetEntry} onClick={openResetConfirmation}>{t('recovery.resetTitle')}</button>
+                  </div>
                 </>
               )}
             </div>

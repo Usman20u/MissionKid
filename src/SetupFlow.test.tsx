@@ -174,7 +174,7 @@ describe('parent-guided first-use setup', () => {
     );
 
     fireEvent.click(screen.getByRole('radio', { name: '9–10' }));
-    expect(screen.queryByText(/saved on this device/i)).toBeNull();
+    expect(screen.queryByText(/language and age group are saved/i)).toBeNull();
     expect(createProfileId).not.toHaveBeenCalled();
 
     fireEvent.click(screen.getByRole('button', { name: 'Complete setup' }));
@@ -182,7 +182,7 @@ describe('parent-guided first-use setup', () => {
     expect(
       screen.getByRole('heading', { name: 'Setup complete' }),
     ).toBeTruthy();
-    expect(screen.getByText(/saved on this device/i)).toBeTruthy();
+    expect(screen.getByText(/language and age group are saved/i)).toBeTruthy();
     expect(harness.setCalls).toHaveLength(1);
     expect(createProfileId).toHaveBeenCalledTimes(1);
     expect(
@@ -389,7 +389,7 @@ describe('Task 5 save and editing regressions', () => {
     fireEvent.click(screen.getByRole('radio', { name: '4–6' }));
     fireEvent.click(screen.getByRole('button', { name: 'Complete setup' }));
     expect(screen.getByRole('alert').textContent).toMatch(/may be temporary and lost/);
-    expect(screen.queryByText(/saved on this device/)).toBeNull();
+    expect(screen.queryByText(/language and age group are saved/)).toBeNull();
     expect(harness.values.has(MISSIONKID_STORAGE_KEY)).toBe(false);
 
     fireEvent.click(screen.getByRole('radio', { name: 'Deutsch' }));
@@ -444,7 +444,7 @@ describe('Task 5 save and editing regressions', () => {
     expect((screen.getByRole('radio', { name: 'English' }) as HTMLInputElement).checked).toBe(true);
     expect((screen.getByRole('radio', { name: '7–8' }) as HTMLInputElement).checked).toBe(true);
     expect(JSON.parse(harness.values.get(MISSIONKID_STORAGE_KEY)!)).toEqual(snapshot);
-    expect(screen.queryByText(/saved on this device/)).toBeNull();
+    expect(screen.queryByText(/language and age group are saved/)).toBeNull();
   });
 
   it('does not hand off on an unconfirmed read-back, even if recovery finds the write', () => {
