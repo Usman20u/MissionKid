@@ -3,6 +3,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { App } from './App';
 import { resolveHydrationResult } from './appState';
+import { translateMessage } from './localization';
 import {
   MISSIONKID_STORAGE_KEY,
   createEmptySnapshot,
@@ -363,6 +364,22 @@ describe('returning and editing setup', () => {
     expect(storedSnapshot.currentSession).toBeNull();
     expect(storedSnapshot.completedSessions).toEqual([]);
   });
+
+  it.each(['en', 'de', 'ru'] as const)(
+    'states browser-local persistence in the confirmed setup body in %s',
+    (language) => {
+      const harness = createAdapterHarness(createCompletedSnapshot(language));
+      const { container } = render(<App adapter={harness.adapter} />);
+
+      expect(
+        screen.getByText(translateMessage(language, 'setup.complete.body')),
+      ).toBeTruthy();
+      // The approved boundary is one browser, never the whole device.
+      expect(container.textContent).not.toMatch(
+        /this device|diesem Gerät|этом устройстве/,
+      );
+    },
+  );
 
   it('contains no unauthorized later-function interface', () => {
     const harness = createAdapterHarness();

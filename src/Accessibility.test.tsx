@@ -17,18 +17,30 @@ function completedSnapshot(): MissionKidSnapshot {
   };
 }
 
-type Faults = { write: boolean; corruptOnWrite: boolean };
+type Faults = {
+  read: boolean;
+  write: boolean;
+  corruptOnWrite: boolean;
+  readFailsAfterWrite: boolean;
+};
 
 function harness(raw?: string) {
   const values = new Map<string, string>([['unrelated', 'keep']]);
   if (raw !== undefined) values.set(MISSIONKID_STORAGE_KEY, raw);
-  const faults: Faults = { write: false, corruptOnWrite: false };
+  const faults: Faults = {
+    read: false,
+    write: false,
+    corruptOnWrite: false,
+    readFailsAfterWrite: false,
+  };
   const storage: SnapshotStorage = {
     getItem(key) {
+      if (faults.read) throw new Error('PRIVATE RAW STORAGE ERROR');
       return values.get(key) ?? null;
     },
     setItem(key, value) {
       if (faults.corruptOnWrite) values.set(key, '{not-json');
+      if (faults.readFailsAfterWrite) faults.read = true;
       if (faults.write) throw new Error('PRIVATE RAW STORAGE ERROR');
       values.set(key, value);
     },
@@ -202,6 +214,25 @@ describe('F001 deliberate focus movement', () => {
     );
     expect(screen.getByRole('alert').textContent).toMatch(/cannot currently be used/);
     expect(screen.queryByText(/PRIVATE RAW/)).toBeNull();
+  });
+
+  it('moves focus to the temporary mode heading when durable storage becomes unavailable', () => {
+    const h = harness();
+    // The pre-write read succeeds; storage only becomes unreadable afterwards,
+    // so recovery reports unavailable and the parent lands in temporary mode.
+    h.faults.write = true;
+    h.faults.readFailsAfterWrite = true;
+    render(<App adapter={h.adapter} createProfileId={() => 'temporary-profile'} />);
+
+    expect(screen.getByRole('heading', { level: 1, name: 'Parent setup' })).toBeTruthy();
+
+    fireEvent.click(screen.getByRole('radio', { name: '7–8' }));
+    click('Complete setup');
+
+    const heading = screen.getByRole('heading', { level: 1, name: 'Temporary mode' });
+    expect(document.activeElement).toBe(heading);
+    expect(screen.getByRole('alert').textContent).toMatch(/Temporary mode/);
+    expect(screen.queryByRole('heading', { name: 'Setup complete' })).toBeNull();
   });
 
   it('announces an in-place save failure without taking focus from the form', () => {
