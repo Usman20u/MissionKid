@@ -1,3 +1,4 @@
+import { AGE_BANDS, type AgeBand } from './ageBands';
 import {
   DEFAULT_LANGUAGE,
   resolveSupportedLanguage,
@@ -7,9 +8,7 @@ import {
 export const MISSIONKID_STORAGE_KEY = 'missionkid:snapshot';
 export const CURRENT_SNAPSHOT_VERSION = 1 as const;
 
-export const AGE_BANDS = ['4–6', '7–8', '9–10'] as const;
-
-export type AgeBand = (typeof AGE_BANDS)[number];
+export { AGE_BANDS, type AgeBand } from './ageBands';
 
 export type ChildProfile = Readonly<{
   localProfileId: string;
