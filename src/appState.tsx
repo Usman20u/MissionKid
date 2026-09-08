@@ -7,6 +7,7 @@ import {
   type PropsWithChildren,
 } from 'react';
 
+import type { MissionCategory } from './catalog';
 import {
   DEFAULT_LANGUAGE,
   type SupportedLanguage,
@@ -30,6 +31,10 @@ type ReadyAppState = SetupContext &
     saveStatus: 'idle' | 'unconfirmed';
   }>;
 
+// One discovery cycle is runtime-only. It is never written to the browser
+// snapshot, which holds no Mission Category, cycle or suggestion state.
+type DiscoveryContext = Readonly<{ category: MissionCategory | null }>;
+
 type RecoveryContext = Readonly<{
   // Last validated F001 facts, not a claim that storage is still available.
   lastDurable?: SetupContext;
@@ -37,6 +42,7 @@ type RecoveryContext = Readonly<{
   resetConfirm?: boolean;
   resetUnconfirmed?: boolean;
   temporaryComplete?: boolean;
+  discovery?: DiscoveryContext;
 }>;
 
 export type AppState = RecoveryContext & (
@@ -59,6 +65,8 @@ export type AppStateAction =
   | { type: 'language-changed'; language: SupportedLanguage }
   | { type: 'age-band-changed'; ageBand: AgeBand }
   | { type: 'setup-editing-started' }
+  | { type: 'discovery-opened' }
+  | { type: 'discovery-category-selected'; category: MissionCategory }
   | {
       type: 'setup-save-unconfirmed';
       localProfileId: string | null;
@@ -126,6 +134,27 @@ export function isSetupContextComplete(
   );
 }
 
+// One discovery cycle is exactly one age band, one UI language and one Mission
+// Category. It is derived rather than stored, so changing any of the three yields
+// a different cycle and the previous request is discarded by construction.
+export type DiscoveryCycle = Readonly<{
+  ageBand: AgeBand;
+  language: SupportedLanguage;
+  category: MissionCategory;
+}>;
+
+export function selectDiscoveryCycle(state: AppState): DiscoveryCycle | null {
+  if (state.status !== 'ready' || !isSetupContextComplete(state)) {
+    return null;
+  }
+
+  const category = state.discovery?.category;
+
+  return category && state.ageBand
+    ? { ageBand: state.ageBand, language: state.language, category }
+    : null;
+}
+
 export function appStateReducer(
   state: AppState,
   action: AppStateAction,
@@ -190,8 +219,19 @@ export function appStateReducer(
         ageBand: action.ageBand,
       };
     case 'setup-editing-started':
+      // Leaving discovery for the parent-guided setup step ends the cycle.
       return state.status === 'ready'
-        ? { ...state, setupView: 'editing' }
+        ? { ...state, setupView: 'editing', discovery: undefined }
+        : state;
+    case 'discovery-opened':
+      return state.status === 'ready' &&
+        state.setupView === 'handoff' &&
+        isSetupContextComplete(state)
+        ? { ...state, discovery: { category: null } }
+        : state;
+    case 'discovery-category-selected':
+      return state.discovery
+        ? { ...state, discovery: { category: action.category } }
         : state;
     case 'setup-save-unconfirmed': {
       // Recovery is newer evidence than the pre-write read; neither confirms the attempted save.

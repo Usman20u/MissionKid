@@ -1,0 +1,147 @@
+import type { ReactNode } from 'react';
+
+import { selectDiscoveryCycle, useAppState } from './appState';
+import { MISSION_CATEGORIES, type MissionCategory } from './catalog';
+import { translateMessage, type MessageKey } from './localization';
+
+// Canonical categories are the identity; these keys only resolve the visible
+// label. A localized label is never used as identity.
+const CATEGORY_LABEL_KEYS: Readonly<Record<MissionCategory, MessageKey>> = {
+  Movement: 'discovery.category.movement',
+  Creativity: 'discovery.category.creativity',
+  'Helping at Home': 'discovery.category.helpingAtHome',
+  Learning: 'discovery.category.learning',
+  Calm: 'discovery.category.calm',
+};
+
+// A structural cue for each category so meaning never rests on colour alone.
+// The visible label stays authoritative; these are decorative.
+const CATEGORY_GLYPHS: Readonly<Record<MissionCategory, ReactNode>> = {
+  Movement: (
+    <>
+      <path d="M4 17c3-6 6-9 9-9s5 2 7 5" />
+      <path d="M4 12c2.5-4.5 5-7 7.5-7" opacity="0.55" />
+      <circle cx="19" cy="7" r="2" />
+    </>
+  ),
+  Creativity: (
+    <>
+      <circle cx="9" cy="8.5" r="4.5" />
+      <path d="M14.5 5h6l-3 6z" />
+      <rect x="10.5" y="13.5" width="8" height="7.5" rx="1.4" />
+    </>
+  ),
+  'Helping at Home': (
+    <>
+      <path d="M4 11 12 4l8 7" />
+      <path d="M6.5 10v9h11v-9" />
+      <path d="M10 19v-5h4v5" />
+    </>
+  ),
+  Learning: (
+    <>
+      <circle cx="11" cy="11" r="6" />
+      <path d="m15.5 15.5 4 4" />
+      <path d="M11 8v6M8 11h6" opacity="0.55" />
+    </>
+  ),
+  Calm: (
+    <>
+      <path d="M3 15c3-2 6-2 9 0s6 2 9 0" />
+      <path d="M3 19c3-2 6-2 9 0s6 2 9 0" opacity="0.55" />
+      <circle cx="12" cy="7" r="3" />
+    </>
+  ),
+};
+
+function CategoryGlyph({ category }: Readonly<{ category: MissionCategory }>) {
+  return (
+    <svg
+      aria-hidden="true"
+      className="mission-world__glyph"
+      focusable="false"
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="1.6"
+      viewBox="0 0 24 24"
+    >
+      {CATEGORY_GLYPHS[category]}
+    </svg>
+  );
+}
+
+// The five canonical Mission Categories as one bounded peer-choice group. This
+// view derives and exposes the discovery cycle; it renders no Mission.
+export function MissionCategorySelection() {
+  const { dispatch, state } = useAppState();
+  const t = (key: MessageKey) => translateMessage(state.language, key);
+  const selected = state.discovery?.category ?? null;
+  const cycle = selectDiscoveryCycle(state);
+  const helpId = 'discovery-categories-help';
+
+  return (
+    <div className="mission-discovery">
+      {state.ageBand ? (
+        <p className="mission-discovery__context">
+          <span>{t('discovery.context.age')}</span> {state.ageBand}
+        </p>
+      ) : null}
+
+      <fieldset className="choice-group" aria-describedby={helpId}>
+        <legend>{t('discovery.categories.legend')}</legend>
+        <p className="choice-group__help" id={helpId}>
+          {t('discovery.categories.help')}
+        </p>
+        <div className="mission-worlds">
+          {MISSION_CATEGORIES.map((category) => (
+            <label
+              className="mission-world"
+              data-category={category}
+              key={category}
+            >
+              <input
+                checked={selected === category}
+                className="mission-world__input"
+                name="discovery-category"
+                onChange={() =>
+                  dispatch({ type: 'discovery-category-selected', category })
+                }
+                type="radio"
+                value={category}
+              />
+              <span className="mission-world__frame" aria-hidden="true" />
+              <CategoryGlyph category={category} />
+              <span className="mission-world__label">
+                {t(CATEGORY_LABEL_KEYS[category])}
+              </span>
+              <span className="mission-world__state" aria-hidden="true">
+                {selected === category ? (
+                  <>
+                    <span className="mission-world__check">✓</span>
+                    {t('discovery.selected')}
+                  </>
+                ) : null}
+              </span>
+            </label>
+          ))}
+        </div>
+      </fieldset>
+
+      {cycle ? (
+        <p className="mission-discovery__status" role="status">
+          {t('discovery.cycle.status')}
+        </p>
+      ) : null}
+
+      <button
+        className="button button--secondary"
+        onClick={() => dispatch({ type: 'setup-editing-started' })}
+        type="button"
+      >
+        {t('setup.action.edit')}
+      </button>
+    </div>
+  );
+}

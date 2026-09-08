@@ -378,3 +378,222 @@ input {
   color: #8b2828;
   border: 2px solid #8b2828;
 }
+
+/* F002 discovery doorway.
+   Five equal portals: identical box, spacing, type scale and affordance. Only
+   the decorative frame and glyph differ, and category meaning always rests on
+   the visible label rather than colour or icon recognition. */
+.mission-discovery {
+  margin-top: 1.5rem;
+}
+
+.mission-discovery__context {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0;
+  color: #4c625c;
+  font-weight: 700;
+}
+
+.mission-discovery__context span {
+  color: #5a6d67;
+  font-weight: 650;
+}
+
+.mission-worlds {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+}
+
+.mission-world {
+  position: relative;
+  display: grid;
+  min-height: 4.75rem;
+  align-items: center;
+  grid-template-areas: 'glyph label state';
+  grid-template-columns: auto 1fr auto;
+  gap: 0.9rem;
+  padding: 0.9rem 1.1rem;
+  border: 2px solid #7d968d;
+  border-radius: 1rem;
+  background:
+    radial-gradient(
+      120% 140% at 12% 0%,
+      hsl(var(--world-hue) 44% 96%) 0,
+      #fff 62%
+    );
+  color: #1f3630;
+  cursor: pointer;
+  isolation: isolate;
+  overflow: hidden;
+  transition:
+    border-color 140ms ease,
+    box-shadow 140ms ease,
+    transform 140ms ease;
+}
+
+/* Portal aperture: a soft interior light and rim that give depth without
+   animation or extra assets. Decorative only. */
+.mission-world__frame {
+  position: absolute;
+  z-index: -1;
+  border-radius: inherit;
+  inset: 0;
+  background:
+    radial-gradient(
+      70% 90% at 88% 108%,
+      hsl(var(--world-hue) 52% 88% / 65%) 0,
+      transparent 70%
+    );
+  box-shadow: inset 0 0 0 1px hsl(var(--world-hue) 32% 84%);
+}
+
+.mission-world__input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  clip-path: inset(50%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.mission-world__glyph {
+  width: 2.15rem;
+  height: 2.15rem;
+  grid-area: glyph;
+  color: hsl(var(--world-hue) 42% 32%);
+}
+
+.mission-world__label {
+  grid-area: label;
+  font-size: 1.05rem;
+  font-weight: 750;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+
+/* Reserved so selection never changes a portal's size relative to its peers. */
+.mission-world__state {
+  display: flex;
+  min-width: 5.5rem;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.35rem;
+  grid-area: state;
+  color: #17493c;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.mission-world__check {
+  display: grid;
+  width: 1.4rem;
+  height: 1.4rem;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: #17493c;
+  color: #fff;
+  font-size: 0.8rem;
+  place-items: center;
+}
+
+.mission-world:hover {
+  border-color: #5f8377;
+}
+
+/* Selected state carries a mark, a text cue, a heavier rim and depth, so it is
+   never signalled by colour alone. */
+.mission-world:has(input:checked) {
+  border-color: #17493c;
+  box-shadow:
+    inset 0 0 0 2px #17493c,
+    0 0.75rem 1.6rem rgb(23 73 60 / 16%);
+  transform: translateY(-2px);
+}
+
+.mission-world:has(input:focus-visible) {
+  outline: 3px solid #b4650c;
+  outline-offset: 3px;
+}
+
+.mission-world[data-category='Movement'] { --world-hue: 24; }
+.mission-world[data-category='Creativity'] { --world-hue: 286; }
+.mission-world[data-category='Helping at Home'] { --world-hue: 152; }
+.mission-world[data-category='Learning'] { --world-hue: 208; }
+.mission-world[data-category='Calm'] { --world-hue: 178; }
+
+.mission-discovery__status {
+  max-width: 64ch;
+  margin: 1.25rem 0 0;
+  padding: 0.9rem 1rem;
+  border: 1px dashed #b3c7bf;
+  border-radius: 0.75rem;
+  color: #445752;
+  line-height: 1.55;
+}
+
+/* Parent-facing gate: calm and plain, deliberately not the child treatment. */
+.discovery-gate {
+  max-width: 64ch;
+  margin: 1.25rem 0 0;
+  padding: 0.95rem 1.1rem;
+  border-left: 4px solid #4d7d6d;
+  border-radius: 0 0.75rem 0.75rem 0;
+  background: #f1f7f3;
+  color: #3d514c;
+  line-height: 1.55;
+}
+
+@media (min-width: 56rem) {
+  .mission-worlds {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+
+  .mission-world {
+    min-height: 12.5rem;
+    align-content: start;
+    justify-items: start;
+    grid-template-areas:
+      'glyph'
+      'label'
+      'state';
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.7rem;
+    padding: 1.15rem 1rem 1rem;
+  }
+
+  /* The glyph carries the portal at this size; a small icon in a tall card
+     leaves the composition looking unfinished. */
+  .mission-world__glyph {
+    width: 2.9rem;
+    height: 2.9rem;
+  }
+
+  .mission-world__frame {
+    background:
+      radial-gradient(
+        85% 55% at 50% 112%,
+        hsl(var(--world-hue) 56% 84% / 78%) 0,
+        transparent 72%
+      );
+  }
+
+  .mission-world__state {
+    min-width: 0;
+    align-self: end;
+    justify-content: flex-start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mission-world {
+    transition: none;
+  }
+
+  .mission-world:has(input:checked) {
+    transform: none;
+  }
+}

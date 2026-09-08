@@ -56,6 +56,22 @@ const englishMessages = {
   'setup.complete.language': 'Language',
   'setup.complete.age': 'Age group',
   'setup.action.edit': 'Change setup',
+  'view.discovery.title': 'What kind of Mission?',
+  'discovery.action.open': 'Find a Mission',
+  'discovery.context.age': 'Age group',
+  'discovery.categories.legend': 'Mission Category',
+  'discovery.categories.help':
+    'Choose one. You can change it at any time, and nothing is decided yet.',
+  'discovery.category.movement': 'Movement',
+  'discovery.category.creativity': 'Creativity',
+  'discovery.category.helpingAtHome': 'Helping at Home',
+  'discovery.category.learning': 'Learning',
+  'discovery.category.calm': 'Calm',
+  'discovery.selected': 'Selected',
+  'discovery.cycle.status':
+    'Mission suggestions for this Mission Category will appear here.',
+  'discovery.gate.body':
+    'Missions cannot be suggested yet. A parent needs to finish the age step below first. MissionKid never guesses an age group.',
 } as const;
 
 export type MessageKey = keyof typeof englishMessages;
@@ -120,6 +136,22 @@ export const INTERFACE_MESSAGES: CompleteInterfaceMessages = {
     'setup.complete.language': 'Sprache',
     'setup.complete.age': 'Altersgruppe',
     'setup.action.edit': 'Einrichtung ändern',
+    'view.discovery.title': 'Welche Art von Mission?',
+    'discovery.action.open': 'Mission finden',
+    'discovery.context.age': 'Altersgruppe',
+    'discovery.categories.legend': 'Missionskategorie',
+    'discovery.categories.help':
+      'Wähle eine aus. Du kannst sie jederzeit ändern, und noch ist nichts entschieden.',
+    'discovery.category.movement': 'Bewegung',
+    'discovery.category.creativity': 'Kreativität',
+    'discovery.category.helpingAtHome': 'Zu Hause helfen',
+    'discovery.category.learning': 'Lernen',
+    'discovery.category.calm': 'Ruhe',
+    'discovery.selected': 'Ausgewählt',
+    'discovery.cycle.status':
+      'Missionsvorschläge für diese Missionskategorie erscheinen hier.',
+    'discovery.gate.body':
+      'Es können noch keine Missionen vorgeschlagen werden. Ein Erwachsener muss zuerst den Altersschritt unten abschließen. MissionKid errät niemals eine Altersgruppe.',
   },
   ru: {
     "recovery.pending": "Подождите. Это действие ещё не подтверждено.",
@@ -174,6 +206,22 @@ export const INTERFACE_MESSAGES: CompleteInterfaceMessages = {
     'setup.complete.language': 'Язык',
     'setup.complete.age': 'Возрастная группа',
     'setup.action.edit': 'Изменить настройку',
+    'view.discovery.title': 'Какая будет миссия?',
+    'discovery.action.open': 'Найти миссию',
+    'discovery.context.age': 'Возрастная группа',
+    'discovery.categories.legend': 'Категория миссии',
+    'discovery.categories.help':
+      'Выбери одну. Её можно поменять в любой момент, и пока ничего не решено.',
+    'discovery.category.movement': 'Движение',
+    'discovery.category.creativity': 'Творчество',
+    'discovery.category.helpingAtHome': 'Помощь по дому',
+    'discovery.category.learning': 'Обучение',
+    'discovery.category.calm': 'Спокойствие',
+    'discovery.selected': 'Выбрано',
+    'discovery.cycle.status':
+      'Предложения миссий для этой категории появятся здесь.',
+    'discovery.gate.body':
+      'Пока миссии предложить нельзя. Сначала взрослому нужно завершить шаг с возрастом ниже. MissionKid никогда не угадывает возрастную группу.',
   },
 };
 
