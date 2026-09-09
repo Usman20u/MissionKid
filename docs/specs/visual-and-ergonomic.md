@@ -196,6 +196,8 @@ Each option must make the approved comparison information easy to scan:
 
 All three options must receive equal visual weight. A stable reading order may be used, but order must not look like rank or recommendation. Information should follow the same hierarchy across all three so the family can compare without dense scanning.
 
+Where Mission cards use the controlled Mission Mini-World scene system, all three scenes are peers. Scene richness, hero-object emphasis, color, or composition must not make one suggestion look recommended, better, easier, or more valuable, and each card's required text content remains complete and comparable regardless of its scene.
+
 `Another set`, when available under `F002`, remains visually secondary to choosing one of the current Missions. It must not resemble refresh gambling, autoplay, swiping, or endless discovery. When another complete set is unavailable, the current three choices remain visually usable; absence of another set is a bounded state, not child failure.
 
 During a replacement request, the current valid set remains the meaningful content. Loading presentation must not partially replace it, fabricate a fourth option, or imply an infinite supply.
@@ -387,7 +389,7 @@ No final palette or exact color token is selected here.
 
 ## Icons and imagery
 
-Icons and illustrations may support comprehension but remain secondary to text.
+Icons and illustrations support comprehension. Approved text remains authoritative for the Mission instruction, Mission Category, duration, required adult involvement, safety guidance, consequences, and every other critical meaning, and imagery must never be the only carrier of that meaning. A Mission scene may be visually prominent under the controlled Mission Mini-World scene system below; prominence never transfers authority from text to image.
 
 - Labels remain authoritative.
 - Decoration must not obscure Mission instructions, actions, progress, adult requirements, or safety guidance.
@@ -395,6 +397,62 @@ Icons and illustrations may support comprehension but remain secondary to text.
 - Unsafe behavior must not be made attractive or aspirational.
 - Decorative content must not compete with the primary action or create a false content feed.
 - No visual pattern may invite or require child photo or video upload.
+
+## Controlled Mission Mini-World scene system
+
+Mission Discovery may present each Mission through a controlled scene: one small, distinctive mini-world or diorama that shows what the Mission involves. A Mission scene is a prominent emotional and comprehension entry point into the Mission card rather than background decoration.
+
+This authorizes one bounded scene system for child-facing Mission presentation. It does not authorize an open illustration library, and it changes no `F001`–`F004` behavior, Mission eligibility rule, or Mission content requirement.
+
+### Scene authority limits
+
+- Approved localized text remains authoritative for the exact Mission instruction.
+- Required adult involvement and applicable safety guidance remain visible as text wherever the owning specifications require them, and are never replaced, softened, delayed, or displaced by a scene.
+- A scene must never be the only carrier of critical meaning, including Mission identity, Mission Category, duration, adult involvement, safety guidance, state, or availability.
+- A scene must not depict, imply, or make attractive an action the Mission does not instruct, and must never make an excluded or unsafe action appealing.
+- Scenes avoid stereotypes involving gender, culture, race, ability, housing, resources, or family structure, and remain globally recognizable rather than tied to one country, climate, or household type.
+- A scene must not invite or imply child photo or video capture and must not depict a recognizable real child.
+
+### Visual direction
+
+Child-facing Mission scenes should feel premium, warm, and child-safe: semi-realistic or stylized three-dimensional or two-and-a-half-dimensional form, a miniature-diorama sense of place, recognizable real-world subjects, depth, light, material, atmosphere, and tactile form.
+
+Excluded: generic flat iconography, generic abstract banners, a stock-illustration look, cheap cartoon styling, casino or neon gaming energy, visual noise, photorealistic or uncanny depictions of children, and realism heavy enough to reduce warmth.
+
+Parent-oriented utility, confirmation, and recovery surfaces remain calmer and more restrained and do not adopt child-facing scene richness.
+
+### Three-layer color and material model
+
+A Mission scene separates three layers so it reads as a place rather than a single-hue symbol:
+
+1. **Category atmosphere.** Mission Category color lights the scene's environment and air and establishes category continuity. It must not recolor every object into one hue, and it never replaces the visible category label.
+2. **Object-local color and material.** Recognizable objects keep their own restrained local color and material identity at controlled low-to-medium saturation.
+3. **Hero-object emphasis.** At most one focal subject per scene may carry stronger emphasis through saturation, light, depth, placement, or material contrast.
+
+Hero-object emphasis describes the Mission's own action. It must never indicate rank, recommendation, popularity, difficulty, quality, or that one suggestion is better than another, and it must not vary by anything other than that Mission's content.
+
+### Scene composition
+
+Scenes should share one consistent grammar: a foreground, midground, and background; one readable focal subject; soft directional key light with restrained ambient fill; contact shadows and believable grounding; controlled perspective; and a matte, soft-material feeling.
+
+A scene should read as a small world or miniature place rather than a decorative icon banner. Composition must not create a false content feed, an autoplaying surface, or an attention trap.
+
+### Accessibility and performance
+
+- A decorative Mission scene is exposed to assistive technology as decoration; the Mission card's meaning comes from its text.
+- No Mission meaning, state, safety requirement, adult requirement, or availability may depend on a scene rendering, loading, or being perceived.
+- Scenes must not create color-only meaning, clip or truncate critical text, or reduce touch-target size, contrast, visible focus, keyboard order, or larger-text behavior.
+- Scenes remain mobile-first and must not degrade responsive behavior in English, German, or Russian, including where a longer translation grows a card.
+- Scene motion follows the motion rules: no continuous attention animation, no autoplay attention capture, and reduced-motion preferences respected.
+- Scenes must remain performant on ordinary mobile devices and must not introduce heavy runtime rendering.
+
+### Implementation neutrality
+
+The scene system may be implemented with SVG, CSS, lightweight raster assets, or controlled static rendered imagery, in any combination that satisfies the accessibility, localization, responsive, and performance requirements above.
+
+Any controlled presentation metadata the scene system needs, such as a scene composition keyed by the stable Mission identifier, belongs to the presentation layer. It adds no field to Mission catalog content, no persisted value, and no snapshot data. [Mission Catalog and Safety](mission-catalog-and-safety.md) keeps the hero object or focal action as a human-reviewed content and presentation handoff; if a genuine machine-readable requirement ever arises, the owning technical specifications introduce it.
+
+No specific rendering technology is a permanent product requirement, and a runtime three-dimensional engine is not mandated. Runtime AI-generated imagery is not permitted: Mission scenes are controlled, reviewed, bundled product content in the same sense as Mission text. Asset weight remains subject to the Technical Architecture's minimal static-application constraints, and any new dependency still requires a documented need and the privacy, accessibility, size, and maintenance review that specification requires.
 
 ## Motion and feedback
 
@@ -465,7 +523,7 @@ The MVP should use a small coherent family of presentation patterns for:
 - loading and unavailable states; and
 - error and recovery surfaces.
 
-Consistency means the same kind of information has recognizable hierarchy and consequence across views. It does not authorize a component library, token catalog, illustration system, or full design system.
+Consistency means the same kind of information has recognizable hierarchy and consequence across views. It does not authorize a component library, token catalog, general illustration system, or full design system. The bounded Mission Mini-World scene system is authorized separately above and is not a general illustration system.
 
 ## Anti-manipulation visual rules
 
@@ -543,6 +601,9 @@ If presentation would require new behavior, a new state, a new data fact, a chan
 18. No visual pattern introduces an infinite feed, autoplay, fake scarcity, streak pressure, social proof, public comparison, random reward, urgent countdown manipulation, or pressure to continue.
 19. No presentation rule changes the `F001`–`F004` behavior, Technical Specification mechanics, or Mission Catalog and Safety eligibility rules.
 20. An ergonomic review results in one to three targeted improvements rather than a generic redesign.
+21. Child-facing Mission scenes, where used, remain one bounded controlled system in which approved text stays authoritative, required adult-involvement and safety guidance stay visible as text, no critical meaning depends on the scene, and no scene depicts or makes attractive an action the Mission does not instruct.
+22. Scene category atmosphere, object-local color, and single hero-object emphasis describe the Mission action only and never convey rank, recommendation, popularity, or relative value among the three equally weighted suggestions.
+23. Mission scenes preserve the accessibility baseline, reduced-motion behavior, localization resilience, and mobile performance requirements without mandating a specific rendering technology, a runtime three-dimensional engine, or runtime AI-generated imagery.
 
 ## Explicit non-goals
 
@@ -551,7 +612,7 @@ This specification does not define or authorize:
 - an exact final palette or color tokens;
 - an exact final font family or typography tokens;
 - a logo or brand identity;
-- an illustration library;
+- an open or general-purpose illustration library, a broad decorative illustration system, arbitrary marketing artwork, or asset-heavy illustration bloat; the bounded Mission Mini-World scene system above, including its scene grammar, reusable scene primitives, Mission-specific compositions, and controlled presentation metadata, is authorized and is not such a library;
 - a complete design system;
 - detailed design tokens;
 - a component-library choice;

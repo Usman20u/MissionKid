@@ -1,7 +1,7 @@
 # MissionKid Implementation Plan 02 — Mission Discovery and Selection (F002)
 
 **Date:** 2026-09-07
-**Status:** Approved — implementation authorized for Plan 02 scope
+**Status:** Approved — Plan 02 scope; affected implementation paused by a material specification change (see Change control)
 
 ## Authorization basis
 
@@ -17,6 +17,56 @@ The durable specification-completion evidence is [`plans/completed/2026-08-17-mi
 The approved application foundation and `F001` are delivered by the completed [`plans/completed/2026-09-03-implementation-foundation-f001.md`](../completed/2026-09-03-implementation-foundation-f001.md). No owning specification changed during that work, so the `SPEC COMPLETE` basis remains valid and the material-change revalidation rule in `AGENTS.md` is not triggered.
 
 Once this approved plan is committed and remains the sole active plan, it authorizes product code only within the exact Plan 02 scope below. It does not authorize any `F003` or `F004` behavior.
+
+## Change control — material specification change (2026-09-09)
+
+A human product review found that the reviewed Mission catalog is safe, complete, and correctly localized, but that part of its content quality does not meet the intended MissionKid experience. The owning content and presentation specifications were updated on 2026-09-09:
+
+- [`docs/specs/mission-catalog-and-safety.md`](../../docs/specs/mission-catalog-and-safety.md) adds **Mission Experience Principles**, which govern Mission purpose, concrete action, final beat, meaningful outcome, single hero object or focal action, observable completion, title framing, per-category experience quality, and age-band voice.
+- [`docs/specs/visual-and-ergonomic.md`](../../docs/specs/visual-and-ergonomic.md) authorizes the bounded **Controlled Mission Mini-World scene system**, resolves the previous illustration-library non-goal conflict, and keeps approved text authoritative.
+- [`docs/specs/functions/002-mission-discovery-and-selection.md`](../../docs/specs/functions/002-mission-discovery-and-selection.md) records the minimal alignment for Mission card presentation without changing `F002` behavior.
+
+This is a material change to approved specifications affecting Mission content quality and Mission card presentation, so the `AGENTS.md` revalidation rule applies.
+
+### Historical record
+
+Tasks 1 to 4 were completed against the specifications valid at that time and remain truthfully complete. This change does not retract them.
+
+The Task 2 catalog committed in `5e65b37` remains valid, reviewed, safe, correctly localized data that satisfies every eligibility and coverage rule in force when it was published. Its content quality is now additionally subject to the new Mission Experience Principles, which is a republication and refinement review rather than a defect in the committed work.
+
+### Paused work
+
+- Task 5 implementation is paused. The current uncommitted Task 5 working-tree refinement must not be committed until the revalidation below is recorded.
+- Task 6 must not begin before the gate is cleared, because bounded replacement operates over the same catalog and suggestion presentation.
+- Tasks 7 to 15 remain unstarted and unaffected in scope, but they follow Task 6.
+- No Mission identifier, Mission prose, catalog content version, or catalog schema changes as part of this pause.
+
+### Required revalidation before affected implementation resumes
+
+1. Revalidate the affected specification stages for the changed content and presentation authority.
+2. Re-run User Story / traceability validation for the affected `F002` stories.
+3. Re-run the Full Specification Audit.
+4. Record renewed authorization for the affected work in this plan.
+
+### Mission content republication gate
+
+Replacement or refined Mission content may ship only after all of the following, in order:
+
+1. select and refine candidate Missions;
+2. review each candidate against the Mission Experience Principles;
+3. confirm exact age-band suitability per candidate rather than assuming a shared wording;
+4. write the approved English content;
+5. produce meaning-equivalent German and Russian content;
+6. complete the safety and adult-involvement review;
+7. record provenance and review metadata;
+8. bump the catalog content version;
+9. pass Task 1 record validation;
+10. pass whole-catalog publication validation;
+11. confirm coverage for all 15 age band x Mission Category cells across the three language contexts;
+12. complete the manual content review; and
+13. only then update Mission scenes for the final approved Mission identifiers and content.
+
+No step of this gate is authorized by this change-control note alone; each remains ordinary Plan 02 Task 2 and Task 3 work under renewed authorization.
 
 ## Objective
 

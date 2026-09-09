@@ -104,6 +104,80 @@ A Mission instruction must:
 
 Instructions must not request a photo, video, audio recording, location, wearable signal, public post, or other completion evidence. They must not introduce social sharing or external completion verification.
 
+## Mission Experience Principles
+
+Catalog eligibility establishes that a Mission is safe, complete, and age-suitable. These principles establish whether it is worth choosing. A Mission that is technically eligible but reads as a cautious exercise, a disguised chore, a school test, adult reflection language rewritten for a child, or an activity whose final instruction immediately undoes what the child produced does not meet the intended content quality.
+
+Every production Mission should satisfy these principles unless a documented safety, materials, environment, accessibility, or age-suitability reason justifies an exception. That justification is recorded with the content review rather than left implicit.
+
+These are content-quality rules for human review. They introduce no schema field, no runtime behavior, no engagement mechanic, no product feature, and no Mission entry, and they set no catalog total.
+
+### Role or purpose
+
+The child should understand why the Mission is worth doing. A Mission may give a simple role such as explorer, helper, builder, detective, listener, creator, or caretaker.
+
+A role exists to give purpose, not to create narrative complexity. A mascot, story world, recurring character, or fantasy framing must not be required for a Mission to work, and a role must never make an excluded or unsafe action attractive.
+
+### Concrete real-world action
+
+A Mission must result in real physical, creative, observational, helping, learning, or calming activity away from passive screen use. Where a concrete physical action expresses the same developmental value as an abstract instruction, prefer the concrete action.
+
+### Satisfying final beat
+
+The final instruction should normally be the most satisfying moment of the Mission, such as revealing, showing, noticing, completing, telling, comparing, admiring, delivering, discovering, using, or sharing safely within the family.
+
+Immediate cleanup, dismantling, or undoing what the child produced must not be the emotional payoff. Where returning materials or tidying is appropriate, it follows the satisfying completion beat and must not erase the sense of achievement. This does not weaken the requirement for a clear observable end condition; it governs which moment that end condition lands on.
+
+### A meaningful outcome
+
+Where naturally applicable, a Mission should leave something behind: an arrangement, a drawing, a discovery, a solved grouping, a built object, a helpful result, an observation, a story, a cared-for space or object, a remembered fact, or a shared moment.
+
+This does not require permanent physical output, a keepsake, or a collection for every Mission, and it never introduces completion evidence.
+
+### One hero object or focal action
+
+Each Mission should have one clear focus a reviewer can name, such as a cup, a tower, a pair of shoes, a sheet of paper, a pillow, a basket, footprints, a shelf, a table, or a sound source.
+
+A single focus keeps the instruction concrete, supports child comprehension, and gives presentation work an unambiguous subject.
+
+This is a human-reviewed content and presentation handoff. It introduces no machine-readable hero-object field, no catalog schema change, and no persisted value. If a future approved requirement genuinely needs machine-readable presentation metadata, the owning technical specifications introduce it rather than this section.
+
+### Observable completion
+
+Wherever natural, the child should be able to tell that the Mission is finished from a simple observable condition, such as finding three things, building five, matching every pair, completing one route, telling one short story, or placing one item at each setting.
+
+Counting must not be forced where it harms the activity, and an observable condition must never become a performance target, score, or comparison.
+
+### Titles that promise an activity
+
+A title should read as an activity or event rather than a worksheet heading. Prefer an action, a discovery, a role, a transformation, or a challenge the child sets against the task itself rather than against another child.
+
+Test framing such as testing yourself, proving, scoring, correct-and-incorrect labelling, or performance ranking must not be used. This adds to the existing title rules and relaxes none of them; competitive, punitive, scarcity, streak, and prize framing remain excluded.
+
+### Category experience quality
+
+These expectations apply in addition to the category safety boundaries defined below, which always take precedence.
+
+| Mission Category | Intended experience quality |
+| --- | --- |
+| Movement | The category should primarily feel physically active. Safety must not turn it into a set of mostly slow or still exercises; slowness belongs where it is the actual Mission mechanic, not as a default tone. |
+| Creativity | The Mission should produce imagining, construction, drawing, storytelling, or transformation, and should normally reach a visible or expressive final beat. |
+| Helping at Home | The Mission should create agency, responsibility, care, and contribution. It must not read as a chore renamed with friendlier wording; prefer a clear role, purpose, recipient, or result over generic tidying. |
+| Learning | The Mission should feel like discovery, investigation, experimentation, pattern-finding, or curiosity. Worksheet and test language does not belong, and ordinary mistakes or forgetting must not read as failure. |
+| Calm | Calm should usually emerge from a concrete sensory or physical task rather than from an instruction to be calm. Adult mindfulness language rewritten for children does not belong; the experience stays warm, grounded, and age-appropriate. |
+
+### Age-band voice
+
+The approved age bands remain `4–6`, `7–8`, and `9–10`. A Mission may support several bands, but review must consider whether the actual wording and action genuinely fit every approved band rather than only whether the action is safe for each.
+
+Content for `4–6` should be especially concrete, short, physical, immediately understandable, and low in abstraction. One wording must not be assumed equally suitable for `4–6` and `9–10` merely because the action is safe for both. Where one wording cannot serve every approved band, the correct outcome is a narrower age approval or separate reviewed content, never a broadened approval.
+
+### Safety precedence
+
+These experience principles never override the child-safety exclusions, adult-involvement requirements, privacy rules, materials and environment rules, localization requirements, global neutrality, the absence of any purchase requirement, the exclusion of stranger contact and identifying data, or the reward and engagement safety rules.
+
+A Mission that is more exciting but less safe is worse, not better. Where an experience principle and a safety rule conflict, the safety rule applies and the Mission is either written to satisfy it or excluded.
+
 ## Guidance duration
 
 Duration is calm planning guidance, not a performance target, score, deadline, or claim about how fast a child should work.
@@ -276,6 +350,9 @@ Catalog planning should provide further eligible Missions in complete groups whe
 16. Every supported age-band × Mission Category context contains at least three eligible Missions before that context can satisfy initial discovery.
 17. Removing or safety-withdrawing content never substitutes a different Mission into an existing session or rewrites completed History, and a safety-withdrawn unfinished Mission cannot resume as approved content.
 18. The specification introduces no actual Mission entry, runtime filtering algorithm, storage change, product feature, or implementation claim.
+19. Every production Mission has an understandable purpose or role, one concrete real-world action, and a final beat that lands on completion rather than on undoing what the child produced; any exception records its documented safety, materials, environment, accessibility, or age-suitability reason.
+20. Every production Mission has one nameable hero object or focal action and, where natural, a simple observable completion condition, without introducing a catalog schema field, machine-readable presentation metadata, forced counting that harms the activity, or completion evidence.
+21. Titles read as activities rather than worksheet headings, each Mission Category meets its intended experience quality alongside its safety boundary, `4–6` wording is concrete and low in abstraction, and no experience principle weakens a safety, privacy, adult-involvement, localization, or engagement rule.
 
 ## Explicit non-goals
 
@@ -283,6 +360,7 @@ This specification does not introduce or define:
 
 - the actual MVP Mission catalog or example Mission entries;
 - runtime AI-generated or AI-rewritten Missions;
+- a machine-readable hero-object, focal-action, scene, or other presentation field on Mission content;
 - community-created Missions, child-generated public content, or a public Mission marketplace;
 - social voting, ratings, sharing, public profiles, or public leaderboards;
 - school or classroom content systems;

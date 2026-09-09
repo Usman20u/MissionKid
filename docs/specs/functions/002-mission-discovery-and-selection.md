@@ -99,6 +99,8 @@ Each Mission card must communicate:
 
 The content should be short, understandable, age-appropriate, and usable on mobile. It must give the family enough information to judge the activity before choosing it without adding unnecessary visual or interaction noise.
 
+A Mission card may present the Mission through a prominent controlled scene as authorized by the [Visual & Ergonomic Specification](../visual-and-ergonomic.md). A scene supports comprehension and does not replace the localized content above: the localized title, localized short instruction, Mission Category, expected duration, and any required localized safety or adult-involvement note remain present and readable before the family chooses. The three Missions remain equal peers, and no scene, emphasis, or visual richness may present one of them as recommended, ranked, more valuable, or easier. This adds no discovery behavior; presentation detail remains owned by the Visual & Ergonomic Specification.
+
 ## Requesting another set
 
 The family may request another set when the current discovery cycle has at least three eligible missions that have not already been shown in that cycle.
