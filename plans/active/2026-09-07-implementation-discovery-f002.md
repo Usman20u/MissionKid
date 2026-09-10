@@ -81,6 +81,160 @@ On that basis the Mission content republication gate above is authorized and may
 
 Task 5 implementation remains paused until republication completes and its Mission identifiers and content are final. Task 6 remains blocked behind the same gate. Task 7 and the later tasks remain unstarted and unauthorized.
 
+### Frozen MVP publication candidate set (2026-09-10)
+
+The Mission candidate phase is complete and the MVP publication candidate direction is frozen at **54 Missions**. Candidate generation is closed. Reopening is allowed only for a demonstrated Step 4 or later content, safety or reliability defect that cannot be resolved inside the frozen concept.
+
+`54`, the category composition below, and the six-per-context coverage result are an **MVP publication and release-quality decision**, not a catalog invariant. The structural publication minimum of three eligible Missions per context and the Task 1 and Task 3 validators are unchanged. No product behavior, schema, persistence or localization mechanism changes.
+
+Category composition: Movement 12, Creativity 12, Helping at Home 9, Learning 11, Calm 10.
+
+References below are editorial candidate identifiers used to carry this decision into Step 4. They are not Mission identifiers and never become production content. `AN` marks `Adult nearby required` and `AP` marks `Adult participation required`; every other entry is `No special adult assistance required`. Origin records which current production record a Mission continues: `KEEP` ships unchanged, `REFINE` reworks that record, `REPLACEMENT` retires it, and `NEW` has no predecessor.
+
+#### Movement — 12
+
+| Ref | Working title | Age bands | Adult | Origin |
+| --- | --- | --- | --- | --- |
+| MOV-C01 | Bear, Crab, Bird | 4–6, 7–8 | — | REFINE `movement-02` |
+| MOV-C02 | Giant Steps and Mouse Steps | 4–6, 7–8 | — | NEW |
+| MOV-C03 | Sleeping Giant | 4–6, 7–8 | — | REFINE `movement-06` |
+| MOV-C04 | Ten Jumps High | 4–6, 7–8 | — | REPLACEMENT `movement-01` |
+| MOV-C05 | The Cushion Course | 4–6, 7–8 | — | NEW |
+| MOV-C08 | Statue Shapes | 4–6, 7–8 | — | REFINE `movement-05` |
+| MOV-C10 | The Book Balance | 7–8, 9–10 | — | NEW |
+| MOV-C11 | The Exact Steps | 9–10 | — | NEW |
+| MOV-C14 | The Balance Sequence | 9–10 | — | NEW |
+| MOV-C16 | The Low Line | 9–10 | — | NEW |
+| MOV-N1 | Two Hands, Two Jobs | 9–10 | — | NEW |
+| MOV-N2 | The Slow Descent | 9–10 | — | NEW |
+
+#### Creativity — 12
+
+| Ref | Working title | Age bands | Adult | Origin |
+| --- | --- | --- | --- | --- |
+| CRE-C01 | The Tiny World | 4–6, 7–8 | — | REFINE `creativity-04` |
+| CRE-C02 | Sock Friend | 4–6, 7–8 | — | REFINE `creativity-05` |
+| CRE-C03 | Blanket Den | 4–6, 7–8 | **AN** | REFINE `creativity-06` |
+| CRE-C04 | Tallest Tower | 4–6, 7–8 | — | REFINE `creativity-02` |
+| CRE-C06 | Invent a Sound | 4–6, 7–8 | — | NEW |
+| CRE-C07 | The Kind Monster | 4–6, 7–8 | — | NEW |
+| CRE-C10 | Four-Panel Comic | 9–10 | — | KEEP `creativity-08` |
+| CRE-C11 | The Sound Map | 7–8, 9–10 | — | REFINE `creativity-01` |
+| CRE-C12 | The Paper Bridge | 9–10 | — | NEW |
+| CRE-C13 | The Instruction Card | 9–10 | — | NEW |
+| CRE-C14 | The Ordinary Object Museum | 7–8, 9–10 | — | NEW |
+| CRE-N1 | The Code Maker | 9–10 | — | NEW |
+
+#### Helping at Home — 9
+
+| Ref | Working title | Age bands | Adult | Origin |
+| --- | --- | --- | --- | --- |
+| HELP-C01 | Special Delivery | 4–6, 7–8 | — | REFINE `helping-06` |
+| HELP-C02 | Table Captain | 4–6, 7–8, 9–10 | **AP** | REFINE `helping-03` |
+| HELP-C05 | Napkin Fold Five | 4–6, 7–8 | — | NEW |
+| HELP-C09 | Ready for Tomorrow | 7–8, 9–10 | — | REFINE `helping-07` |
+| HELP-C11 | The Table Surprise | 4–6, 7–8, 9–10 | — | NEW |
+| HELP-C13 | The Helper's Label | 7–8, 9–10 | — | NEW |
+| HELP-C15 | The Water Round | 4–6, 7–8, 9–10 | **AP** | NEW |
+| HELP-C17 | The Ready Corner | 7–8, 9–10 | — | NEW |
+| HELP-N2 | The Lost-and-Found Box | 4–6, 7–8 | — | NEW |
+
+#### Learning — 11
+
+| Ref | Working title | Age bands | Adult | Origin |
+| --- | --- | --- | --- | --- |
+| LEARN-C01 | The Upside-Down Room | 4–6, 7–8 | — | KEEP `learning-05` |
+| LEARN-C02 | Roll It Down | 4–6, 7–8, 9–10 | — | REFINE `learning-04` |
+| LEARN-C03 | Which One Floats? | 4–6, 7–8 | **AP** | NEW |
+| LEARN-C04 | The Sound Through the Table | 4–6, 7–8 | — | NEW |
+| LEARN-C07 | What's Missing? | 4–6, 7–8 | **AP** | REPLACEMENT `learning-01` |
+| LEARN-C08 | How Many Steps? | 4–6, 7–8 | — | REFINE `learning-08` |
+| LEARN-C09 | Near and Far | 7–8, 9–10 | — | REFINE `learning-02` |
+| LEARN-C10 | Which Lands First? | 7–8, 9–10 | — | KEEP `learning-07` |
+| LEARN-C11 | The Disappearing Thumb | 7–8, 9–10 | — | NEW |
+| LEARN-N1 | The Balance Point | 9–10 | — | NEW |
+| LEARN-N2 | The Water Line | 9–10 | **AP** | NEW |
+
+#### Calm — 10
+
+| Ref | Working title | Age bands | Adult | Origin |
+| --- | --- | --- | --- | --- |
+| CALM-C01 | Still Water | 4–6, 7–8, 9–10 | **AN** | KEEP `calm-02` |
+| CALM-C07 | Slow-Motion Walk | 4–6, 7–8, 9–10 | — | REFINE `calm-08` |
+| CALM-C09 | Watch It Change | 7–8, 9–10 | — | KEEP `calm-07` |
+| CALM-C11 | The Heavy Blanket | 4–6, 7–8 | — | NEW |
+| CALM-C13 | Soft Landing | 4–6, 7–8 | — | NEW |
+| CALM-C15 | The Domino Line | 7–8, 9–10 | — | NEW |
+| CALM-C16 | The Quiet Unstack | 7–8, 9–10 | — | NEW |
+| CALM-C19 | The Pencil Spin | 4–6, 7–8 | — | NEW |
+| CALM-N1 | The Sock Snake | 4–6, 7–8 | — | NEW |
+| CALM-N2 | The Tight Roll | 9–10 | — | NEW |
+
+Origin totals: KEEP 5, REFINE 15, REPLACEMENT 2, NEW 32.
+
+#### Adult involvement in the frozen set
+
+Seven Missions require adult involvement: two `Adult nearby required` (CRE-C03, CALM-C01) and five `Adult participation required` (HELP-C02, HELP-C15, LEARN-C03, LEARN-C07, LEARN-N2). The remaining forty-seven require no special adult assistance.
+
+#### Coverage result
+
+| Mission Category | 4–6 | 7–8 | 9–10 |
+| --- | --- | --- | --- |
+| Movement | 6 | 7 | 6 |
+| Creativity | 6 | 8 | 6 |
+| Helping at Home | 6 | 9 | 6 |
+| Learning | 6 | 9 | 6 |
+| Calm | 6 | 9 | 6 |
+
+Every age-band and Mission Category context holds at least six eligible Missions, so initial exactly-three discovery succeeds everywhere and at least three unseen eligible Missions remain, making one complete fresh `Another set` available in all fifteen contexts. Age eligibility was not broadened to reach this result; where a Mission genuinely suited only one or two bands it was narrowed instead.
+
+This supports the `Another set` behavior `F002` already defines. It does not alter Task 6 implementation and does not authorize Task 6, which remains blocked until its normal sequencing gate.
+
+#### Step 4 drafting constraints
+
+Final English drafting must satisfy these constraints. Each was established by content review during the candidate phase.
+
+| Ref | Constraint |
+| --- | --- |
+| HELP-C01 | Service framing; no external reaction; no disguised tidying |
+| HELP-C02 | Adult supplies items safe for the child to carry |
+| HELP-C11 | Scene must differ visibly from Table Captain |
+| HELP-C15 | Completion is cups placed at safe prepared places, not people served; adult controls water amount, safe cups and safe stable placement surfaces |
+| HELP-N2 | Completion is founding, not filling |
+| CRE-C02 | Completion must not require a listener |
+| CRE-C03 | Adult nearby; low, stable, open structure |
+| CRE-C04 | Light unbreakable items only |
+| CRE-C12 | Design, test, adjust; bending is data, not failure |
+| CRE-C13 | Completion must not require another person to perform the card |
+| CRE-N1 | Sharing, not secrecy |
+| LEARN-C02 | Prediction before test; do not promise which object wins — the child predicts and observes |
+| LEARN-C03 | Adult participation; adult-provided and approved safe objects |
+| LEARN-C04 | One stable clean table; gentle fingertip tap; no door, floor or moving furniture; no second person; compare contact against air without promising a specific loudness result |
+| LEARN-N1 | Long, straight, light objects balanced across a flat finger |
+| LEARN-N2 | Adult supplies three safe non-breakable objects that sink on their own; narrow container; same start level each time; nothing held under; no promised result — ask which actually moved the line most. Keep the household setup simple: if final English requires specialized container or object conditions, stop and reopen the Mission rather than hiding complexity in copy |
+| MOV-C04 | Jump in place; no furniture or high-object target |
+| MOV-N1 | No eyes-closed movement |
+| MOV-N2 | Distinguish slowness from CALM-C07 |
+| CALM-C01 | Existing water safety model; adult nearby |
+| CALM-C11 | Never over the head |
+| CALM-C13 | Rolling only, never throwing |
+| CALM-C15 | Use only light safe objects that stand stably before the line is built |
+| CALM-N1 | Contact placement without disturbing the previous sock; no toppling mechanic; keep distinct from the Domino Line |
+| CALM-N2 | Cloth or towel only; the test is whether the roll holds itself; second roll tighter than the first; no sound or special-geometry dependency; keep distinct from HELP-C05 folding |
+
+#### Republication step status
+
+| Step | Status |
+| --- | --- |
+| 1 — Candidate selection and refinement | Complete |
+| 2 — Mission Experience Principles review | Complete |
+| 3 — Age-band suitability, pruning and publication freeze | Complete |
+| 4 — Approved English drafting | Authorized next; not started |
+| 5–13 — Translation, review, provenance, version bump, validation, coverage, manual review, scenes | Not started |
+
+No final English, German or Russian content exists yet. Step 4 may begin only once this freeze record is committed. Task 5 remains paused, Task 6 remains blocked, and Task 7 and the later tasks remain unstarted and unauthorized.
+
+
 ## Objective
 
 Implement `F002 — Mission Discovery and Selection`: the five canonical Mission Categories, the reviewed production Mission catalog, deterministic eligibility and exactly-three suggestion derivation, bounded `Another set` progression, and the deliberate choice that creates exactly one Mission Session in `selected`.
