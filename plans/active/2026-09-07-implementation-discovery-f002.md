@@ -68,6 +68,19 @@ Replacement or refined Mission content may ship only after all of the following,
 
 No step of this gate is authorized by this change-control note alone; each remains ordinary Plan 02 Task 2 and Task 3 work under renewed authorization.
 
+### Renewed authorization (2026-09-09)
+
+The material specification change committed as `a21ef33` has been revalidated against the specification chain at that commit.
+
+- Affected `F002` user-story traceability passes. `P3`, `P4`, and `C1` remain accurate: the principles change which Missions are worth publishing and the scene authority changes how a Mission card presents one, but neither changes discovery behavior or the meaning of any acceptance criterion. No user-story text required amendment.
+- The Full Specification Audit passes. No contradiction exists between the Mission Experience Principles, the Controlled Mission Mini-World scene system, and the existing safety, privacy, accessibility, anti-manipulation, and architecture rules.
+- No `MissionRecord` field, persisted value, snapshot field, Task 1 record-validation change, or Task 3 publication and coverage-validation change is required. Structural validation stays as published; the principles are a human content-review standard.
+- The reviewed catalog `mvp-catalog-2026-09` enters controlled republication under the Mission Experience Principles. It remains historically valid published content.
+
+On that basis the Mission content republication gate above is authorized and may begin.
+
+Task 5 implementation remains paused until republication completes and its Mission identifiers and content are final. Task 6 remains blocked behind the same gate. Task 7 and the later tasks remain unstarted and unauthorized.
+
 ## Objective
 
 Implement `F002 — Mission Discovery and Selection`: the five canonical Mission Categories, the reviewed production Mission catalog, deterministic eligibility and exactly-three suggestion derivation, bounded `Another set` progression, and the deliberate choice that creates exactly one Mission Session in `selected`.
