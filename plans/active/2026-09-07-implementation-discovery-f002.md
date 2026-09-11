@@ -98,7 +98,7 @@ References below are editorial candidate identifiers used to carry this decision
 | MOV-C01 | Bear, Crab, Bird | 4–6, 7–8 | — | REFINE `movement-02` |
 | MOV-C02 | Giant Steps and Mouse Steps | 4–6, 7–8 | — | NEW |
 | MOV-C03 | Sleeping Giant | 4–6, 7–8 | — | REFINE `movement-06` |
-| MOV-C04 | Ten Jumps High | 4–6, 7–8 | — | REPLACEMENT `movement-01` |
+| MOV-C04 | Ten Tall Jumps | 4–6, 7–8 | — | REPLACEMENT `movement-01` |
 | MOV-C05 | The Cushion Course | 4–6, 7–8 | — | NEW |
 | MOV-C08 | Statue Shapes | 4–6, 7–8 | — | REFINE `movement-05` |
 | MOV-C10 | The Book Balance | 7–8, 9–10 | — | NEW |
@@ -199,8 +199,8 @@ These contracts record the approved concept identity of each frozen Mission so S
 | MOV-C01 | Cross the room three times — as a bear on hands and feet, as a crab on their back, then on tiptoe like a bird — then cross once more using whichever way they liked best, faster. | Three crossings plus one repeat of the chosen favourite. | The chosen fourth crossing, done faster. |
 | MOV-C02 | Cross the room in the fewest possible giant stretching strides, counting them, then cross back in the smallest possible mouse steps, counting those too. | Both crossings made and both counts known. | Comparing the two numbers. |
 | MOV-C03 | A giant is asleep on the far side of the room; cross without waking it, freezing completely still each time it stirs. | Three crossings made. | Reaching the far side without waking it. |
-| MOV-C04 | Standing on clear floor, reach both hands as high as possible and jump in place ten times, stretching taller each time. | Ten jumps. | Lying down afterwards and feeling their own heart beating fast. |
-| MOV-C05 | Carry every cushion from one room and lay them flat on the floor as a course — some to crawl over, some to go around, one to sit on at the end — then travel the whole course three times, a different way each time. Nothing is stacked or climbed. | Course laid out and travelled three times, each time differently. | The third run, finishing seated on the last cushion. |
+| MOV-C04 | Standing on clear floor, jump in place ten times, stretching tall with both arms on every jump — the same stretch each time, not a higher jump each time. | Ten jumps. | Lying down afterwards and feeling their own heart beating fast. |
+| MOV-C05 | Lay exactly three cushions or pillows flat on the floor as a course — one to crawl over, one to go around, and the last one to sit on — then travel the course three times, a different way each time. All three stay flat: nothing is stacked, stood on, run on or jumped on. | Course laid out and travelled three times, each time differently. | The third run, finishing seated on the last cushion or pillow. |
 | MOV-C08 | Move freely while counting to five, then freeze in the funniest shape they can and hold it to a count of three; three rounds, a different shape each time. | Three different held shapes. | The funniest of the three shapes. |
 | MOV-C10 | Balance a book flat on their head and walk across the room and back, then add a second book and walk across and back again, putting back any book that slides off and carrying on. | Across and back once with one book, then once with two. | Arriving back from the two-book round with both books still on their head. |
 | MOV-C11 | Choose two points, guess how many of their own steps lie between them, then walk it and arrive on exactly that number by lengthening or shortening their stride. Three different routes. | Three routes walked, each landing on the guessed number. | Arriving exactly on the number. |
@@ -283,6 +283,29 @@ Final English drafting must satisfy these constraints. Each was established by c
 | CALM-N1 | Contact placement without disturbing the previous sock; no toppling mechanic; keep distinct from the Domino Line |
 | CALM-N2 | Cloth or towel only; the test is whether the roll holds itself; second roll tighter than the first; no sound or special-geometry dependency; keep distinct from HELP-C05 folding |
 
+#### Locked Movement English content
+
+Human review approved and locked the English content below for all 12 frozen Movement Missions on 2026-09-11. This is the approved Step 4 English content for Movement: each title, instruction and safety note is final English copy and carries into the later republication steps exactly as written. Creativity, Helping at Home, Learning and Calm English drafting has not started, and no German or Russian content exists.
+
+- Movement English content: locked, 12 / 12.
+- Safety note text: locked as English copy, 12 / 12. The record-level `safetyNoteRequired` value is not finalized for any Movement Mission and remains with the later safety and adult-involvement review; this lock does not decide whether a safety note appears in the product.
+- Production catalog: unchanged. `src/catalogContent.ts` still holds 40 Missions at content version `mvp-catalog-2026-09`, and this lock publishes no production content. The locked English is documentation authority for the later controlled republication steps.
+
+| Ref | Title | Instruction | Safety note |
+| --- | --- | --- | --- |
+| MOV-C01 | Bear, Crab, Bird | Cross the room as a bear, on your hands and feet. Cross back as a crab, with your tummy facing up. Cross again as a bird, on tiptoe. Then choose your favourite of the three and cross one last time that way, a little faster. | Use a clear floor that is not slippery, and slow down before you reach the other side. |
+| MOV-C02 | Giant Steps and Mouse Steps | Cross the room like a giant, taking the biggest steps you can and counting them out loud. Then come back like a mouse, in tiny steps, heel to toe, counting again. Now say both numbers. Which one is bigger? | Use a clear floor that is not slippery, and only take giant steps you can balance on. |
+| MOV-C03 | Sleeping Giant | A giant is asleep on the far side of the room. Creep over so quietly that it does not wake up. Every few steps, pretend the giant stirs: freeze completely still, then creep on. Go over, back and over again. If the giant is still asleep when you arrive the last time, you made it! | Creep slowly on a clear floor and look where you are going. |
+| MOV-C04 | Ten Tall Jumps | Stand in a clear space. Jump ten times on the same spot, stretching up tall with both arms each time. After the tenth jump, lie down on your back. Put a hand on your chest and feel how fast your heart is beating. | Jump away from furniture, on a floor that is not slippery, with nothing hanging low above you. Land softly. |
+| MOV-C05 | The Cushion Course | Lay three cushions or pillows flat on the floor to make a little course. One is for crawling over, one is for going around, and the last one is for sitting on. Go through your course three times, a different way each time, like a cat or a snail. The third time, finish by sitting on the last one. | Use cushions or pillows you are allowed to use, and keep all three flat on the floor. Do not stand, run or jump on them, because they can slide. |
+| MOV-C08 | Statue Shapes | Wiggle, dance or walk around the room while you count to five. On five, freeze in a funny shape and hold it still while you count to three. Do this three times with a new shape each time, and save your funniest shape for the last freeze. | Move on a clear floor with space around you, and choose shapes you can hold without falling over. |
+| MOV-C10 | The Book Balance | Balance a book flat on your head and walk across the room and back. Then add a second book on top and walk across and back once more. If a book slides off, put it back and carry on from that spot. Finish back where you started with both books still on your head. | Use light, thin books and walk slowly on a clear floor. |
+| MOV-C11 | The Exact Steps | Pick two spots in your home, such as a door and a table, and guess how many steps it takes to get between them. Then make your guess come true: walk the route, making your steps longer or shorter so that your last step lands exactly on your number. Do this for three different routes. | Walk on a clear floor. Make your steps longer or shorter, but do not jump or leap. |
+| MOV-C14 | The Balance Sequence | Balance on one foot and do three moves in order: touch the floor with one hand, reach both arms up, then turn slowly to face the next wall. Then do all three on your other foot. If your lifted foot comes down, steady yourself and try that side again. Finish the second side with your foot still in the air. | Use a clear space away from furniture, on a floor that is not slippery. You can put your foot down at any moment. |
+| MOV-C16 | The Low Line | Stand up straight and imagine an invisible line across the room at your waist. Then get low and cross without your head going above the line. Do three crossings, a different low way each time: crouching, crawling, or a way you invent. After the third, you have found three ways to stay under the line. | Choose a clear, open route across the room before you start, and move slowly. |
+| MOV-N1 | Two Hands, Two Jobs | Stand still with a soft object, like a rolled-up sock, in each hand. Move one hand in slow circles while the other goes straight up and down, and count to twenty. Stop, swap jobs, and count to twenty again. For the last round, count to twenty once more and switch jobs at ten without either hand stopping. | Stand with space around you so your arms do not bump into anything. |
+| MOV-N2 | The Slow Descent | Gravity wants you to drop — do not let it. From standing, lower yourself all the way to lying flat on the floor, then rise all the way back up. No knee, hand or elbow should thump down on the way. Then do it again, even slower and quieter than the first time. | Use a clear spot with room to lie down, and stop whenever you want. |
+
 #### Republication step status
 
 | Step | Status |
@@ -290,10 +313,22 @@ Final English drafting must satisfy these constraints. Each was established by c
 | 1 — Candidate selection and refinement | Complete |
 | 2 — Mission Experience Principles review | Complete |
 | 3 — Age-band suitability, pruning and publication freeze | Complete |
-| 4 — Approved English drafting | Authorized next; not started |
-| 5–13 — Translation, review, provenance, version bump, validation, coverage, manual review, scenes | Not started |
+| 4 — Approved English drafting | In progress |
+| 5 — German and Russian content | Not started |
+| 6 — Safety and adult-involvement review | Not started |
+| 7–13 — Provenance, version bump, validation, coverage, manual review, scenes | Not started |
 
-No final English, German or Russian content exists yet. Step 4 may begin only once this freeze record is committed. Task 5 remains paused, Task 6 remains blocked, and Task 7 and the later tasks remain unstarted and unauthorized.
+Step 4 progress by Mission Category:
+
+| Mission Category | English content |
+| --- | --- |
+| Movement | Locked, 12 / 12 |
+| Creativity | Not started |
+| Helping at Home | Not started |
+| Learning | Not started |
+| Calm | Not started |
+
+Approved English content exists only for Movement. No German or Russian content exists yet. Task 5 remains paused, Task 6 remains blocked, and Task 7 and the later tasks remain unstarted and unauthorized.
 
 
 ## Objective
