@@ -121,7 +121,7 @@ References below are editorial candidate identifiers used to carry this decision
 | CRE-C10 | Four-Panel Comic | 9–10 | — | KEEP `creativity-08` |
 | CRE-C11 | The Sound Map | 7–8, 9–10 | — | REFINE `creativity-01` |
 | CRE-C12 | The Paper Bridge | 9–10 | — | NEW |
-| CRE-C13 | The Instruction Card | 9–10 | — | NEW |
+| CRE-C13 | The Skill Guide | 9–10 | — | NEW |
 | CRE-C14 | The Ordinary Object Museum | 7–8, 9–10 | — | NEW |
 | CRE-N1 | The Code Maker | 9–10 | — | NEW |
 
@@ -211,15 +211,15 @@ These contracts record the approved concept identity of each frozen Mission so S
 | CRE-C01 | Build a home on the floor for one small toy that has a door, a bed and a path to the door; the toy then moves in and the world stays up. | All three named features built and the toy moved in. | The toy taking up residence in the world they built. |
 | CRE-C02 | Put a clean sock on one hand as a puppet, give it a name and a voice, then let the puppet say one kind thing out loud — to someone at home if they are nearby, otherwise to the child. | Puppet named, given a voice, and one kind thing said aloud. | Hearing the puppet say the kind thing in its own voice. |
 | CRE-C03 | Spread one light blanket over a low chair to make a small den with one side left open, bring three things inside that make it theirs, and stay in it for one whole song or story. | Den built, three things inside, the song or story finished. | Being inside their own place for the whole of it. |
-| CRE-C04 | Build the tallest tower they can from light unbreakable things, measure its height in hands, then knock it down on purpose. | Tower standing on its own and its height measured. | The deliberate demolition. |
-| CRE-C06 | Make a sound nobody has heard using two safe objects, and practise until it comes out the same three times in a row. | The same invented sound produced three times in a row. | Their own invented sound coming out just the same for the third time in a row. |
+| CRE-C04 | On the floor, build a tower from light unbreakable things only as tall as they can reach without climbing; once it stands on its own, measure its height by placing one hand above the other and counting hands. | Tower standing on its own and its height measured in hands. | Standing back to admire the finished tower at its measured height. |
+| CRE-C06 | Use two safe ordinary objects to invent a sound of their own, and practise until it comes out the same three times in a row. | The same invented sound produced three times in a row. | Their own invented sound coming out just the same for the third time in a row. |
 | CRE-C07 | Draw a monster that is not scary at all and give it one silly job it does around the house. | Drawing finished and the job named. | Looking at the finished monster and saying its silly job out loud. |
 | CRE-C10 | Draw a four-panel comic in which a character solves one small everyday problem, one speech bubble per panel. | Four panels, each with a drawing and a speech bubble. | Reading the comic out loud. |
 | CRE-C11 | Sit in one spot and listen, then draw a map with themselves in the middle and each sound they heard placed where it came from, near or far, with a small picture for each. | Map drawn with every heard sound placed and pictured. | Seeing every sound they heard laid out around themselves on the finished map. |
-| CRE-C12 | Set two books a hand's width apart and, using one sheet of paper and nothing to stick it with, build a bridge between them and test it with a small light object; if it bends, change the shape of the paper and test again, until three different shapes have been designed and tested. | Three different paper shapes designed and tested. | Naming which of their three bridges was strongest. |
-| CRE-C13 | Think of one small thing they can do that someone else at home cannot, and write or draw every step of it in order on one sheet. | Every step of the chosen thing written or drawn on the card, in order. | Looking at the finished card that sets out, step by step, something they know how to do. |
+| CRE-C12 | Set two books a hand's width apart and, using one sheet of paper and nothing to stick it with, build a bridge between them and test it with a small light object; if it bends, change the shape of the paper and test again, until three different shapes have been designed and tested. | Three different paper shapes designed and tested. | Comparing how all three shapes behaved in the test. |
+| CRE-C13 | Choose one small skill they know well and design a one-page guide to it, with every step numbered in order and shown as a drawing or a few words. | The whole chosen skill set out step by step, in order, on the one-page guide. | Looking at the finished guide that sets out, step by step, something they know how to do. |
 | CRE-C14 | Choose five ordinary household things, arrange them in a line as a museum display, and give each a small written or drawn label with an interesting name and one invented fact. | Five exhibits arranged and labelled. | Walking along the finished display as the museum's first visitor, reading each label. |
-| CRE-N1 | Invent a way of writing — a symbol for each letter, or a rule that changes them — write one short real message in it, and make a key on a second sheet so someone at home can work it out; leave both together. | Message and key both finished and set together. | The two sheets side by side: a way of writing that did not exist before, with the means to read it. |
+| CRE-N1 | Invent a way of writing — a symbol for each letter, or a rule that changes them — write one short, friendly message in it, and make a key on a second sheet that explains how the writing works; set the message and the key side by side. | Message and key both finished and set together. | The two sheets side by side: their own way of writing, with the key needed to read it. |
 | HELP-C01 | Find three things that belong to other people in the home and are not where they live, and carry each one to the place that person keeps it. | All three returned to their places. | Standing where they can see what they put right, and taking a bow. |
 | HELP-C02 | An adult hands over the items that are safe to carry; the child sets every place at the table, then announces to the household that the table is ready. | Every place set and the announcement made. | Announcing the table ready to everyone. |
 | HELP-C05 | Fold five napkins or cloths corner to corner into triangles and build them into one neat stack. | Five folded and stacked. | Showing the finished stack. |
@@ -285,7 +285,7 @@ Final English drafting must satisfy these constraints. Each was established by c
 
 #### Locked Movement English content
 
-Human review approved and locked the English content below for all 12 frozen Movement Missions on 2026-09-11. This is the approved Step 4 English content for Movement: each title, instruction and safety note is final English copy and carries into the later republication steps exactly as written. Creativity, Helping at Home, Learning and Calm English drafting has not started, and no German or Russian content exists.
+Human review approved and locked the English content below for all 12 frozen Movement Missions on 2026-09-11. This is the approved Step 4 English content for Movement: each title, instruction and safety note is final English copy and carries into the later republication steps exactly as written. At the time of this Movement lock, Creativity, Helping at Home, Learning and Calm English drafting had not started, and no German or Russian content existed.
 
 - Movement English content: locked, 12 / 12.
 - Safety note text: locked as English copy, 12 / 12. The record-level `safetyNoteRequired` value is not finalized for any Movement Mission and remains with the later safety and adult-involvement review; this lock does not decide whether a safety note appears in the product.
@@ -306,6 +306,30 @@ Human review approved and locked the English content below for all 12 frozen Mov
 | MOV-N1 | Two Hands, Two Jobs | Stand still with a soft object, like a rolled-up sock, in each hand. Move one hand in slow circles while the other goes straight up and down, and count to twenty. Stop, swap jobs, and count to twenty again. For the last round, count to twenty once more and switch jobs at ten without either hand stopping. | Stand with space around you so your arms do not bump into anything. |
 | MOV-N2 | The Slow Descent | Gravity wants you to drop — do not let it. From standing, lower yourself all the way to lying flat on the floor, then rise all the way back up. No knee, hand or elbow should thump down on the way. Then do it again, even slower and quieter than the first time. | Use a clear spot with room to lie down, and stop whenever you want. |
 
+#### Locked Creativity English content
+
+Human review approved and locked the English content below for all 12 frozen Creativity Missions on 2026-09-11. This is the approved Step 4 English content for Creativity: each title, instruction, safety note and adult involvement note is final English copy and carries into the later republication steps exactly as written. Movement English remains locked, 12 / 12. As of this lock, Helping at Home, Learning and Calm English drafting has not started, and no German or Russian content exists.
+
+- Creativity English content: locked, 12 / 12.
+- Safety note text: locked as English copy, 12 / 12. The record-level `safetyNoteRequired` value is not finalized for any Creativity Mission and remains with the later safety and adult-involvement review; this lock does not decide whether a safety note appears in the product.
+- Adult involvement: CRE-C03 is frozen as `Adult nearby required`, and its adult involvement note is part of the locked English. The other 11 Missions require no special adult assistance and have no adult involvement note, shown as `—` in the table.
+- Production catalog: unchanged. `src/catalogContent.ts` still holds 40 Missions at content version `mvp-catalog-2026-09`, this lock publishes no production content, and no new stable Mission identifiers are assigned. The locked English is documentation authority for the later controlled republication steps.
+
+| Ref | Title | Instruction | Safety note | Adult involvement note |
+| --- | --- | --- | --- | --- |
+| CRE-C01 | The Tiny World | Choose one small toy and build it a tiny home on the floor. The home needs a door, a bed and a path that leads to the door. When all three are ready, walk your toy along the path, through the door and into its bed. Leave the home standing: your toy lives there now. | Build with light, unbreakable things you are allowed to use, and keep your toy's home on the floor. | — |
+| CRE-C02 | Sock Friend | Put a clean sock on your hand and turn it into a sock friend. Give your friend a name and a voice all of its own. Then let your sock friend say one kind thing to you, out loud, in its own voice. | Use a clean sock you are allowed to use, and keep it away from your face and mouth. | — |
+| CRE-C03 | Blanket Den | Spread one light blanket over a low chair to make a small den, and leave one side open. Bring three things inside that make it your own place. Then stay inside for one whole song you sing or one whole story you tell yourself. | Use one light blanket over a low chair that stands firmly on the floor. Keep one side open so you can get out easily, and do not climb on the chair. | An adult stays nearby while you build your den and sit inside it, and is there if you need them. |
+| CRE-C04 | Tallest Tower | Build a tower as tall as you can reach, using light, unbreakable things like plastic cups, blocks or small boxes. When it stands on its own, measure it by placing one hand above the other and counting your hands. Then stand back and admire it: your tower is that many hands tall. | Use only light, unbreakable things you are allowed to use. Build on the floor, and stack only as high as you can reach without climbing. | — |
+| CRE-C06 | Invent a Sound | Pick two safe things, like a spoon and a plastic cup, and use them to invent your own sound. Practise until the same sound comes out three times in a row. When the third one sounds just like the first two, that sound is yours! | Use two unbreakable things you are allowed to use, and do not make your sound right next to your ears. | — |
+| CRE-C07 | The Kind Monster | Draw a monster that is not scary at all — maybe fluffy, maybe with a big smile. Give your monster one silly job it does around your home, like tickling socks or counting spoons. When your drawing is finished, look at your monster and say its silly job out loud. | You need a sheet of paper and a pencil or crayons that you are allowed to use. | — |
+| CRE-C10 | Four-Panel Comic | Draw a comic with four panels in which a character solves one small everyday problem. Put one speech bubble in each panel. When all four panels have a drawing and a speech bubble, read your comic out loud. | You need a sheet of paper and a pencil that you are allowed to use. | — |
+| CRE-C11 | The Sound Map | Sit in one spot and listen carefully for one minute. Then draw yourself in the middle of a sheet of paper. Around you, draw a small picture for every sound you heard: close sounds nearby, far sounds further out. When every sound has its picture, look at your map: everything you heard, all around you. | You need a sheet of paper and a pencil that you are allowed to use. | — |
+| CRE-C12 | The Paper Bridge | Set two books a hand's width apart. With one sheet of paper and no tape or glue, make a bridge between them and test it with a small light object, like an eraser. If the paper bends, use what you saw to change its shape and test again. Design and test three different shapes, then compare how all three behaved in the test. | You need two books, one sheet of paper and a small light object that you are allowed to use. | — |
+| CRE-C13 | The Skill Guide | Pick one small skill you know well, like folding a paper plane or drawing a cat in five lines. Design a one-page guide to it: every step in order, numbered, with a drawing or a few words for each. When the last step is in place, look at your finished guide: something you know how to do, set out step by step. | You need a sheet of paper and a pencil that you are allowed to use. | — |
+| CRE-C14 | The Ordinary Object Museum | Turn five ordinary things from your home into a museum. Arrange them in a line, and give each one a small written or drawn label with an interesting name and one invented fact. For example: Ancient Spoon, once used by a giant for breakfast. Then walk along your museum as its very first visitor, reading every label. | Use things you are allowed to move that are not sharp, heavy or breakable. | — |
+| CRE-N1 | The Code Maker | Invent your own way of writing: a new symbol for every letter, or a rule that changes each letter. Write one short, friendly message in your new writing. On a second sheet, make a key that shows how your writing works. Then put the message and the key side by side: your own way of writing, with the key to read it. | You need two sheets of paper and a pencil that you are allowed to use. | — |
+
 #### Republication step status
 
 | Step | Status |
@@ -323,12 +347,12 @@ Step 4 progress by Mission Category:
 | Mission Category | English content |
 | --- | --- |
 | Movement | Locked, 12 / 12 |
-| Creativity | Not started |
+| Creativity | Locked, 12 / 12 |
 | Helping at Home | Not started |
 | Learning | Not started |
 | Calm | Not started |
 
-Approved English content exists only for Movement. No German or Russian content exists yet. Task 5 remains paused, Task 6 remains blocked, and Task 7 and the later tasks remain unstarted and unauthorized.
+Approved English content is locked for Movement and Creativity, 24 of the 54 frozen Missions. No German or Russian content exists yet. Task 5 remains paused, Task 6 remains blocked, and Task 7 and the later tasks remain unstarted and unauthorized.
 
 
 ## Objective
