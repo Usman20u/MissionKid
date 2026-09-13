@@ -129,12 +129,12 @@ References below are editorial candidate identifiers used to carry this decision
 
 | Ref | Working title | Age bands | Adult | Origin |
 | --- | --- | --- | --- | --- |
-| HELP-C01 | Special Delivery | 4–6, 7–8 | — | REFINE `helping-06` |
+| HELP-C01 | The Shoe Line | 4–6, 7–8 | — | REPLACEMENT `helping-06` |
 | HELP-C02 | Table Captain | 4–6, 7–8, 9–10 | **AP** | REFINE `helping-03` |
 | HELP-C05 | Napkin Fold Five | 4–6, 7–8 | — | NEW |
 | HELP-C09 | Ready for Tomorrow | 7–8, 9–10 | — | REFINE `helping-07` |
 | HELP-C11 | The Table Surprise | 4–6, 7–8, 9–10 | — | NEW |
-| HELP-C13 | The Helper's Label | 7–8, 9–10 | — | NEW |
+| HELP-C13 | The One-Look Sign | 7–8, 9–10 | — | NEW |
 | HELP-C15 | The Water Round | 4–6, 7–8, 9–10 | **AP** | NEW |
 | HELP-C17 | The Ready Corner | 7–8, 9–10 | — | NEW |
 | HELP-N2 | The Lost-and-Found Box | 4–6, 7–8 | — | NEW |
@@ -170,7 +170,7 @@ References below are editorial candidate identifiers used to carry this decision
 | CALM-N1 | The Sock Snake | 4–6, 7–8 | — | NEW |
 | CALM-N2 | The Tight Roll | 9–10 | — | NEW |
 
-Origin totals: KEEP 5, REFINE 15, REPLACEMENT 2, NEW 32.
+Origin totals: KEEP 5, REFINE 14, REPLACEMENT 3, NEW 32.
 
 #### Adult involvement in the frozen set
 
@@ -220,13 +220,13 @@ These contracts record the approved concept identity of each frozen Mission so S
 | CRE-C13 | Choose one small skill they know well and design a one-page guide to it, with every step numbered in order and shown as a drawing or a few words. | The whole chosen skill set out step by step, in order, on the one-page guide. | Looking at the finished guide that sets out, step by step, something they know how to do. |
 | CRE-C14 | Choose five ordinary household things, arrange them in a line as a museum display, and give each a small written or drawn label with an interesting name and one invented fact. | Five exhibits arranged and labelled. | Walking along the finished display as the museum's first visitor, reading each label. |
 | CRE-N1 | Invent a way of writing — a symbol for each letter, or a rule that changes them — write one short, friendly message in it, and make a key on a second sheet that explains how the writing works; set the message and the key side by side. | Message and key both finished and set together. | The two sheets side by side: their own way of writing, with the key needed to read it. |
-| HELP-C01 | Find three things that belong to other people in the home and are not where they live, and carry each one to the place that person keeps it. | All three returned to their places. | Standing where they can see what they put right, and taking a bow. |
+| HELP-C01 | At one existing place in the home where shoes are already kept, work only with the shoes already there: match every complete pair that is available, set each pair side by side, and turn all complete pairs so their toes point the same way. A shoe with no visible partner may stay at the end of the line. | Every complete pair available at that shoe place matched, side by side and pointing the same way; an unmatched single shoe does not block completion. | Stepping back and seeing the line of complete pairs ready to step into. |
 | HELP-C02 | An adult hands over the items that are safe to carry; the child sets every place at the table, then announces to the household that the table is ready. | Every place set and the announcement made. | Announcing the table ready to everyone. |
 | HELP-C05 | Fold five napkins or cloths corner to corner into triangles and build them into one neat stack. | Five folded and stacked. | Showing the finished stack. |
 | HELP-C09 | Gather the things needed tomorrow — bag, jacket, water bottle — into one place near the door. | Everything gathered in one place. | The complete pile standing ready by the door. |
 | HELP-C11 | Choose one person, fold a napkin or piece of paper into a simple shape and set it at that person's place, then set their spoon and cup beside it. | One person's place fully set with the folded shape. | Their place looking as though someone did something just for them. |
-| HELP-C13 | Choose one shelf, box or drawer everyone uses, draw a small picture-label showing what belongs there, and put the label where people will see it. | The label drawn and placed. | The place now showing plainly what belongs in it. |
-| HELP-C15 | With an adult filling the cups and choosing safe ones, carry each full cup one at a time to a safe stable surface at the place where that person usually sits, and leave it there. | One cup placed at each person's usual place. | Every place having a full cup waiting. |
+| HELP-C13 | Choose exactly one shared shelf, box or drawer and design one clear visual sign showing what belongs there — drawn, written or both — then put the sign where it is easily seen, leaving the contents where they are. | One visible sign at the chosen shared place, communicating what belongs there. | The shared place now understood at once from the sign itself. |
+| HELP-C15 | With an adult choosing unbreakable cups, controlling the amount of cool water and preparing one steady safe place for each cup, carry one cup at a time with both hands and set it down at one prepared place. | Every prepared place holding one cup; no person needs to drink, respond, ask for water or accept a cup. | All the prepared places holding their cups, and the round complete. |
 | HELP-C17 | Think of one thing the family does often — drawing, reading, a game, building — and gather everything that thing needs into one place so anyone can start straight away without hunting. | Everything the chosen activity needs gathered in one place. | Standing back and looking at the corner they made ready. |
 | HELP-N2 | Find a box or basket, put it somewhere everyone walks past, and draw a picture on paper showing what it is for; set the picture with the box, then walk one room to see whether anything is waiting to be posted. | The box placed and marked with its picture. | The box standing open with its own sign, ready for the household. |
 | LEARN-C01 | Lie on their back on the floor and look up at the room from there, finding three things that look strange or different seen that way. | Three strange-looking things found. | Sitting up slowly and saying which looked strangest. |
@@ -257,7 +257,7 @@ Final English drafting must satisfy these constraints. Each was established by c
 
 | Ref | Constraint |
 | --- | --- |
-| HELP-C01 | Service framing; no external reaction; no disguised tidying |
+| HELP-C01 | Shoes stay at their existing shoe place; pair and orient only; nothing collected from elsewhere in the home; no misplaced objects put away; an unmatched single shoe does not block completion; the result is readiness, not tidying; no external reaction |
 | HELP-C02 | Adult supplies items safe for the child to carry |
 | HELP-C11 | Scene must differ visibly from Table Captain |
 | HELP-C15 | Completion is cups placed at safe prepared places, not people served; adult controls water amount, safe cups and safe stable placement surfaces |
@@ -330,6 +330,29 @@ Human review approved and locked the English content below for all 12 frozen Cre
 | CRE-C14 | The Ordinary Object Museum | Turn five ordinary things from your home into a museum. Arrange them in a line, and give each one a small written or drawn label with an interesting name and one invented fact. For example: Ancient Spoon, once used by a giant for breakfast. Then walk along your museum as its very first visitor, reading every label. | Use things you are allowed to move that are not sharp, heavy or breakable. | — |
 | CRE-N1 | The Code Maker | Invent your own way of writing: a new symbol for every letter, or a rule that changes each letter. Write one short, friendly message in your new writing. On a second sheet, make a key that shows how your writing works. Then put the message and the key side by side: your own way of writing, with the key to read it. | You need two sheets of paper and a pencil that you are allowed to use. | — |
 
+#### Locked Helping at Home English content
+
+Human review approved and locked the English content below for all 9 frozen Helping at Home Missions on 2026-09-13. This is the approved Step 4 English content for Helping at Home: each title, instruction, safety note and adult involvement note is final English copy and carries into the later republication steps exactly as written. Movement and Creativity English remain locked, 12 / 12 each. As of this lock, Learning and Calm English drafting has not started, and no German or Russian content exists.
+
+- Helping at Home English content: locked, 9 / 9.
+- Safety note text: locked as English copy, 9 / 9. The record-level `safetyNoteRequired` value is not finalized for any Helping at Home Mission and remains with the later safety and adult-involvement review; this lock does not decide whether a safety note appears in the product.
+- Adult involvement: HELP-C02 and HELP-C15 are frozen as `Adult participation required`, and their adult involvement notes are part of the locked English. The other 7 Missions require no special adult assistance and have no adult involvement note, shown as `—` in the table.
+- Concept authority reconciled by this lock: HELP-C01 replaces the withdrawn `Special Delivery` delivery concept with `The Shoe Line` and becomes `REPLACEMENT helping-06`, because the withdrawn concept required three belongings to be misplaced before the child could begin and its action stayed too close to putting things away; HELP-C13 is titled `The One-Look Sign` and its contract states one clear visual sign rather than only a small picture-label; HELP-C15 completion rests on safe prepared places rather than each person's usual seat. The membership table, origin totals, frozen concept contracts and Step 4 drafting constraints above carry these changes.
+- Reopening: after this lock, Helping at Home English may be reopened only for a demonstrated safety defect, reliability defect, concept contradiction, translation-blocking defect, or implementation-blocking authority conflict. Candidate generation remains closed.
+- Production catalog: unchanged. `src/catalogContent.ts` still holds 40 Missions at content version `mvp-catalog-2026-09`, this lock publishes no production content, and no new stable Mission identifiers are assigned. The locked English is documentation authority for the later controlled republication steps.
+
+| Ref | Title | Instruction | Safety note | Adult involvement note |
+| --- | --- | --- | --- | --- |
+| HELP-C01 | The Shoe Line | Go to one place where shoes are kept. Match the shoes into complete pairs, put each pair side by side, and turn all the toes the same way. If one shoe has no partner, leave it at the end of the line. When every complete pair points the same way, step back and look at the shoe line you made ready. | Move only shoes you are allowed to touch. Keep them inside the usual shoe area and keep the walking path clear. | — |
+| HELP-C02 | Table Captain | You are the Table Captain. An adult gives you only the things that are safe for you to carry. Set one complete place first, then make every other place match it. When every place is ready, stand back, check the whole table and announce that it is ready. | Carry only light, unbreakable items the adult gives you. Keep both feet on the floor, and leave anything hot, sharp or heavy to the adult. | An adult chooses and hands you the safe items you may carry. |
+| HELP-C05 | Napkin Fold Five | Fold five square napkins or cloths into matching triangles. Fold each one corner to corner, then stack it with the point facing the same way as the others. When the fifth triangle is on top, line up the edges and look at your finished stack: five matching folds, ready to use. | Use five clean napkins or cloths you are allowed to use, and fold them on a table or the floor. | — |
+| HELP-C09 | Ready for Tomorrow | Gather the things you will need tomorrow in one place near the door, such as your bag, jacket and water bottle. When everything you need is together, look at your ready pile: tomorrow's things, all waiting in one place. | Move only your own light things, and keep the doorway and walking space clear. | — |
+| HELP-C11 | The Table Surprise | Choose one person at home and make a special place for them at the table. Fold a napkin or piece of paper into a simple shape and put it at their place. Set their spoon and an empty, unbreakable cup beside the shape. Look at the place you made just for them. | Use items you are allowed to move and can carry easily. Choose a place you can reach with both feet on the floor. | — |
+| HELP-C13 | The One-Look Sign | Choose one shared shelf, box or drawer. Design one sign that shows at a glance what belongs there: draw it, write it, or use both. Leave everything inside exactly where it is, and put your sign where it can be seen easily. Now anyone can see what belongs there right away. | Choose a place you can reach with both feet on the floor. Use paper and drawing or writing tools you are allowed to use. | — |
+| HELP-C15 | The Water Round | This is your Water Round. An adult chooses unbreakable cups, adds a small amount of cool water, and prepares one steady place for each cup. Carry one cup at a time with both hands and set it on a ready place. When every ready place has a cup, your round is complete. | Walk slowly on a clear, dry route. Do not run. If water spills, stop and tell an adult so the floor can be made safe. | An adult chooses unbreakable cups, controls the water amount and prepares the stable places before the round starts. |
+| HELP-C17 | The Ready Corner | Make a place where your family can start an activity straight away. Choose one activity your family often does, such as drawing, reading, a game or building. Gather everything that activity needs in one place. Stand back and look at the place you made ready: anyone can begin without looking for anything. | Use only light, safe things you are allowed to move. Choose a place you can reach without climbing, and keep walking routes clear. | — |
+| HELP-N2 | The Lost-and-Found Box | Make a lost-and-found box for your home. Put an empty box or basket beside a place everyone walks past. Draw a sock or toy on paper and put the picture beside the box as its sign. Walk through one room to see if anything belongs in the box. Then look at your open box and sign: ready to use, even with nothing inside. | Use a light box or basket, paper and crayons you are allowed to use. Keep the box out of the walking space, and leave anything sharp, heavy, breakable or unfamiliar where it is. | — |
+
 #### Republication step status
 
 | Step | Status |
@@ -348,11 +371,11 @@ Step 4 progress by Mission Category:
 | --- | --- |
 | Movement | Locked, 12 / 12 |
 | Creativity | Locked, 12 / 12 |
-| Helping at Home | Not started |
+| Helping at Home | Locked, 9 / 9 |
 | Learning | Not started |
 | Calm | Not started |
 
-Approved English content is locked for Movement and Creativity, 24 of the 54 frozen Missions. No German or Russian content exists yet. Task 5 remains paused, Task 6 remains blocked, and Task 7 and the later tasks remain unstarted and unauthorized.
+Approved English content is locked for Movement, Creativity and Helping at Home, 33 of the 54 frozen Missions. No German or Russian content exists yet. Task 5 remains paused, Task 6 remains blocked, and Task 7 and the later tasks remain unstarted and unauthorized.
 
 
 ## Objective
