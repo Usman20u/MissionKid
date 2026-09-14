@@ -407,6 +407,61 @@ Human review approved and locked the English content below for all 10 frozen Cal
 | CALM-N1 | The Sock Snake | Collect the socks you are allowed to use and lay them end to end across the floor to make a long snake. Each sock must just touch the one before it without moving it at all. If one shifts, straighten it before you add the next. When you have used your last sock, stand back and see how far your snake reached. | Use clean socks you are allowed to use, and build your snake on a clear floor where nobody will walk. | — |
 | CALM-N2 | The Tight Roll | Take a towel or a long cloth and roll it up from one end to the other. Keep it tight and even as you go, so the finished roll is the same thickness all along. Now let go: does it stay rolled by itself, or does it start to loosen? Unroll it and roll it again, tighter this time. Then let go and watch whether this one holds itself. | Use one towel or long cloth you are allowed to use, and roll it on the floor or a table. Do not wrap it around yourself or anyone else. | — |
 
+#### Step 5 localization standard
+
+German and Russian Mission content is a semantic localization of the locked English, not a word-for-word translation. This standard was established by human review of the Movement localization and governs the German and Russian localization of every Mission Category.
+
+- Priority: locked English meaning, then core action, counts and order, observable completion, final beat, safety meaning, natural target-language child voice, age dignity and read-aloud quality.
+- Target-language grammar and idiom may differ from English. A title may be semantically adapted where literal wording would be unnatural or misleading.
+- No localization may add or remove a requirement, change a count, the action order or completion, soften safety, strengthen a success condition, or add adult involvement. Localization never repairs or rewrites the locked English.
+- German: natural Standard German with informal `du`, child-respectful. `Raum` is the general room term, and `Kissen` covers cushions and pillows.
+- Russian: natural neutral modern Russian with informal singular address, avoiding unnecessary gendered wording. `подушки` covers cushions and pillows.
+
+#### Locked Movement German and Russian content
+
+Human review approved and locked the German and Russian content below for all 12 frozen Movement Missions on 2026-09-14. Each title, instruction and safety note is final German or Russian copy, meaning-equivalent to the locked Movement English above, and carries into the later republication steps exactly as written.
+
+- Movement German content: locked, 12 / 12. Movement Russian content: locked, 12 / 12. Movement English remains locked, 12 / 12, and is unchanged.
+- Adult involvement: every Movement Mission requires no special adult assistance, so no Movement Mission has an adult involvement note in any language.
+- Fidelity: every localization preserves the counts, action order, observable completion, final beat and safety meaning of its locked English. No Movement Mission has `KEEP` origin, so each is localized from its locked English rather than from existing production translations.
+- Title adaptation: where literal wording would mislead or sound unnatural, the title is semantically adapted; for example, `Zehn Strecksprünge` and `Десять прыжков — тянись вверх` do not imply a higher jump each time.
+- Reopening: after this lock, Movement German and Russian may be reopened only for a demonstrated semantic fidelity defect, safety translation defect, translation-blocking defect, or implementation or data defect, and not for style preference.
+- Production catalog: unchanged. `src/catalogContent.ts` still holds 40 Missions at content version `mvp-catalog-2026-09`, this lock publishes no production content, and no new stable Mission identifiers are assigned. German and Russian localization of Creativity, Helping at Home, Learning and Calm has not started.
+
+German:
+
+| Ref | Title | Instruction | Safety note |
+| --- | --- | --- | --- |
+| MOV-C01 | Bär, Krabbe, Vogel | Geh als Bär auf Händen und Füßen durch den Raum. Geh als Krabbe mit dem Bauch nach oben zurück. Geh dann als Vogel auf Zehenspitzen noch einmal hinüber. Such dir jetzt von den dreien dein Lieblingstier aus und geh ein letztes Mal so hinüber – ein bisschen schneller. | Beweg dich auf freiem Boden, der nicht rutschig ist, und werde langsamer, bevor du auf der anderen Seite ankommst. |
+| MOV-C02 | Riesenschritte und Mäuseschritte | Geh wie ein Riese durch den Raum: Mach die größten Schritte, die du kannst, und zähl dabei laut mit. Dann komm wie eine Maus zurück – mit winzigen Schritten, Ferse an Fußspitze – und zähl wieder mit. Sag jetzt beide Zahlen. Welche Zahl ist größer? | Beweg dich auf freiem Boden, der nicht rutschig ist, und mach Riesenschritte nur so groß, dass du dabei das Gleichgewicht halten kannst. |
+| MOV-C03 | Der schlafende Riese | Auf der anderen Seite des Raums schläft ein Riese. Schleich so leise hinüber, dass er nicht aufwacht. Tu alle paar Schritte so, als würde sich der Riese im Schlaf bewegen: Erstarre völlig und schleich dann weiter. Geh hinüber, zurück und noch einmal hinüber. Schläft der Riese noch, wenn du zum letzten Mal ankommst, hast du es geschafft! | Schleich langsam über freien Boden und schau, wohin du gehst. |
+| MOV-C04 | Zehn Strecksprünge | Stell dich auf eine freie Fläche. Spring zehnmal auf der Stelle und streck dich dabei jedes Mal mit beiden Armen lang nach oben. Leg dich nach dem zehnten Sprung auf den Rücken. Leg eine Hand auf die Brust und spür, wie schnell dein Herz schlägt. | Spring mit Abstand zu Möbeln auf einem Boden, der nicht rutschig ist. Über dir darf nichts tief hängen. Lande weich. |
+| MOV-C05 | Der Kissen-Parcours | Leg drei Kissen flach auf den Boden – das wird dein kleiner Parcours. Über eines krabbelst du, um eines gehst du herum, und auf das letzte setzt du dich. Geh dreimal durch deinen Parcours, jedes Mal auf eine andere Art, zum Beispiel wie eine Katze oder wie eine Schnecke. Beim dritten Mal setzt du dich zum Schluss auf das letzte Kissen. | Nimm Kissen, die du benutzen darfst, und lass alle drei flach auf dem Boden liegen. Stell dich nicht darauf, renn nicht darüber und spring nicht darauf, denn sie können wegrutschen. |
+| MOV-C08 | Statuen-Posen | Wackle, tanz oder geh durch den Raum und zähl dabei bis fünf. Bei fünf erstarrst du in einer lustigen Pose und hältst sie still, während du bis drei zählst. Mach das dreimal, jedes Mal mit einer neuen Pose, und heb dir deine lustigste Pose fürs letzte Mal auf. | Beweg dich auf freiem Boden mit Platz um dich herum und such dir Posen aus, die du halten kannst, ohne umzufallen. |
+| MOV-C10 | Bücher auf dem Kopf | Balancier ein Buch flach auf dem Kopf und geh damit durch den Raum und wieder zurück. Leg dann ein zweites Buch obendrauf und geh noch einmal hin und zurück. Wenn ein Buch herunterrutscht, leg es zurück auf den Kopf und mach an dieser Stelle weiter. Komm zum Schluss dort an, wo du losgegangen bist – mit beiden Büchern noch auf dem Kopf. | Nimm leichte, dünne Bücher und geh langsam über freien Boden. |
+| MOV-C11 | Auf den Schritt genau | Such dir zu Hause zwei Stellen aus, zum Beispiel eine Tür und einen Tisch, und schätze, wie viele Schritte du von der einen zur anderen brauchst. Jetzt versuch, genau auf deine Zahl zu kommen: Geh denselben Weg und mach deine Schritte länger oder kürzer, sodass du mit genau so vielen Schritten am Ziel ankommst, wie du geschätzt hast. Mach das auf drei verschiedenen Wegen. | Geh auf freiem Boden. Mach deine Schritte länger oder kürzer, aber spring nicht und hüpf nicht. |
+| MOV-C14 | Drei Bewegungen auf einem Bein | Stell dich auf ein Bein und mach drei Bewegungen in dieser Reihenfolge: Berühr mit einer Hand den Boden, streck beide Arme nach oben und dreh dich dann langsam zur nächsten Wand. Mach danach alle drei Bewegungen auf dem anderen Bein. Wenn dein angehobener Fuß den Boden berührt, finde wieder dein Gleichgewicht und fang diese Seite noch einmal an. Beende die zweite Seite mit dem Fuß noch in der Luft. | Mach das auf einer freien Fläche mit Abstand zu Möbeln und auf einem Boden, der nicht rutschig ist. Du kannst deinen Fuß jederzeit abstellen. |
+| MOV-C16 | Unter der Linie | Steh gerade und stell dir eine unsichtbare Linie vor, die auf Höhe deiner Taille quer durch den Raum geht. Mach dich dann klein und durchquere den Raum, ohne dass dein Kopf über die Linie kommt. Mach das dreimal, jedes Mal tief unten auf eine andere Art: in der Hocke, krabbelnd oder so, wie du es dir selbst ausdenkst. Nach dem dritten Mal hast du drei Möglichkeiten gefunden, unter der Linie zu bleiben. | Such dir vor dem Start einen freien, offenen Weg durch den Raum aus und beweg dich langsam. |
+| MOV-N1 | Zwei Hände, zwei Aufgaben | Steh still und halte in jeder Hand etwas Weiches, zum Beispiel eine zusammengerollte Socke. Beweg eine Hand in langsamen Kreisen, während die andere gerade auf und ab geht, und zähl bis zwanzig. Halte an, tausch die Aufgaben und zähl noch einmal bis zwanzig. Zähl in der letzten Runde wieder bis zwanzig und tausch bei zehn die Aufgaben, ohne dass eine der beiden Hände anhält. | Stell dich so hin, dass du Platz um dich herum hast und deine Arme nirgends anstoßen. |
+| MOV-N2 | Der langsame Weg nach unten | Die Schwerkraft will, dass du fällst – lass das nicht zu. Komm aus dem Stand ganz nach unten, bis du flach auf dem Boden liegst, und steh dann wieder ganz auf. Dabei soll kein Knie, keine Hand und kein Ellbogen auf den Boden knallen. Mach es dann ein zweites Mal – noch langsamer und leiser als beim ersten Mal. | Such dir eine freie Stelle, an der du Platz zum Hinlegen hast, und hör auf, wann immer du möchtest. |
+
+Russian:
+
+| Ref | Title | Instruction | Safety note |
+| --- | --- | --- | --- |
+| MOV-C01 | Медведь, краб, птица | Пройди через комнату как медведь — на руках и ногах. Вернись как краб — животом вверх. Потом снова пройди через комнату как птица — на цыпочках. А теперь выбери, кем из трёх тебе понравилось быть больше всего, и пройди так в последний раз — немного быстрее. | Двигайся по свободному нескользкому полу и замедляйся перед тем, как дойдёшь до другой стороны. |
+| MOV-C02 | Шаги великана и шаги мышки | Пройди через комнату как великан: делай самые большие шаги, какие только можешь, и считай их вслух. Потом вернись как мышка — крошечными шажками, пятка к носку — и снова считай. Теперь назови оба числа. Какое из них больше? | Двигайся по свободному нескользкому полу. Шаги великана делай такими, чтобы не терять равновесие. |
+| MOV-C03 | Спящий великан | На другом конце комнаты спит великан. Прокрадись туда так тихо, чтобы он не проснулся. Каждые несколько шагов представляй, что великан шевелится во сне: замри и не шевелись, а потом крадись дальше. Пройди туда, обратно и ещё раз туда. Если великан всё ещё спит, когда ты в последний раз дойдёшь до другой стороны, — у тебя получилось! | Крадись медленно по свободному полу и смотри, куда идёшь. |
+| MOV-C04 | Десять прыжков — тянись вверх | Встань там, где вокруг свободно. Сделай десять прыжков на одном месте и в каждом вытягивайся в струнку, подняв обе руки вверх. После десятого прыжка ляг на спину. Положи руку на грудь и почувствуй, как быстро бьётся сердце. | Прыгай подальше от мебели, на нескользком полу и там, где над головой ничего низко не висит. Приземляйся мягко. |
+| MOV-C05 | Полоса препятствий из подушек | Положи на пол три подушки плашмя — получится маленькая полоса препятствий. Через одну ты переползаешь, другую обходишь, а на последнюю садишься. Пройди эту полосу три раза, каждый раз по-другому — например, как кошка или как улитка. В третий раз в конце сядь на последнюю подушку. | Бери подушки, которые тебе разрешили взять, и следи, чтобы все три лежали на полу плашмя. Не вставай на них, не бегай по ним и не прыгай на них, потому что они могут скользить. |
+| MOV-C08 | Позы статуй | Вертись, танцуй или ходи по комнате и считай до пяти. На счёт «пять» замри в смешной позе и не шевелись, пока считаешь до трёх. Сделай так три раза, каждый раз в новой позе, а самую смешную прибереги для последнего раза. | Двигайся по свободному полу, где вокруг есть место, и выбирай позы, в которых сможешь удержаться и не упасть. |
+| MOV-C10 | Книги на голове | Положи книгу плашмя на голову и, удерживая равновесие, пройди через комнату и обратно. Потом добавь сверху вторую книгу и ещё раз пройди туда и обратно. Если книга соскользнёт, положи её обратно на голову и продолжай с того же места. Закончи на месте старта так, чтобы обе книги всё ещё лежали у тебя на голове. | Бери лёгкие тонкие книги и иди медленно по свободному полу. |
+| MOV-C11 | Ровно столько шагов | Выбери дома два места, например дверь и стол, и угадай, сколько шагов нужно, чтобы пройти от одного до другого. Теперь постарайся попасть точно в своё число: пройди тот же маршрут, делая шаги длиннее или короче, чтобы в конце получилось ровно твоё число шагов. Сделай так на трёх разных маршрутах. | Иди по свободному полу. Делай шаги длиннее или короче, но не прыгай и не скачи. |
+| MOV-C14 | Три движения на одной ноге | Встань на одну ногу и сделай три движения по порядку: коснись пола одной рукой, потянись обеими руками вверх, а потом медленно повернись лицом к следующей стене. Затем сделай все три движения, стоя на другой ноге. Если поднятая нога коснётся пола, восстанови равновесие и сделай всё на этой ноге заново. На второй ноге доведи всё до конца, не опуская поднятую ногу. | Выбери свободное место подальше от мебели, с нескользким полом. Ногу можно опустить в любой момент. |
+| MOV-C16 | Под линией | Встань прямо и представь невидимую линию поперёк комнаты на уровне своего пояса. Потом опустись пониже и переберись на другую сторону комнаты так, чтобы голова не поднималась выше линии. Сделай так три раза, каждый раз по-другому, но всегда низко: на корточках, ползком или так, как придумаешь. После третьего раза у тебя уже три способа остаться под линией. | Прежде чем начать, выбери свободный путь через комнату, где ничего не мешает, и двигайся медленно. |
+| MOV-N1 | Две руки — два дела | Возьми в каждую руку что-нибудь мягкое, например свёрнутый носок, и стой на месте. Одной рукой делай медленные круги, а другую двигай прямо вверх и вниз, считая до двадцати. Остановись, поменяй движения между руками и снова досчитай до двадцати. В последнем раунде снова считай до двадцати и на счёт «десять» поменяй движения между руками, не останавливая ни одну руку. | Встань так, чтобы вокруг было место и руки ни обо что не ударялись. |
+| MOV-N2 | Медленный спуск | Сила тяжести хочет тебя уронить — не поддавайся. Начни стоя: опускайся, пока не ляжешь на пол во весь рост, а потом поднимись и снова встань в полный рост. При этом ни колено, ни рука, ни локоть не должны стукнуться об пол. Потом повтори — на этот раз ещё медленнее и тише, чем в первый. | Выбери свободное место, где можно лечь, и остановись, когда захочешь. |
+
 #### Republication step status
 
 | Step | Status |
@@ -415,7 +470,7 @@ Human review approved and locked the English content below for all 10 frozen Cal
 | 2 — Mission Experience Principles review | Complete |
 | 3 — Age-band suitability, pruning and publication freeze | Complete |
 | 4 — Approved English drafting | Complete |
-| 5 — German and Russian content | Not started |
+| 5 — German and Russian content | In progress |
 | 6 — Safety and adult-involvement review | Not started |
 | 7–13 — Provenance, version bump, validation, coverage, manual review, scenes | Not started |
 
@@ -429,7 +484,17 @@ Step 4 progress by Mission Category:
 | Learning | Locked, 11 / 11 |
 | Calm | Locked, 10 / 10 |
 
-Approved English content is locked for all five Mission Categories, 54 of the 54 frozen Missions, and Step 4 is complete. No German or Russian content exists yet, the production catalog is unchanged, and the 54 frozen Missions are not yet production content. Task 5 remains paused, Task 6 remains blocked, and Task 7 and the later tasks remain unstarted and unauthorized.
+Step 5 progress by Mission Category:
+
+| Mission Category | German content | Russian content |
+| --- | --- | --- |
+| Movement | Locked, 12 / 12 | Locked, 12 / 12 |
+| Creativity | Not started | Not started |
+| Helping at Home | Not started | Not started |
+| Learning | Not started | Not started |
+| Calm | Not started | Not started |
+
+Approved English content is locked for all five Mission Categories, 54 of the 54 frozen Missions, and Step 4 is complete. Step 5 is in progress: German and Russian content is locked for Movement, 12 of the 54 frozen Missions in each language, and has not started for Creativity, Helping at Home, Learning or Calm. The production catalog is unchanged, and the 54 frozen Missions are not yet production content. Task 5 remains paused, Task 6 remains blocked, and Task 7 and the later tasks remain unstarted and unauthorized.
 
 
 ## Objective
