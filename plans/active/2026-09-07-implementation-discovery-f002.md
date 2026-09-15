@@ -735,6 +735,17 @@ The republication compatibility bridge is complete. Commit `2a64cdd` maps Missio
 - Verification: `npm test` passes 12 test files and 281 tests, and `npm run build` passes, both before and after the bridge.
 - State: the production catalog still holds 40 Missions at content version `mvp-catalog-2026-09`, the 54-Mission republication has not started, and Task 5 remains paused.
 
+#### Controlled 54-Mission catalog republication
+
+The controlled 54-Mission catalog republication is complete. Commit `d61d605` replaces the 40-Mission production catalog in `src/catalogContent.ts` with the locked 54-Mission release set at content version `mvp-catalog-2026-09-r2`, and commit `4ff171a` removes the scene mappings of the retired Missions from `src/missionScenes.ts`.
+
+- Release set: 54 production Missions, Movement 12, Creativity 12, Helping at Home 9, Learning 11 and Calm 10, with exactly the 54 locked production identifiers and no duplicate, missing or unexpected identifier. The 21 records outside the release set were removed under the pre-persistence exception, and no retired identifier is reused.
+- Authority fidelity: an audit of the evaluated production module against this plan found zero mismatches in identifier, category, age bands, `durationSeconds`, `catalogOrder`, adult-involvement level, `safetyNoteRequired`, and the English, German and Russian title, instruction, safety note and adult involvement note of all 54 Missions, 162 of 162 language records. The five `KEEP` records remain byte-identical to their previous production content. Adult involvement is explicit for 7 Missions and absent for 47; `safetyNoteRequired` is `true` for 53 Missions and `false` only for `calm-07` (CALM-C09), which has no safety note in any language.
+- Discovery release result: all 15 age-band and Mission Category cells hold at least six eligible Missions, identical in English, German and Russian, and the first set and the second fresh set are valid in 15 of 15 contexts each, with no drift from the locked catalog order. No validator requires 54 Missions or six per context.
+- Scenes: all 54 production Missions resolve explicit scenes, none uses a category fallback, the first set and the second fresh set are scene-distinct in 15 of 15 contexts, and no retired scene mapping remains. The scene resolver, element library, subject rules and category fallbacks are unchanged.
+- Verification: `npm test` passes 12 test files and 281 tests, and `npm run build` passes, before the republication, with the republished catalog and after the scene cleanup. No test file changed.
+- Task 5 state: the remaining staged-source fingerprint is still `0519fdf39471bc32b17b74403879603f33996e81b7c7cbf36cef0d9be354167c` with nine staged entries, and `src/MissionScene.tsx` remains untracked and unchanged. The staged copies of `src/MissionSuggestionSet.tsx` and `src/missionSuggestions.test.ts` still reference the superseded motif API and must be reconciled with their working-tree versions before the next Task 5 commit. Task 5 remains paused, and push is not authorized.
+
 #### Republication step status
 
 | Step | Status |
@@ -745,7 +756,7 @@ The republication compatibility bridge is complete. Commit `2a64cdd` maps Missio
 | 4 — Approved English drafting | Complete |
 | 5 — German and Russian content | Complete |
 | 6 — Safety and adult-involvement review | Complete — pass |
-| 7–13 — Provenance, version bump, validation, coverage, manual review, scenes | Not started |
+| 7–13 — Provenance, version bump, validation, coverage, manual review, scenes | In progress |
 
 Step 4 progress by Mission Category:
 
@@ -767,7 +778,7 @@ Step 5 progress by Mission Category:
 | Learning | Locked, 11 / 11 | Locked, 11 / 11 |
 | Calm | Locked, 10 / 10 | Locked, 10 / 10 |
 
-Approved English content is locked for all five Mission Categories, 54 of the 54 frozen Missions, and Step 4 is complete. German and Russian content is locked for all five Mission Categories, 54 of the 54 frozen Missions in each language, and Step 5 is complete; candidate and localization generation is closed. Step 6, the safety and adult-involvement review, is complete with a pass, and `safetyNoteRequired` is final: `true` for 53 Missions and `false` for CALM-C09. Production metadata is locked for all 54 Missions: final Mission identifiers, guidance durations and catalog order. The scene compatibility bridge required before republication is complete. The production catalog is unchanged at 40 Missions and content version `mvp-catalog-2026-09`: the 54-Mission republication has not started, and the 54 frozen Missions are not yet production content. Task 5 remains paused with its uncommitted source work preserved, Task 6 remains blocked, and Task 7 and the later tasks remain unstarted and unauthorized.
+Approved English content is locked for all five Mission Categories, 54 of the 54 frozen Missions, and Step 4 is complete. German and Russian content is locked for all five Mission Categories, 54 of the 54 frozen Missions in each language, and Step 5 is complete; candidate and localization generation is closed. Step 6, the safety and adult-involvement review, is complete with a pass, and `safetyNoteRequired` is final: `true` for 53 Missions and `false` for CALM-C09. Production metadata is locked for all 54 Missions: final Mission identifiers, guidance durations and catalog order. The scene compatibility bridge required before republication is complete. The controlled republication is complete: production holds the 54 locked Missions at content version `mvp-catalog-2026-09-r2`, their scenes are mapped and the retired scene mappings are removed. The manual production review of the republished catalog remains. Task 5 remains paused with its uncommitted source work preserved, Task 6 remains blocked, and Task 7 and the later tasks remain unstarted and unauthorized.
 
 
 ## Objective
