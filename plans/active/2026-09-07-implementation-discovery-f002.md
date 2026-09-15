@@ -639,6 +639,19 @@ Russian:
 | CALM-N1 | Змейка из носков | Собери носки, которыми тебе разрешено пользоваться, и выложи их на полу в линию, конец к концу, — получится длинная змейка. Каждый носок должен едва касаться предыдущего и совсем его не сдвигать. Если какой-то носок сдвинется, поправь его, прежде чем класть следующий. Когда выложишь последний носок, отойди и посмотри, как далеко протянулась твоя змейка. | Бери чистые носки, которыми тебе разрешено пользоваться, и выкладывай змейку на свободном полу, там, где никто не будет ходить. | — |
 | CALM-N2 | Плотный рулон | Возьми полотенце или длинный кусок ткани и сверни его в рулон от одного края до другого. Сворачивай плотно и ровно, чтобы готовый рулон был одинаковой толщины по всей длине. Теперь отпусти: он сам держится свёрнутым или начинает раскручиваться? Разверни его и сверни снова — на этот раз плотнее. Потом отпусти и посмотри, держится ли этот рулон сам. | Бери одно полотенце или один длинный кусок ткани, которым тебе разрешено пользоваться, и сворачивай его на полу или на столе. Не обматывай им себя или кого-то другого. | — |
 
+#### Step 6 safety and adult-involvement review
+
+Human review approved the Step 6 safety and adult-involvement review of the locked 54-Mission English, German and Russian authority on 2026-09-15. Step 6 is complete, with the result `PASS`.
+
+- Set integrity: pass. 54 of 54 Missions have English, German and Russian authority, 162 of 162 language records. Category counts are Movement 12, Creativity 12, Helping at Home 9, Learning 11 and Calm 10. Membership, concept contracts and every language table carry the same identifiers with no duplicates, and the five `KEEP` records remain byte-identical to `src/catalogContent.ts`.
+- Review results, each 54 of 54: German safety equivalence, Russian safety equivalence, instruction and safety-note consistency, age-band safety, ordinary-home reliability, result neutrality, no dependency on another person's reaction, no therapy or wellness claims, and safety-note structure. Blocking defects: none.
+- Adult involvement: exactly seven Missions have explicit adult involvement. CRE-C03 and CALM-C01 are `Adult nearby required`; HELP-C02, HELP-C15, LEARN-C03, LEARN-C07 and LEARN-N2 are `Adult participation required`. The other 47 require no special adult assistance. The review found no adult judgment and no dependency on adult approval or praise, and no German or Russian wording weakens or broadens an adult role.
+- `safetyNoteRequired`: the record-level value that each English lock deferred to this review is final. It is `true` for 53 of the 54 Missions, each of which carries a safety note in English, German and Russian, and `false` only for CALM-C09 `Watch It Change`, which has no safety note in any language. No safety note is added to CALM-C09, and no Mission copy changes.
+- Accepted non-blocking observations, requiring no authority change: the apparent thumb shift in LEARN-C11 can grow as the thumb comes closer, and its slow approach and no-eye-contact boundary are sufficient; CALM-C01, LEARN-C03 and LEARN-N2 do not require an unbreakable vessel, which is accepted because none depends on breakable materials and their adult, setup and spill boundaries are sufficient, and the `KEEP` copy of CALM-C01 is not reopened; in MOV-C11 the child chooses both points and the estimate, and the no-jumping, no-leaping rule remains authoritative; the conditional Russian adult wording of CRE-C03 and the `KEEP` Russian adult wording of CALM-C01 do not broaden either adult role.
+- Closed authority: candidate generation, localization generation and the safety and adult-involvement review are closed. Locked Mission authority may be reopened only for a proven safety defect, adult-involvement defect, semantic authority defect, or implementation or data mismatch against the locked authority, and not for prose, title, punctuation, symmetry, novelty or stylistic preference.
+- Production catalog: unchanged. `src/catalogContent.ts` still holds 40 Missions at content version `mvp-catalog-2026-09`. The 54-Mission republication, including its production German and Russian content, has not started, and Task 5 remains paused.
+- Next controlled phase: the 54-Mission catalog republication. It republishes the exact locked English, German and Russian authority with the final `safetyNoteRequired` values and the locked age bands, adult-involvement levels, origins and concept contracts; changes the content version deliberately; runs the catalog validators and content tests; proves 54 production Missions, the required coverage in all 15 age-band and Mission Category cells, and the `Another set` guarantees; and audits the exact production diff. This review performs none of that work.
+
 #### Republication step status
 
 | Step | Status |
@@ -648,7 +661,7 @@ Russian:
 | 3 — Age-band suitability, pruning and publication freeze | Complete |
 | 4 — Approved English drafting | Complete |
 | 5 — German and Russian content | Complete |
-| 6 — Safety and adult-involvement review | Not started |
+| 6 — Safety and adult-involvement review | Complete — pass |
 | 7–13 — Provenance, version bump, validation, coverage, manual review, scenes | Not started |
 
 Step 4 progress by Mission Category:
@@ -671,7 +684,7 @@ Step 5 progress by Mission Category:
 | Learning | Locked, 11 / 11 | Locked, 11 / 11 |
 | Calm | Locked, 10 / 10 | Locked, 10 / 10 |
 
-Approved English content is locked for all five Mission Categories, 54 of the 54 frozen Missions, and Step 4 is complete. German and Russian content is locked for all five Mission Categories, 54 of the 54 frozen Missions in each language, and Step 5 is complete; candidate and localization generation is closed. Step 6, the safety and adult-involvement review, has not started. The production catalog is unchanged at 40 Missions and content version `mvp-catalog-2026-09`: no republication has occurred, and the 54 frozen Missions are not yet production content. Task 5 remains paused with its uncommitted source work preserved, Task 6 remains blocked, and Task 7 and the later tasks remain unstarted and unauthorized.
+Approved English content is locked for all five Mission Categories, 54 of the 54 frozen Missions, and Step 4 is complete. German and Russian content is locked for all five Mission Categories, 54 of the 54 frozen Missions in each language, and Step 5 is complete; candidate and localization generation is closed. Step 6, the safety and adult-involvement review, is complete with a pass, and `safetyNoteRequired` is final: `true` for 53 Missions and `false` for CALM-C09. The production catalog is unchanged at 40 Missions and content version `mvp-catalog-2026-09`: the 54-Mission republication has not started, and the 54 frozen Missions are not yet production content. Task 5 remains paused with its uncommitted source work preserved, Task 6 remains blocked, and Task 7 and the later tasks remain unstarted and unauthorized.
 
 
 ## Objective
