@@ -76,18 +76,11 @@ export const SUBJECT_ELEMENTS: ReadonlySet<SceneElement> = new Set([
 
 // Each composition shows what the Mission actually involves: the place, the
 // thing that is handled, and the trace or light that makes the action readable.
-// Entries for Missions retired by the 54-Mission release stay only until that
-// release replaces the current catalog.
 const SCENE_BY_MISSION: Readonly<Record<string, readonly SceneElement[]>> = {
   // Movement
-  'movement-01': ['floor', 'childTall', 'childCurled'],
   'movement-02': ['floor', 'pawTracks', 'dashTrail'],
-  'movement-03': ['wall', 'floor', 'childBalance'],
-  'movement-04': ['floor', 'straightLine', 'footsteps'],
   'movement-05': ['floor', 'childTall', 'childBalance'],
   'movement-06': ['floor', 'footsteps', 'soundWaves'],
-  'movement-07': ['floor', 'childFigure', 'clueMarks'],
-  'movement-08': ['wall', 'floor', 'dashTrail', 'clueMarks'],
   'movement-09': ['floor', 'footsteps', 'pawTracks'],
   'movement-10': ['floor', 'childTall', 'rippleRings'],
   'movement-11': ['floor', 'cushion', 'softThings', 'dashTrail'],
@@ -101,11 +94,9 @@ const SCENE_BY_MISSION: Readonly<Record<string, readonly SceneElement[]>> = {
   // Creativity
   'creativity-01': ['paperSheet', 'pencil', 'soundWaves'],
   'creativity-02': ['floor', 'blockTower', 'childTall'],
-  'creativity-03': ['storyPanels', 'pencil'],
   'creativity-04': ['hillBridge', 'toysScatter'],
   'creativity-05': ['floor', 'softThings', 'handReach'],
   'creativity-06': ['floor', 'blanketDrape', 'lightBeam'],
-  'creativity-07': ['paperSheet', 'gears', 'pencil'],
   'creativity-08': ['storyPanels', 'speechBubble'],
   'creativity-09': ['table', 'cup', 'soundWaves'],
   'creativity-10': ['paperSheet', 'pencil', 'speechBubble'],
@@ -115,14 +106,8 @@ const SCENE_BY_MISSION: Readonly<Record<string, readonly SceneElement[]>> = {
   'creativity-14': ['paperSheet', 'patternRow', 'magnifyRings'],
 
   // Helping at Home
-  'helping-01': ['floor', 'toysScatter', 'basket', 'dashTrail'],
-  'helping-02': ['floor', 'shoePair'],
   'helping-03': ['floor', 'table', 'cup', 'adultFigure', 'childFigure'],
-  'helping-04': ['bed', 'blanketDrape', 'handReach'],
-  'helping-05': ['shelfBoard', 'bookRow', 'floor'],
-  'helping-06': ['floor', 'doorway', 'childFigure', 'dashTrail'],
   'helping-07': ['floor', 'doorway', 'bagAndCoat'],
-  'helping-08': ['drawerOpen', 'toysScatter', 'floor'],
   'helping-09': ['floor', 'straightLine', 'shoePair'],
   'helping-10': ['table', 'softThings', 'handReach'],
   'helping-11': ['table', 'cup', 'lightBeam'],
@@ -132,12 +117,9 @@ const SCENE_BY_MISSION: Readonly<Record<string, readonly SceneElement[]>> = {
   'helping-15': ['floor', 'paperSheet', 'basket', 'footsteps'],
 
   // Learning
-  'learning-01': ['shelfBoard', 'bookRow', 'ghostEchoes'],
   'learning-02': ['wall', 'floor', 'childFigure', 'soundWaves'],
-  'learning-03': ['floor', 'lightBeam', 'cup', 'shoePair', 'clueMarks'],
   'learning-04': ['floor', 'rampBook', 'ballRolling'],
   'learning-05': ['ceilingRoom', 'childCurled'],
-  'learning-06': ['floor', 'patternRow'],
   'learning-07': ['floor', 'fallingPapers'],
   'learning-08': ['floor', 'footsteps', 'clueMarks'],
   'learning-09': ['waterSurface', 'pebble', 'ballRolling', 'rippleRings'],
@@ -148,12 +130,7 @@ const SCENE_BY_MISSION: Readonly<Record<string, readonly SceneElement[]>> = {
   'learning-14': ['table', 'cup', 'pebble', 'rippleRings'],
 
   // Calm
-  'calm-01': ['floor', 'pebble', 'magnifyRings'],
   'calm-02': ['waterSurface', 'cup', 'rippleRings'],
-  'calm-03': ['floor', 'cushion', 'handReach'],
-  'calm-04': ['wall', 'windowFrame', 'lightBeam', 'floor'],
-  'calm-05': ['floor', 'softThings', 'cushion'],
-  'calm-06': ['wall', 'floor', 'dashTrail', 'clueMarks'],
   'calm-07': ['wall', 'clockFace', 'lightBeam'],
   'calm-08': ['floor', 'childFigure', 'ghostEchoes'],
   'calm-09': ['floor', 'cushion', 'blanketDrape'],
