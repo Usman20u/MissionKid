@@ -652,6 +652,77 @@ Human review approved the Step 6 safety and adult-involvement review of the lock
 - Production catalog: unchanged. `src/catalogContent.ts` still holds 40 Missions at content version `mvp-catalog-2026-09`. The 54-Mission republication, including its production German and Russian content, has not started, and Task 5 remains paused.
 - Next controlled phase: the 54-Mission catalog republication. It republishes the exact locked English, German and Russian authority with the final `safetyNoteRequired` values and the locked age bands, adult-involvement levels, origins and concept contracts; changes the content version deliberately; runs the catalog validators and content tests; proves 54 production Missions, the required coverage in all 15 age-band and Mission Category cells, and the `Another set` guarantees; and audits the exact production diff. This review performs none of that work.
 
+#### Locked production metadata authority
+
+Human review approved and locked the production metadata for all 54 frozen Missions on 2026-09-15: final stable Mission identifiers, guidance durations and catalog order. Together with the locked English, German and Russian content and the Step 6 adult-involvement and `safetyNoteRequired` authority, this completes the record authority for the controlled 54-Mission republication. Production metadata generation is closed.
+
+- Identity policy: a `KEEP` or `REFINE` Mission keeps its existing production identifier, and a `REPLACEMENT` or `NEW` Mission receives a new one. New identifiers follow the existing `category-NN` convention above the highest existing number in each category, `-08`, in locked membership order; no gap is filled and no retired identifier is reused. 19 identifiers are preserved (5 `KEEP`, 14 `REFINE`) and 35 are new (3 `REPLACEMENT`, 32 `NEW`). The replaced identifiers `movement-01`, `helping-06` and `learning-01` are retired and are never reused for a different Mission concept. All 54 identifiers are unique, and no candidate reference is a production identifier.
+- Guidance durations: whole minutes from 180 to 540 seconds, used as guidance only and never as a success deadline. The five `KEEP` durations equal production.
+- Catalog order: category-relative, spaced by 10 and unique within each category. It is not a global order and adds no structural validator.
+- Adult and safety metadata, unchanged from Step 6: `Adult nearby required` for CRE-C03 and CALM-C01; `Adult participation required` for HELP-C02, HELP-C15, LEARN-C03, LEARN-C07 and LEARN-N2; `No special adult assistance required` for the other 47. `safetyNoteRequired` is `true` for 53 Missions and `false` only for CALM-C09.
+- Discovery release result: every one of the 15 age-band and Mission Category contexts holds at least six eligible Missions, a valid first set of three and a second fully fresh set of three, identical in English, German and Russian. First sets are valid and varied in 15 of 15 contexts, and so are second sets. The paper-heavy Creativity `9–10` second set, which reflects that category pool, and Helping at Home second sets containing both The Table Surprise and The Water Round are accepted material overlap, not ordering defects. HELP-C02 keeps the identifier `helping-03` and leads the Helping at Home first sets through product ordering alone. This is a release result, not a validator requirement.
+- Retired production records: the 21 current production records outside the 54-Mission set are removed at republication. This is a pre-persistence exception: persistence currently accepts only a null `currentSession` and an empty `completedSessions`, so no stored state can reference a retired identifier. It does not replace the architecture rule that normal retirement retains a history-compatible record. Once Mission identifiers can be persisted, retired stable identifiers must not disappear without that mechanism.
+- Compatibility bridge: republication requires a focused compatibility bridge before the 40 → 54 production catalog commit. Explicit scene coverage is 19 of 54 final identifiers. The 35 new identifiers need explicit scene mappings; the inherited `movement-05` scene depicts the retired `Freeze and Melt` content rather than Statue Shapes; the `creativity-02` scene is identical to the Creativity fallback; and the 21 retired scene mappings must be removed or made unreachable. Without the bridge, the protected test `gives the three Missions of a set visibly different scenes` in `src/missionSuggestions.test.ts` fails. That invariant remains valid: the bridge changes scene mappings in `src/missionScenes.ts`, not product ordering or test intent, and it is not full Task 5 visual work. No stale-identifier or stale-order test assumption fails. This lock does not implement the bridge.
+- Content version: the republication publishes `mvp-catalog-2026-09-r2`, which the implementation accepts. Production still uses `mvp-catalog-2026-09`.
+- Reopening: locked production metadata may be reopened only for a proven implementation impossibility, identifier collision, persistence or history defect, Discovery correctness defect, safety or data mismatch, or a production test demonstrating a real product defect, and not for taste or an alternative valid ordering.
+
+| Ref | Origin | Production identifier | `durationSeconds` | `catalogOrder` |
+| --- | --- | --- | --- | --- |
+| MOV-C01 | REFINE | `movement-02` | 240 | 10 |
+| MOV-C02 | NEW | `movement-09` | 180 | 70 |
+| MOV-C03 | REFINE | `movement-06` | 240 | 40 |
+| MOV-C04 | REPLACEMENT | `movement-10` | 180 | 20 |
+| MOV-C05 | NEW | `movement-11` | 300 | 90 |
+| MOV-C08 | REFINE | `movement-05` | 180 | 110 |
+| MOV-C10 | NEW | `movement-12` | 240 | 60 |
+| MOV-C11 | NEW | `movement-13` | 300 | 80 |
+| MOV-C14 | NEW | `movement-14` | 180 | 100 |
+| MOV-C16 | NEW | `movement-15` | 180 | 50 |
+| MOV-N1 | NEW | `movement-16` | 180 | 30 |
+| MOV-N2 | NEW | `movement-17` | 180 | 120 |
+| CRE-C01 | REFINE | `creativity-04` | 360 | 70 |
+| CRE-C02 | REFINE | `creativity-05` | 180 | 30 |
+| CRE-C03 | REFINE | `creativity-06` | 300 | 110 |
+| CRE-C04 | REFINE | `creativity-02` | 300 | 10 |
+| CRE-C06 | NEW | `creativity-09` | 180 | 90 |
+| CRE-C07 | NEW | `creativity-10` | 300 | 50 |
+| CRE-C10 | KEEP | `creativity-08` | 540 | 40 |
+| CRE-C11 | REFINE | `creativity-01` | 420 | 60 |
+| CRE-C12 | NEW | `creativity-11` | 420 | 20 |
+| CRE-C13 | NEW | `creativity-12` | 480 | 100 |
+| CRE-C14 | NEW | `creativity-13` | 480 | 80 |
+| CRE-N1 | NEW | `creativity-14` | 540 | 120 |
+| HELP-C01 | REPLACEMENT | `helping-09` | 180 | 60 |
+| HELP-C02 | REFINE | `helping-03` | 300 | 10 |
+| HELP-C05 | NEW | `helping-10` | 180 | 30 |
+| HELP-C09 | REFINE | `helping-07` | 240 | 80 |
+| HELP-C11 | NEW | `helping-11` | 240 | 70 |
+| HELP-C13 | NEW | `helping-12` | 300 | 40 |
+| HELP-C15 | NEW | `helping-13` | 180 | 90 |
+| HELP-C17 | NEW | `helping-14` | 300 | 50 |
+| HELP-N2 | NEW | `helping-15` | 300 | 20 |
+| LEARN-C01 | KEEP | `learning-05` | 240 | 30 |
+| LEARN-C02 | REFINE | `learning-04` | 300 | 70 |
+| LEARN-C03 | NEW | `learning-09` | 180 | 10 |
+| LEARN-C04 | NEW | `learning-10` | 180 | 100 |
+| LEARN-C07 | REPLACEMENT | `learning-11` | 240 | 80 |
+| LEARN-C08 | REFINE | `learning-08` | 180 | 50 |
+| LEARN-C09 | REFINE | `learning-02` | 240 | 60 |
+| LEARN-C10 | KEEP | `learning-07` | 300 | 20 |
+| LEARN-C11 | NEW | `learning-12` | 180 | 40 |
+| LEARN-N1 | NEW | `learning-13` | 240 | 90 |
+| LEARN-N2 | NEW | `learning-14` | 300 | 110 |
+| CALM-C01 | KEEP | `calm-02` | 240 | 10 |
+| CALM-C07 | REFINE | `calm-08` | 240 | 60 |
+| CALM-C09 | KEEP | `calm-07` | 300 | 20 |
+| CALM-C11 | NEW | `calm-09` | 180 | 50 |
+| CALM-C13 | NEW | `calm-10` | 180 | 30 |
+| CALM-C15 | NEW | `calm-11` | 360 | 40 |
+| CALM-C16 | NEW | `calm-12` | 180 | 70 |
+| CALM-C19 | NEW | `calm-13` | 180 | 80 |
+| CALM-N1 | NEW | `calm-14` | 300 | 100 |
+| CALM-N2 | NEW | `calm-15` | 180 | 90 |
+
 #### Republication step status
 
 | Step | Status |
@@ -684,7 +755,7 @@ Step 5 progress by Mission Category:
 | Learning | Locked, 11 / 11 | Locked, 11 / 11 |
 | Calm | Locked, 10 / 10 | Locked, 10 / 10 |
 
-Approved English content is locked for all five Mission Categories, 54 of the 54 frozen Missions, and Step 4 is complete. German and Russian content is locked for all five Mission Categories, 54 of the 54 frozen Missions in each language, and Step 5 is complete; candidate and localization generation is closed. Step 6, the safety and adult-involvement review, is complete with a pass, and `safetyNoteRequired` is final: `true` for 53 Missions and `false` for CALM-C09. The production catalog is unchanged at 40 Missions and content version `mvp-catalog-2026-09`: the 54-Mission republication has not started, and the 54 frozen Missions are not yet production content. Task 5 remains paused with its uncommitted source work preserved, Task 6 remains blocked, and Task 7 and the later tasks remain unstarted and unauthorized.
+Approved English content is locked for all five Mission Categories, 54 of the 54 frozen Missions, and Step 4 is complete. German and Russian content is locked for all five Mission Categories, 54 of the 54 frozen Missions in each language, and Step 5 is complete; candidate and localization generation is closed. Step 6, the safety and adult-involvement review, is complete with a pass, and `safetyNoteRequired` is final: `true` for 53 Missions and `false` for CALM-C09. Production metadata is locked for all 54 Missions: final Mission identifiers, guidance durations and catalog order. A focused scene compatibility bridge is required before republication. The production catalog is unchanged at 40 Missions and content version `mvp-catalog-2026-09`: the 54-Mission republication has not started, and the 54 frozen Missions are not yet production content. Task 5 remains paused with its uncommitted source work preserved, Task 6 remains blocked, and Task 7 and the later tasks remain unstarted and unauthorized.
 
 
 ## Objective
