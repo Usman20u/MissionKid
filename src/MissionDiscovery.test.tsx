@@ -11,7 +11,11 @@ import {
   type AppStateAction,
 } from './appState';
 import { MISSION_CATEGORIES, type MissionCategory } from './catalog';
-import { SUPPORTED_LANGUAGES, type SupportedLanguage } from './localization';
+import {
+  SUPPORTED_LANGUAGES,
+  translateMessage,
+  type SupportedLanguage,
+} from './localization';
 import { MISSIONKID_STORAGE_KEY } from './persistence';
 
 const CATEGORY_LABELS: Readonly<
@@ -329,7 +333,7 @@ describe('category selection and the discovery cycle', () => {
     expect(screen.queryByRole('button', { name: 'Another set' })).toBeNull();
     expect(screen.getAllByRole('article')).toHaveLength(3);
     expect(
-      screen.getByText(/last full set in this Mission Category/i),
+      screen.getByText(translateMessage('en', 'discovery.anotherSet.bounded')),
     ).toBeTruthy();
     expect(screen.queryByRole('alert')).toBeNull();
   });
