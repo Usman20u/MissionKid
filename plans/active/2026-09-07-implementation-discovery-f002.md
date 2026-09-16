@@ -1,7 +1,7 @@
 # MissionKid Implementation Plan 02 — Mission Discovery and Selection (F002)
 
 **Date:** 2026-09-07
-**Status:** Approved — Plan 02 scope; Tasks 1 to 6 complete, Task 7 next (see Change control)
+**Status:** Approved — Plan 02 scope; Tasks 1 to 7 complete, Task 8 next (see Change control)
 
 ## Authorization basis
 
@@ -778,7 +778,7 @@ Step 5 progress by Mission Category:
 | Learning | Locked, 11 / 11 | Locked, 11 / 11 |
 | Calm | Locked, 10 / 10 | Locked, 10 / 10 |
 
-Approved English content is locked for all five Mission Categories, 54 of the 54 frozen Missions, and Step 4 is complete. German and Russian content is locked for all five Mission Categories, 54 of the 54 frozen Missions in each language, and Step 5 is complete; candidate and localization generation is closed. Step 6, the safety and adult-involvement review, is complete with a pass, and `safetyNoteRequired` is final: `true` for 53 Missions and `false` for CALM-C09. Production metadata is locked for all 54 Missions: final Mission identifiers, guidance durations and catalog order. The scene compatibility bridge required before republication is complete. The controlled republication is complete: production holds the 54 locked Missions at content version `mvp-catalog-2026-09-r2`, their scenes are mapped and the retired scene mappings are removed. The manual production review of the republished catalog has passed. Tasks 5 and 6 are complete, Task 7 is the next authorized task, and the later tasks remain unstarted.
+Approved English content is locked for all five Mission Categories, 54 of the 54 frozen Missions, and Step 4 is complete. German and Russian content is locked for all five Mission Categories, 54 of the 54 frozen Missions in each language, and Step 5 is complete; candidate and localization generation is closed. Step 6, the safety and adult-involvement review, is complete with a pass, and `safetyNoteRequired` is final: `true` for 53 Missions and `false` for CALM-C09. Production metadata is locked for all 54 Missions: final Mission identifiers, guidance durations and catalog order. The scene compatibility bridge required before republication is complete. The controlled republication is complete: production holds the 54 locked Missions at content version `mvp-catalog-2026-09-r2`, their scenes are mapped and the retired scene mappings are removed. The manual production review of the republished catalog has passed. Tasks 5, 6 and 7 are complete, Task 8 is the next authorized task, and the later tasks remain unstarted.
 
 #### Task 5 completion (2026-09-16)
 
@@ -853,6 +853,56 @@ it is replaced by a plain statement and the current three stay choosable.
 
 No Mission content, Mission metadata, catalog order, production catalog or
 Mission scene mapping changed in this task.
+
+#### Task 7 completion (2026-09-16)
+
+Task 7 is complete and committed as `08d0cd4`: a deliberate choice creates
+exactly one persisted Mission Session in `selected`.
+
+| Gate | Result |
+| --- | --- |
+| Selected-session schema | Pass |
+| Confirmed write / read-back | Pass |
+| Idempotency | Pass |
+| Existing-session conflict | Pass |
+| Runtime handoff | Pass |
+| New ready view | None |
+| Persistence migration | None |
+| `snapshotVersion` | 1 |
+| `npm test` | 348 / 348 pass |
+| `npm run build` | Pass |
+| Task 8 | Not started |
+
+`src/missionSession.ts` owns the transition. It follows the five-step path: the
+stored snapshot is read and validated, the transition is validated against it,
+the next whole snapshot is produced, written and read back exactly, and success
+is published only once that read-back matches field by field. `selectedAt` is
+epoch milliseconds from an injected wall clock, and the session identifier comes
+from an injected factory, following the Task 1 profile-identifier precedent.
+
+Choosing the same Mission again resolves the existing session: no second
+identifier, no moved `selectedAt`, no second write. Choosing a different Mission
+while a session exists returns a typed conflict before any persistence, leaving
+the stored value and the visible three untouched. Task 8 owns presenting both
+that conflict and every unconfirmed write.
+
+Persistence widens `currentSession` from `null` to a `selected` session at the
+same `snapshotVersion` 1, with no migration. `snapshotsMatch` compared the
+session by reference, which would have confirmed any read-back at all; it now
+compares every field, and a read-back differing in one field is a mismatch. A
+stored session that carries a later lifecycle timestamp, a wrong state, an
+unknown category or age band, a non-positive duration, a non-integer timestamp,
+embedded Mission wording, or another profile's identifier is refused rather than
+repaired. Whether `missionId` still resolves to reviewed catalog content stays a
+flow decision, as the record-level trust rules require, so persistence gained no
+catalog dependency.
+
+A confirmed selection publishes the session into runtime, ends the discovery
+cycle, and exposes a typed handoff that the start experience is available. No
+view was added: F003 consumes that handoff later.
+
+No Mission content, Mission metadata, catalog, Mission scene mapping or Task 5
+visual system changed in this task.
 
 ## Objective
 
