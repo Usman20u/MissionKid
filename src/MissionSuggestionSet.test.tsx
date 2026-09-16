@@ -352,6 +352,50 @@ describe('a complete suggestion set', () => {
     ).toBeNull();
   });
 
+  it('gives every Mission its own choose control in every language', () => {
+    for (const language of SUPPORTED_LANGUAGES) {
+      const chosen: string[] = [];
+      const { unmount } = render(
+        <MissionSuggestionSet
+          context={context({ language })}
+          onChoose={(missionId) => chosen.push(missionId)}
+        />,
+      );
+
+      const label = translateMessage(language, 'discovery.card.choose');
+      const controls = screen.getAllByRole('button', { name: label });
+      expect(controls).toHaveLength(3);
+
+      // Each control names its own Mission, so the three stay comparable peers
+      // and no card becomes one large button.
+      const expected = expectedMissions(context({ language })).map((m) => m.missionId);
+      for (const [index, control] of controls.entries()) {
+        expect(control.closest('article')!.tagName).toBe('ARTICLE');
+        fireEvent.click(control);
+        expect(chosen.at(-1)).toBe(expected[index]);
+      }
+      unmount();
+    }
+  });
+
+  it('describes each choose control by the Mission it belongs to', () => {
+    render(<MissionSuggestionSet context={context()} onChoose={() => {}} />);
+
+    for (const card of cards()) {
+      const control = within(card).getByRole('button');
+      const title = within(card).getByRole('heading', { level: 3 });
+      // The accessible name is the same on all three, so the description is
+      // what tells a screen-reader user which Mission this one chooses.
+      expect(control.getAttribute('aria-describedby')).toBe(title.id);
+    }
+  });
+
+  it('offers no choose control when nothing can own a selection', () => {
+    render(<MissionSuggestionSet context={context()} />);
+
+    expect(screen.queryByRole('button')).toBeNull();
+  });
+
   it('offers no way to choose a Mission', () => {
     // Structural rather than textual: Mission instructions legitimately contain
     // words like "choose" and "start", so only real controls are checked.

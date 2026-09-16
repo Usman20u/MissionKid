@@ -1,6 +1,18 @@
 import type { ReactNode } from 'react';
 
 import { selectDiscoveryCycle, selectShownMissionIds, useAppState } from './appState';
+import { MISSION_CATALOG } from './catalogContent';
+import {
+  createSessionId,
+  readWallClock,
+  selectMission,
+  type SessionIdFactory,
+  type WallClock,
+} from './missionSession';
+import {
+  persistenceAdapter,
+  type PersistenceAdapter,
+} from './persistence';
 import { MISSION_CATEGORIES, type MissionCategory } from './catalog';
 import { translateMessage, type MessageKey } from './localization';
 import { MissionSuggestionSet } from './MissionSuggestionSet';
@@ -75,7 +87,17 @@ function CategoryGlyph({ category }: Readonly<{ category: MissionCategory }>) {
 
 // The five canonical Mission Categories as one bounded peer-choice group. This
 // view derives and exposes the discovery cycle; it renders no Mission.
-export function MissionCategorySelection() {
+type MissionCategorySelectionProps = Readonly<{
+  adapter?: PersistenceAdapter;
+  createId?: SessionIdFactory;
+  now?: WallClock;
+}>;
+
+export function MissionCategorySelection({
+  adapter = persistenceAdapter,
+  createId = createSessionId,
+  now = readWallClock,
+}: MissionCategorySelectionProps = {}) {
   const { dispatch, state } = useAppState();
   const t = (key: MessageKey) => translateMessage(state.language, key);
   const selected = state.discovery?.category ?? null;
@@ -136,6 +158,26 @@ export function MissionCategorySelection() {
           onAnotherSet={(missionIds) =>
             dispatch({ type: 'discovery-another-set-requested', missionIds })
           }
+          onChoose={(missionId) => {
+            const mission = MISSION_CATALOG.find(
+              (record) => record.missionId === missionId,
+            );
+            if (!mission) return;
+
+            const result = selectMission(
+              adapter,
+              { mission, context: cycle },
+              createId,
+              now,
+            );
+
+            // Runtime only learns of a selection the storage confirmed. Every
+            // other outcome leaves the three Missions exactly as they are;
+            // Task 8 owns telling the family what happened.
+            if (result.status === 'created' || result.status === 'resolved') {
+              dispatch({ type: 'mission-selection-confirmed', session: result.session });
+            }
+          }}
           shown={selectShownMissionIds(state)}
         />
       ) : null}

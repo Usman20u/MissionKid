@@ -644,6 +644,14 @@ input {
   gap: 1.15rem;
 }
 
+/* The one action on a card. It sits last, after everything the family needs to
+   judge the Mission, and stays inside the card so it reads as this Mission's
+   action rather than the page's. */
+.mission-card__choose {
+  margin-top: 0.35rem;
+  justify-self: start;
+}
+
 /* Secondary to choosing one of the three above: it sits after them, at the
    width of the text rather than the set, and never competes with a Mission. */
 .mission-suggestions__another {

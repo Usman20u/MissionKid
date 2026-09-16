@@ -1,13 +1,16 @@
 import { fireEvent, render, screen, within } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { AppShell, selectAppView } from './AppShell';
 import {
   AppStateProvider,
   appStateReducer,
+  selectCurrentSession,
   selectDiscoveryCycle,
+  selectMissionStartAvailable,
   selectShownMissionIds,
   type AppState,
+  useAppState,
   type AppStateAction,
 } from './appState';
 import { MISSION_CATEGORIES, type MissionCategory } from './catalog';
@@ -16,7 +19,13 @@ import {
   translateMessage,
   type SupportedLanguage,
 } from './localization';
-import { MISSIONKID_STORAGE_KEY } from './persistence';
+import { MissionCategorySelection } from './MissionDiscovery';
+import {
+  MISSIONKID_STORAGE_KEY,
+  createEmptySnapshot,
+  createPersistenceAdapter,
+  type SnapshotStorage,
+} from './persistence';
 
 const CATEGORY_LABELS: Readonly<
   Record<SupportedLanguage, Readonly<Record<MissionCategory, string>>>
@@ -58,6 +67,51 @@ function completedSetup(overrides: Partial<AppState> = {}): AppState {
 
 function inDiscovery(overrides: Partial<AppState> = {}): AppState {
   return completedSetup({ discovery: { category: null, shown: [] }, ...overrides });
+}
+
+function memoryStorage() {
+  const values = new Map<string, string>();
+  values.set(
+    MISSIONKID_STORAGE_KEY,
+    JSON.stringify({
+      ...createEmptySnapshot(),
+      childProfile: { localProfileId: 'profile-1', ageBand: '7–8' },
+    }),
+  );
+  const storage: SnapshotStorage = {
+    getItem: (key) => values.get(key) ?? null,
+    setItem: (key, value) => {
+      values.set(key, value);
+    },
+    removeItem: (key) => {
+      values.delete(key);
+    },
+  };
+  return { values, storage };
+}
+
+// Discovery with an injected adapter, identifier factory and clock, so a test
+// owns every fact a selection records.
+function renderDiscovery(
+  memory: ReturnType<typeof memoryStorage>,
+  captured: AppState[],
+  createId: () => string = () => 'session-1',
+) {
+  function Probe() {
+    captured.push(useAppState().state);
+    return null;
+  }
+
+  return render(
+    <AppStateProvider initialState={inDiscovery()}>
+      <Probe />
+      <MissionCategorySelection
+        adapter={createPersistenceAdapter(memory.storage)}
+        createId={createId}
+        now={() => 1_700_000_000_000}
+      />
+    </AppStateProvider>,
+  );
 }
 
 function renderShell(state: AppState) {
@@ -355,6 +409,110 @@ describe('category selection and the discovery cycle', () => {
         card.querySelector('.mission-card__title')!.textContent,
       ),
     ).toEqual(firstMovementSet);
+  });
+
+  it('publishes a confirmed selection, ends the cycle, and adds no new view', () => {
+    const memory = memoryStorage();
+    const captured: AppState[] = [];
+
+    renderDiscovery(memory, captured);
+    fireEvent.click(radioFor('Movement'));
+    fireEvent.click(screen.getByRole('button', { name: 'Another set' }));
+    expect(selectShownMissionIds(captured.at(-1)!)).toHaveLength(3);
+
+    const chosen = screen.getAllByRole('article')[0]!;
+    const missionId = chosen
+      .querySelector('button')!
+      .getAttribute('aria-describedby')!
+      .replace('mission-title-', '');
+    fireEvent.click(within(chosen).getByRole('button', { name: 'Choose this Mission' }));
+
+    const after = captured.at(-1)!;
+    const session = selectCurrentSession(after);
+
+    expect(session?.missionId).toBe(missionId);
+    expect(session?.state).toBe('selected');
+    expect(selectMissionStartAvailable(after)).toBe(true);
+    // Choosing ends the cycle; the Mission Category choice is not disturbed.
+    expect(selectShownMissionIds(after)).toEqual([]);
+    expect(after.discovery?.category).toBe('Movement');
+    // The start experience belongs to F003. Nothing here renders it.
+    expect(screen.getByRole('group', { name: 'Mission Category' })).toBeTruthy();
+    expect(screen.getAllByRole('article')).toHaveLength(3);
+  });
+
+  it('keeps the three Missions and publishes nothing when the write fails', () => {
+    const memory = memoryStorage();
+    memory.storage.setItem = () => {
+      throw new Error('write failed');
+    };
+    const captured: AppState[] = [];
+
+    renderDiscovery(memory, captured);
+    fireEvent.click(radioFor('Movement'));
+    const before = screen.getAllByRole('article').map((card) =>
+      card.querySelector('.mission-card__title')!.textContent,
+    );
+
+    fireEvent.click(screen.getAllByRole('button', { name: 'Choose this Mission' })[0]!);
+
+    // No false success, and the family keeps exactly what they were choosing
+    // from. Task 8 owns telling them what happened.
+    expect(selectCurrentSession(captured.at(-1)!)).toBeNull();
+    expect(selectMissionStartAvailable(captured.at(-1)!)).toBe(false);
+    expect(
+      screen.getAllByRole('article').map((card) =>
+        card.querySelector('.mission-card__title')!.textContent,
+      ),
+    ).toEqual(before);
+  });
+
+  it('resolves one session when the same Mission is chosen twice', () => {
+    const memory = memoryStorage();
+    const createId = vi.fn(() => 'session-1');
+    const captured: AppState[] = [];
+
+    renderDiscovery(memory, captured, createId);
+    fireEvent.click(radioFor('Movement'));
+
+    const control = () => screen.getAllByRole('button', { name: 'Choose this Mission' })[0]!;
+    fireEvent.click(control());
+    const first = selectCurrentSession(captured.at(-1)!);
+    fireEvent.click(control());
+    const second = selectCurrentSession(captured.at(-1)!);
+
+    expect(second).toEqual(first);
+    expect(createId).toHaveBeenCalledTimes(1);
+    expect(JSON.parse(memory.values.get(MISSIONKID_STORAGE_KEY)!).currentSession.sessionId)
+      .toBe('session-1');
+  });
+
+  it('refuses a different Mission while one is selected and changes nothing', () => {
+    const memory = memoryStorage();
+    const captured: AppState[] = [];
+
+    renderDiscovery(memory, captured);
+    fireEvent.click(radioFor('Movement'));
+    const controls = () => screen.getAllByRole('button', { name: 'Choose this Mission' });
+    fireEvent.click(controls()[0]!);
+
+    const stored = memory.values.get(MISSIONKID_STORAGE_KEY);
+    const session = selectCurrentSession(captured.at(-1)!);
+    const visible = screen.getAllByRole('article').map((card) =>
+      card.querySelector('.mission-card__title')!.textContent,
+    );
+
+    fireEvent.click(controls()[1]!);
+
+    // The conflict is refused before persistence: same stored value, same
+    // runtime session, same three Missions on screen.
+    expect(memory.values.get(MISSIONKID_STORAGE_KEY)).toBe(stored);
+    expect(selectCurrentSession(captured.at(-1)!)).toEqual(session);
+    expect(
+      screen.getAllByRole('article').map((card) =>
+        card.querySelector('.mission-card__title')!.textContent,
+      ),
+    ).toEqual(visible);
   });
 
   it('starts a cycle with nothing shown and records a retired set', () => {

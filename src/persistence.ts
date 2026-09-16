@@ -1,4 +1,5 @@
 import { AGE_BANDS, type AgeBand } from './ageBands';
+import { MISSION_CATEGORIES, type MissionCategory } from './catalog';
 import {
   DEFAULT_LANGUAGE,
   resolveSupportedLanguage,
@@ -16,13 +17,30 @@ export type ChildProfile = Readonly<{
   ageBand: AgeBand | null;
 }>;
 
+// The durable facts of one Mission Session. The selection facts are snapshots
+// taken when the Mission was chosen, so a later catalog release or a later
+// setup edit cannot rewrite what was agreed to. No localized Mission text lives
+// here: presentation always resolves from the static catalog.
+export type SelectedMissionSession = Readonly<{
+  sessionId: string;
+  childProfileId: string;
+  missionId: string;
+  missionCategoryAtSelection: MissionCategory;
+  ageBandAtSelection: AgeBand;
+  durationSecondsAtSelection: number;
+  state: 'selected';
+  // Epoch milliseconds, written once when the session is created.
+  selectedAt: number;
+}>;
+
 export type MissionKidSnapshot = Readonly<{
   snapshotVersion: typeof CURRENT_SNAPSHOT_VERSION;
   settings: Readonly<{
     language: SupportedLanguage;
   }>;
   childProfile: ChildProfile | null;
-  currentSession: null;
+  // `ready` and `active` are later lifecycle states and are not accepted yet.
+  currentSession: SelectedMissionSession | null;
   currentResultSessionId: null;
   completedSessions: readonly [];
 }>;
@@ -119,6 +137,63 @@ function isLocalProfileId(value: unknown): value is string {
   return typeof value === 'string' && value.trim().length > 0;
 }
 
+const SELECTED_SESSION_KEYS = [
+  'sessionId',
+  'childProfileId',
+  'missionId',
+  'missionCategoryAtSelection',
+  'ageBandAtSelection',
+  'durationSecondsAtSelection',
+  'state',
+  'selectedAt',
+] as const;
+
+function isEpochMilliseconds(value: unknown): value is number {
+  return typeof value === 'number' && Number.isInteger(value) && value >= 0;
+}
+
+// Stored sessions are untrusted input. The exact key set is required, so a
+// stored `startedAt`, `completedAt` or `completionPeriodId` makes the session
+// invalid rather than being quietly dropped: this task cannot produce them, and
+// silently repairing a session would invent a lifecycle fact.
+//
+// The Mission reference is checked for shape only. Whether it still resolves to
+// reviewed, safe catalog content is a flow decision, not a storage one: the
+// record-level trust rules keep such a session and refuse to start it rather
+// than discarding the family's selection.
+function isSelectedSession(
+  value: unknown,
+  childProfileId: string | null,
+): value is SelectedMissionSession {
+  return (
+    isRecord(value) &&
+    hasExactKeys(value, SELECTED_SESSION_KEYS) &&
+    isLocalProfileId(value.sessionId) &&
+    isLocalProfileId(value.childProfileId) &&
+    value.childProfileId === childProfileId &&
+    isLocalProfileId(value.missionId) &&
+    MISSION_CATEGORIES.some((category) => category === value.missionCategoryAtSelection) &&
+    isAgeBand(value.ageBandAtSelection) &&
+    typeof value.durationSecondsAtSelection === 'number' &&
+    Number.isInteger(value.durationSecondsAtSelection) &&
+    value.durationSecondsAtSelection > 0 &&
+    value.state === 'selected' &&
+    isEpochMilliseconds(value.selectedAt)
+  );
+}
+
+// Field by field, because a stored session is a parsed object that is never
+// reference-equal to the one it was written from. Reference equality would have
+// confirmed any read-back at all.
+function sessionsMatch(
+  expected: SelectedMissionSession | null,
+  actual: SelectedMissionSession | null,
+): boolean {
+  if (expected === null || actual === null) return expected === actual;
+
+  return SELECTED_SESSION_KEYS.every((key) => expected[key] === actual[key]);
+}
+
 function validateSnapshot(value: unknown): SnapshotValidationResult {
   if (!isRecord(value) || !hasOwn(value, 'snapshotVersion')) {
     return { status: 'invalid' };
@@ -175,12 +250,23 @@ function validateSnapshot(value: unknown): SnapshotValidationResult {
   }
 
   if (
-    value.currentSession !== null ||
     value.currentResultSessionId !== null ||
     !Array.isArray(value.completedSessions) ||
     value.completedSessions.length !== 0
   ) {
     return { status: 'invalid' };
+  }
+
+  // A session belongs to the profile that made the selection, so a session
+  // without a profile to own it is not a repairable snapshot.
+  let currentSession: SelectedMissionSession | null = null;
+
+  if (value.currentSession !== null) {
+    if (!isSelectedSession(value.currentSession, childProfile?.localProfileId ?? null)) {
+      return { status: 'invalid' };
+    }
+
+    currentSession = value.currentSession;
   }
 
   return {
@@ -190,7 +276,7 @@ function validateSnapshot(value: unknown): SnapshotValidationResult {
       snapshotVersion: CURRENT_SNAPSHOT_VERSION,
       settings: { language },
       childProfile,
-      currentSession: null,
+      currentSession,
       currentResultSessionId: null,
       completedSessions: [],
     },
@@ -215,7 +301,7 @@ function snapshotsMatch(
     expected.childProfile?.localProfileId ===
       actual.childProfile?.localProfileId &&
     expected.childProfile?.ageBand === actual.childProfile?.ageBand &&
-    expected.currentSession === actual.currentSession &&
+    sessionsMatch(expected.currentSession, actual.currentSession) &&
     expected.currentResultSessionId === actual.currentResultSessionId &&
     expected.completedSessions.length === actual.completedSessions.length
   );

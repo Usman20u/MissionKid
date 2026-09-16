@@ -25,11 +25,12 @@ const ADULT_LABEL_KEYS: Readonly<Partial<Record<string, MessageKey>>> = {
 type CardProps = Readonly<{
   mission: MissionRecord;
   language: SupportedLanguage;
+  onChoose?: (missionId: string) => void;
 }>;
 
 // Presentation only: an article, not a control. Task 5 has no choice behaviour,
 // so nothing here may look or behave like a button.
-function MissionCard({ mission, language }: CardProps) {
+function MissionCard({ mission, language, onChoose }: CardProps) {
   const t = (key: MessageKey) => translateMessage(language, key);
   const content = mission.content[language];
   const adultLabelKey = ADULT_LABEL_KEYS[mission.adultInvolvement];
@@ -72,6 +73,20 @@ function MissionCard({ mission, language }: CardProps) {
             {content.safetyNote}
           </p>
         ) : null}
+        {/* The card stays an article: only this control is activatable, so the
+            three remain comparable peers rather than three large buttons. It
+            names its own Mission, and choosing twice resolves one session
+            rather than relying on the press being hard to repeat. */}
+        {onChoose ? (
+          <button
+            aria-describedby={titleId}
+            className="button button--primary mission-card__choose"
+            onClick={() => onChoose(mission.missionId)}
+            type="button"
+          >
+            {t('discovery.card.choose')}
+          </button>
+        ) : null}
       </div>
     </article>
   );
@@ -109,6 +124,8 @@ type MissionSuggestionSetProps = Readonly<{
   // Absent where no cycle owns this set, in which case no bounded progression
   // is offered at all rather than a control that could not advance anything.
   onAnotherSet?: (missionIds: readonly string[]) => void;
+  // Absent where nothing can own a selection, for the same reason.
+  onChoose?: (missionId: string) => void;
 }>;
 
 export function MissionSuggestionSet({
@@ -116,6 +133,7 @@ export function MissionSuggestionSet({
   catalog = MISSION_CATALOG,
   shown = [],
   onAnotherSet,
+  onChoose,
 }: MissionSuggestionSetProps) {
   const t = (key: MessageKey) => translateMessage(context.language, key);
   const result = deriveSuggestionSet(catalog, context, shown);
@@ -167,7 +185,12 @@ export function MissionSuggestionSet({
       </h2>
       <div className="mission-suggestions__set">
         {result.missions.map((mission) => (
-          <MissionCard key={mission.missionId} language={context.language} mission={mission} />
+          <MissionCard
+            key={mission.missionId}
+            language={context.language}
+            mission={mission}
+            onChoose={onChoose}
+          />
         ))}
       </div>
       {/* Secondary to choosing one of the three above, and offered only while a

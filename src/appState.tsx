@@ -17,6 +17,7 @@ import type {
   AgeBand,
   HydrationResult,
   MissionKidSnapshot,
+  SelectedMissionSession,
 } from './persistence';
 
 type SetupContext = Readonly<{
@@ -53,6 +54,9 @@ type RecoveryContext = Readonly<{
   resetUnconfirmed?: boolean;
   temporaryComplete?: boolean;
   discovery?: DiscoveryContext;
+  // The confirmed durable selection, mirrored into runtime only after the write
+  // was read back exactly. It is never set optimistically.
+  currentSession?: SelectedMissionSession;
 }>;
 
 export type AppState = RecoveryContext & (
@@ -78,6 +82,7 @@ export type AppStateAction =
   | { type: 'discovery-opened' }
   | { type: 'discovery-category-selected'; category: MissionCategory }
   | { type: 'discovery-another-set-requested'; missionIds: readonly string[] }
+  | { type: 'mission-selection-confirmed'; session: SelectedMissionSession }
   | {
       type: 'setup-save-unconfirmed';
       localProfileId: string | null;
@@ -153,6 +158,19 @@ export type DiscoveryCycle = Readonly<{
   language: SupportedLanguage;
   category: MissionCategory;
 }>;
+
+// A confirmed selection exists and the start experience it leads to is
+// available. F003 owns that experience; this is only the typed fact that it can
+// begin, so nothing in this task renders a screen for it.
+export function selectMissionStartAvailable(state: AppState): boolean {
+  return state.currentSession !== undefined;
+}
+
+export function selectCurrentSession(
+  state: AppState,
+): SelectedMissionSession | null {
+  return state.currentSession ?? null;
+}
 
 // The Missions this cycle has already shown. Empty outside a cycle, so a fresh
 // cycle always starts at the first set.
@@ -282,6 +300,15 @@ export function appStateReducer(
         discovery: { ...discovery, shown: [...discovery.shown, ...action.missionIds] },
       };
     }
+    case 'mission-selection-confirmed':
+      // Choosing a Mission ends the discovery cycle, so the shown identifiers
+      // go with it. The Mission Category the parent picked is a separate
+      // choice and is left alone.
+      return {
+        ...state,
+        currentSession: action.session,
+        discovery: state.discovery ? { ...state.discovery, shown: [] } : undefined,
+      };
     case 'setup-save-unconfirmed': {
       // Recovery is newer evidence than the pre-write read; neither confirms the attempted save.
       const evidence = action.recovery.status === 'hydrated' || action.recovery.status === 'absent'

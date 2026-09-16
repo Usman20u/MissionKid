@@ -74,6 +74,7 @@ const englishMessages = {
   'discovery.adult.nearby': 'Adult nearby',
   'discovery.adult.participation': 'Adult takes part',
   'discovery.card.safetyLabel': 'Before you start',
+  'discovery.card.choose': 'Choose this Mission',
   'discovery.anotherSet': 'Another set',
   'discovery.anotherSet.bounded':
     "There aren't three more Missions in this category. Choose one of these three, or pick another category above.",
@@ -164,6 +165,7 @@ export const INTERFACE_MESSAGES: CompleteInterfaceMessages = {
     'discovery.adult.nearby': 'Erwachsene Person in der Nähe',
     'discovery.adult.participation': 'Erwachsene Person macht mit',
     'discovery.card.safetyLabel': 'Vor dem Start',
+    'discovery.card.choose': 'Diese Mission wählen',
     'discovery.anotherSet': 'Weitere drei',
     'discovery.anotherSet.bounded':
       'Hier gibt es keine drei weiteren Missionen. Wähle eine von diesen dreien oder oben eine andere Kategorie.',
@@ -244,6 +246,7 @@ export const INTERFACE_MESSAGES: CompleteInterfaceMessages = {
     'discovery.adult.nearby': 'Взрослый рядом',
     'discovery.adult.participation': 'Взрослый участвует',
     'discovery.card.safetyLabel': 'Перед началом',
+    'discovery.card.choose': 'Выбрать эту миссию',
     'discovery.anotherSet': 'Ещё три',
     'discovery.anotherSet.bounded':
       'Здесь уже нет ещё трёх новых миссий. Выбери одну из этих трёх или другую категорию выше.',
