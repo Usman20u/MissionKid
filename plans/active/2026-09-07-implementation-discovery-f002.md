@@ -1,7 +1,7 @@
 # MissionKid Implementation Plan 02 — Mission Discovery and Selection (F002)
 
 **Date:** 2026-09-07
-**Status:** Approved — Plan 02 scope; Task 5 implementation in progress following the completed Mission content republication (see Change control)
+**Status:** Approved — Plan 02 scope; Tasks 1 to 5 complete, Task 6 next (see Change control)
 
 ## Authorization basis
 
@@ -744,7 +744,7 @@ The controlled 54-Mission catalog republication is complete. Commit `d61d605` re
 - Discovery release result: all 15 age-band and Mission Category cells hold at least six eligible Missions, identical in English, German and Russian, and the first set and the second fresh set are valid in 15 of 15 contexts each, with no drift from the locked catalog order. No validator requires 54 Missions or six per context.
 - Scenes: all 54 production Missions resolve explicit scenes, none uses a category fallback, the first set and the second fresh set are scene-distinct in 15 of 15 contexts, and no retired scene mapping remains. The scene resolver, element library, subject rules and category fallbacks are unchanged.
 - Verification: `npm test` passes 12 test files and 281 tests, and `npm run build` passes, before the republication, with the republished catalog and after the scene cleanup. No test file changed.
-- Task 5 state: nine staged source entries at fingerprint `c5f1abe5f0fe4a6bc7d599584153ffbcea59d0aff0eaca09c752961bf32fa6d3`, each content-identical to its working-tree version. No staged file uses the superseded motif API; that reconciliation is complete. `src/MissionScene.tsx` is integrated and still untracked pending the final Task-5 ergonomic and human visual review before the implementation commit; its Git blob SHA-1 is `36589030c97680e40821cfe1073597cb0f0bb5bc` and its SHA-256 is `42870d66deb9e9af392c0f69f32cfcd1c8c6a132d1278330dd2b2571625217cd`. Task 5 is in progress, and push is not authorized.
+- Task 5 state: complete and committed as `18ea222`. Push is not authorized.
 
 #### Republication step status
 
@@ -778,8 +778,35 @@ Step 5 progress by Mission Category:
 | Learning | Locked, 11 / 11 | Locked, 11 / 11 |
 | Calm | Locked, 10 / 10 | Locked, 10 / 10 |
 
-Approved English content is locked for all five Mission Categories, 54 of the 54 frozen Missions, and Step 4 is complete. German and Russian content is locked for all five Mission Categories, 54 of the 54 frozen Missions in each language, and Step 5 is complete; candidate and localization generation is closed. Step 6, the safety and adult-involvement review, is complete with a pass, and `safetyNoteRequired` is final: `true` for 53 Missions and `false` for CALM-C09. Production metadata is locked for all 54 Missions: final Mission identifiers, guidance durations and catalog order. The scene compatibility bridge required before republication is complete. The controlled republication is complete: production holds the 54 locked Missions at content version `mvp-catalog-2026-09-r2`, their scenes are mapped and the retired scene mappings are removed. The manual production review of the republished catalog has passed. Task 5 is in progress with its source work staged and reconciled, Task 6 remains blocked, and Task 7 and the later tasks remain unstarted and unauthorized.
+Approved English content is locked for all five Mission Categories, 54 of the 54 frozen Missions, and Step 4 is complete. German and Russian content is locked for all five Mission Categories, 54 of the 54 frozen Missions in each language, and Step 5 is complete; candidate and localization generation is closed. Step 6, the safety and adult-involvement review, is complete with a pass, and `safetyNoteRequired` is final: `true` for 53 Missions and `false` for CALM-C09. Production metadata is locked for all 54 Missions: final Mission identifiers, guidance durations and catalog order. The scene compatibility bridge required before republication is complete. The controlled republication is complete: production holds the 54 locked Missions at content version `mvp-catalog-2026-09-r2`, their scenes are mapped and the retired scene mappings are removed. The manual production review of the republished catalog has passed. Task 5 is complete, Task 6 is the next authorized task, and Task 7 and the later tasks remain unstarted.
 
+#### Task 5 completion (2026-09-16)
+
+Task 5 is complete and committed as `18ea222`: eligibility, deterministic
+exactly-three derivation, Mission card presentation and the Controlled Mission
+Mini-World scene system.
+
+| Gate | Result |
+| --- | --- |
+| Human visual review | Pass |
+| Mobile | 360 RU pass |
+| Desktop | Pass |
+| Mission scenes | 54 / 54 explicit |
+| First-set visual readability | 15 / 15 pass |
+| Accessibility announcement | Pass |
+| `npm test` | 288 / 288 pass |
+| `npm run build` | Pass |
+
+Final visual-system decision: partial diorama depth is accepted for this
+implementation slice. Depth comes from background recession, midground haze,
+contact shadows, the stage vignette, object scale and overlap. A true per-scene
+foreground layer would require new per-Mission artwork and is deferred as a
+future visual enhancement, not a Task 5 requirement. Also deferred, unchanged by
+this slice: Russian cards that remain long because their approved copy is long,
+and the global `min-width: 320px` shell floor below 320 CSS pixels.
+
+No Mission content, Mission metadata, catalog order or production catalog
+changed in this task.
 
 ## Objective
 
