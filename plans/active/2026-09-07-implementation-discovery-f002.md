@@ -1,7 +1,7 @@
 # MissionKid Implementation Plan 02 — Mission Discovery and Selection (F002)
 
 **Date:** 2026-09-07
-**Status:** Approved — Plan 02 scope; Tasks 1 to 7 complete, Task 8 next (see Change control)
+**Status:** Approved — Plan 02 scope; Tasks 1 to 8 complete, Task 9 next (see Change control)
 
 ## Authorization basis
 
@@ -778,7 +778,7 @@ Step 5 progress by Mission Category:
 | Learning | Locked, 11 / 11 | Locked, 11 / 11 |
 | Calm | Locked, 10 / 10 | Locked, 10 / 10 |
 
-Approved English content is locked for all five Mission Categories, 54 of the 54 frozen Missions, and Step 4 is complete. German and Russian content is locked for all five Mission Categories, 54 of the 54 frozen Missions in each language, and Step 5 is complete; candidate and localization generation is closed. Step 6, the safety and adult-involvement review, is complete with a pass, and `safetyNoteRequired` is final: `true` for 53 Missions and `false` for CALM-C09. Production metadata is locked for all 54 Missions: final Mission identifiers, guidance durations and catalog order. The scene compatibility bridge required before republication is complete. The controlled republication is complete: production holds the 54 locked Missions at content version `mvp-catalog-2026-09-r2`, their scenes are mapped and the retired scene mappings are removed. The manual production review of the republished catalog has passed. Tasks 5, 6 and 7 are complete, Task 8 is the next authorized task, and the later tasks remain unstarted.
+Approved English content is locked for all five Mission Categories, 54 of the 54 frozen Missions, and Step 4 is complete. German and Russian content is locked for all five Mission Categories, 54 of the 54 frozen Missions in each language, and Step 5 is complete; candidate and localization generation is closed. Step 6, the safety and adult-involvement review, is complete with a pass, and `safetyNoteRequired` is final: `true` for 53 Missions and `false` for CALM-C09. Production metadata is locked for all 54 Missions: final Mission identifiers, guidance durations and catalog order. The scene compatibility bridge required before republication is complete. The controlled republication is complete: production holds the 54 locked Missions at content version `mvp-catalog-2026-09-r2`, their scenes are mapped and the retired scene mappings are removed. The manual production review of the republished catalog has passed. Tasks 5 to 8 are complete, Task 9 is the next authorized task, and the later tasks remain unstarted.
 
 #### Task 5 completion (2026-09-16)
 
@@ -903,6 +903,55 @@ view was added: F003 consumes that handoff later.
 
 No Mission content, Mission metadata, catalog, Mission scene mapping or Task 5
 visual system changed in this task.
+
+#### Task 8 completion (2026-09-16)
+
+Task 8 is complete and committed as `b613b2a`: the reachable F002 unavailable,
+error and recovery states.
+
+| Gate | Result |
+| --- | --- |
+| Reachable F002 unavailable/recovery states | Pass |
+| Selection conflict | Pass |
+| Selection unconfirmed | Pass |
+| Current-set preservation | Pass |
+| No raw technical detail | Pass |
+| EN / DE / RU | Pass |
+| Accessibility | Pass |
+| `npm test` | 359 / 359 pass |
+| `npm run build` | Pass |
+
+Two of the five named states were already correct and were left alone: the
+insufficient-content state from Task 5 and the bounded no-further-complete-set
+state from Task 6.
+
+Two are unreachable under this architecture and were deliberately not built. The
+catalog is bundled static content and derivation is a pure synchronous total
+function, so there is no first-set load to fail and no replacement request to
+fail. A pool too small to fill one group is the insufficient-content state, not a
+load failure. Tests now hold that property — derivation returns a typed result
+for every production context and for malformed records rather than throwing —
+so the absence of those paths is recorded rather than papered over with UI for a
+failure that cannot occur.
+
+The state that was genuinely missing is the selection outcome. Task 7 produced
+typed `conflict`, `unconfirmed` and `unavailable` results that nothing presented.
+A conflict is a product state and is announced politely: one Mission is already
+chosen, and choosing that same Mission again carries on with it, which the Task 7
+idempotency guarantees. An unconfirmed transition is a failure and takes the
+assertive treatment already used for an unconfirmed save: nothing started, and
+choosing again is the retry. Where a write landed but its read-back failed, that
+retry resolves the stored session instead of creating a second one. In every
+case the three Missions stay on screen and stay choosable, no message names a
+session, storage key, exception or internal state, and a message is dropped as
+soon as the cycle it described changes.
+
+The existing-session conflict has no return-or-abandon control yet: `F003`
+owns that choice and the ready experience it returns to, so neither was invented
+here.
+
+No Mission content, Mission metadata, catalog, Mission scene mapping,
+persistence schema or Task 5 visual system changed in this task.
 
 ## Objective
 
