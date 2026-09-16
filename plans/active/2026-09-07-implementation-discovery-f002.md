@@ -1,7 +1,7 @@
 # MissionKid Implementation Plan 02 — Mission Discovery and Selection (F002)
 
 **Date:** 2026-09-07
-**Status:** Approved — Plan 02 scope; Tasks 1 to 5 complete, Task 6 next (see Change control)
+**Status:** Approved — Plan 02 scope; Tasks 1 to 6 complete, Task 7 next (see Change control)
 
 ## Authorization basis
 
@@ -778,7 +778,7 @@ Step 5 progress by Mission Category:
 | Learning | Locked, 11 / 11 | Locked, 11 / 11 |
 | Calm | Locked, 10 / 10 | Locked, 10 / 10 |
 
-Approved English content is locked for all five Mission Categories, 54 of the 54 frozen Missions, and Step 4 is complete. German and Russian content is locked for all five Mission Categories, 54 of the 54 frozen Missions in each language, and Step 5 is complete; candidate and localization generation is closed. Step 6, the safety and adult-involvement review, is complete with a pass, and `safetyNoteRequired` is final: `true` for 53 Missions and `false` for CALM-C09. Production metadata is locked for all 54 Missions: final Mission identifiers, guidance durations and catalog order. The scene compatibility bridge required before republication is complete. The controlled republication is complete: production holds the 54 locked Missions at content version `mvp-catalog-2026-09-r2`, their scenes are mapped and the retired scene mappings are removed. The manual production review of the republished catalog has passed. Task 5 is complete, Task 6 is the next authorized task, and Task 7 and the later tasks remain unstarted.
+Approved English content is locked for all five Mission Categories, 54 of the 54 frozen Missions, and Step 4 is complete. German and Russian content is locked for all five Mission Categories, 54 of the 54 frozen Missions in each language, and Step 5 is complete; candidate and localization generation is closed. Step 6, the safety and adult-involvement review, is complete with a pass, and `safetyNoteRequired` is final: `true` for 53 Missions and `false` for CALM-C09. Production metadata is locked for all 54 Missions: final Mission identifiers, guidance durations and catalog order. The scene compatibility bridge required before republication is complete. The controlled republication is complete: production holds the 54 locked Missions at content version `mvp-catalog-2026-09-r2`, their scenes are mapped and the retired scene mappings are removed. The manual production review of the republished catalog has passed. Tasks 5 and 6 are complete, Task 7 is the next authorized task, and the later tasks remain unstarted.
 
 #### Task 5 completion (2026-09-16)
 
@@ -807,6 +807,52 @@ and the global `min-width: 320px` shell floor below 320 CSS pixels.
 
 No Mission content, Mission metadata, catalog order or production catalog
 changed in this task.
+
+#### Task 6 completion (2026-09-16)
+
+Task 6 is complete and committed as `20ae7f4`: bounded `Another set` progression
+over the Task 5 derivation.
+
+| Gate | Result |
+| --- | --- |
+| Bounded progression | Pass |
+| Runtime shown-identifier cycle state | Pass |
+| Persistence | None |
+| 15-context real-catalog audit | Pass |
+| No repeat | Pass |
+| No wraparound | Pass |
+| No partial set | Pass |
+| Bounded end | Pass |
+| Replacement failure preserves current set | Pass |
+| Accessibility | Pass |
+| `npm test` | 307 / 307 pass |
+| `npm run build` | Pass |
+
+The cycle's shown Mission identifiers live in the runtime discovery context in
+`src/appState.tsx`, alongside the selected Mission Category. They are never
+persisted and never reach a Mission record. A cycle is one age band, one UI
+language and one Mission Category: the cycle itself stays derived, and the shown
+identifiers reset when the Mission Category, language or age band changes, and
+when the family leaves discovery. Re-choosing the same Mission Category is not a
+change and continues the cycle.
+
+`deriveSuggestionSet` takes the shown identifiers and returns the next complete
+unseen group in the same deterministic order, plus whether a further complete
+group exists. There is one eligibility rule and one ordering, not a second
+algorithm for replacement. The reducer retires only a complete group of three
+fresh identifiers, so a malformed request leaves the visible three untouched;
+derivation is synchronous and pure, so no loading or partial state can appear
+between two sets.
+
+The 15 age-band and Mission Category contexts all reach at least one
+replacement, three reach a third complete set, no Mission repeats within a
+cycle, no cycle wraps, and every cycle stops with fewer than three unseen
+Missions rather than showing a partial group. `Another set` is presented as a
+secondary control below the three Missions; when no further complete set exists
+it is replaced by a plain statement and the current three stay choosable.
+
+No Mission content, Mission metadata, catalog order, production catalog or
+Mission scene mapping changed in this task.
 
 ## Objective
 
