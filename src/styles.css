@@ -39,7 +39,7 @@ input {
 
 .app-shell__header,
 .app-shell__main {
-  width: min(100%, 66rem);
+  width: min(100%, 72rem);
   margin: 0 auto;
   padding-right: 1rem;
   padding-left: 1rem;
@@ -66,8 +66,19 @@ input {
   padding: 1.25rem 1rem 3rem;
 }
 
-.app-shell__main section {
-  padding: clamp(1.25rem, 4vw, 3rem);
+.app-shell__main > section {
+  --section-pad: clamp(1.25rem, 4vw, 2rem);
+
+  padding: var(--section-pad);
+  border: 1px solid #d8e1da;
+  border-radius: 1.25rem;
+  background: rgb(255 255 255 / 92%);
+  box-shadow: 0 1.25rem 3rem rgb(32 48 45 / 8%);
+}
+
+/* Kept explicitly now that the rule above no longer reaches nested sections. */
+.reset-panel {
+  padding: var(--section-pad);
   border: 1px solid #d8e1da;
   border-radius: 1.25rem;
   background: rgb(255 255 255 / 92%);
@@ -519,11 +530,14 @@ input {
   outline-offset: 3px;
 }
 
-.mission-world[data-category='Movement'] { --world-hue: 24; }
-.mission-world[data-category='Creativity'] { --world-hue: 286; }
-.mission-world[data-category='Helping at Home'] { --world-hue: 152; }
-.mission-world[data-category='Learning'] { --world-hue: 208; }
-.mission-world[data-category='Calm'] { --world-hue: 178; }
+/* One atmosphere per Mission Category, shared by the doorway portal and the
+   Mission scenes inside it: the category is the world, a Mission is a place in
+   it. Category meaning never rests on this hue — the label always carries it. */
+[data-category='Movement'] { --world-hue: 24; }
+[data-category='Creativity'] { --world-hue: 286; }
+[data-category='Helping at Home'] { --world-hue: 152; }
+[data-category='Learning'] { --world-hue: 208; }
+[data-category='Calm'] { --world-hue: 178; }
 
 .mission-discovery__status {
   max-width: 64ch;
@@ -596,4 +610,564 @@ input {
   .mission-world:has(input:checked) {
     transform: none;
   }
+}
+
+/* F002 Mission suggestions.
+   Three equal peers, each opening on a scene window: a small place drawn from
+   the Mission's real action, with atmosphere behind, a plane in the middle and a
+   subject in front. All copy sits on a calm surface below, so depth never
+   competes with comprehension. The cards are articles, not controls. */
+.mission-suggestions,
+.mission-unavailable {
+  margin-top: 2rem;
+  padding: 1.5rem 1.15rem 1.35rem;
+  border: 1px solid #dce6e1;
+  border-radius: 1.35rem;
+  background:
+    radial-gradient(120% 90% at 50% 0%, #fbfdfc 0, #f3f7f4 100%);
+}
+
+.mission-suggestions__title,
+.mission-unavailable__title {
+  margin: 0 0 1.15rem;
+  color: #1d3630;
+  font-size: 1.05rem;
+  font-weight: 750;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.mission-suggestions__set {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.15rem;
+}
+
+@media (max-width: 55.99rem) {
+  .mission-suggestions,
+  .mission-unavailable {
+    margin-inline: calc(-1 * var(--section-pad));
+    padding-inline: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
+  }
+}
+
+.mission-card {
+  display: grid;
+  overflow: hidden;
+  border: 1px solid hsl(var(--world-hue) 22% 84%);
+  border-radius: 1.15rem;
+  background: #fff;
+  box-shadow:
+    0 0.15rem 0.4rem rgb(32 48 45 / 5%),
+    0 1rem 2.25rem rgb(32 48 45 / 10%);
+  grid-template-rows: auto 1fr;
+}
+
+/* The window. Its inner shadow makes the scene sit behind the card face
+   rather than on top of it. */
+.mission-card__window {
+  position: relative;
+  overflow: hidden;
+  /* Matches the scene viewBox so nothing is cropped at any width. */
+  aspect-ratio: 20 / 11;
+  border-bottom: 0;
+  background:
+    radial-gradient(
+      130% 85% at 50% 4%,
+      hsl(var(--world-hue) 62% 95%) 0,
+      hsl(var(--world-hue) 46% 89%) 52%,
+      hsl(var(--world-hue) 40% 83%) 100%
+    );
+}
+
+/* Light falls off toward the frame, and the floor dissolves into the card face
+   below so the card reads as one object rather than picture-box plus text-box. */
+.mission-card__window::after {
+  position: absolute;
+  background: linear-gradient(
+    180deg,
+    transparent 0 88%,
+    hsl(var(--world-hue) 30% 94% / 45%) 96%,
+    #fff 100%
+  );
+  box-shadow:
+    inset 0 0.9rem 1.7rem hsl(var(--world-hue) 40% 30% / 17%),
+    inset 0.75rem 0 1.5rem hsl(var(--world-hue) 40% 30% / 10%),
+    inset -0.75rem 0 1.5rem hsl(var(--world-hue) 40% 30% / 7%);
+  content: '';
+  inset: 0;
+  pointer-events: none;
+}
+
+.mission-scene {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* --- Scene grammar. Silhouettes inherit the category atmosphere; depth comes
+   from layered planes, contact shadows and light falloff rather than motion. --- */
+.s-el {
+  color: hsl(var(--world-hue) 52% 27%);
+}
+
+/* Distant planes sit back and slightly desaturated. */
+.s-back {
+  fill: hsl(var(--world-hue) 30% 84%);
+}
+
+.s-plane {
+  fill: hsl(var(--world-hue) 32% 72%);
+}
+
+.s-water {
+  fill: hsl(var(--world-hue) 42% 66%);
+}
+
+/* Paper keeps its own material everywhere; only the light on it is categorical. */
+.s-sheet {
+  fill: #f6f2ea;
+}
+
+.s-edge,
+.s-edge-circle {
+  fill: none;
+  stroke: currentcolor;
+  stroke-linejoin: round;
+  stroke-width: 2;
+}
+
+/* Foreground subjects: solid, shadowed, clearly in front. */
+.s-solid {
+  fill: currentcolor;
+}
+
+/* One lighting language for the whole product: key light from upper-left, so
+   left faces catch light, right faces fall into shade, and every subject drops
+   a soft contact shadow onto the plane it stands on. */
+.s-hi {
+  fill: #fff;
+  opacity: 0.3;
+}
+
+.s-lo {
+  fill: #06231c;
+  opacity: 0.16;
+}
+
+.s-top {
+  fill: #fff;
+  opacity: 0.42;
+}
+
+.s-rim {
+  fill: #fff;
+  opacity: 0.55;
+}
+
+.s-seam {
+  fill: none;
+  opacity: 0.22;
+  stroke: #06231c;
+  stroke-width: 1.5;
+}
+
+/* Contact shadows are soft and sit under the subject, never behind it. */
+.s-cast {
+  fill: #06231c;
+  filter: url(#mk-soft);
+  opacity: 0.31;
+}
+
+/* Distance haze: the far edge of a plane fades into the atmosphere. */
+.s-haze {
+  fill: hsl(var(--world-hue) 46% 88%);
+  opacity: 0.42;
+}
+
+/* Available to assistive technology, absent from the layout. Not display:none
+   and not hidden, either of which would remove it from the accessibility tree
+   and silence the announcement it exists to make. */
+.a11y-only {
+  position: absolute;
+  overflow: hidden;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.mission-scene-defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
+/* Limbs read as strokes, not fills. */
+.s-arm {
+  fill: none;
+  stroke: currentcolor;
+  stroke-linecap: round;
+  stroke-width: 7;
+}
+
+.s-shadow {
+  fill: hsl(var(--world-hue) 45% 24%);
+  opacity: 0.2;
+}
+
+.s-line {
+  fill: none;
+  opacity: 0.45;
+  stroke: currentcolor;
+  stroke-linecap: round;
+  stroke-width: 2;
+}
+
+.s-mark {
+  fill: none;
+  opacity: 0.75;
+  stroke: currentcolor;
+  stroke-linecap: round;
+  stroke-width: 2.4;
+}
+
+.s-tape {
+  fill: none;
+  opacity: 0.5;
+  stroke: hsl(var(--world-hue) 40% 46%);
+  stroke-dasharray: 12 8;
+  stroke-linecap: round;
+  stroke-width: 3;
+}
+
+.s-trail {
+  fill: none;
+  opacity: 0.5;
+  stroke: currentcolor;
+  stroke-dasharray: 5 7;
+  stroke-linecap: round;
+  stroke-width: 2.5;
+}
+
+.s-wave {
+  fill: none;
+  stroke: currentcolor;
+  stroke-linecap: round;
+  stroke-width: 2.5;
+}
+
+.s-light {
+  fill: hsl(var(--world-hue) 90% 98%);
+  opacity: 0.72;
+}
+
+.s-glow {
+  fill: hsl(var(--world-hue) 90% 98%);
+  opacity: 0.55;
+}
+
+/* --- Local object colour. The category hue lights the world: sky, plane,
+   water, haze, beam and the window behind the card. An object standing in that
+   world keeps its own material instead, so a child and a table stay two things
+   rather than one silhouette. Saturation stays low and values stay mid-dark, so
+   five atmospheres can light the same objects without any of them turning
+   sweet. Colour never carries meaning here: the card's text does. --- */
+
+/* People. Warm clay for a child, cool slate for an adult, so the two never
+   merge into one shape. */
+.s-el--childTall,
+.s-el--childCurled,
+.s-el--childBalance,
+.s-el--childFigure,
+.s-el--handReach {
+  color: #a35f47;
+}
+
+.s-el--adultFigure {
+  color: #4d5c68;
+}
+
+/* Wood and standing furniture. */
+.s-el--table,
+.s-el--shelfBoard,
+.s-el--bed,
+.s-el--doorway,
+.s-el--drawerOpen,
+.s-el--rampBook {
+  color: #8a6242;
+}
+
+/* Paper, card and cloth-bound things. */
+.s-el--paperSheet,
+.s-el--storyPanels,
+.s-el--speechBubble,
+.s-el--fallingPapers {
+  color: #8d7a5f;
+}
+
+.s-el--bookRow {
+  color: #3f6f62;
+}
+
+/* A sock is cotton, not category paint. */
+.s-el--sock {
+  color: #9c6b84;
+}
+
+/* Imagined, and not a person in the room: stone rather than skin, so it never
+   reads as an adult the Mission has not asked for. */
+.s-el--giantAsleep {
+  color: #6b7566;
+}
+
+/* Soft goods keep a textile warmth rather than reading as spills. */
+.s-el--softThings {
+  color: #b0697a;
+}
+
+.s-el--cushion {
+  color: #b58a52;
+}
+
+.s-el--blanketDrape {
+  color: #6b72a3;
+}
+
+.s-el--bagAndCoat {
+  color: #6b7350;
+}
+
+.s-el--shoePair {
+  color: #5c4636;
+}
+
+/* Handled objects. */
+.s-el--cup {
+  color: #5b8ba0;
+}
+
+.s-el--blockTower {
+  color: #bf8a49;
+}
+
+.s-el--toysScatter {
+  color: #b5674f;
+}
+
+.s-el--basket {
+  color: #a3763f;
+}
+
+.s-el--pencil {
+  color: #bd9337;
+}
+
+.s-el--ballRolling {
+  color: #a9543f;
+}
+
+.s-el--pebble {
+  color: #79736b;
+}
+
+/* Small counted things. Kept neutral: this row appears in four Missions, on
+   four different atmospheres, and must not fight any of them. */
+.s-el--patternRow {
+  color: #8a7a66;
+}
+
+/* Made things read as instruments rather than toys. */
+.s-el--clockFace {
+  color: #46505e;
+}
+
+.s-el--gears {
+  color: #6d7278;
+}
+
+/* A trace is the ground remembering an action, so it stays earth rather than
+   taking an object's colour. */
+.s-el--pawTracks,
+.s-el--footsteps {
+  color: #7d6551;
+}
+
+/* Environment recedes; subjects come forward with a soft cast shadow. */
+.s-el--wall,
+.s-el--ceilingRoom,
+.s-el--hillBridge {
+  opacity: 0.86;
+}
+
+.s-el--childTall,
+.s-el--childCurled,
+.s-el--childBalance,
+.s-el--childFigure,
+.s-el--adultFigure,
+.s-el--cup,
+.s-el--shoePair,
+.s-el--blockTower,
+.s-el--toysScatter,
+.s-el--basket,
+.s-el--pencil,
+.s-el--bookRow,
+.s-el--gears,
+.s-el--bagAndCoat,
+.s-el--ballRolling,
+.s-el--cushion,
+.s-el--softThings,
+.s-el--pebble,
+.s-el--handReach {
+  filter: drop-shadow(0 2px 2.5px hsl(var(--world-hue) 45% 22% / 26%));
+}
+
+/* --- Focal subject. Exactly one element per scene is what the Mission is
+   about, and it earns a firmer contact shadow, a cleaner edge and slightly more
+   light — the way a real object nearer the eye behaves. No glow, no outline, no
+   badge, no scale change and no motion: the other elements are not dimmed, so
+   this reads as depth rather than as a recommendation. --- */
+.s-el[data-focal] {
+  filter: drop-shadow(0 3px 4px hsl(var(--world-hue) 45% 20% / 34%));
+}
+
+.s-el[data-focal] .s-cast {
+  opacity: 0.34;
+}
+
+.s-el[data-focal] .s-shadow {
+  opacity: 0.24;
+}
+
+.s-el[data-focal] .s-hi {
+  opacity: 0.38;
+}
+
+.s-el[data-focal] .s-edge,
+.s-el[data-focal] .s-edge-circle {
+  stroke-width: 2.4;
+}
+
+.mission-card__content {
+  position: relative;
+  display: grid;
+  margin-top: -0.6rem;
+  padding: 0.5rem 1.15rem 1.2rem;
+  gap: 0.55rem;
+  align-content: start;
+  background: linear-gradient(
+    180deg,
+    #fff 0,
+    #fff 55%,
+    hsl(var(--world-hue) 40% 97%) 100%
+  );
+}
+
+/* Quiet context line: present, never competing with the title. */
+.mission-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem 0.85rem;
+  margin: 0;
+  color: hsl(var(--world-hue) 26% 34%);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.045em;
+  text-transform: uppercase;
+}
+
+/* Held at the same value as the rest of the context line: at 22% 42% this
+   cleared 4.5:1 against the warm categories and missed it against the cool
+   ones, and a duration a child cannot read is not quieter, only worse. */
+.mission-card__duration {
+  color: hsl(var(--world-hue) 20% 36%);
+}
+
+/* Primary. */
+.mission-card__title {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 780;
+  line-height: 1.18;
+  letter-spacing: -0.025em;
+}
+
+/* Secondary: readable, deliberately lighter than the title. */
+.mission-card__instruction {
+  margin: 0;
+  color: #46605a;
+  font-size: 0.965rem;
+  line-height: 1.6;
+}
+
+/* Required adult and safety content: its own material layer, always visible,
+   never behind disclosure, and calm rather than alarming. */
+.mission-card__note {
+  position: relative;
+  margin: 0.35rem 0 0;
+  padding: 0.7rem 0.85rem 0.75rem 2.15rem;
+  border-radius: 0.7rem;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.mission-card__note-mark {
+  position: absolute;
+  top: 0.95rem;
+  left: 0.9rem;
+  width: 0.62rem;
+  height: 0.62rem;
+  border-radius: 50%;
+}
+
+.mission-card__note-label {
+  display: block;
+  margin-bottom: 0.15rem;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.mission-card__note--adult {
+  background: #eef4f0;
+  color: #24443c;
+}
+
+.mission-card__note--adult .mission-card__note-mark {
+  background: #2f6b58;
+}
+
+.mission-card__note--safety {
+  background: #faf3e9;
+  color: #55401f;
+}
+
+.mission-card__note--safety .mission-card__note-mark {
+  background: #a8752f;
+}
+
+.mission-unavailable__body {
+  max-width: 64ch;
+  margin: 0;
+  color: #445752;
+  line-height: 1.6;
+}
+
+@media (min-width: 56rem) {
+  .mission-suggestions,
+  .mission-unavailable {
+    padding: 1.85rem 1.6rem 1.75rem;
+  }
+
+  .mission-suggestions__set {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.35rem;
+    align-items: start;
+  }
+
 }

@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 import { selectDiscoveryCycle, useAppState } from './appState';
 import { MISSION_CATEGORIES, type MissionCategory } from './catalog';
 import { translateMessage, type MessageKey } from './localization';
+import { MissionSuggestionSet } from './MissionSuggestionSet';
 
 // Canonical categories are the identity; these keys only resolve the visible
 // label. A localized label is never used as identity.
@@ -129,11 +130,7 @@ export function MissionCategorySelection() {
         </div>
       </fieldset>
 
-      {cycle ? (
-        <p className="mission-discovery__status" role="status">
-          {t('discovery.cycle.status')}
-        </p>
-      ) : null}
+      {cycle ? <MissionSuggestionSet context={cycle} /> : null}
 
       <button
         className="button button--secondary"

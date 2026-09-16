@@ -228,9 +228,8 @@ describe('category selection and the discovery cycle', () => {
       expect(
         within(radioFor(category).closest('label')!).getByText('Selected'),
       ).toBeTruthy();
-      expect(screen.getByRole('status').textContent).toContain(
-        'Mission suggestions for this Mission Category will appear here.',
-      );
+      // Task 5 fills the cycle: a complete set of three Missions appears.
+      expect(screen.getAllByRole('article')).toHaveLength(3);
     },
   );
 
@@ -302,14 +301,14 @@ describe('category selection and the discovery cycle', () => {
     );
   });
 
-  it('renders no Mission and creates no Mission Session', () => {
-    const { container } = renderShell(inDiscovery());
+  it('shows suggestions without creating a Mission Session', () => {
+    renderShell(inDiscovery());
 
     fireEvent.click(radioFor('Movement'));
 
-    // Task 4 is the doorway only: no Mission content, and nothing persisted.
-    expect(container.querySelector('[data-mission-id]')).toBeNull();
-    expect(screen.queryByText(/minute|Minute|минут/)).toBeNull();
+    // Task 5 renders Missions; choosing one still belongs to Task 7, so no
+    // selection control exists and nothing is persisted.
+    expect(screen.getAllByRole('article')).toHaveLength(3);
     expect(within(categoryGroup()).getAllByRole('radio')).toHaveLength(5);
     expect(globalThis.localStorage.getItem(MISSIONKID_STORAGE_KEY)).toBeNull();
   });

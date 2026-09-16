@@ -26,6 +26,7 @@ export const SCENE_ELEMENTS = [
   'childBalance',
   'childFigure',
   'adultFigure',
+  'giantAsleep',
   'cup',
   'shoePair',
   'blockTower',
@@ -37,6 +38,7 @@ export const SCENE_ELEMENTS = [
   'softThings',
   'blanketDrape',
   'bookRow',
+  'sock',
   'clockFace',
   'gears',
   'speechBubble',
@@ -69,18 +71,56 @@ export const SUBJECT_ELEMENTS: ReadonlySet<SceneElement> = new Set([
   'ceilingRoom', 'hillBridge', 'childTall', 'childCurled', 'childBalance',
   'childFigure', 'adultFigure', 'cup', 'shoePair', 'blockTower', 'toysScatter',
   'basket', 'paperSheet', 'pencil', 'storyPanels', 'softThings', 'blanketDrape',
-  'bookRow', 'clockFace', 'gears', 'speechBubble', 'bagAndCoat', 'patternRow',
+  'bookRow', 'sock', 'giantAsleep', 'clockFace', 'gears', 'speechBubble',
+  'bagAndCoat', 'patternRow',
   'fallingPapers', 'pebble', 'ballRolling', 'cushion', 'pawTracks', 'footsteps',
   'soundWaves', 'clueMarks', 'ghostEchoes', 'handReach', 'magnifyRings',
 ]);
+
+// Elements that can carry a scene on their own. Deliberately narrower than
+// SUBJECT_ELEMENTS: room geometry and standing furniture are where a Mission
+// happens rather than what it is, a trace is the evidence of an action rather
+// than the action, and an adult is present for the child's Mission, never its
+// point. One of these, and only one, is emphasised per scene.
+const FOCAL_ELEMENTS: ReadonlySet<SceneElement> = new Set([
+  'childTall', 'childCurled', 'childBalance', 'childFigure', 'cup', 'shoePair',
+  'blockTower', 'toysScatter', 'basket', 'paperSheet', 'pencil', 'storyPanels',
+  'softThings', 'blanketDrape', 'bookRow', 'sock', 'giantAsleep', 'clockFace',
+  'gears', 'speechBubble', 'bagAndCoat', 'patternRow', 'fallingPapers', 'pebble',
+  'ballRolling', 'cushion', 'handReach',
+]);
+
+// Where a Mission happens rather than what it is about. Room geometry and
+// standing furniture hold a scene up; they never carry it. An adult is present
+// for the child's Mission, never its point.
+const SETTING_ELEMENTS: ReadonlySet<SceneElement> = new Set([
+  'table', 'shelfBoard', 'windowFrame', 'rampBook', 'bed', 'doorway',
+  'drawerOpen', 'ceilingRoom', 'hillBridge', 'adultFigure',
+]);
+
+// The composition is written back to front, so the first element that can hold
+// the eye is the one the Mission is about. Where a Mission genuinely is its own
+// trace — counting steps, following a sound — that trace carries the scene
+// ahead of the furniture it happens among. Emphasising nothing is the last
+// resort, not the furniture.
+export function resolveSceneFocus(
+  elements: readonly SceneElement[],
+): SceneElement | null {
+  return elements.find((element) => FOCAL_ELEMENTS.has(element)) ??
+    elements.find(
+      (element) => SUBJECT_ELEMENTS.has(element) && !SETTING_ELEMENTS.has(element),
+    ) ??
+    elements.find((element) => SUBJECT_ELEMENTS.has(element)) ??
+    null;
+}
 
 // Each composition shows what the Mission actually involves: the place, the
 // thing that is handled, and the trace or light that makes the action readable.
 const SCENE_BY_MISSION: Readonly<Record<string, readonly SceneElement[]>> = {
   // Movement
-  'movement-02': ['floor', 'pawTracks', 'dashTrail'],
+  'movement-02': ['floor', 'childBalance', 'pawTracks', 'dashTrail'],
   'movement-05': ['floor', 'childTall', 'childBalance'],
-  'movement-06': ['floor', 'footsteps', 'soundWaves'],
+  'movement-06': ['floor', 'childFigure', 'giantAsleep', 'footsteps'],
   'movement-09': ['floor', 'footsteps', 'pawTracks'],
   'movement-10': ['floor', 'childTall', 'rippleRings'],
   'movement-11': ['floor', 'cushion', 'softThings', 'dashTrail'],
@@ -95,7 +135,7 @@ const SCENE_BY_MISSION: Readonly<Record<string, readonly SceneElement[]>> = {
   'creativity-01': ['paperSheet', 'pencil', 'soundWaves'],
   'creativity-02': ['floor', 'blockTower', 'childTall'],
   'creativity-04': ['hillBridge', 'toysScatter'],
-  'creativity-05': ['floor', 'softThings', 'handReach'],
+  'creativity-05': ['floor', 'sock', 'speechBubble'],
   'creativity-06': ['floor', 'blanketDrape', 'lightBeam'],
   'creativity-08': ['storyPanels', 'speechBubble'],
   'creativity-09': ['table', 'cup', 'soundWaves'],
@@ -109,7 +149,7 @@ const SCENE_BY_MISSION: Readonly<Record<string, readonly SceneElement[]>> = {
   'helping-03': ['floor', 'table', 'cup', 'adultFigure', 'childFigure'],
   'helping-07': ['floor', 'doorway', 'bagAndCoat'],
   'helping-09': ['floor', 'straightLine', 'shoePair'],
-  'helping-10': ['table', 'softThings', 'handReach'],
+  'helping-10': ['table', 'paperSheet', 'patternRow', 'handReach'],
   'helping-11': ['table', 'cup', 'lightBeam'],
   'helping-12': ['shelfBoard', 'bookRow', 'speechBubble'],
   'helping-13': ['floor', 'cup', 'footsteps', 'rippleRings'],
@@ -134,7 +174,7 @@ const SCENE_BY_MISSION: Readonly<Record<string, readonly SceneElement[]>> = {
   'calm-07': ['wall', 'clockFace', 'lightBeam'],
   'calm-08': ['floor', 'childFigure', 'ghostEchoes'],
   'calm-09': ['floor', 'cushion', 'blanketDrape'],
-  'calm-10': ['floor', 'softThings', 'ballRolling'],
+  'calm-10': ['floor', 'ballRolling', 'softThings', 'dashTrail'],
   'calm-11': ['floor', 'patternRow', 'dashTrail'],
   'calm-12': ['floor', 'blockTower', 'handReach'],
   'calm-13': ['table', 'pencil', 'gears'],

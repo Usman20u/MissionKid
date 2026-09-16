@@ -68,8 +68,15 @@ const englishMessages = {
   'discovery.category.learning': 'Learning',
   'discovery.category.calm': 'Calm',
   'discovery.selected': 'Selected',
-  'discovery.cycle.status':
-    'Mission suggestions for this Mission Category will appear here.',
+  'discovery.suggestions.heading': 'Three Missions',
+  'discovery.card.about': 'About',
+  'discovery.card.minutes': 'min',
+  'discovery.adult.nearby': 'Adult nearby',
+  'discovery.adult.participation': 'Adult takes part',
+  'discovery.card.safetyLabel': 'Before you start',
+  'discovery.unavailable.title': 'No Missions right now',
+  'discovery.unavailable.body':
+    'MissionKid has no complete set of three Missions for this Mission Category right now. Nothing went wrong, and you can pick another Mission Category above.',
   'discovery.gate.body':
     'Missions cannot be suggested yet. A parent needs to finish the age step below first. MissionKid never guesses an age group.',
 } as const;
@@ -148,8 +155,15 @@ export const INTERFACE_MESSAGES: CompleteInterfaceMessages = {
     'discovery.category.learning': 'Lernen',
     'discovery.category.calm': 'Ruhe',
     'discovery.selected': 'Ausgewählt',
-    'discovery.cycle.status':
-      'Missionsvorschläge für diese Missionskategorie erscheinen hier.',
+    'discovery.suggestions.heading': 'Drei Missionen',
+    'discovery.card.about': 'Etwa',
+    'discovery.card.minutes': 'Min.',
+    'discovery.adult.nearby': 'Erwachsene Person in der Nähe',
+    'discovery.adult.participation': 'Erwachsene Person macht mit',
+    'discovery.card.safetyLabel': 'Vor dem Start',
+    'discovery.unavailable.title': 'Gerade keine Missionen',
+    'discovery.unavailable.body':
+      'MissionKid hat für diese Missionskategorie gerade keinen vollständigen Satz aus drei Missionen. Es ist nichts schiefgegangen, und du kannst oben eine andere Missionskategorie wählen.',
     'discovery.gate.body':
       'Es können noch keine Missionen vorgeschlagen werden. Ein Erwachsener muss zuerst den Altersschritt unten abschließen. MissionKid errät niemals eine Altersgruppe.',
   },
@@ -218,8 +232,15 @@ export const INTERFACE_MESSAGES: CompleteInterfaceMessages = {
     'discovery.category.learning': 'Обучение',
     'discovery.category.calm': 'Спокойствие',
     'discovery.selected': 'Выбрано',
-    'discovery.cycle.status':
-      'Предложения миссий для этой категории появятся здесь.',
+    'discovery.suggestions.heading': 'Три миссии',
+    'discovery.card.about': 'Около',
+    'discovery.card.minutes': 'мин',
+    'discovery.adult.nearby': 'Взрослый рядом',
+    'discovery.adult.participation': 'Взрослый участвует',
+    'discovery.card.safetyLabel': 'Перед началом',
+    'discovery.unavailable.title': 'Сейчас миссий нет',
+    'discovery.unavailable.body':
+      'Для этой категории сейчас нет полного набора из трёх миссий. Ничего не сломалось — можно выбрать другую категорию выше.',
     'discovery.gate.body':
       'Пока миссии предложить нельзя. Сначала взрослому нужно завершить шаг с возрастом ниже. MissionKid никогда не угадывает возрастную группу.',
   },

@@ -56,7 +56,9 @@ function isPresent(value: string | undefined): boolean {
 // for the whole age band, and complete content in that UI language. The localized
 // content is examined per language rather than inferred from record validity,
 // because the specification states coverage in UI-language terms.
-function isEligibleForContext(mission: MissionRecord, context: CoverageContext): boolean {
+// Exported so coverage and runtime suggestion derivation share one rule: the
+// coverage guarantee would be meaningless if derivation applied a different one.
+export function isEligibleForContext(mission: MissionRecord, context: CoverageContext): boolean {
   if (!mission.reviewed || !mission.discoveryEligible) return false;
   if (mission.category !== context.category) return false;
   if (!mission.ageBands.includes(context.ageBand)) return false;
