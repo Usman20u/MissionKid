@@ -14,7 +14,13 @@ export const SUGGESTION_SET_SIZE = 3;
 export type SuggestionContext = CoverageContext;
 
 export type SuggestionSetResult =
-  | Readonly<{ status: 'complete'; missions: readonly MissionRecord[] }>
+  | Readonly<{
+      status: 'complete';
+      missions: readonly MissionRecord[];
+      // Whether a further complete group of three unseen Missions exists. False
+      // is the bounded-catalog outcome, not a failure and not an empty result.
+      anotherSetAvailable: boolean;
+    }>
   | Readonly<{ status: 'insufficient-content' }>;
 
 // Locale-independent Unicode code-point comparison, as the ordering rule requires.
@@ -62,14 +68,29 @@ export function selectEligibleMissions(
     .sort(compareMissions);
 }
 
-// The first set is the first three eligible records in that deterministic order.
+// The set is the first three eligible records in that deterministic order that
+// the cycle has not already shown. With no shown identifiers this is the first
+// set; after a bounded replacement it is the next complete unseen group. One
+// ordering, one eligibility rule, one algorithm: there is no second path that
+// could disagree with the first about what is eligible or what comes next.
+//
+// There is no wraparound and no partial group. A cycle advances only while a
+// full unseen group remains, so `shown` never leaves fewer than three unseen
+// records behind; `anotherSetAvailable` is what keeps that true.
 export function deriveSuggestionSet(
   records: readonly unknown[],
   context: SuggestionContext,
+  shown: readonly string[] = [],
 ): SuggestionSetResult {
   const eligible = selectEligibleMissions(records, context);
+  const retired = new Set(shown);
+  const unseen = eligible.filter((mission) => !retired.has(mission.missionId));
 
-  return eligible.length < SUGGESTION_SET_SIZE
+  return unseen.length < SUGGESTION_SET_SIZE
     ? { status: 'insufficient-content' }
-    : { status: 'complete', missions: eligible.slice(0, SUGGESTION_SET_SIZE) };
+    : {
+        status: 'complete',
+        missions: unseen.slice(0, SUGGESTION_SET_SIZE),
+        anotherSetAvailable: unseen.length >= SUGGESTION_SET_SIZE * 2,
+      };
 }

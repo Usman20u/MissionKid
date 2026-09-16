@@ -1,3 +1,5 @@
+import { useEffect, useRef } from 'react';
+
 import { MISSION_CATALOG } from './catalogContent';
 import type { MissionCategory, MissionRecord } from './catalog';
 import { translateMessage, type MessageKey, type SupportedLanguage } from './localization';
@@ -102,15 +104,34 @@ function SuggestionAnnouncement({
 type MissionSuggestionSetProps = Readonly<{
   context: SuggestionContext;
   catalog?: readonly unknown[];
+  // Mission identifiers this discovery cycle has already shown.
+  shown?: readonly string[];
+  // Absent where no cycle owns this set, in which case no bounded progression
+  // is offered at all rather than a control that could not advance anything.
+  onAnotherSet?: (missionIds: readonly string[]) => void;
 }>;
 
 export function MissionSuggestionSet({
   context,
   catalog = MISSION_CATALOG,
+  shown = [],
+  onAnotherSet,
 }: MissionSuggestionSetProps) {
   const t = (key: MessageKey) => translateMessage(context.language, key);
-  const result = deriveSuggestionSet(catalog, context);
+  const result = deriveSuggestionSet(catalog, context, shown);
   const headingId = 'mission-suggestions-heading';
+  const heading = useRef<HTMLHeadingElement>(null);
+  const advanced = useRef(shown.length);
+
+  // Replacing three Missions under a deliberate press is a state change the
+  // family must be able to find again. The heading names the new state and sits
+  // directly above it, so focus moves there rather than announcing three
+  // Missions aloud or leaving a screen-reader user somewhere that no longer
+  // describes what is on screen.
+  useEffect(() => {
+    if (shown.length > advanced.current) heading.current?.focus();
+    advanced.current = shown.length;
+  }, [shown.length]);
 
   if (result.status === 'insufficient-content') {
     return (
@@ -136,7 +157,12 @@ export function MissionSuggestionSet({
         language={context.language}
         stateKey="discovery.suggestions.heading"
       />
-      <h2 className="mission-suggestions__title" id={headingId}>
+      <h2
+        className="mission-suggestions__title"
+        id={headingId}
+        ref={heading}
+        tabIndex={-1}
+      >
         {t('discovery.suggestions.heading')}
       </h2>
       <div className="mission-suggestions__set">
@@ -144,6 +170,22 @@ export function MissionSuggestionSet({
           <MissionCard key={mission.missionId} language={context.language} mission={mission} />
         ))}
       </div>
+      {/* Secondary to choosing one of the three above, and offered only while a
+          further complete unseen group exists. Running out is a bounded catalog,
+          so it is stated plainly and the current three stay choosable. */}
+      {onAnotherSet ? (
+        result.anotherSetAvailable ? (
+          <button
+            className="button button--secondary mission-suggestions__another"
+            onClick={() => onAnotherSet(result.missions.map((mission) => mission.missionId))}
+            type="button"
+          >
+            {t('discovery.anotherSet')}
+          </button>
+        ) : (
+          <p className="mission-suggestions__bounded">{t('discovery.anotherSet.bounded')}</p>
+        )
+      ) : null}
     </section>
   );
 }

@@ -1,4 +1,4 @@
-import { render, screen, within } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
 import { MISSION_CATEGORIES, type MissionCategory, type MissionRecord } from './catalog';
@@ -258,6 +258,100 @@ describe('a complete suggestion set', () => {
     }
   });
 
+  it('labels the bounded progression control in every language', () => {
+    for (const language of SUPPORTED_LANGUAGES) {
+      const { unmount } = render(
+        <MissionSuggestionSet
+          context={context({ language })}
+          onAnotherSet={() => {}}
+        />,
+      );
+
+      const control = screen.getByRole('button');
+      expect(control.textContent).toBe(translateMessage(language, 'discovery.anotherSet'));
+      // A bounded, deliberate action: one control, no feed, no autoplay.
+      expect(screen.getAllByRole('button')).toHaveLength(1);
+      unmount();
+    }
+  });
+
+  it('hands the current three back when another set is requested', () => {
+    const requested: (readonly string[])[] = [];
+    render(
+      <MissionSuggestionSet
+        context={context()}
+        onAnotherSet={(missionIds) => requested.push(missionIds)}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole('button'));
+
+    // The retired group is exactly the three that were on screen.
+    expect(requested).toHaveLength(1);
+    expect(requested[0]).toEqual(expectedMissions(context()).map((m) => m.missionId));
+  });
+
+  it('replaces the control with the bounded state in every language', () => {
+    // Movement for 7–8 holds seven eligible Missions: one replacement, then the
+    // bounded end with one Mission left over that is never shown alone.
+    const shown = expectedMissions(context()).map((m) => m.missionId);
+    const second = deriveSuggestionSet(MISSION_CATALOG, context(), shown);
+    if (second.status !== 'complete') throw new Error('expected a second set');
+    const exhausted = [...shown, ...second.missions.map((m) => m.missionId)];
+
+    for (const language of SUPPORTED_LANGUAGES) {
+      const { unmount } = render(
+        <MissionSuggestionSet
+          context={context({ language })}
+          onAnotherSet={() => {}}
+          shown={shown}
+        />,
+      );
+
+      expect(screen.queryByRole('button')).toBeNull();
+      expect(
+        screen.getByText(translateMessage(language, 'discovery.anotherSet.bounded')),
+      ).toBeTruthy();
+      // Bounded, not failed: no alert, and the three stay on screen.
+      expect(screen.queryByRole('alert')).toBeNull();
+      expect(screen.getAllByRole('article')).toHaveLength(3);
+      unmount();
+    }
+
+    expect(deriveSuggestionSet(MISSION_CATALOG, context(), exhausted).status)
+      .toBe('insufficient-content');
+  });
+
+  it('moves focus to the heading after a replacement, not before one', () => {
+    const { rerender } = render(
+      <MissionSuggestionSet context={context()} onAnotherSet={() => {}} />,
+    );
+    const heading = screen.getByRole('heading', { level: 2 });
+
+    // Nothing has been replaced yet, so focus has not been taken from anyone.
+    expect(document.activeElement).not.toBe(heading);
+
+    const shown = expectedMissions(context()).map((m) => m.missionId);
+    rerender(
+      <MissionSuggestionSet context={context()} onAnotherSet={() => {}} shown={shown} />,
+    );
+
+    // The heading names the state that just changed and sits above the new set.
+    expect(document.activeElement).toBe(screen.getByRole('heading', { level: 2 }));
+    expect(screen.getByRole('heading', { level: 2 }).getAttribute('tabindex')).toBe('-1');
+  });
+
+  it('offers no progression control when no cycle owns the set', () => {
+    render(<MissionSuggestionSet context={context()} />);
+
+    // Without an owning cycle there is nothing to advance, so no control and no
+    // bounded message claiming the catalog ran out.
+    expect(screen.queryByRole('button')).toBeNull();
+    expect(
+      screen.queryByText(translateMessage('en', 'discovery.anotherSet.bounded')),
+    ).toBeNull();
+  });
+
   it('offers no way to choose a Mission', () => {
     // Structural rather than textual: Mission instructions legitimately contain
     // words like "choose" and "start", so only real controls are checked.
@@ -268,9 +362,15 @@ describe('a complete suggestion set', () => {
     }
     expect(
       container.querySelectorAll(
-        'button, a, input, select, textarea, [tabindex], [role]:not([role="status"])',
+        'button, a, input, select, textarea, [tabindex]:not([tabindex="-1"]), [role]:not([role="status"])',
       ),
     ).toHaveLength(0);
+    // The only tabindex is the heading's programmatic focus target, which the
+    // keyboard never reaches on its own and which activates nothing.
+    expect([...container.querySelectorAll('[tabindex]')].map((el) => [
+      el.tagName,
+      el.getAttribute('tabindex'),
+    ])).toEqual([['H2', '-1']]);
     // The one permitted role is the polite live region announcing the state,
     // which is not a control and offers nothing to activate.
     expect([...container.querySelectorAll('[role]')].map((el) => el.getAttribute('role')))

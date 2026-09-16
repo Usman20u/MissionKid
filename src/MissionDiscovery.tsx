@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 
-import { selectDiscoveryCycle, useAppState } from './appState';
+import { selectDiscoveryCycle, selectShownMissionIds, useAppState } from './appState';
 import { MISSION_CATEGORIES, type MissionCategory } from './catalog';
 import { translateMessage, type MessageKey } from './localization';
 import { MissionSuggestionSet } from './MissionSuggestionSet';
@@ -130,7 +130,15 @@ export function MissionCategorySelection() {
         </div>
       </fieldset>
 
-      {cycle ? <MissionSuggestionSet context={cycle} /> : null}
+      {cycle ? (
+        <MissionSuggestionSet
+          context={cycle}
+          onAnotherSet={(missionIds) =>
+            dispatch({ type: 'discovery-another-set-requested', missionIds })
+          }
+          shown={selectShownMissionIds(state)}
+        />
+      ) : null}
 
       <button
         className="button button--secondary"

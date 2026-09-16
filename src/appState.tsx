@@ -8,6 +8,7 @@ import {
 } from 'react';
 
 import type { MissionCategory } from './catalog';
+import { SUGGESTION_SET_SIZE } from './missionSuggestions';
 import {
   DEFAULT_LANGUAGE,
   type SupportedLanguage,
@@ -33,7 +34,16 @@ type ReadyAppState = SetupContext &
 
 // One discovery cycle is runtime-only. It is never written to the browser
 // snapshot, which holds no Mission Category, cycle or suggestion state.
-type DiscoveryContext = Readonly<{ category: MissionCategory | null }>;
+//
+// `shown` holds the Mission identifiers this cycle has already displayed, in the
+// order they were displayed. It is what makes bounded replacement bounded: the
+// next set is the next complete group of records that are not in it. It is
+// transient interaction state, not a record of anything, so it is never
+// persisted and never reaches a Mission record.
+type DiscoveryContext = Readonly<{
+  category: MissionCategory | null;
+  shown: readonly string[];
+}>;
 
 type RecoveryContext = Readonly<{
   // Last validated F001 facts, not a claim that storage is still available.
@@ -67,6 +77,7 @@ export type AppStateAction =
   | { type: 'setup-editing-started' }
   | { type: 'discovery-opened' }
   | { type: 'discovery-category-selected'; category: MissionCategory }
+  | { type: 'discovery-another-set-requested'; missionIds: readonly string[] }
   | {
       type: 'setup-save-unconfirmed';
       localProfileId: string | null;
@@ -143,6 +154,12 @@ export type DiscoveryCycle = Readonly<{
   category: MissionCategory;
 }>;
 
+// The Missions this cycle has already shown. Empty outside a cycle, so a fresh
+// cycle always starts at the first set.
+export function selectShownMissionIds(state: AppState): readonly string[] {
+  return state.discovery?.shown ?? [];
+}
+
 export function selectDiscoveryCycle(state: AppState): DiscoveryCycle | null {
   if (state.status !== 'ready' || !isSetupContextComplete(state)) {
     return null;
@@ -207,16 +224,22 @@ export function appStateReducer(
     case 'validated-state-received':
       return action.state;
     case 'language-changed':
+      // A cycle is one age band, one language and one Mission Category. The
+      // cycle itself is derived, so a new language already yields a new one;
+      // what has to be dropped explicitly is what the old cycle had shown. The
+      // chosen Mission Category is a separate choice and survives.
       return {
         ...state,
         temporaryComplete: false,
         language: action.language,
+        discovery: state.discovery ? { ...state.discovery, shown: [] } : undefined,
       };
     case 'age-band-changed':
       return {
         ...state,
         temporaryComplete: false,
         ageBand: action.ageBand,
+        discovery: state.discovery ? { ...state.discovery, shown: [] } : undefined,
       };
     case 'setup-editing-started':
       // Leaving discovery for the parent-guided setup step ends the cycle.
@@ -227,12 +250,38 @@ export function appStateReducer(
       return state.status === 'ready' &&
         state.setupView === 'handoff' &&
         isSetupContextComplete(state)
-        ? { ...state, discovery: { category: null } }
+        ? { ...state, discovery: { category: null, shown: [] } }
         : state;
     case 'discovery-category-selected':
-      return state.discovery
-        ? { ...state, discovery: { category: action.category } }
-        : state;
+      if (!state.discovery) return state;
+      // Re-choosing the same Mission Category is not a change, so the cycle and
+      // everything it has already shown continue. A different one is a
+      // different cycle and starts again at the first set.
+      return state.discovery.category === action.category
+        ? state
+        : { ...state, discovery: { category: action.category, shown: [] } };
+    case 'discovery-another-set-requested': {
+      const discovery = state.discovery;
+
+      // Only a complete group retires, and only Missions the cycle has not
+      // already retired. Anything else leaves the cycle exactly as it was, so a
+      // malformed request can never blank or partially replace what is on
+      // screen. The control itself is offered only while a further complete
+      // unseen group exists.
+      if (
+        !discovery?.category ||
+        action.missionIds.length !== SUGGESTION_SET_SIZE ||
+        new Set(action.missionIds).size !== SUGGESTION_SET_SIZE ||
+        action.missionIds.some((missionId) => discovery.shown.includes(missionId))
+      ) {
+        return state;
+      }
+
+      return {
+        ...state,
+        discovery: { ...discovery, shown: [...discovery.shown, ...action.missionIds] },
+      };
+    }
     case 'setup-save-unconfirmed': {
       // Recovery is newer evidence than the pre-write read; neither confirms the attempted save.
       const evidence = action.recovery.status === 'hydrated' || action.recovery.status === 'absent'

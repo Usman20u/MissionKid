@@ -278,6 +278,102 @@ describe('purity', () => {
   });
 });
 
+// Bounded replacement advances through the same deterministic order the first
+// set came from. Nothing here is a second suggestion algorithm: every case below
+// calls the one derivation with a growing set of shown identifiers.
+describe('bounded replacement', () => {
+  const pool = (count: number) =>
+    Array.from({ length: count }, (_, index) =>
+      createMission(`movement-${String(index + 1).padStart(2, '0')}`, {
+        catalogOrder: (index + 1) * 10,
+      }),
+    );
+
+  function advance(records: readonly MissionRecord[], times: number) {
+    const shown: string[] = [];
+    const sets: (readonly string[])[] = [];
+
+    for (let step = 0; step <= times; step += 1) {
+      const result = deriveSuggestionSet(records, context(), shown);
+      if (result.status !== 'complete') break;
+      sets.push(result.missions.map((mission) => mission.missionId));
+      if (!result.anotherSetAvailable) break;
+      shown.push(...result.missions.map((mission) => mission.missionId));
+    }
+
+    return sets;
+  }
+
+  it('keeps the first set as the first three in deterministic order', () => {
+    const records = pool(9);
+
+    expect(ids(deriveSuggestionSet(records, context()))).toEqual([
+      'movement-01', 'movement-02', 'movement-03',
+    ]);
+    expect(ids(deriveSuggestionSet(records, context(), []))).toEqual([
+      'movement-01', 'movement-02', 'movement-03',
+    ]);
+  });
+
+  it('advances to the next complete unseen group', () => {
+    const records = pool(9);
+    const shown = ['movement-01', 'movement-02', 'movement-03'];
+
+    expect(ids(deriveSuggestionSet(records, context(), shown))).toEqual([
+      'movement-04', 'movement-05', 'movement-06',
+    ]);
+  });
+
+  it('never shows a Mission twice while a full unseen group remains', () => {
+    const sets = advance(pool(9), 5);
+
+    expect(sets).toHaveLength(3);
+    const seen = sets.flat();
+    expect(new Set(seen).size).toBe(seen.length);
+  });
+
+  it('stops rather than wrapping back to the first set', () => {
+    const sets = advance(pool(9), 5);
+
+    // Nine Missions are exactly three groups. A fourth request must not exist,
+    // and the last group must not be the first group again.
+    expect(sets).toHaveLength(3);
+    expect(sets[2]).not.toEqual(sets[0]);
+    expect(deriveSuggestionSet(pool(9), context(), sets.flat()).status)
+      .toBe('insufficient-content');
+  });
+
+  it('offers no replacement when fewer than three unseen Missions remain', () => {
+    // Eight Missions: one full replacement, then two left over.
+    const records = pool(8);
+    const first = deriveSuggestionSet(records, context());
+    if (first.status !== 'complete') throw new Error('expected a complete first set');
+    expect(first.anotherSetAvailable).toBe(true);
+
+    const second = deriveSuggestionSet(records, context(), ids(first));
+    if (second.status !== 'complete') throw new Error('expected a complete second set');
+
+    // Two Missions are still unseen, and they are not offered as a partial set.
+    expect(second.missions).toHaveLength(SUGGESTION_SET_SIZE);
+    expect(second.anotherSetAvailable).toBe(false);
+    expect(ids(second)).toEqual(['movement-04', 'movement-05', 'movement-06']);
+  });
+
+  it('keeps the last complete set derivable at the bounded end', () => {
+    const records = pool(8);
+    const shown = ['movement-01', 'movement-02', 'movement-03'];
+    const bounded = deriveSuggestionSet(records, context(), shown);
+
+    // Re-deriving with unchanged cycle state returns the same three, so nothing
+    // blanks or partially replaces while the family is still choosing.
+    expect(ids(deriveSuggestionSet(records, context(), shown))).toEqual(ids(bounded));
+  });
+
+  it('treats a pool shorter than one group as insufficient content, not a partial set', () => {
+    expect(deriveSuggestionSet(pool(2), context()).status).toBe('insufficient-content');
+  });
+});
+
 describe('the production catalog', () => {
   it('yields a complete set for every age band, category and language', () => {
     for (const ageBand of AGE_BANDS) {
@@ -377,6 +473,40 @@ describe('the production catalog', () => {
 
       expect(trace).not.toContain(focus);
       expect(scene.filter((element) => !trace.includes(element)).length).toBeGreaterThan(1);
+    }
+  });
+
+  it('advances every context through complete unseen groups only', () => {
+    for (const ageBand of AGE_BANDS) {
+      for (const category of MISSION_CATEGORIES) {
+        const ctx = context({ ageBand, category });
+        const eligible = selectEligibleMissions(MISSION_CATALOG, ctx);
+        const shown: string[] = [];
+        const sets: (readonly string[])[] = [];
+
+        for (let step = 0; step < 20; step += 1) {
+          const result = deriveSuggestionSet(MISSION_CATALOG, ctx, shown);
+          if (result.status !== 'complete') break;
+          expect(result.missions).toHaveLength(SUGGESTION_SET_SIZE);
+          sets.push(result.missions.map((mission) => mission.missionId));
+          if (!result.anotherSetAvailable) break;
+          shown.push(...result.missions.map((mission) => mission.missionId));
+        }
+
+        const seen = sets.flat();
+        // Every production context reaches at least one replacement, no Mission
+        // is shown twice in a cycle, and the cycle stops with fewer than three
+        // unseen Missions left rather than wrapping or padding a group.
+        expect(sets.length).toBeGreaterThanOrEqual(2);
+        expect(new Set(seen).size).toBe(seen.length);
+        expect(eligible.length - seen.length).toBeLessThan(SUGGESTION_SET_SIZE);
+
+        // Every shown Mission still belongs to the requested context.
+        for (const missionId of seen) {
+          const mission = eligible.find((entry) => entry.missionId === missionId);
+          expect(mission).toBeTruthy();
+        }
+      }
     }
   });
 

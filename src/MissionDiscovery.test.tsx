@@ -6,7 +6,9 @@ import {
   AppStateProvider,
   appStateReducer,
   selectDiscoveryCycle,
+  selectShownMissionIds,
   type AppState,
+  type AppStateAction,
 } from './appState';
 import { MISSION_CATEGORIES, type MissionCategory } from './catalog';
 import { SUPPORTED_LANGUAGES, type SupportedLanguage } from './localization';
@@ -51,7 +53,7 @@ function completedSetup(overrides: Partial<AppState> = {}): AppState {
 }
 
 function inDiscovery(overrides: Partial<AppState> = {}): AppState {
-  return completedSetup({ discovery: { category: null }, ...overrides });
+  return completedSetup({ discovery: { category: null, shown: [] }, ...overrides });
 }
 
 function renderShell(state: AppState) {
@@ -287,6 +289,138 @@ describe('category selection and the discovery cycle', () => {
 
     expect(selectDiscoveryCycle(after)).not.toEqual(selectDiscoveryCycle(before));
     expect(selectDiscoveryCycle(after)?.ageBand).toBe('9–10');
+  });
+
+  it('replaces the visible three on request and persists nothing', () => {
+    renderShell(inDiscovery());
+    fireEvent.click(radioFor('Movement'));
+
+    const titles = () =>
+      screen.getAllByRole('article').map((card) =>
+        card.querySelector('.mission-card__title')!.textContent,
+      );
+    const first = titles();
+    expect(first).toHaveLength(3);
+
+    fireEvent.click(screen.getByRole('button', { name: 'Another set' }));
+
+    const second = titles();
+    expect(second).toHaveLength(3);
+    expect(second).not.toEqual(first);
+    // Nothing from the first set comes back while a full unseen group remained.
+    for (const title of second) expect(first).not.toContain(title);
+    // The cycle is interaction state: replacing a set writes no snapshot.
+    expect(globalThis.localStorage.getItem(MISSIONKID_STORAGE_KEY)).toBeNull();
+  });
+
+  it('stops offering another set at the end of the catalog and keeps the three', () => {
+    renderShell(inDiscovery());
+    fireEvent.click(radioFor('Movement'));
+
+    let guard = 0;
+    while (screen.queryByRole('button', { name: 'Another set' }) && guard < 20) {
+      fireEvent.click(screen.getByRole('button', { name: 'Another set' }));
+      guard += 1;
+    }
+
+    expect(guard).toBeGreaterThan(0);
+    // Bounded, not broken: the control is gone, the three remain choosable, and
+    // the state is stated rather than presented as an error.
+    expect(screen.queryByRole('button', { name: 'Another set' })).toBeNull();
+    expect(screen.getAllByRole('article')).toHaveLength(3);
+    expect(
+      screen.getByText(/last full set in this Mission Category/i),
+    ).toBeTruthy();
+    expect(screen.queryByRole('alert')).toBeNull();
+  });
+
+  it('starts a fresh cycle when the Mission Category changes', () => {
+    renderShell(inDiscovery());
+    fireEvent.click(radioFor('Movement'));
+    const firstMovementSet = screen.getAllByRole('article').map((card) =>
+      card.querySelector('.mission-card__title')!.textContent,
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'Another set' }));
+    fireEvent.click(radioFor('Calm'));
+    fireEvent.click(radioFor('Movement'));
+
+    // Back at the beginning of Movement, not part-way through the old cycle.
+    expect(
+      screen.getAllByRole('article').map((card) =>
+        card.querySelector('.mission-card__title')!.textContent,
+      ),
+    ).toEqual(firstMovementSet);
+  });
+
+  it('starts a cycle with nothing shown and records a retired set', () => {
+    const opened = inDiscovery();
+    expect(selectShownMissionIds(opened)).toEqual([]);
+
+    const advanced = appStateReducer(
+      appStateReducer(opened, { type: 'discovery-category-selected', category: 'Movement' }),
+      { type: 'discovery-another-set-requested', missionIds: ['a', 'b', 'c'] },
+    );
+
+    expect(selectShownMissionIds(advanced)).toEqual(['a', 'b', 'c']);
+  });
+
+  it('leaves the cycle untouched when a request is not one fresh complete group', () => {
+    const cycle = appStateReducer(inDiscovery(), {
+      type: 'discovery-category-selected',
+      category: 'Movement',
+    });
+    const advanced = appStateReducer(cycle, {
+      type: 'discovery-another-set-requested',
+      missionIds: ['a', 'b', 'c'],
+    });
+
+    // A partial group, a padded group, a repeat of something already retired,
+    // and a duplicate inside one request all leave the visible set alone rather
+    // than half-replacing it.
+    for (const missionIds of [['a', 'b'], ['d', 'e', 'f', 'g'], ['c', 'd', 'e'], ['d', 'd', 'e']]) {
+      expect(
+        appStateReducer(advanced, { type: 'discovery-another-set-requested', missionIds }),
+      ).toBe(advanced);
+    }
+
+    // And a request with no cycle at all changes nothing.
+    expect(
+      appStateReducer(completedSetup(), {
+        type: 'discovery-another-set-requested',
+        missionIds: ['a', 'b', 'c'],
+      }),
+    ).toEqual(completedSetup());
+  });
+
+  it('resets what a cycle has shown when any of its three inputs changes', () => {
+    const advanced = appStateReducer(
+      appStateReducer(inDiscovery(), { type: 'discovery-category-selected', category: 'Movement' }),
+      { type: 'discovery-another-set-requested', missionIds: ['a', 'b', 'c'] },
+    );
+    expect(selectShownMissionIds(advanced)).toHaveLength(3);
+
+    const changes: readonly AppStateAction[] = [
+      { type: 'discovery-category-selected', category: 'Calm' },
+      { type: 'language-changed', language: 'de' },
+      { type: 'age-band-changed', ageBand: '4–6' },
+    ];
+
+    for (const change of changes) {
+      expect(selectShownMissionIds(appStateReducer(advanced, change))).toEqual([]);
+    }
+
+    // Re-choosing the same Mission Category is not a change, so the cycle runs on.
+    expect(
+      selectShownMissionIds(
+        appStateReducer(advanced, { type: 'discovery-category-selected', category: 'Movement' }),
+      ),
+    ).toEqual(['a', 'b', 'c']);
+
+    // Leaving discovery ends the cycle outright.
+    expect(
+      selectShownMissionIds(appStateReducer(advanced, { type: 'setup-editing-started' })),
+    ).toEqual([]);
   });
 
   it('ends the cycle when the parent returns to the setup step', () => {

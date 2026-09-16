@@ -93,6 +93,7 @@ input {
 }
 
 .app-view__title:focus-visible,
+.mission-suggestions__title:focus-visible,
 .reset-panel__title:focus-visible {
   outline: 3px solid #b4650c;
   outline-offset: 4px;
@@ -641,6 +642,22 @@ input {
   display: grid;
   grid-template-columns: 1fr;
   gap: 1.15rem;
+}
+
+/* Secondary to choosing one of the three above: it sits after them, at the
+   width of the text rather than the set, and never competes with a Mission. */
+.mission-suggestions__another {
+  margin-top: 1.35rem;
+}
+
+/* Running out of full sets is a fact about the catalog, not a failure, so it
+   reads as a calm sentence rather than a warning. */
+.mission-suggestions__bounded {
+  max-width: 48ch;
+  margin: 1.35rem 0 0;
+  color: hsl(var(--world-hue) 20% 34%);
+  font-size: 0.95rem;
+  line-height: 1.5;
 }
 
 @media (max-width: 55.99rem) {

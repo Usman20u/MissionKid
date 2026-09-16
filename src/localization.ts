@@ -74,6 +74,9 @@ const englishMessages = {
   'discovery.adult.nearby': 'Adult nearby',
   'discovery.adult.participation': 'Adult takes part',
   'discovery.card.safetyLabel': 'Before you start',
+  'discovery.anotherSet': 'Another set',
+  'discovery.anotherSet.bounded':
+    'That is the last full set in this Mission Category. Choose one of these three, or pick another Mission Category above.',
   'discovery.unavailable.title': 'No Missions right now',
   'discovery.unavailable.body':
     'MissionKid has no complete set of three Missions for this Mission Category right now. Nothing went wrong, and you can pick another Mission Category above.',
@@ -161,6 +164,9 @@ export const INTERFACE_MESSAGES: CompleteInterfaceMessages = {
     'discovery.adult.nearby': 'Erwachsene Person in der Nähe',
     'discovery.adult.participation': 'Erwachsene Person macht mit',
     'discovery.card.safetyLabel': 'Vor dem Start',
+    'discovery.anotherSet': 'Andere drei',
+    'discovery.anotherSet.bounded':
+      'Das ist der letzte vollständige Satz in dieser Missionskategorie. Wähl eine von diesen dreien oder oben eine andere Missionskategorie.',
     'discovery.unavailable.title': 'Gerade keine Missionen',
     'discovery.unavailable.body':
       'MissionKid hat für diese Missionskategorie gerade keinen vollständigen Satz aus drei Missionen. Es ist nichts schiefgegangen, und du kannst oben eine andere Missionskategorie wählen.',
@@ -238,6 +244,9 @@ export const INTERFACE_MESSAGES: CompleteInterfaceMessages = {
     'discovery.adult.nearby': 'Взрослый рядом',
     'discovery.adult.participation': 'Взрослый участвует',
     'discovery.card.safetyLabel': 'Перед началом',
+    'discovery.anotherSet': 'Другие три',
+    'discovery.anotherSet.bounded':
+      'Это последний полный набор в этой категории. Выбери одну из этих трёх или другую категорию выше.',
     'discovery.unavailable.title': 'Сейчас миссий нет',
     'discovery.unavailable.body':
       'Для этой категории сейчас нет полного набора из трёх миссий. Ничего не сломалось — можно выбрать другую категорию выше.',
