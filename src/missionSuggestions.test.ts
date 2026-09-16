@@ -374,6 +374,35 @@ describe('bounded replacement', () => {
   });
 });
 
+// F002 names a catalog-loading failure for the first set and a replacement
+// failure. Neither is reachable here: the catalog is bundled static content and
+// derivation is a pure synchronous function that returns a typed result for
+// every input, so there is nothing to load and nothing to fail. A pool too small
+// to fill one group is the insufficient-content state, not a load failure. These
+// tests exist to keep that true rather than to exercise a failure path, because
+// building one would mean inventing machinery the architecture does not have.
+describe('derivation cannot fail', () => {
+  it('returns a typed result for every production context without throwing', () => {
+    for (const ageBand of AGE_BANDS) {
+      for (const category of MISSION_CATEGORIES) {
+        const result = deriveSuggestionSet(MISSION_CATALOG, context({ ageBand, category }));
+        expect(['complete', 'insufficient-content']).toContain(result.status);
+      }
+    }
+  });
+
+  it('returns the controlled unavailable result rather than throwing on bad input', () => {
+    for (const records of [
+      [],
+      [null, undefined, 'not a Mission', 42],
+      [{ missionId: 'movement-02' }],
+      [createMission('movement-02', { reviewed: false as never })],
+    ]) {
+      expect(deriveSuggestionSet(records, context()).status).toBe('insufficient-content');
+    }
+  });
+});
+
 describe('the production catalog', () => {
   it('yields a complete set for every age band, category and language', () => {
     for (const ageBand of AGE_BANDS) {

@@ -1,6 +1,11 @@
 import type { ReactNode } from 'react';
 
-import { selectDiscoveryCycle, selectShownMissionIds, useAppState } from './appState';
+import {
+  selectDiscoveryCycle,
+  selectSelectionIssue,
+  selectShownMissionIds,
+  useAppState,
+} from './appState';
 import { MISSION_CATALOG } from './catalogContent';
 import {
   createSessionId,
@@ -172,12 +177,21 @@ export function MissionCategorySelection({
             );
 
             // Runtime only learns of a selection the storage confirmed. Every
-            // other outcome leaves the three Missions exactly as they are;
-            // Task 8 owns telling the family what happened.
+            // other outcome leaves the three Missions exactly as they are and
+            // is explained rather than swallowed.
             if (result.status === 'created' || result.status === 'resolved') {
               dispatch({ type: 'mission-selection-confirmed', session: result.session });
+              return;
             }
+
+            // `unavailable` is also a Mission that could not become a session,
+            // so it gets the same truthful explanation as an unconfirmed write.
+            dispatch({
+              type: 'mission-selection-failed',
+              issue: result.status === 'conflict' ? 'conflict' : 'unconfirmed',
+            });
           }}
+          selectionIssue={selectSelectionIssue(state)}
           shown={selectShownMissionIds(state)}
         />
       ) : null}

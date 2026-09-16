@@ -4,6 +4,7 @@ import { MISSION_CATALOG } from './catalogContent';
 import type { MissionCategory, MissionRecord } from './catalog';
 import { translateMessage, type MessageKey, type SupportedLanguage } from './localization';
 import { MissionScene, MissionSceneDefs } from './MissionScene';
+import type { MissionSelectionIssue } from './appState';
 import { deriveSuggestionSet, type SuggestionContext } from './missionSuggestions';
 
 const CATEGORY_LABEL_KEYS: Readonly<Record<MissionCategory, MessageKey>> = {
@@ -126,6 +127,8 @@ type MissionSuggestionSetProps = Readonly<{
   onAnotherSet?: (missionIds: readonly string[]) => void;
   // Absent where nothing can own a selection, for the same reason.
   onChoose?: (missionId: string) => void;
+  // Why the last deliberate choice did not become a new Mission Session.
+  selectionIssue?: MissionSelectionIssue | null;
 }>;
 
 export function MissionSuggestionSet({
@@ -134,6 +137,7 @@ export function MissionSuggestionSet({
   shown = [],
   onAnotherSet,
   onChoose,
+  selectionIssue = null,
 }: MissionSuggestionSetProps) {
   const t = (key: MessageKey) => translateMessage(context.language, key);
   const result = deriveSuggestionSet(catalog, context, shown);
@@ -183,6 +187,26 @@ export function MissionSuggestionSet({
       >
         {t('discovery.suggestions.heading')}
       </h2>
+      {/* A choice that did not become a Mission Session. It is said plainly and
+          in one sentence, and the three Missions below stay exactly as they
+          were: choosing again is the retry, and choosing the same Mission
+          resolves the one already stored rather than making a second. Nothing
+          here names a session, a storage key or an exception.
+          A conflict is a product state and is announced politely; an
+          unconfirmed transition is a failure and follows the assertive
+          treatment already used for an unconfirmed save. */}
+      {selectionIssue ? (
+        <p
+          className={`mission-suggestions__issue mission-suggestions__issue--${selectionIssue}`}
+          role={selectionIssue === 'conflict' ? 'status' : 'alert'}
+        >
+          {t(
+            selectionIssue === 'conflict'
+              ? 'discovery.selection.conflict'
+              : 'discovery.selection.unconfirmed',
+          )}
+        </p>
+      ) : null}
       <div className="mission-suggestions__set">
         {result.missions.map((mission) => (
           <MissionCard

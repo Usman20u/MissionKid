@@ -57,6 +57,10 @@ type RecoveryContext = Readonly<{
   // The confirmed durable selection, mirrored into runtime only after the write
   // was read back exactly. It is never set optimistically.
   currentSession?: SelectedMissionSession;
+  // Why the last deliberate choice did not become a new Mission Session.
+  // `conflict` is a product state: one is already chosen. `unconfirmed` is a
+  // transition failure: nothing started, and the choice can be made again.
+  selectionIssue?: MissionSelectionIssue;
 }>;
 
 export type AppState = RecoveryContext & (
@@ -66,6 +70,8 @@ export type AppState = RecoveryContext & (
   | (SetupContext & Readonly<{ status: 'blocked-recovery' }>));
 
 export type ResolvedAppState = Exclude<AppState, { status: 'pending' }>;
+
+export type MissionSelectionIssue = 'conflict' | 'unconfirmed';
 
 export type AppStateAction =
   | { type: 'operation-started'; operation: 'save' | 'retry' | 'reset' }
@@ -83,6 +89,7 @@ export type AppStateAction =
   | { type: 'discovery-category-selected'; category: MissionCategory }
   | { type: 'discovery-another-set-requested'; missionIds: readonly string[] }
   | { type: 'mission-selection-confirmed'; session: SelectedMissionSession }
+  | { type: 'mission-selection-failed'; issue: MissionSelectionIssue }
   | {
       type: 'setup-save-unconfirmed';
       localProfileId: string | null;
@@ -170,6 +177,12 @@ export function selectCurrentSession(
   state: AppState,
 ): SelectedMissionSession | null {
   return state.currentSession ?? null;
+}
+
+export function selectSelectionIssue(
+  state: AppState,
+): MissionSelectionIssue | null {
+  return state.selectionIssue ?? null;
 }
 
 // The Missions this cycle has already shown. Empty outside a cycle, so a fresh
@@ -277,7 +290,11 @@ export function appStateReducer(
       // different cycle and starts again at the first set.
       return state.discovery.category === action.category
         ? state
-        : { ...state, discovery: { category: action.category, shown: [] } };
+        : {
+            ...state,
+            selectionIssue: undefined,
+            discovery: { category: action.category, shown: [] },
+          };
     case 'discovery-another-set-requested': {
       const discovery = state.discovery;
 
@@ -297,6 +314,7 @@ export function appStateReducer(
 
       return {
         ...state,
+        selectionIssue: undefined,
         discovery: { ...discovery, shown: [...discovery.shown, ...action.missionIds] },
       };
     }
@@ -307,8 +325,13 @@ export function appStateReducer(
       return {
         ...state,
         currentSession: action.session,
+        selectionIssue: undefined,
         discovery: state.discovery ? { ...state.discovery, shown: [] } : undefined,
       };
+    case 'mission-selection-failed':
+      // Nothing about the cycle changes: the same three Missions stay on screen
+      // and stay choosable, which is what makes choosing again the retry.
+      return { ...state, selectionIssue: action.issue };
     case 'setup-save-unconfirmed': {
       // Recovery is newer evidence than the pre-write read; neither confirms the attempted save.
       const evidence = action.recovery.status === 'hydrated' || action.recovery.status === 'absent'

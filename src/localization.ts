@@ -75,6 +75,10 @@ const englishMessages = {
   'discovery.adult.participation': 'Adult takes part',
   'discovery.card.safetyLabel': 'Before you start',
   'discovery.card.choose': 'Choose this Mission',
+  'discovery.selection.conflict':
+    'A Mission is already chosen. Choose that same Mission again to carry on with it.',
+  'discovery.selection.unconfirmed':
+    'That Mission could not be confirmed just now. Nothing has started. Choose it again, or choose a different one.',
   'discovery.anotherSet': 'Another set',
   'discovery.anotherSet.bounded':
     "There aren't three more Missions in this category. Choose one of these three, or pick another category above.",
@@ -166,6 +170,10 @@ export const INTERFACE_MESSAGES: CompleteInterfaceMessages = {
     'discovery.adult.participation': 'Erwachsene Person macht mit',
     'discovery.card.safetyLabel': 'Vor dem Start',
     'discovery.card.choose': 'Diese Mission wählen',
+    'discovery.selection.conflict':
+      'Es ist schon eine Mission gewählt. Wähle dieselbe Mission noch einmal, um mit ihr weiterzumachen.',
+    'discovery.selection.unconfirmed':
+      'Diese Mission konnte gerade nicht bestätigt werden. Es hat nichts angefangen. Wähle sie noch einmal oder wähle eine andere.',
     'discovery.anotherSet': 'Weitere drei',
     'discovery.anotherSet.bounded':
       'Hier gibt es keine drei weiteren Missionen. Wähle eine von diesen dreien oder oben eine andere Kategorie.',
@@ -247,6 +255,10 @@ export const INTERFACE_MESSAGES: CompleteInterfaceMessages = {
     'discovery.adult.participation': 'Взрослый участвует',
     'discovery.card.safetyLabel': 'Перед началом',
     'discovery.card.choose': 'Выбрать эту миссию',
+    'discovery.selection.conflict':
+      'Миссия уже выбрана. Выбери ту же миссию ещё раз, чтобы продолжить с ней.',
+    'discovery.selection.unconfirmed':
+      'Эту миссию сейчас не удалось подтвердить. Ничего не началось. Выбери её ещё раз или выбери другую.',
     'discovery.anotherSet': 'Ещё три',
     'discovery.anotherSet.bounded':
       'Здесь уже нет ещё трёх новых миссий. Выбери одну из этих трёх или другую категорию выше.',

@@ -644,6 +644,26 @@ input {
   gap: 1.15rem;
 }
 
+/* A choice that did not become a Mission Session. Calm, one sentence, and the
+   same surface language as the rest of Discovery: nothing here is a warning
+   banner, because nothing was lost and nothing was the child's doing. */
+.mission-suggestions__issue {
+  max-width: 48ch;
+  margin: 0 0 1.15rem;
+  padding: 0.8rem 1rem;
+  border-left: 3px solid hsl(var(--world-hue) 30% 62%);
+  border-radius: 0.5rem;
+  background: hsl(var(--world-hue) 40% 97%);
+  color: #23423a;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.mission-suggestions__issue--unconfirmed {
+  border-left-color: #b4650c;
+  background: #fdf5ec;
+}
+
 /* The one action on a card. It sits last, after everything the family needs to
    judge the Mission, and stays inside the card so it reads as this Mission's
    action rather than the page's. */

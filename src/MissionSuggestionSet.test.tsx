@@ -396,6 +396,107 @@ describe('a complete suggestion set', () => {
     expect(screen.queryByRole('button')).toBeNull();
   });
 
+  it('explains a conflict politely and keeps the three Missions choosable', () => {
+    for (const language of SUPPORTED_LANGUAGES) {
+      const { container, unmount } = render(
+        <MissionSuggestionSet
+          context={context({ language })}
+          onChoose={() => {}}
+          selectionIssue="conflict"
+        />,
+      );
+
+      const message = screen.getByText(
+        translateMessage(language, 'discovery.selection.conflict'),
+      );
+      // A Mission already chosen is a product state, not a failure, so it is
+      // announced politely rather than interrupting.
+      expect(message.getAttribute('role')).toBe('status');
+      expect(container.querySelector('[role="alert"]')).toBeNull();
+      expect(screen.getAllByRole('article')).toHaveLength(3);
+      expect(
+        screen.getAllByRole('button', {
+          name: translateMessage(language, 'discovery.card.choose'),
+        }),
+      ).toHaveLength(3);
+      unmount();
+    }
+  });
+
+  it('reports an unconfirmed selection as a failure without losing the set', () => {
+    for (const language of SUPPORTED_LANGUAGES) {
+      const { unmount } = render(
+        <MissionSuggestionSet
+          context={context({ language })}
+          onChoose={() => {}}
+          selectionIssue="unconfirmed"
+        />,
+      );
+
+      const message = screen.getByRole('alert');
+      expect(message.textContent).toBe(
+        translateMessage(language, 'discovery.selection.unconfirmed'),
+      );
+      // Choosing again is the retry, so all three stay present and usable.
+      expect(screen.getAllByRole('article')).toHaveLength(3);
+      expect(
+        screen.getAllByRole('button', {
+          name: translateMessage(language, 'discovery.card.choose'),
+        }),
+      ).toHaveLength(3);
+      unmount();
+    }
+  });
+
+  it('keeps every recovery message free of technical detail', () => {
+    for (const issue of ['conflict', 'unconfirmed'] as const) {
+      for (const language of SUPPORTED_LANGUAGES) {
+        const { container, unmount } = render(
+          <MissionSuggestionSet
+            context={context({ language })}
+            onChoose={() => {}}
+            selectionIssue={issue}
+          />,
+        );
+
+        const text = container.querySelector('.mission-suggestions__issue')!.textContent!;
+        // Nothing names a session, a storage key, an exception or a state
+        // machine, and nothing blames the child.
+        for (const forbidden of [
+          'session', 'Session', 'sessionId', 'localStorage', 'missionkid:', 'snapshot',
+          'Error', 'undefined', 'null', 'JSON', 'read-back', 'selected',
+        ]) {
+          expect(text).not.toContain(forbidden);
+        }
+        unmount();
+      }
+    }
+  });
+
+  it('shows no recovery message when the last choice was fine', () => {
+    const { container } = render(
+      <MissionSuggestionSet context={context()} onChoose={() => {}} />,
+    );
+
+    expect(container.querySelector('.mission-suggestions__issue')).toBeNull();
+    expect(container.querySelector('[role="alert"]')).toBeNull();
+  });
+
+  it('keeps the bounded end calm rather than treating it as a failure', () => {
+    const shown = expectedMissions(context()).map((m) => m.missionId);
+    const { container } = render(
+      <MissionSuggestionSet context={context()} onAnotherSet={() => {}} shown={shown} />,
+    );
+
+    // Running out of full sets is a bounded catalog, so it never becomes an
+    // alert and never removes the three Missions.
+    expect(container.querySelector('[role="alert"]')).toBeNull();
+    expect(
+      screen.getByText(translateMessage('en', 'discovery.anotherSet.bounded')),
+    ).toBeTruthy();
+    expect(screen.getAllByRole('article')).toHaveLength(3);
+  });
+
   it('offers no way to choose a Mission', () => {
     // Structural rather than textual: Mission instructions legitimately contain
     // words like "choose" and "start", so only real controls are checked.

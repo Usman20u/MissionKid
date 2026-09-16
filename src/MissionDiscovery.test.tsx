@@ -7,6 +7,7 @@ import {
   appStateReducer,
   selectCurrentSession,
   selectDiscoveryCycle,
+  selectSelectionIssue,
   selectMissionStartAvailable,
   selectShownMissionIds,
   type AppState,
@@ -513,6 +514,123 @@ describe('category selection and the discovery cycle', () => {
         card.querySelector('.mission-card__title')!.textContent,
       ),
     ).toEqual(visible);
+  });
+
+  it('explains a refused second Mission and keeps everything as it was', () => {
+    const memory = memoryStorage();
+    const captured: AppState[] = [];
+
+    renderDiscovery(memory, captured);
+    fireEvent.click(radioFor('Movement'));
+    const controls = () => screen.getAllByRole('button', { name: 'Choose this Mission' });
+    fireEvent.click(controls()[0]!);
+
+    const stored = memory.values.get(MISSIONKID_STORAGE_KEY);
+    const session = selectCurrentSession(captured.at(-1)!);
+
+    fireEvent.click(controls()[1]!);
+
+    expect(selectSelectionIssue(captured.at(-1)!)).toBe('conflict');
+    expect(screen.getByText(/A Mission is already chosen/i).getAttribute('role'))
+      .toBe('status');
+    // Refused before persistence: nothing stored changed, nothing published
+    // changed, and the three Missions are still there to choose from.
+    expect(memory.values.get(MISSIONKID_STORAGE_KEY)).toBe(stored);
+    expect(selectCurrentSession(captured.at(-1)!)).toEqual(session);
+    expect(screen.getAllByRole('article')).toHaveLength(3);
+  });
+
+  it('reports an unconfirmed selection and lets the family choose again', () => {
+    const memory = memoryStorage();
+    let failWrite = true;
+    const realSet = memory.storage.setItem;
+    memory.storage.setItem = (key, value) => {
+      if (failWrite) throw new Error('write failed');
+      realSet(key, value);
+    };
+    const captured: AppState[] = [];
+
+    renderDiscovery(memory, captured);
+    fireEvent.click(radioFor('Movement'));
+    const before = screen.getAllByRole('article').map((card) =>
+      card.querySelector('.mission-card__title')!.textContent,
+    );
+
+    fireEvent.click(screen.getAllByRole('button', { name: 'Choose this Mission' })[0]!);
+
+    expect(selectSelectionIssue(captured.at(-1)!)).toBe('unconfirmed');
+    expect(screen.getByRole('alert')).toBeTruthy();
+    // No false success, and the same three Missions to retry from.
+    expect(selectCurrentSession(captured.at(-1)!)).toBeNull();
+    expect(selectMissionStartAvailable(captured.at(-1)!)).toBe(false);
+    expect(
+      screen.getAllByRole('article').map((card) =>
+        card.querySelector('.mission-card__title')!.textContent,
+      ),
+    ).toEqual(before);
+
+    // Choosing the same Mission again is the retry. It succeeds and the
+    // explanation goes with the state it described.
+    failWrite = false;
+    fireEvent.click(screen.getAllByRole('button', { name: 'Choose this Mission' })[0]!);
+
+    expect(selectSelectionIssue(captured.at(-1)!)).toBeNull();
+    expect(selectCurrentSession(captured.at(-1)!)?.state).toBe('selected');
+    expect(screen.queryByRole('alert')).toBeNull();
+  });
+
+  it('creates no second session when a retry follows a write that had landed', () => {
+    const memory = memoryStorage();
+    let failReadBack = true;
+    const realGet = memory.storage.getItem;
+    let reads = 0;
+    memory.storage.getItem = (key) => {
+      reads += 1;
+      // The write lands; only the read that would confirm it fails.
+      if (failReadBack && reads > 1) throw new Error('read-back failed');
+      return realGet(key);
+    };
+    const createId = vi.fn(() => 'session-1');
+    const captured: AppState[] = [];
+
+    renderDiscovery(memory, captured, createId);
+    fireEvent.click(radioFor('Movement'));
+    fireEvent.click(screen.getAllByRole('button', { name: 'Choose this Mission' })[0]!);
+
+    expect(selectSelectionIssue(captured.at(-1)!)).toBe('unconfirmed');
+    expect(selectCurrentSession(captured.at(-1)!)).toBeNull();
+    // The durable write actually landed, which the next read will reveal.
+    expect(JSON.parse(memory.values.get(MISSIONKID_STORAGE_KEY)!).currentSession)
+      .not.toBeNull();
+
+    failReadBack = false;
+    fireEvent.click(screen.getAllByRole('button', { name: 'Choose this Mission' })[0]!);
+
+    // Retrying resolves the session that was already stored rather than making
+    // a second one, so no duplicate Mission Session can exist.
+    expect(selectCurrentSession(captured.at(-1)!)?.sessionId).toBe('session-1');
+    expect(createId).toHaveBeenCalledTimes(1);
+    expect(selectSelectionIssue(captured.at(-1)!)).toBeNull();
+  });
+
+  it('drops a recovery message that no longer describes anything', () => {
+    const memory = memoryStorage();
+    memory.storage.setItem = () => {
+      throw new Error('write failed');
+    };
+    const captured: AppState[] = [];
+
+    renderDiscovery(memory, captured);
+    fireEvent.click(radioFor('Movement'));
+    fireEvent.click(screen.getAllByRole('button', { name: 'Choose this Mission' })[0]!);
+    expect(selectSelectionIssue(captured.at(-1)!)).toBe('unconfirmed');
+
+    fireEvent.click(radioFor('Calm'));
+
+    // A different Mission Category is a different cycle: the old explanation
+    // does not follow it there.
+    expect(selectSelectionIssue(captured.at(-1)!)).toBeNull();
+    expect(screen.queryByRole('alert')).toBeNull();
   });
 
   it('starts a cycle with nothing shown and records a retired set', () => {
