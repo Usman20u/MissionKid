@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, within } from '@testing-library/react';
+import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
 import { AppShell, selectAppView } from './AppShell';
@@ -93,13 +93,40 @@ function memoryStorage() {
 
 // Discovery with an injected adapter, identifier factory and clock, so a test
 // owns every fact a selection records.
+const dispatched: ((action: AppStateAction) => void)[] = [];
+
+// Drives an action the interface itself never emits, so a defensive path can be
+// observed through the rendered result rather than only in the reducer.
+function dispatchFrom(action: AppStateAction) {
+  dispatched.at(-1)!(action);
+}
+
+function missionIdsOnScreen(): readonly string[] {
+  return screen
+    .getAllByRole('article')
+    .map((card) =>
+      card
+        .querySelector('button')!
+        .getAttribute('aria-describedby')!
+        .replace('mission-title-', ''),
+    );
+}
+
+function titlesOnScreen(): readonly (string | null)[] {
+  return screen
+    .getAllByRole('article')
+    .map((card) => card.querySelector('.mission-card__title')!.textContent);
+}
+
 function renderDiscovery(
   memory: ReturnType<typeof memoryStorage>,
   captured: AppState[],
   createId: () => string = () => 'session-1',
 ) {
   function Probe() {
-    captured.push(useAppState().state);
+    const { state, dispatch } = useAppState();
+    captured.push(state);
+    dispatched.push(dispatch);
     return null;
   }
 
@@ -611,6 +638,136 @@ describe('category selection and the discovery cycle', () => {
     expect(selectCurrentSession(captured.at(-1)!)?.sessionId).toBe('session-1');
     expect(createId).toHaveBeenCalledTimes(1);
     expect(selectSelectionIssue(captured.at(-1)!)).toBeNull();
+  });
+
+  it('keeps the visible three when a replacement request cannot be honoured', () => {
+    const memory = memoryStorage();
+    const captured: AppState[] = [];
+
+    renderDiscovery(memory, captured);
+    fireEvent.click(radioFor('Movement'));
+    const before = titlesOnScreen();
+    const onScreen = missionIdsOnScreen();
+
+    // A malformed replacement is the reachable form of a failed request here:
+    // derivation is pure and synchronous, so there is no load to fail. Each
+    // request names Missions the family can currently see, so honouring one
+    // would visibly retire them; the set must stay whole instead.
+    for (const missionIds of [
+      onScreen.slice(0, 2),
+      [...onScreen, 'movement-99'],
+      [onScreen[0]!, onScreen[0]!, onScreen[1]!],
+    ]) {
+      act(() => {
+        dispatchFrom({ type: 'discovery-another-set-requested', missionIds });
+      });
+
+      expect(titlesOnScreen()).toEqual(before);
+      expect(screen.getAllByRole('article')).toHaveLength(3);
+      expect(
+        screen.getAllByRole('button', { name: 'Choose this Mission' }),
+      ).toHaveLength(3);
+      // The bounded end is a different state and must not be claimed here.
+      expect(screen.getByRole('button', { name: 'Another set' })).toBeTruthy();
+    }
+  });
+
+  it('records exactly one selected session and starts no timer', () => {
+    const memory = memoryStorage();
+    const captured: AppState[] = [];
+
+    renderDiscovery(memory, captured);
+    fireEvent.click(radioFor('Movement'));
+    fireEvent.click(screen.getAllByRole('button', { name: 'Choose this Mission' })[0]!);
+
+    const stored = JSON.parse(memory.values.get(MISSIONKID_STORAGE_KEY)!);
+
+    expect(stored.snapshotVersion).toBe(1);
+    expect(stored.currentSession.state).toBe('selected');
+    expect(stored.currentSession.sessionId).toBe('session-1');
+    expect(stored.currentSession.selectedAt).toBe(1_700_000_000_000);
+    // The start experience is offered, but nothing about it has begun: no
+    // lifecycle timestamp beyond the selection itself exists to be recovered.
+    expect(selectMissionStartAvailable(captured.at(-1)!)).toBe(true);
+    expect(Object.hasOwn(stored.currentSession, 'startedAt')).toBe(false);
+    expect(Object.hasOwn(stored.currentSession, 'completedAt')).toBe(false);
+    expect(Object.keys(stored.currentSession).sort()).toEqual([
+      'ageBandAtSelection',
+      'childProfileId',
+      'durationSecondsAtSelection',
+      'missionCategoryAtSelection',
+      'missionId',
+      'sessionId',
+      'selectedAt',
+      'state',
+    ].sort());
+  });
+
+  it('adds no completed record, result pointer or progress source by discovering', () => {
+    const memory = memoryStorage();
+    const captured: AppState[] = [];
+
+    renderDiscovery(memory, captured);
+
+    // Viewing.
+    fireEvent.click(radioFor('Movement'));
+    expect(screen.getAllByRole('article')).toHaveLength(3);
+    // Replacing.
+    fireEvent.click(screen.getByRole('button', { name: 'Another set' }));
+    // Choosing.
+    fireEvent.click(screen.getAllByRole('button', { name: 'Choose this Mission' })[0]!);
+
+    const stored = JSON.parse(memory.values.get(MISSIONKID_STORAGE_KEY)!);
+
+    // A Mission Session in `selected` is the only thing discovery may record.
+    // Recognition, History and progress all require a completed session, and
+    // none exists.
+    expect(stored.currentSession.state).toBe('selected');
+    expect(stored.completedSessions).toEqual([]);
+    expect(stored.currentResultSessionId).toBeNull();
+    expect(Object.keys(stored).sort()).toEqual([
+      'childProfile',
+      'completedSessions',
+      'currentResultSessionId',
+      'currentSession',
+      'settings',
+      'snapshotVersion',
+    ]);
+    expect(
+      screen.queryByText(/Reward|Mission History|Monthly Goal|Mission done|Start mission/i),
+    ).toBeNull();
+  });
+
+  it('asks for nothing about the child and offers no social or payment behaviour', () => {
+    const memory = memoryStorage();
+    const captured: AppState[] = [];
+
+    const { container } = renderDiscovery(memory, captured);
+    fireEvent.click(radioFor('Movement'));
+    fireEvent.click(screen.getAllByRole('button', { name: 'Choose this Mission' })[0]!);
+
+    // Choosing a Mission Category is the only input discovery has. Nothing
+    // collects a name, a birth date, contact details, a photo or proof.
+    for (const input of Array.from(container.querySelectorAll('input'))) {
+      expect(input.getAttribute('type')).toBe('radio');
+      expect(input.getAttribute('name')).toBe('discovery-category');
+    }
+    expect(container.querySelector('textarea, select, form, video, audio, img')).toBeNull();
+    expect(
+      screen.queryByText(
+        /chat|message|share|invite|friend|follow|like|leaderboard|rank|score|streak|buy|pay|price|premium|subscribe|upgrade|block|lock screen|photo|upload|prove/i,
+      ),
+    ).toBeNull();
+
+    // And nothing identifying reaches storage: the session keeps a Mission
+    // reference and the immutable facts of the choice.
+    const raw = memory.values.get(MISSIONKID_STORAGE_KEY)!;
+    for (const forbidden of [
+      'name', 'birth', 'email', 'phone', 'address', 'location', 'school',
+      'photo', 'video', 'proof', 'password', 'token', 'payment',
+    ]) {
+      expect(raw.toLowerCase()).not.toContain(forbidden);
+    }
   });
 
   it('drops a recovery message that no longer describes anything', () => {

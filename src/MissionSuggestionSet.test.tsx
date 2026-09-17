@@ -1,15 +1,26 @@
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
+import { AGE_BANDS } from './ageBands';
 import { MISSION_CATEGORIES, type MissionCategory, type MissionRecord } from './catalog';
 import { MISSION_CATALOG } from './catalogContent';
 import {
   SUPPORTED_LANGUAGES,
   translateMessage,
+  type MessageKey,
   type SupportedLanguage,
 } from './localization';
 import { MissionSuggestionSet } from './MissionSuggestionSet';
 import { deriveSuggestionSet, type SuggestionContext } from './missionSuggestions';
+
+// The visible Mission Category words, resolved the way the card resolves them.
+const CATEGORY_LABEL_KEYS: Readonly<Record<MissionCategory, MessageKey>> = {
+  Movement: 'discovery.category.movement',
+  Creativity: 'discovery.category.creativity',
+  'Helping at Home': 'discovery.category.helpingAtHome',
+  Learning: 'discovery.category.learning',
+  Calm: 'discovery.category.calm',
+};
 
 const context = (overrides: Partial<SuggestionContext> = {}): SuggestionContext => ({
   ageBand: '7–8',
@@ -56,6 +67,27 @@ describe('a complete suggestion set', () => {
     expect(cards()).toHaveLength(3);
   });
 
+  it('presents exactly three distinct Missions in every approved context', () => {
+    for (const ageBand of AGE_BANDS) {
+      for (const category of MISSION_CATEGORIES) {
+        for (const language of SUPPORTED_LANGUAGES) {
+          const { unmount } = render(
+            <MissionSuggestionSet context={context({ ageBand, category, language })} />,
+          );
+
+          const rendered = cards();
+          const titles = rendered.map(
+            (card) => within(card).getByRole('heading', { level: 3 }).textContent,
+          );
+
+          expect(rendered).toHaveLength(3);
+          expect(new Set(titles).size).toBe(3);
+          unmount();
+        }
+      }
+    }
+  });
+
   it.each(SUPPORTED_LANGUAGES)('renders the approved catalog content in %s', (language) => {
     const ctx = context({ language });
     render(<MissionSuggestionSet context={ctx} />);
@@ -69,9 +101,23 @@ describe('a complete suggestion set', () => {
 
       expect(within(card).getByRole('heading', { level: 3 }).textContent).toBe(content.title);
       expect(within(card).getByText(content.instruction)).toBeTruthy();
-      // Mission Category and expected duration accompany every card.
+      // Mission Category and expected duration accompany every card. The
+      // Category is read as the localized words the family sees, not as the
+      // styling attribute beside them.
       expect(card.textContent).toContain(String(mission.durationSeconds / 60));
+      expect(
+        within(card).getByText(translateMessage(language, CATEGORY_LABEL_KEYS[mission.category])),
+      ).toBeTruthy();
       expect(card.getAttribute('data-category')).toBe(mission.category);
+
+      // Required safety and adult-involvement wording appears in the same
+      // language, before anything could be chosen.
+      if (mission.safetyNoteRequired) {
+        expect(within(card).getByText(content.safetyNote!)).toBeTruthy();
+      }
+      if (mission.adultInvolvement !== 'No special adult assistance required') {
+        expect(within(card).getByText(content.adultInvolvementNote!)).toBeTruthy();
+      }
     });
   });
 

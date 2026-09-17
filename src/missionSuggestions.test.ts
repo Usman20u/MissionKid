@@ -2,7 +2,12 @@
 import { describe, expect, it } from 'vitest';
 
 import { AGE_BANDS, type AgeBand } from './ageBands';
-import { MISSION_CATEGORIES, type MissionCategory, type MissionRecord } from './catalog';
+import {
+  MISSION_CATEGORIES,
+  validateMissionRecord,
+  type MissionCategory,
+  type MissionRecord,
+} from './catalog';
 import { MISSION_CATALOG } from './catalogContent';
 import { SUPPORTED_LANGUAGES, type SupportedLanguage } from './localization';
 import { resolveMissionScene, resolveSceneFocus, SUBJECT_ELEMENTS } from './missionScenes';
@@ -542,14 +547,81 @@ describe('the production catalog', () => {
   it('matches every Mission in the set to the requested context', () => {
     for (const ageBand of AGE_BANDS) {
       for (const category of MISSION_CATEGORIES) {
-        const result = deriveSuggestionSet(MISSION_CATALOG, context({ ageBand, category }));
+        for (const language of SUPPORTED_LANGUAGES) {
+          const result = deriveSuggestionSet(
+            MISSION_CATALOG,
+            context({ ageBand, category, language }),
+          );
 
-        if (result.status !== 'complete') throw new Error('expected a complete set');
-        for (const mission of result.missions) {
-          expect(mission.category).toBe(category);
-          expect(mission.ageBands).toContain(ageBand);
-          expect(mission.reviewed).toBe(true);
-          expect(mission.discoveryEligible).toBe(true);
+          if (result.status !== 'complete') throw new Error('expected a complete set');
+          for (const mission of result.missions) {
+            expect(mission.category).toBe(category);
+            expect(mission.ageBands).toContain(ageBand);
+            expect(mission.reviewed).toBe(true);
+            expect(mission.discoveryEligible).toBe(true);
+
+            // Eligibility is exact in the selected language too: a Mission is
+            // offered only where its reviewed wording is actually available,
+            // never by falling back to another language.
+            const content = mission.content[language];
+            expect(content.title.trim().length).toBeGreaterThan(0);
+            expect(content.instruction.trim().length).toBeGreaterThan(0);
+          }
+        }
+      }
+    }
+  });
+
+  it('offers only Missions the controlled catalog itself published', () => {
+    const published = new Set<MissionRecord>(MISSION_CATALOG);
+
+    for (const ageBand of AGE_BANDS) {
+      for (const category of MISSION_CATEGORIES) {
+        for (const language of SUPPORTED_LANGUAGES) {
+          const ctx = context({ ageBand, category, language });
+          const result = deriveSuggestionSet(MISSION_CATALOG, ctx);
+
+          if (result.status !== 'complete') throw new Error('expected a complete set');
+          for (const mission of result.missions) {
+            // Identity, not equality: a suggestion is a reviewed record handed
+            // through, so nothing can be generated, rewritten or substituted on
+            // the way to the family.
+            expect(published.has(mission)).toBe(true);
+          }
+
+          // And the same context always yields the same reviewed Missions:
+          // there is no sampling, expansion or freshness to vary them.
+          expect(ids(deriveSuggestionSet(MISSION_CATALOG, ctx))).toEqual(ids(result));
+        }
+      }
+    }
+  });
+
+  it('offers only Missions carrying the reviewed safety facts their content requires', () => {
+    for (const ageBand of AGE_BANDS) {
+      for (const category of MISSION_CATEGORIES) {
+        for (const language of SUPPORTED_LANGUAGES) {
+          const result = deriveSuggestionSet(
+            MISSION_CATALOG,
+            context({ ageBand, category, language }),
+          );
+
+          if (result.status !== 'complete') throw new Error('expected a complete set');
+          for (const mission of result.missions) {
+            // Each displayed Mission still satisfies the published record
+            // contract, so age, duration, localization and safety facts are
+            // reviewed rather than assumed.
+            expect(validateMissionRecord(mission).status).toBe('valid');
+            expect(mission.durationSeconds).toBeGreaterThan(0);
+
+            const content = mission.content[language];
+            if (mission.safetyNoteRequired) {
+              expect(content.safetyNote?.trim().length).toBeGreaterThan(0);
+            }
+            if (mission.adultInvolvement !== 'No special adult assistance required') {
+              expect(content.adultInvolvementNote?.trim().length).toBeGreaterThan(0);
+            }
+          }
         }
       }
     }
