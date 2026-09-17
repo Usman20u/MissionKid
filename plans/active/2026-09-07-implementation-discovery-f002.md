@@ -1,7 +1,7 @@
 # MissionKid Implementation Plan 02 — Mission Discovery and Selection (F002)
 
 **Date:** 2026-09-07
-**Status:** Approved — Plan 02 scope; Tasks 1 to 12 complete, Task 13 next (see Change control)
+**Status:** Approved — Plan 02 scope; Tasks 1 to 13 complete, Task 14 next (see Change control)
 
 ## Authorization basis
 
@@ -778,7 +778,7 @@ Step 5 progress by Mission Category:
 | Learning | Locked, 11 / 11 | Locked, 11 / 11 |
 | Calm | Locked, 10 / 10 | Locked, 10 / 10 |
 
-Approved English content is locked for all five Mission Categories, 54 of the 54 frozen Missions, and Step 4 is complete. German and Russian content is locked for all five Mission Categories, 54 of the 54 frozen Missions in each language, and Step 5 is complete; candidate and localization generation is closed. Step 6, the safety and adult-involvement review, is complete with a pass, and `safetyNoteRequired` is final: `true` for 53 Missions and `false` for CALM-C09. Production metadata is locked for all 54 Missions: final Mission identifiers, guidance durations and catalog order. The scene compatibility bridge required before republication is complete. The controlled republication is complete: production holds the 54 locked Missions at content version `mvp-catalog-2026-09-r2`, their scenes are mapped and the retired scene mappings are removed. The manual production review of the republished catalog has passed. Tasks 5 to 12 are complete, Task 13 is the next authorized task, and the later tasks remain unstarted.
+Approved English content is locked for all five Mission Categories, 54 of the 54 frozen Missions, and Step 4 is complete. German and Russian content is locked for all five Mission Categories, 54 of the 54 frozen Missions in each language, and Step 5 is complete; candidate and localization generation is closed. Step 6, the safety and adult-involvement review, is complete with a pass, and `safetyNoteRequired` is final: `true` for 53 Missions and `false` for CALM-C09. Production metadata is locked for all 54 Missions: final Mission identifiers, guidance durations and catalog order. The scene compatibility bridge required before republication is complete. The controlled republication is complete: production holds the 54 locked Missions at content version `mvp-catalog-2026-09-r2`, their scenes are mapped and the retired scene mappings are removed. The manual production review of the republished catalog has passed. Tasks 5 to 13 are complete, Task 14 is the next authorized task, and the later tasks remain unstarted.
 
 #### Task 5 completion (2026-09-16)
 
@@ -1328,6 +1328,106 @@ global `min-width: 320px` floor was left untouched.
 
 No Mission content, Mission metadata, catalog, Mission scene mapping,
 persistence schema, `snapshotVersion` or `F003` behaviour changed in this task.
+
+#### Task 13 completion (2026-09-17)
+
+Task 13 is complete: the whole Plan 02 implementation was audited against its
+owning specifications. No blocker was found, so no correction was made and this
+task has no source commit. The audited tree is `78f212d`.
+
+| Gate | Result |
+| --- | --- |
+| Blockers | None |
+| Targeted corrections | None required |
+| Dependency / configuration changes | None |
+| `F003` / `F004` behaviour | Absent |
+| Secrets | None |
+| `npm test` | 379 / 379 pass |
+| `npm run build` | Pass |
+| `git diff --check` | Pass |
+
+The audit covered the complete diff from the `F001` merge base `d9a717e` to
+`78f212d`: 27 files, 10052 insertions, 23 deletions.
+
+Nothing was added that the approved shape did not call for. `package.json`,
+`package-lock.json`, `tsconfig.json`, `vite.config.ts`, `index.html` and
+`.gitignore` are byte-identical to the baseline, so Plan 02 introduced no
+dependency, no configuration change and no speculative infrastructure. The
+seventeen new files are the catalog domain and content modules, the coverage
+validator, the discovery and session domain modules, the two discovery views,
+the scene system authorized by the 2026-09-09 specification change, the shared
+age-band source, and their colocated tests.
+
+Architecture boundaries hold. `window.localStorage` is touched in exactly three
+places, all inside the persistence adapter; there is one namespaced storage key
+and one whole-snapshot shape of exactly six keys; `snapshotVersion` remains `1`
+with no migration. The catalog is a `readonly` bundled array that no runtime
+path mutates, and no view reads or writes a snapshot field directly. The
+selection transition follows the confirmed-write path exactly and publishes
+success from the read-back value rather than the value it intended to write.
+
+Later-function behaviour is absent rather than merely unused. Persistence
+accepts `state: 'selected'` only, and its exact-key check makes a stored
+`startedAt`, `completedAt` or `completionPeriodId` invalid instead of quietly
+dropping it. The only occurrences of those names anywhere in the source are the
+comment explaining that refusal and a comment naming the return-or-abandon
+choice as `F003` work. `currentResultSessionId` is typed as `null` and rejected
+when anything else, so a result pointer cannot coexist with a session.
+
+Data minimization holds. The persisted session is the exact eight fields the
+Data and State Model names, and no name, birth date, contact detail, location,
+school, photo, video, proof, credential or payment field appears in any
+production module; the only matches for those words in the repository are the
+Task 10 test that asserts their absence. There is no secret, no runtime
+environment dependency, and no `fetch`, `XMLHttpRequest`, `WebSocket`, beacon,
+analytics or AI call anywhere, which is what makes the no-runtime-generation
+rule structural rather than a promise.
+
+Catalog compliance was re-measured rather than assumed. The production catalog
+holds 54 Missions at one content version `mvp-catalog-2026-09-r2`, every record
+reviewed, discovery-eligible, uniquely identified and structurally valid, 53 of
+54 carrying required safety copy. The smallest eligible pool across all
+forty-five contexts is six against a structural minimum of three, every context
+yields a complete set, and the publication gate reports no invalid record and
+no deficiency. The ordering contract — ascending `catalogOrder`, then ascending
+Mission identifier by Unicode code point — holds in all fifteen pools. Adult
+involvement uses exactly the three approved levels and durations are whole
+minutes from three to nine.
+
+Repository hygiene passes. No AI or tool metadata, attribution line, coaching
+text or prompt history appears in any tracked file or in any Plan 02 commit
+message; the branch has one author; non-English prose appears only in the
+German and Russian dictionaries, the reviewed catalog, and test fixtures that
+assert localized output. There is no `TODO`, `FIXME`, `@ts-ignore`,
+`@ts-expect-error` or lint suppression, no `any` type, and no dead code: the
+exports that no other module imports are function return types and the closed
+value list that derives `SceneElement`. The single `console.warn` is the
+missing-message reporter, guarded by `import.meta.env.DEV` and verifiably
+absent from the production bundle.
+
+The fifteen acceptance criteria remain mapped to named tests after the Task 12
+change, and the new `discovery.selection.conflictNamed` key is complete in all
+three dictionaries.
+
+The one specification change made during Plan 02, commit `a21ef33`, is the
+authorized 2026-09-09 material change. Its renewed authorization is recorded
+above with traceability revalidation and a passing Full Specification Audit, so
+the `AGENTS.md` material-change rule was followed rather than bypassed. The
+`F002` addition it made states that it adds no discovery behavior, which the
+implementation honours: every card still carries the localized title,
+instruction, Mission Category, duration and any required safety or
+adult-involvement note.
+
+One gap is expected and assigned rather than a finding: the dated changelog
+carries no Plan 02 entry yet, which is Task 14's authorized work.
+
+The defect carried forward is unchanged and is the only known open item: the
+post-confirmed-selection screen has no transition surface, so the chosen
+Mission is not identifiable afterwards. It belongs to `F003` for the reasons
+recorded in the Task 12 entry.
+
+No source, test, specification, catalog, Mission metadata, scene mapping,
+persistence schema or dependency changed in this task.
 
 ## Objective
 
