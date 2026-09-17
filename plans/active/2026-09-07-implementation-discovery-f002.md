@@ -1,7 +1,7 @@
 # MissionKid Implementation Plan 02 — Mission Discovery and Selection (F002)
 
 **Date:** 2026-09-07
-**Status:** Approved — Plan 02 scope; Tasks 1 to 11 complete, Task 12 next (see Change control)
+**Status:** Approved — Plan 02 scope; Tasks 1 to 12 complete, Task 13 next (see Change control)
 
 ## Authorization basis
 
@@ -778,7 +778,7 @@ Step 5 progress by Mission Category:
 | Learning | Locked, 11 / 11 | Locked, 11 / 11 |
 | Calm | Locked, 10 / 10 | Locked, 10 / 10 |
 
-Approved English content is locked for all five Mission Categories, 54 of the 54 frozen Missions, and Step 4 is complete. German and Russian content is locked for all five Mission Categories, 54 of the 54 frozen Missions in each language, and Step 5 is complete; candidate and localization generation is closed. Step 6, the safety and adult-involvement review, is complete with a pass, and `safetyNoteRequired` is final: `true` for 53 Missions and `false` for CALM-C09. Production metadata is locked for all 54 Missions: final Mission identifiers, guidance durations and catalog order. The scene compatibility bridge required before republication is complete. The controlled republication is complete: production holds the 54 locked Missions at content version `mvp-catalog-2026-09-r2`, their scenes are mapped and the retired scene mappings are removed. The manual production review of the republished catalog has passed. Tasks 5 to 11 are complete, Task 12 is the next authorized task, and the later tasks remain unstarted.
+Approved English content is locked for all five Mission Categories, 54 of the 54 frozen Missions, and Step 4 is complete. German and Russian content is locked for all five Mission Categories, 54 of the 54 frozen Missions in each language, and Step 5 is complete; candidate and localization generation is closed. Step 6, the safety and adult-involvement review, is complete with a pass, and `safetyNoteRequired` is final: `true` for 53 Missions and `false` for CALM-C09. Production metadata is locked for all 54 Missions: final Mission identifiers, guidance durations and catalog order. The scene compatibility bridge required before republication is complete. The controlled republication is complete: production holds the 54 locked Missions at content version `mvp-catalog-2026-09-r2`, their scenes are mapped and the retired scene mappings are removed. The manual production review of the republished catalog has passed. Tasks 5 to 12 are complete, Task 13 is the next authorized task, and the later tasks remain unstarted.
 
 #### Task 5 completion (2026-09-16)
 
@@ -1247,6 +1247,87 @@ Verification artifacts, screenshots and server logs were kept outside the
 repository. Observed for `F003` rather than fixed here: a confirmed selection
 currently produces no visible acknowledgement, because the ready experience
 that would acknowledge it is out of Plan 02 scope.
+
+#### Task 12 completion (2026-09-17)
+
+Task 12 is complete and committed as `6b8985d`: the required ergonomic review
+of every reachable `F002` state, and the one improvement it justified.
+
+| Gate | Result |
+| --- | --- |
+| Ergonomic review | Pass |
+| Reachable states reviewed | 10 production-reachable, plus 1 test-only |
+| Outcome | 1 justified fix implemented |
+| `npm test` | 379 / 379 pass |
+| `npm run build` | Pass |
+| `git diff --check` | Pass |
+| Affected-state recheck | Pass |
+
+Ten states are reachable in the production build: the discovery gate, the
+entry handoff carrying `discovery.action.open`, Discovery before a Mission
+Category is chosen, the first suggestion set, a later complete set, the bounded
+final set with its no-further-complete-set sentence, the existing-session
+conflict, the unconfirmed-write state, the post-confirmed-selection screen, and
+the parent-facing blocked-recovery view that `F002` does not own a surface in.
+The insufficient-content surface is not production-reachable and was reviewed
+through its component contract only. Each was examined in English, German and
+Russian at narrow and wide widths against the owning specification's review
+method, whose ten questions were answered in full rather than only the six
+condensed ones.
+
+Most states passed. The five Mission Categories read as one bounded peer group
+with no preselection; the three suggestions stay equal peers with the approved
+comparison information and required safety and adult-involvement wording in
+words; the bounded end is a calm sentence rather than a failure; the
+unconfirmed state is assertive, truthful and retryable with the Mission the
+family just pressed still in front of them; nothing exposes internals.
+
+One concrete defect was fixed. The existing-session conflict told the family to
+`Choose that same Mission again` without naming the Mission, and in two of the
+three reachable conflict shapes that Mission is not on screen at all: it can
+sit in another Mission Category or in a later set of the same one. Measured in
+the built application, the instruction was unactionable in both. The owning
+presentation specification makes the current Mission the dominant information
+of this state, so the message now names it, resolved from the catalog in the
+current language through a new `discovery.selection.conflictNamed` key. The
+original unnamed sentence is kept and still used when the stored Mission no
+longer resolves to reviewed content, so the message never guesses. The Mission
+name is quoted the way each language quotes a title, because a German Mission
+title that is itself an imperative read as broken prose unquoted. Nothing about
+the conflict behaviour changed: the stored session, its Mission and the visible
+three are still untouched, and the notice stays a calm `status`.
+
+Two findings were deliberately not acted on.
+
+The post-confirmed-selection screen is a real defect and is reported rather
+than fixed. Choosing a Mission from a later set silently replaces the visible
+three with the first set, the chosen Mission disappears, focus is lost to the
+document body with no announcement, and the three Missions that appear are
+choosable but refuse every press as a conflict. This contradicts the
+presentation specification's rule that the chosen Mission remains identifiable
+while the transition resolves and that the state must not imply duplicate
+selection. It is the same root cause as the acknowledgement gap already carried
+forward: `F002` has no transition surface because Plan 02 stops at the typed
+handoff. Every available partial fix either builds the selected-transition
+presentation that Task 12 is explicitly forbidden to add, or reverses Task 7's
+recorded decision that choosing ends the cycle and rewrites the passing
+acceptance test that encodes it. It therefore belongs to `F003` alongside the
+acknowledgement, and both are now one dependency rather than two observations.
+
+On the entry handoff the secondary `Change setup` precedes the primary
+`Find a Mission` in reading and tab order, directly after the sentence saying
+MissionKid is ready for the next step. The primary action is still the visually
+dominant one, which is what the action-hierarchy rule actually requires, so
+this was recorded as a review note on an `F001`-owned view rather than taken as
+an `F002` defect.
+
+The Task 5 visual system was not reopened. Long Russian cards were re-examined
+and produce no overflow, truncation, unreadable measure, lost action or
+inaccessible safety text, so their height alone remained out of scope, and the
+global `min-width: 320px` floor was left untouched.
+
+No Mission content, Mission metadata, catalog, Mission scene mapping,
+persistence schema, `snapshotVersion` or `F003` behaviour changed in this task.
 
 ## Objective
 
