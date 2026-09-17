@@ -1,7 +1,7 @@
 # MissionKid Implementation Plan 02 — Mission Discovery and Selection (F002)
 
 **Date:** 2026-09-07
-**Status:** Approved — Plan 02 scope; Tasks 1 to 10 complete, Task 11 next (see Change control)
+**Status:** Approved — Plan 02 scope; Tasks 1 to 11 complete, Task 12 next (see Change control)
 
 ## Authorization basis
 
@@ -778,7 +778,7 @@ Step 5 progress by Mission Category:
 | Learning | Locked, 11 / 11 | Locked, 11 / 11 |
 | Calm | Locked, 10 / 10 | Locked, 10 / 10 |
 
-Approved English content is locked for all five Mission Categories, 54 of the 54 frozen Missions, and Step 4 is complete. German and Russian content is locked for all five Mission Categories, 54 of the 54 frozen Missions in each language, and Step 5 is complete; candidate and localization generation is closed. Step 6, the safety and adult-involvement review, is complete with a pass, and `safetyNoteRequired` is final: `true` for 53 Missions and `false` for CALM-C09. Production metadata is locked for all 54 Missions: final Mission identifiers, guidance durations and catalog order. The scene compatibility bridge required before republication is complete. The controlled republication is complete: production holds the 54 locked Missions at content version `mvp-catalog-2026-09-r2`, their scenes are mapped and the retired scene mappings are removed. The manual production review of the republished catalog has passed. Tasks 5 to 10 are complete, Task 11 is the next authorized task, and the later tasks remain unstarted.
+Approved English content is locked for all five Mission Categories, 54 of the 54 frozen Missions, and Step 4 is complete. German and Russian content is locked for all five Mission Categories, 54 of the 54 frozen Missions in each language, and Step 5 is complete; candidate and localization generation is closed. Step 6, the safety and adult-involvement review, is complete with a pass, and `safetyNoteRequired` is final: `true` for 53 Missions and `false` for CALM-C09. Production metadata is locked for all 54 Missions: final Mission identifiers, guidance durations and catalog order. The scene compatibility bridge required before republication is complete. The controlled republication is complete: production holds the 54 locked Missions at content version `mvp-catalog-2026-09-r2`, their scenes are mapped and the retired scene mappings are removed. The manual production review of the republished catalog has passed. Tasks 5 to 11 are complete, Task 12 is the next authorized task, and the later tasks remain unstarted.
 
 #### Task 5 completion (2026-09-16)
 
@@ -1118,6 +1118,135 @@ the distinct-complete-group guard alone enforces both size and distinctness.
 No acceptance test failed against current production code, so no product defect
 was found and no production behavior file was touched. The build output hashes
 are byte-identical to the Task 9 baseline.
+
+#### Task 11 completion (2026-09-17)
+
+Task 11 is complete: the manual product-flow verification ran against the built
+production application. No source, test, specification or catalog file changed,
+so this task has no source commit.
+
+| Gate | Result |
+| --- | --- |
+| Root-only behavior | Pass |
+| 45 Discovery contexts | 45 / 45 pass, at both viewports |
+| Bounded `Another set` | 15 / 15 contexts pass |
+| Bounded end | Pass, EN / DE / RU |
+| Cycle reset semantics | Pass |
+| Selection into `selected` | Pass |
+| Refresh / read-back | Pass |
+| Conflict and unconfirmed states | Pass, EN / DE / RU |
+| Incomplete-setup gate | Pass, EN / DE / RU |
+| Anti-manipulation | Pass |
+| Product defects found | None |
+| `npm test` | 376 / 376 pass |
+| `npm run build` | Pass |
+
+What actually ran: the Vite production build served from `dist`, first by
+`vite preview` on `localhost:4178` and then by a plain static server on
+`127.0.0.1:4179`, driven headless through Google Chrome 153.0.8010.37 on macOS
+14.8.9. Bundle under test: `index-BMxqIBKW.js`, `index-CCcJH-nn.css`. No other
+browser and no assistive technology ran, so none is claimed.
+
+Root-only behavior needed both servers to report honestly. The architecture
+requires the shell and its assets at `/` and makes any non-root path a
+hosting-level not-found, with no history-route fallback required. On the plain
+static host that is exactly what happens: `/` serves the shell, and
+`/discovery`, `/missions`, `/ready`, `/history` and a missing asset all return
+404. `vite preview` instead returns the shell for every path, including
+`/assets/missing.js`; that is its own SPA-fallback default, not application
+behavior and not the production hosting configuration. The application itself
+satisfies the rule directly: the bundle contains no router and no
+`pushState`/`replaceState`, and no view emits an anchor href or assigns
+`location`, so no non-root product URL is ever generated or advertised.
+
+All forty-five Discovery contexts were exercised in the real browser at
+360x800 and at 1280x800, ninety runs in total. Each showed exactly three cards
+with three distinct identifiers drawn from the reviewed catalog, the requested
+Mission Category on every card, non-empty localized title and instruction, a
+visible duration, the localized Mission Category words on the card rather than
+only its styling attribute, exactly five category choices, a matching document
+language, and required safety and adult-involvement wording where the record
+calls for it. No context produced horizontal scrolling, clipped copy, an
+ellipsis, an unexpected alert or a sixth category. The three Missions were
+identical at both viewports and identical across the three languages, which is
+what the eligibility rule requires: language changes wording, never which
+Missions are eligible.
+
+Bounded progression was re-observed rather than assumed, and it reproduced the
+Task 6 record exactly. Every one of the fifteen age-band and Mission Category
+cycles reached at least one replacement; three reached a third complete set,
+all at age band `7–8`, in Helping at Home, Learning and Calm. No Mission
+repeated inside a cycle, no cycle wrapped back to its first set, no partial
+group ever appeared, and a four-hundred-millisecond wait between sets never
+changed the visible three, so nothing advances without a deliberate press. At
+every bounded end the control was removed rather than left as an endless
+action, the plain explanation appeared in the selected language, the three
+Missions stayed visible and choosable, and no alert role or warning treatment
+was used.
+
+Cycle state behaved as specified and never reached storage. `Another set`
+advanced the cycle; re-choosing the same Mission Category continued it;
+choosing a different Mission Category and returning restarted at the first set;
+leaving Discovery ended it. The stored snapshot carried only
+`snapshotVersion`, `settings`, `childProfile`, `currentSession`,
+`currentResultSessionId` and `completedSessions`, with no shown-identifier,
+cycle or suggestion data in it. Editing the language and then the age band
+through the real setup form reset the cycle both times and persisted the new
+context.
+
+A deliberate choice created exactly one session in `selected`, holding only the
+reference and the immutable selection facts, at `snapshotVersion` 1, with no
+`startedAt` and no `completedAt`, no completed record and no result pointer.
+No localized Mission wording reached the snapshot. Reloading the page returned
+a byte-identical snapshot and stayed stable on a second reload, and the view
+after reload was the setup-complete handoff, since `F003` owns the ready
+experience and Plan 02 must not render it. Pressing the same choose control
+three times in rapid succession, and again afterwards, produced one session
+identifier and one `selectedAt` with no duplicate and no completed record.
+
+The reachable failure states were exercised honestly. Choosing a different
+Mission while one is already selected produced the polite `status` message in
+all three languages and left the stored session, its Mission and the visible
+three untouched. Blocking the durable write produced the assertive `alert`
+message in all three languages, claimed no session, and kept the three
+choosable; restoring writes and choosing again succeeded and cleared the
+message. A corrupted stored snapshot reached the parent-facing recovery view
+with no Discovery surface. No message in any of these states named a session,
+a storage key, an exception or any internal state.
+
+Two states were deliberately not staged. The insufficient-content surface is
+not reachable in the production build: all fifteen age-band and Mission
+Category contexts were checked and none produced it, because the catalog
+coverage gate guarantees three eligible Missions everywhere. A catalog-loading
+failure is likewise unreachable, since the catalog is bundled and derivation is
+a pure synchronous function. Both remain covered by the automated suite rather
+than fabricated in the browser.
+
+Nine human-reviewed screenshots were taken and inspected: 360 Russian and
+German Discovery, wide English Discovery, the long Russian Learning cards at
+9-10, the adult-participation Mission `helping-03`, German safety notes,
+`calm-07` rendering with no safety note and no adult note while keeping every
+other required element, the Russian bounded end, and the wide selected-session
+transition. `Adult takes part` and `Adult nearby` were confirmed
+distinguishable in words on real cards, and the Mission with no requirement
+correctly states nothing rather than reassuring the family.
+
+Anti-manipulation and privacy held across all fifteen contexts: no countdown,
+scarcity, streak, ranking, popularity, score, badge, reward, prize or purchase
+wording appeared, and after the initial bundle load Discovery, replacement and
+selection issued no network requests at all.
+
+One verification-harness fault is recorded because it briefly looked like a
+product defect. The browser harness re-seeded its fixture snapshot on every
+navigation, so the first reload check appeared to erase a stored session. The
+harness was corrected to seed only when no snapshot exists; the session then
+survived reload byte-for-byte. The application never lost data, and nothing in
+the repository was involved.
+
+Verification artifacts, screenshots and server logs were kept outside the
+repository. Observed for `F003` rather than fixed here: a confirmed selection
+currently produces no visible acknowledgement, because the ready experience
+that would acknowledge it is out of Plan 02 scope.
 
 ## Objective
 
