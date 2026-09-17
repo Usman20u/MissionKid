@@ -15,6 +15,7 @@ import {
   type AppStateAction,
 } from './appState';
 import { MISSION_CATEGORIES, type MissionCategory } from './catalog';
+import { MISSION_CATALOG } from './catalogContent';
 import {
   SUPPORTED_LANGUAGES,
   translateMessage,
@@ -555,11 +556,21 @@ describe('category selection and the discovery cycle', () => {
     const stored = memory.values.get(MISSIONKID_STORAGE_KEY);
     const session = selectCurrentSession(captured.at(-1)!);
 
+    // The Mission that is already chosen, resolved from the catalog the way a
+    // card resolves it.
+    const chosenTitle = MISSION_CATALOG.find(
+      (record) => record.missionId === session!.missionId,
+    )!.content.en.title;
+
     fireEvent.click(controls()[1]!);
 
     expect(selectSelectionIssue(captured.at(-1)!)).toBe('conflict');
-    expect(screen.getByText(/A Mission is already chosen/i).getAttribute('role'))
-      .toBe('status');
+    const notice = document.querySelector('.mission-suggestions__issue')!;
+    expect(notice.getAttribute('role')).toBe('status');
+    // Naming it is what makes "choose that same Mission again" actionable: the
+    // one already chosen is often not among the three on screen.
+    expect(notice.textContent).toContain(chosenTitle);
+    expect(notice.textContent).toMatch(/already chosen/i);
     // Refused before persistence: nothing stored changed, nothing published
     // changed, and the three Missions are still there to choose from.
     expect(memory.values.get(MISSIONKID_STORAGE_KEY)).toBe(stored);

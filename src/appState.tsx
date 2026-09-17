@@ -65,6 +65,10 @@ type RecoveryContext = Readonly<{
   // wording, so without this the message is an unchanged node and assistive
   // technology stays silent on the retry the message itself invites.
   selectionAttempt?: number;
+  // The Mission a conflict is about. A stored session is not published into
+  // runtime by hydration, so without this the conflict could not name the
+  // Mission the family is being told to choose again.
+  selectionConflictMissionId?: string;
 }>;
 
 export type AppState = RecoveryContext & (
@@ -93,7 +97,12 @@ export type AppStateAction =
   | { type: 'discovery-category-selected'; category: MissionCategory }
   | { type: 'discovery-another-set-requested'; missionIds: readonly string[] }
   | { type: 'mission-selection-confirmed'; session: SelectedMissionSession }
-  | { type: 'mission-selection-failed'; issue: MissionSelectionIssue }
+  | {
+      type: 'mission-selection-failed';
+      issue: MissionSelectionIssue;
+      // Present only for a conflict, which is always about one stored Mission.
+      conflictMissionId?: string;
+    }
   | {
       type: 'setup-save-unconfirmed';
       localProfileId: string | null;
@@ -191,6 +200,10 @@ export function selectSelectionIssue(
 
 export function selectSelectionAttempt(state: AppState): number {
   return state.selectionAttempt ?? 0;
+}
+
+export function selectConflictMissionId(state: AppState): string | null {
+  return state.selectionConflictMissionId ?? null;
 }
 
 // The Missions this cycle has already shown. Empty outside a cycle, so a fresh
@@ -302,6 +315,7 @@ export function appStateReducer(
             ...state,
             selectionIssue: undefined,
             selectionAttempt: undefined,
+            selectionConflictMissionId: undefined,
             discovery: { category: action.category, shown: [] },
           };
     case 'discovery-another-set-requested': {
@@ -325,6 +339,7 @@ export function appStateReducer(
         ...state,
         selectionIssue: undefined,
         selectionAttempt: undefined,
+        selectionConflictMissionId: undefined,
         discovery: { ...discovery, shown: [...discovery.shown, ...action.missionIds] },
       };
     }
@@ -337,6 +352,7 @@ export function appStateReducer(
         currentSession: action.session,
         selectionIssue: undefined,
         selectionAttempt: undefined,
+        selectionConflictMissionId: undefined,
         discovery: state.discovery ? { ...state.discovery, shown: [] } : undefined,
       };
     case 'mission-selection-failed':
@@ -348,6 +364,7 @@ export function appStateReducer(
         ...state,
         selectionIssue: action.issue,
         selectionAttempt: (state.selectionAttempt ?? 0) + 1,
+        selectionConflictMissionId: action.conflictMissionId,
       };
     case 'setup-save-unconfirmed': {
       // Recovery is newer evidence than the pre-write read; neither confirms the attempted save.

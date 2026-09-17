@@ -132,6 +132,10 @@ type MissionSuggestionSetProps = Readonly<{
   // Which attempt it belongs to, so a repeated failure is a new message rather
   // than the same one left standing.
   selectionAttempt?: number;
+  // The localized title of the Mission a conflict is about. Absent when the
+  // stored Mission no longer resolves to reviewed content, in which case the
+  // message stays truthful by naming nothing.
+  chosenMissionTitle?: string | null;
 }>;
 
 export function MissionSuggestionSet({
@@ -142,6 +146,7 @@ export function MissionSuggestionSet({
   onChoose,
   selectionIssue = null,
   selectionAttempt = 0,
+  chosenMissionTitle = null,
 }: MissionSuggestionSetProps) {
   const t = (key: MessageKey) => translateMessage(context.language, key);
   const result = deriveSuggestionSet(catalog, context, shown);
@@ -216,11 +221,17 @@ export function MissionSuggestionSet({
           key={`${selectionIssue}-${selectionAttempt}`}
           role={selectionIssue === 'conflict' ? 'status' : 'alert'}
         >
-          {t(
-            selectionIssue === 'conflict'
-              ? 'discovery.selection.conflict'
-              : 'discovery.selection.unconfirmed',
-          )}
+          {selectionIssue === 'conflict'
+            ? // Naming the Mission is what makes "choose that same Mission
+              // again" something the family can act on: the one already chosen
+              // is often not among the three in front of them.
+              chosenMissionTitle
+              ? t('discovery.selection.conflictNamed').replace(
+                  '{mission}',
+                  chosenMissionTitle,
+                )
+              : t('discovery.selection.conflict')
+            : t('discovery.selection.unconfirmed')}
         </p>
       ) : null}
       <div className="mission-suggestions__set">

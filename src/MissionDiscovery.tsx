@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 
 import {
+  selectConflictMissionId,
   selectDiscoveryCycle,
   selectSelectionAttempt,
   selectSelectionIssue,
@@ -110,6 +111,16 @@ export function MissionCategorySelection({
   const cycle = selectDiscoveryCycle(state);
   const helpId = 'discovery-categories-help';
 
+  // A conflict is about one already-chosen Mission, and the specification makes
+  // that Mission the state's dominant information. Its wording comes from the
+  // catalog in the current language, never from the stored session, and stays
+  // absent if the Mission no longer resolves to reviewed content.
+  const conflictMissionId = selectConflictMissionId(state);
+  const chosenMissionTitle = conflictMissionId
+    ? MISSION_CATALOG.find((record) => record.missionId === conflictMissionId)
+        ?.content[state.language].title ?? null
+    : null;
+
   return (
     <div className="mission-discovery">
       {state.ageBand ? (
@@ -190,8 +201,11 @@ export function MissionCategorySelection({
             dispatch({
               type: 'mission-selection-failed',
               issue: result.status === 'conflict' ? 'conflict' : 'unconfirmed',
+              conflictMissionId:
+                result.status === 'conflict' ? result.session.missionId : undefined,
             });
           }}
+          chosenMissionTitle={chosenMissionTitle}
           selectionAttempt={selectSelectionAttempt(state)}
           selectionIssue={selectSelectionIssue(state)}
           shown={selectShownMissionIds(state)}

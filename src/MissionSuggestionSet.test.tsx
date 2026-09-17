@@ -482,6 +482,65 @@ describe('a complete suggestion set', () => {
     }
   });
 
+  it('names the already-chosen Mission in a conflict, in every language', () => {
+    for (const language of SUPPORTED_LANGUAGES) {
+      const { container, unmount } = render(
+        <MissionSuggestionSet
+          chosenMissionTitle={`Chosen (${language})`}
+          context={context({ language })}
+          onChoose={() => {}}
+          selectionIssue="conflict"
+        />,
+      );
+
+      const notice = container.querySelector('.mission-suggestions__issue')!;
+      // Without the name, "choose that same Mission again" asks for something
+      // the family cannot identify: the chosen Mission is often not one of the
+      // three in front of them.
+      expect(notice.textContent).toContain(`Chosen (${language})`);
+      expect(notice.textContent).not.toContain('{mission}');
+      expect(notice.getAttribute('role')).toBe('status');
+      unmount();
+    }
+  });
+
+  it('names nothing rather than guessing when the chosen Mission cannot be resolved', () => {
+    for (const language of SUPPORTED_LANGUAGES) {
+      const { container, unmount } = render(
+        <MissionSuggestionSet
+          chosenMissionTitle={null}
+          context={context({ language })}
+          onChoose={() => {}}
+          selectionIssue="conflict"
+        />,
+      );
+
+      const notice = container.querySelector('.mission-suggestions__issue')!;
+      expect(notice.textContent).toBe(
+        translateMessage(language, 'discovery.selection.conflict'),
+      );
+      expect(notice.textContent).not.toContain('{mission}');
+      unmount();
+    }
+  });
+
+  it('leaves an unconfirmed selection unnamed, because the Mission is on screen', () => {
+    const { container } = render(
+      <MissionSuggestionSet
+        chosenMissionTitle="Chosen (en)"
+        context={context()}
+        onChoose={() => {}}
+        selectionIssue="unconfirmed"
+      />,
+    );
+
+    // The family just pressed that Mission, so it is already identifiable and
+    // repeating its name would add nothing.
+    expect(container.querySelector('.mission-suggestions__issue')!.textContent).toBe(
+      translateMessage('en', 'discovery.selection.unconfirmed'),
+    );
+  });
+
   it('reports an unconfirmed selection as a failure without losing the set', () => {
     for (const language of SUPPORTED_LANGUAGES) {
       const { unmount } = render(
