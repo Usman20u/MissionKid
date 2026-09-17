@@ -1,7 +1,7 @@
 # MissionKid Implementation Plan 02 — Mission Discovery and Selection (F002)
 
 **Date:** 2026-09-07
-**Status:** Approved — Plan 02 scope; Tasks 1 to 14 complete, Task 15 next (see Change control)
+**Status:** Approved — Plan 02 scope; Tasks 1 to 15 complete and the readiness gate passed. The plan remains active pending a separate authorized closeout (see Change control)
 
 ## Authorization basis
 
@@ -778,7 +778,7 @@ Step 5 progress by Mission Category:
 | Learning | Locked, 11 / 11 | Locked, 11 / 11 |
 | Calm | Locked, 10 / 10 | Locked, 10 / 10 |
 
-Approved English content is locked for all five Mission Categories, 54 of the 54 frozen Missions, and Step 4 is complete. German and Russian content is locked for all five Mission Categories, 54 of the 54 frozen Missions in each language, and Step 5 is complete; candidate and localization generation is closed. Step 6, the safety and adult-involvement review, is complete with a pass, and `safetyNoteRequired` is final: `true` for 53 Missions and `false` for CALM-C09. Production metadata is locked for all 54 Missions: final Mission identifiers, guidance durations and catalog order. The scene compatibility bridge required before republication is complete. The controlled republication is complete: production holds the 54 locked Missions at content version `mvp-catalog-2026-09-r2`, their scenes are mapped and the retired scene mappings are removed. The manual production review of the republished catalog has passed. Tasks 5 to 14 are complete, Task 15 is the next authorized task, and it remains unstarted.
+Approved English content is locked for all five Mission Categories, 54 of the 54 frozen Missions, and Step 4 is complete. German and Russian content is locked for all five Mission Categories, 54 of the 54 frozen Missions in each language, and Step 5 is complete; candidate and localization generation is closed. Step 6, the safety and adult-involvement review, is complete with a pass, and `safetyNoteRequired` is final: `true` for 53 Missions and `false` for CALM-C09. Production metadata is locked for all 54 Missions: final Mission identifiers, guidance durations and catalog order. The scene compatibility bridge required before republication is complete. The controlled republication is complete: production holds the 54 locked Missions at content version `mvp-catalog-2026-09-r2`, their scenes are mapped and the retired scene mappings are removed. The manual production review of the republished catalog has passed. Tasks 5 to 15 are complete, and no Plan 02 task remains unstarted; closeout requires its own authorization.
 
 #### Task 5 completion (2026-09-16)
 
@@ -1485,6 +1485,127 @@ forward both known open items — the missing post-selection transition surface 
 the absent return-or-abandon control — as `F003` work. It contains no shell
 transcript, no conversational material and no live task status, so it adds no
 authority parallel to this plan.
+
+#### Task 15 completion (2026-09-17)
+
+Task 15 is complete and committed as the plan record below: the final Plan 02
+diff, checks and clean-commit readiness gate. It is a verification task; no
+source, test, specification, catalog or dependency file changed, and nothing was
+pushed, opened as a pull request, merged or moved.
+
+| Gate | Result |
+| --- | --- |
+| Final `F002` diff audit | Pass |
+| File-scope audit | Pass |
+| Scope boundary (`F003` / `F004` absent) | Pass |
+| Architecture and persistence invariants | Pass |
+| Dependency audit | Pass — none changed |
+| Clean install (`npm ci`) | Pass — 109 packages, 0 vulnerabilities |
+| `npm run typecheck` | Pass |
+| `npm test` | 379 / 379 pass, 13 files |
+| `npm run build` | Pass |
+| `git diff --check` | Pass |
+| Repository status | Clean |
+| Secret and personal-data scan | Pass — none |
+| Changelog truth audit | Pass |
+| Commit and attribution audit | Pass |
+| Blocking defects | None |
+
+The audited boundary is the complete diff from the `F001` merge base `d9a717e`
+to `8aa9231`: 46 commits, 28 files, 10256 insertions, 23 deletions. Every file
+is accounted for: 15 product source files, 8 test files, the three
+specification files of the authorized 2026-09-09 change, this plan, and the
+dated changelog. No generated artifact, screenshot, scratch file, log or
+temporary script is tracked, and `git status` is empty with untracked files
+included.
+
+`package.json`, `package-lock.json`, `tsconfig.json`, `vite.config.ts`,
+`index.html` and `.gitignore` remain byte-identical to the baseline, so Plan 02
+added no runtime dependency, no development dependency and no lockfile churn.
+`npm ci` reproduced the tree from the lockfile, and the build after it produced
+the same asset hashes as before, so the result is reproducible rather than
+incidental.
+
+Scope holds in both directions. The implemented behavior is the approved `F002`
+set: the reviewed 54-Mission catalog, record and publication validation with the
+coverage guarantee, the five-category peer group and the entry gate,
+deterministic eligibility and exactly-three derivation, Mission card
+presentation with the authorized scene system, bounded `Another set`, the
+confirmed-write selection into one `selected` session, and the reachable
+unavailable, conflict and unconfirmed states with their localization,
+accessibility and responsive baseline. Absent, by construction rather than by
+omission: no `ready` or `active` transition, timer, Mission Break, abandonment,
+completion flow, Reward Card, History or Monthly Goal; no backend, database,
+authentication, analytics, runtime AI, router, external request or content
+generation. `window.localStorage` is reached in three places, all inside the
+adapter; the snapshot is one namespaced key of exactly six sections at
+`snapshotVersion` `1`; `SelectedMissionSession` is exactly eight fields with
+`state: 'selected'`; `currentResultSessionId` is typed `null` and
+`completedSessions` an empty tuple, both rejected otherwise; derivation is pure,
+deterministic and has no random source; and the discovery cycle's shown
+identifiers live only in runtime state.
+
+Catalog facts were re-measured independently of the suite: 54 records at content
+version `mvp-catalog-2026-09-r2`, Movement 12, Creativity 12, Helping at Home 9,
+Learning 11 and Calm 10, all three language blocks present on every record,
+`safetyNoteRequired` true for 53 and false for one, adult involvement explicit
+for 7. The smallest eligible pool across the 15 age-band and Mission Category
+cells is six against a structural minimum of three, so all 45 language contexts
+hold a complete set with margin.
+
+Test intent covers every material `F002` contract: catalog record validity and
+the publication gate, eligibility and context filtering, deterministic ordering
+including the code-point tie-breaker, the exactly-three first set, bounded
+replacement with no repeat, no wraparound and no partial group, the bounded end,
+cycle reset on Mission Category, language, age band and leaving discovery,
+selection into the exact selected-session fields, confirmed read-back,
+duplicate and conflict prevention, unconfirmed-write behavior, the unavailable
+states, English, German and Russian resolution, accessibility semantics, and the
+scene invariants. No blocker-level coverage hole was found, so no test was added.
+
+The recorded manual verification remains truthful and was not restaged: Google
+Chrome 153.0.8010.37 on macOS at 360 x 800 and 1280 x 800, with no other browser
+and no assistive technology claimed, and the insufficient-content and
+catalog-failure states recorded as unreachable in the production build and
+covered by the automated suite instead. Task 5's visual approval stays closed.
+
+Localization is complete and consistent: the three dictionaries carry the same
+69 keys with no duplicate, no empty value and no placeholder, 26 of them
+`F002` keys, `{mission}` present in all three `conflictNamed` strings, and the
+only strings identical across languages are the product name and the three
+language endonyms. No `F003` or `F004` copy was added.
+
+Commit hygiene passes. All 46 commits have one author, single-line subjects, no
+body and no trailer; none contains a prohibited attribution or AI or tool
+metadata. Plan commits touch only the plan, the changelog commit touches only
+the changelog, and every source commit is scoped to its own work; the one
+specification commit `a21ef33` carries its own change-control record in this
+plan, which is the authorized pairing rather than unrelated scope. No history
+was rewritten.
+
+Two things are reported rather than acted on, neither a blocker:
+
+- This task's own verification intent above says to confirm that no
+  specification changed. Three specification files did change, in `a21ef33`,
+  under the material-change revalidation and renewed authorization recorded in
+  this plan on 2026-09-09. The change-control record governs; the Task 15
+  wording predates it. `AGENTS.md`, the roadmap, the README and both completed
+  plans are untouched.
+- The comment at `src/missionSession.ts:30` says Task 8 presents the
+  return-or-abandon choice. Task 8 presented the conflict message only and
+  recorded that `F003` owns that control, so the comment is stale. It describes
+  no behavior and appears in no product surface; the smallest correction is a
+  one-line comment edit, which belongs to the next authorized source change
+  rather than to this read-only gate.
+
+The carried-forward `F003` dependency is unchanged: the post-confirmed-selection
+screen has no transition surface, and the existing-session conflict has no
+return-or-abandon control.
+
+`F002` implementation tasks are complete and the branch is ready for a separate
+closeout decision. This plan stays in `plans/active/`; moving it, pushing,
+opening a pull request and merging each require their own explicit
+authorization, and none was performed.
 
 ## Objective
 
