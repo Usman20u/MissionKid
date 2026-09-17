@@ -230,6 +230,19 @@ describe('a complete suggestion set', () => {
     );
   });
 
+  it.each(MISSION_CATEGORIES)('carries the %s atmosphere on the set itself', (category) => {
+    const { container } = render(
+      <MissionSuggestionSet context={context({ category })} onChoose={() => {}} selectionIssue="conflict" />,
+    );
+
+    // The bounded and recovery notices are tinted from the category hue, and
+    // that hue is only defined on elements carrying `data-category`. Without it
+    // here those surfaces resolve nothing and the notice loses the treatment
+    // that separates it from ordinary copy.
+    const set = container.querySelector('.mission-suggestions');
+    expect(set!.getAttribute('data-category')).toBe(category);
+  });
+
   it('keeps the visible heading a heading and the section label', () => {
     const { container } = render(<MissionSuggestionSet context={context()} />);
 
@@ -471,6 +484,64 @@ describe('a complete suggestion set', () => {
         unmount();
       }
     }
+  });
+
+  it('makes a repeated failure a new message rather than a silent one', () => {
+    const { container, rerender } = render(
+      <MissionSuggestionSet
+        context={context()}
+        onChoose={() => {}}
+        selectionAttempt={1}
+        selectionIssue="unconfirmed"
+      />,
+    );
+
+    const first = container.querySelector('.mission-suggestions__issue');
+
+    // The wording is identical on a second failure, so only a replaced node
+    // reaches a live region. Reusing it would leave the retry this message
+    // asks for unanswered for anyone who cannot see the screen.
+    rerender(
+      <MissionSuggestionSet
+        context={context()}
+        onChoose={() => {}}
+        selectionAttempt={2}
+        selectionIssue="unconfirmed"
+      />,
+    );
+
+    const second = container.querySelector('.mission-suggestions__issue');
+    expect(second).not.toBe(first);
+    expect(second!.textContent).toBe(
+      translateMessage('en', 'discovery.selection.unconfirmed'),
+    );
+    expect(screen.getAllByRole('article')).toHaveLength(3);
+  });
+
+  it('keeps one message standing while the same attempt is re-rendered', () => {
+    const { container, rerender } = render(
+      <MissionSuggestionSet
+        context={context()}
+        onChoose={() => {}}
+        selectionAttempt={1}
+        selectionIssue="conflict"
+      />,
+    );
+
+    const first = container.querySelector('.mission-suggestions__issue');
+
+    // An unrelated re-render is not a new outcome, so it must not repeat the
+    // announcement.
+    rerender(
+      <MissionSuggestionSet
+        context={context()}
+        onChoose={() => {}}
+        selectionAttempt={1}
+        selectionIssue="conflict"
+      />,
+    );
+
+    expect(container.querySelector('.mission-suggestions__issue')).toBe(first);
   });
 
   it('shows no recovery message when the last choice was fine', () => {

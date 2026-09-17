@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 
 import {
   selectDiscoveryCycle,
+  selectSelectionAttempt,
   selectSelectionIssue,
   selectShownMissionIds,
   useAppState,
@@ -191,6 +192,7 @@ export function MissionCategorySelection({
               issue: result.status === 'conflict' ? 'conflict' : 'unconfirmed',
             });
           }}
+          selectionAttempt={selectSelectionAttempt(state)}
           selectionIssue={selectSelectionIssue(state)}
           shown={selectShownMissionIds(state)}
         />

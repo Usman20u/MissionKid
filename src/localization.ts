@@ -173,7 +173,7 @@ export const INTERFACE_MESSAGES: CompleteInterfaceMessages = {
     'discovery.selection.conflict':
       'Es ist schon eine Mission gewählt. Wähle dieselbe Mission noch einmal, um mit ihr weiterzumachen.',
     'discovery.selection.unconfirmed':
-      'Diese Mission konnte gerade nicht bestätigt werden. Es hat nichts angefangen. Wähle sie noch einmal oder wähle eine andere.',
+      'Diese Mission konnte gerade nicht bestätigt werden. Es wurde nichts gestartet. Wähle sie noch einmal oder wähle eine andere.',
     'discovery.anotherSet': 'Weitere drei',
     'discovery.anotherSet.bounded':
       'Hier gibt es keine drei weiteren Missionen. Wähle eine von diesen dreien oder oben eine andere Kategorie.',

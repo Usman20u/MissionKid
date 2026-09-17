@@ -129,6 +129,9 @@ type MissionSuggestionSetProps = Readonly<{
   onChoose?: (missionId: string) => void;
   // Why the last deliberate choice did not become a new Mission Session.
   selectionIssue?: MissionSelectionIssue | null;
+  // Which attempt it belongs to, so a repeated failure is a new message rather
+  // than the same one left standing.
+  selectionAttempt?: number;
 }>;
 
 export function MissionSuggestionSet({
@@ -138,6 +141,7 @@ export function MissionSuggestionSet({
   onAnotherSet,
   onChoose,
   selectionIssue = null,
+  selectionAttempt = 0,
 }: MissionSuggestionSetProps) {
   const t = (key: MessageKey) => translateMessage(context.language, key);
   const result = deriveSuggestionSet(catalog, context, shown);
@@ -172,7 +176,15 @@ export function MissionSuggestionSet({
   }
 
   return (
-    <section aria-labelledby={headingId} className="mission-suggestions">
+    // The set belongs to one Mission Category, and the category atmosphere is
+    // carried by `data-category`. Without it the bounded and recovery notices
+    // below resolve no hue at all and lose the surface that separates them from
+    // ordinary copy.
+    <section
+      aria-labelledby={headingId}
+      className="mission-suggestions"
+      data-category={context.category}
+    >
       <MissionSceneDefs />
       <SuggestionAnnouncement
         category={context.category}
@@ -198,6 +210,10 @@ export function MissionSuggestionSet({
       {selectionIssue ? (
         <p
           className={`mission-suggestions__issue mission-suggestions__issue--${selectionIssue}`}
+          // Each attempt is its own message. Choosing again after the same
+          // failure would otherwise leave an unchanged node that no live region
+          // reports, so the retry this text asks for would go unanswered.
+          key={`${selectionIssue}-${selectionAttempt}`}
           role={selectionIssue === 'conflict' ? 'status' : 'alert'}
         >
           {t(

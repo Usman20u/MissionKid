@@ -61,6 +61,10 @@ type RecoveryContext = Readonly<{
   // `conflict` is a product state: one is already chosen. `unconfirmed` is a
   // transition failure: nothing started, and the choice can be made again.
   selectionIssue?: MissionSelectionIssue;
+  // Which attempt produced it. Choosing again after the same failure changes no
+  // wording, so without this the message is an unchanged node and assistive
+  // technology stays silent on the retry the message itself invites.
+  selectionAttempt?: number;
 }>;
 
 export type AppState = RecoveryContext & (
@@ -185,6 +189,10 @@ export function selectSelectionIssue(
   return state.selectionIssue ?? null;
 }
 
+export function selectSelectionAttempt(state: AppState): number {
+  return state.selectionAttempt ?? 0;
+}
+
 // The Missions this cycle has already shown. Empty outside a cycle, so a fresh
 // cycle always starts at the first set.
 export function selectShownMissionIds(state: AppState): readonly string[] {
@@ -293,6 +301,7 @@ export function appStateReducer(
         : {
             ...state,
             selectionIssue: undefined,
+            selectionAttempt: undefined,
             discovery: { category: action.category, shown: [] },
           };
     case 'discovery-another-set-requested': {
@@ -315,6 +324,7 @@ export function appStateReducer(
       return {
         ...state,
         selectionIssue: undefined,
+        selectionAttempt: undefined,
         discovery: { ...discovery, shown: [...discovery.shown, ...action.missionIds] },
       };
     }
@@ -326,12 +336,19 @@ export function appStateReducer(
         ...state,
         currentSession: action.session,
         selectionIssue: undefined,
+        selectionAttempt: undefined,
         discovery: state.discovery ? { ...state.discovery, shown: [] } : undefined,
       };
     case 'mission-selection-failed':
       // Nothing about the cycle changes: the same three Missions stay on screen
-      // and stay choosable, which is what makes choosing again the retry.
-      return { ...state, selectionIssue: action.issue };
+      // and stay choosable, which is what makes choosing again the retry. Only
+      // the attempt advances, so a retry that fails the same way is still
+      // announced rather than passing in silence.
+      return {
+        ...state,
+        selectionIssue: action.issue,
+        selectionAttempt: (state.selectionAttempt ?? 0) + 1,
+      };
     case 'setup-save-unconfirmed': {
       // Recovery is newer evidence than the pre-write read; neither confirms the attempted save.
       const evidence = action.recovery.status === 'hydrated' || action.recovery.status === 'absent'
