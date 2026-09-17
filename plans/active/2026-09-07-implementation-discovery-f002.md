@@ -1,7 +1,7 @@
 # MissionKid Implementation Plan 02 — Mission Discovery and Selection (F002)
 
 **Date:** 2026-09-07
-**Status:** Approved — Plan 02 scope; Tasks 1 to 8 complete, Task 9 next (see Change control)
+**Status:** Approved — Plan 02 scope; Tasks 1 to 9 complete, Task 10 next (see Change control)
 
 ## Authorization basis
 
@@ -778,7 +778,7 @@ Step 5 progress by Mission Category:
 | Learning | Locked, 11 / 11 | Locked, 11 / 11 |
 | Calm | Locked, 10 / 10 | Locked, 10 / 10 |
 
-Approved English content is locked for all five Mission Categories, 54 of the 54 frozen Missions, and Step 4 is complete. German and Russian content is locked for all five Mission Categories, 54 of the 54 frozen Missions in each language, and Step 5 is complete; candidate and localization generation is closed. Step 6, the safety and adult-involvement review, is complete with a pass, and `safetyNoteRequired` is final: `true` for 53 Missions and `false` for CALM-C09. Production metadata is locked for all 54 Missions: final Mission identifiers, guidance durations and catalog order. The scene compatibility bridge required before republication is complete. The controlled republication is complete: production holds the 54 locked Missions at content version `mvp-catalog-2026-09-r2`, their scenes are mapped and the retired scene mappings are removed. The manual production review of the republished catalog has passed. Tasks 5 to 8 are complete, Task 9 is the next authorized task, and the later tasks remain unstarted.
+Approved English content is locked for all five Mission Categories, 54 of the 54 frozen Missions, and Step 4 is complete. German and Russian content is locked for all five Mission Categories, 54 of the 54 frozen Missions in each language, and Step 5 is complete; candidate and localization generation is closed. Step 6, the safety and adult-involvement review, is complete with a pass, and `safetyNoteRequired` is final: `true` for 53 Missions and `false` for CALM-C09. Production metadata is locked for all 54 Missions: final Mission identifiers, guidance durations and catalog order. The scene compatibility bridge required before republication is complete. The controlled republication is complete: production holds the 54 locked Missions at content version `mvp-catalog-2026-09-r2`, their scenes are mapped and the retired scene mappings are removed. The manual production review of the republished catalog has passed. Tasks 5 to 9 are complete, Task 10 is the next authorized task, and the later tasks remain unstarted.
 
 #### Task 5 completion (2026-09-16)
 
@@ -952,6 +952,116 @@ here.
 
 No Mission content, Mission metadata, catalog, Mission scene mapping,
 persistence schema or Task 5 visual system changed in this task.
+
+#### Task 9 completion (2026-09-17)
+
+Task 9 is complete and committed as `ee35a70`: the F002 localization,
+accessibility and responsive baseline across every implemented F002 state.
+
+| Gate | Result |
+| --- | --- |
+| EN | Pass |
+| DE | Pass |
+| RU | Pass |
+| Message-key completeness | Pass |
+| Keyboard / focus | Pass |
+| Touch targets | Pass |
+| Contrast | Pass |
+| Mobile | Pass |
+| Desktop | Pass |
+| Larger text | Pass |
+| Reduced motion | Pass |
+| Anti-manipulation | Pass |
+| `npm test` | 369 / 369 pass |
+| `npm run build` | Pass |
+
+The audit came first. All 26 interface messages the F002 views resolve are
+present and non-empty in English, German and Russian, none is unused, none
+duplicates reviewed Mission copy, and no view holds language-specific text: the
+three dictionaries carry 68 identical keys. Mission title, instruction, safety
+and adult wording continue to resolve from the production catalog in the
+selected language.
+
+Three concrete defects were found and only those were changed.
+
+The recovery notices declared a category tint the element could not resolve.
+`--world-hue` is defined on `[data-category]` elements, and the suggestion
+section carried no such attribute, so `background` and `border-left` were
+invalid at computed-value time: the conflict notice rendered with no surface and
+no accent bar at all, and the unconfirmed notice lost the bar whose colour its
+own rule set. The section now carries its Mission Category, so both notices
+render the surface they were written to have.
+
+A repeated failure was silent. Choosing again after the same outcome produced
+identical wording in the same node, so no live region reported it and the retry
+the message asks for went unanswered for anyone who could not see the screen.
+The runtime now records which attempt produced the message and the notice is
+keyed by it, so each failure is announced once and an unrelated re-render is
+not. The recovery behaviour is unchanged: the same three Missions stay on
+screen and stay choosable, and choosing the same Mission still resolves one
+session rather than creating a second.
+
+A German compound pushed the page into horizontal scrolling at 200% text. A
+`legend` box is sized to its longest unbreakable word, and the inherited
+`overflow-wrap: break-word` does not reduce that intrinsic width, so
+`Missionskategorie` measured 311 CSS pixels inside a 214-pixel column at 360
+pixels wide. `overflow-wrap: anywhere` on `.choice-group legend` lets the word
+count as breakable when the width is measured. The selector is shared with
+`F001`, which had the same defect more severely in
+`Sprache der Benutzeroberfläche`; both are fixed, and first-use setup, setup
+editing, blocked recovery and the reset confirmation were re-checked at 320,
+360, 390 and 1280 pixels in all three languages at normal and 200% text with no
+regression.
+
+One interface string was refined. German `discovery.selection.unconfirmed` read
+`Es hat nichts angefangen.`, which parses as an impersonal subject taking an
+object and reverses the intended sense; it now reads `Es wurde nichts
+gestartet.`, matching the English `Nothing has started.` and the Russian
+`Ничего не началось.` No other wording changed in any language, and no Mission
+catalog copy changed.
+
+Everything else was measured and left alone. Every reachable state carries one
+`h1`, one `h2` and a `h3` per Mission; the five categories stay a native radio
+group named by its legend; the suggestion region is named by its heading;
+Mission cards stay articles with real buttons inside them; scenes stay out of
+the accessibility tree. Tab order runs category group, three choose controls,
+`Another set`, `Change setup`, with a visible three-pixel focus ring at 4.0:1 or
+better, no positive `tabindex` and no trap. Focus moves to the heading on
+`Another set` and at the bounded end; a Mission Category change announces
+politely instead, because moving focus would break arrow navigation in the group
+the family is still using. Every real touch target measures at least 286x76 for
+a category portal and 108x52 for a button, in all three languages. Contrast was
+measured from rendered pixels across all five category atmospheres: the lowest
+text result is 5.62:1 against a 4.5:1 requirement. Under
+`prefers-reduced-motion: reduce` no element animates and selection still reads
+from its check mark, its `Selected` wording and its border. The
+anti-manipulation review passes: bounded progression with no wraparound, no
+countdown, no randomness, no streak or shame wording, no infinite-scroll cue,
+and `Another set` removed rather than left disabled when it can do nothing.
+
+The final render matrix passed at 360 EN, 360 DE, 360 RU, 390 RU, 1280 EN and
+1280 DE, covering initial suggestions, the bounded end, selection conflict and
+selection unconfirmed, with no horizontal overflow, clipping or ellipsis in any
+of the 288 mobile and 36 larger-text permutations swept.
+
+Deliberately deferred, unchanged by this task:
+
+- the global `min-width: 320px` shell floor. Task 9 required 360 and 390 pixel
+  widths and 200% text, and the rule breaks none of them; 320 and 640 pixel
+  reflow were checked as well and also pass, so the evidence for a shared
+  change does not exist and the rule was left alone;
+- the `F001` `.choice` control overflowing at a 320 pixel width combined with
+  200% text-only scaling, in all three languages. This is a compound case beyond
+  any owning-spec requirement, since 320 pixels already represents 400% browser
+  zoom, and it belongs to `F001` rather than `F002`;
+- the conflict notice's accent bar measuring 2.04:1 to 2.91:1 against its own
+  panel. The state's meaning is carried entirely by its sentence and its polite
+  status role, the owning specification requires the conflict to read as calm
+  product status rather than a warning, and the unconfirmed notice that must be
+  noticeable reaches 4.05:1.
+
+No Mission content, Mission metadata, catalog, Mission scene mapping,
+persistence schema, `snapshotVersion` or `F003` behaviour changed in this task.
 
 ## Objective
 
