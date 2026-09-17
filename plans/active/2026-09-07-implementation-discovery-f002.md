@@ -1,7 +1,7 @@
 # MissionKid Implementation Plan 02 — Mission Discovery and Selection (F002)
 
 **Date:** 2026-09-07
-**Status:** Approved — Plan 02 scope; Tasks 1 to 9 complete, Task 10 next (see Change control)
+**Status:** Approved — Plan 02 scope; Tasks 1 to 10 complete, Task 11 next (see Change control)
 
 ## Authorization basis
 
@@ -778,7 +778,7 @@ Step 5 progress by Mission Category:
 | Learning | Locked, 11 / 11 | Locked, 11 / 11 |
 | Calm | Locked, 10 / 10 | Locked, 10 / 10 |
 
-Approved English content is locked for all five Mission Categories, 54 of the 54 frozen Missions, and Step 4 is complete. German and Russian content is locked for all five Mission Categories, 54 of the 54 frozen Missions in each language, and Step 5 is complete; candidate and localization generation is closed. Step 6, the safety and adult-involvement review, is complete with a pass, and `safetyNoteRequired` is final: `true` for 53 Missions and `false` for CALM-C09. Production metadata is locked for all 54 Missions: final Mission identifiers, guidance durations and catalog order. The scene compatibility bridge required before republication is complete. The controlled republication is complete: production holds the 54 locked Missions at content version `mvp-catalog-2026-09-r2`, their scenes are mapped and the retired scene mappings are removed. The manual production review of the republished catalog has passed. Tasks 5 to 9 are complete, Task 10 is the next authorized task, and the later tasks remain unstarted.
+Approved English content is locked for all five Mission Categories, 54 of the 54 frozen Missions, and Step 4 is complete. German and Russian content is locked for all five Mission Categories, 54 of the 54 frozen Missions in each language, and Step 5 is complete; candidate and localization generation is closed. Step 6, the safety and adult-involvement review, is complete with a pass, and `safetyNoteRequired` is final: `true` for 53 Missions and `false` for CALM-C09. Production metadata is locked for all 54 Missions: final Mission identifiers, guidance durations and catalog order. The scene compatibility bridge required before republication is complete. The controlled republication is complete: production holds the 54 locked Missions at content version `mvp-catalog-2026-09-r2`, their scenes are mapped and the retired scene mappings are removed. The manual production review of the republished catalog has passed. Tasks 5 to 10 are complete, Task 11 is the next authorized task, and the later tasks remain unstarted.
 
 #### Task 5 completion (2026-09-16)
 
@@ -1062,6 +1062,62 @@ Deliberately deferred, unchanged by this task:
 
 No Mission content, Mission metadata, catalog, Mission scene mapping,
 persistence schema, `snapshotVersion` or `F003` behaviour changed in this task.
+
+#### Task 10 completion (2026-09-17)
+
+Task 10 is complete and committed as `9624aed`: every `F002` acceptance
+criterion now has an explicit contract-level automated assertion.
+
+| Gate | Result |
+| --- | --- |
+| F002 acceptance criteria | 15 / 15 automated contract coverage |
+| Baseline tests | 369 / 369 pass |
+| Final tests | 376 / 376 pass |
+| `npm run build` | Pass |
+| `git diff --check` | Pass |
+| Production behavior changes | None |
+| `F003` | Not started |
+
+The matrix was built before any editing. Six criteria already held full
+contract coverage and were left alone: 3 (five canonical categories), 6
+(bounded replacement of three unseen Missions), 7 (bounded end keeping the
+current three usable), 8 (incomplete-setup gate), 9 (insufficient content with
+no relaxation) and 12 (repeated activation creating no duplicate session).
+
+Nine criteria did not. Criterion 1 was proven at the domain level for all
+forty-five contexts but presented in only one of them, criterion 2 never
+crossed the language dimension, criterion 4 read the Mission Category from a
+styling attribute rather than the words on the card and checked required
+safety and adult wording in English only, criterion 5 never asserted that a
+suggestion is a published record rather than something assembled, criterion 10
+was proven only in the reducer and never in what stays on screen, criterion 11
+asserted the runtime session but never the stored one, and criteria 13 and 15
+had no discovery coverage at all. Criterion 14's machine-checkable half —
+record validity and required localized safety facts on every displayed Mission
+— was unasserted; its global-suitability and away-from-the-screen clauses
+remain human-review properties settled by the Step 6 content review and are
+deliberately not simulated by a unit test.
+
+Seven tests were added and two strengthened, all in existing files. Every one
+was then shown to fail against the defect it claims to protect. Relaxing the
+age band, handing back rebuilt Mission objects, presenting a duplicate Mission,
+dropping the visible category label, hiding a required safety note, removing
+the distinct-complete-group guard, writing a lifecycle timestamp at selection
+and adding an input that asks for an email address each produced a failure in
+the intended test. A blanked German title and a removed safety note in the
+production catalog — both reverted — were caught as well. The absence claims in
+criteria 11, 13 and 15 were additionally confirmed live by assertion inversion,
+so none is passing vacuously.
+
+Two mutations were equivalent rather than undetected and are recorded as such.
+Reading English content instead of the selected language changes no outcome,
+because incomplete localization already invalidates a record before eligibility
+runs. Removing the replacement length guard changes no outcome either, because
+the distinct-complete-group guard alone enforces both size and distinctness.
+
+No acceptance test failed against current production code, so no product defect
+was found and no production behavior file was touched. The build output hashes
+are byte-identical to the Task 9 baseline.
 
 ## Objective
 
