@@ -1,7 +1,7 @@
 # MissionKid Implementation Plan 02 — Mission Discovery and Selection (F002)
 
 **Date:** 2026-09-07
-**Status:** Approved — Plan 02 scope; Tasks 1 to 15 complete and the readiness gate passed. The plan remains active pending a separate authorized closeout (see Change control)
+**Status:** Completed
 
 ## Authorization basis
 
