@@ -1,7 +1,7 @@
 # MissionKid Implementation Plan 02 — Mission Discovery and Selection (F002)
 
 **Date:** 2026-09-07
-**Status:** Approved — Plan 02 scope; Tasks 1 to 13 complete, Task 14 next (see Change control)
+**Status:** Approved — Plan 02 scope; Tasks 1 to 14 complete, Task 15 next (see Change control)
 
 ## Authorization basis
 
@@ -778,7 +778,7 @@ Step 5 progress by Mission Category:
 | Learning | Locked, 11 / 11 | Locked, 11 / 11 |
 | Calm | Locked, 10 / 10 | Locked, 10 / 10 |
 
-Approved English content is locked for all five Mission Categories, 54 of the 54 frozen Missions, and Step 4 is complete. German and Russian content is locked for all five Mission Categories, 54 of the 54 frozen Missions in each language, and Step 5 is complete; candidate and localization generation is closed. Step 6, the safety and adult-involvement review, is complete with a pass, and `safetyNoteRequired` is final: `true` for 53 Missions and `false` for CALM-C09. Production metadata is locked for all 54 Missions: final Mission identifiers, guidance durations and catalog order. The scene compatibility bridge required before republication is complete. The controlled republication is complete: production holds the 54 locked Missions at content version `mvp-catalog-2026-09-r2`, their scenes are mapped and the retired scene mappings are removed. The manual production review of the republished catalog has passed. Tasks 5 to 13 are complete, Task 14 is the next authorized task, and the later tasks remain unstarted.
+Approved English content is locked for all five Mission Categories, 54 of the 54 frozen Missions, and Step 4 is complete. German and Russian content is locked for all five Mission Categories, 54 of the 54 frozen Missions in each language, and Step 5 is complete; candidate and localization generation is closed. Step 6, the safety and adult-involvement review, is complete with a pass, and `safetyNoteRequired` is final: `true` for 53 Missions and `false` for CALM-C09. Production metadata is locked for all 54 Missions: final Mission identifiers, guidance durations and catalog order. The scene compatibility bridge required before republication is complete. The controlled republication is complete: production holds the 54 locked Missions at content version `mvp-catalog-2026-09-r2`, their scenes are mapped and the retired scene mappings are removed. The manual production review of the republished catalog has passed. Tasks 5 to 14 are complete, Task 15 is the next authorized task, and it remains unstarted.
 
 #### Task 5 completion (2026-09-16)
 
@@ -1428,6 +1428,63 @@ recorded in the Task 12 entry.
 
 No source, test, specification, catalog, Mission metadata, scene mapping,
 persistence schema or dependency changed in this task.
+
+#### Task 14 completion (2026-09-17)
+
+Task 14 is complete and committed as `4946c5f`: the dated changelog now carries
+a factual Plan 02 entry. No source, test, specification, catalog or dependency
+file changed.
+
+| Gate | Result |
+| --- | --- |
+| Changelog entry | Added |
+| Scope described | `F002` only |
+| `F003` / `F004` | Stated unimplemented |
+| Shell-command diary | None |
+| Conversational or coaching material | None |
+| Parallel status authority | None |
+| Premature completion, browser, push, PR or merge claim | None |
+| `npm test` | 379 / 379 pass |
+| `npm run build` | Pass |
+| `git diff --check` | Pass |
+
+The entry was appended to `changelog/2026-08-17.md` as
+`Plan 02 implementation — Mission discovery and selection (F002)`, following the
+`Plan 01 implementation` precedent in that file. A second dated changelog file
+was deliberately not created: the repository keeps one dated changelog, and a
+second file would split that record.
+
+It records what was built — the catalog domain and its record validator, the
+reviewed 54-Mission catalog at `mvp-catalog-2026-09-r2`, whole-catalog and
+coverage validation, the five-category peer group and the entry gate,
+deterministic eligibility and exactly-three derivation, Mission card
+presentation and the authorized scene system, bounded `Another set`, the
+confirmed-write selection into one `selected` session, the reachable
+unavailable, conflict and unconfirmed states, the localization, accessibility
+and responsive baseline, and the one ergonomic improvement — together with the
+defects actually fixed along the way: the reference-only snapshot comparison,
+the unresolvable Mission Category tint on the recovery notices, the silent
+repeated failure, the German compound that forced horizontal scrolling, and the
+German unconfirmed wording.
+
+The authorized 2026-09-09 material specification change is recorded as a change
+in its own right, with its pause, revalidation and renewed authorization, since
+the specification files themselves changed.
+
+Verification is reported exactly as it occurred: type checking, 379 tests across
+13 test files and the production build pass; the manual product-flow
+verification ran in Google Chrome 153.0.8010.37 on macOS at two viewports, and
+no other browser and no assistive technology is claimed; the insufficient-content
+and catalog-failure states are recorded as unreachable in the production build
+and covered by the automated suite instead of staged in a browser; and the
+implementation audit found no blocker.
+
+The entry claims no MVP completion, no plan completion, no push, no pull request
+and no merge, states that `F003` and `F004` remain unimplemented, and carries
+forward both known open items — the missing post-selection transition surface and
+the absent return-or-abandon control — as `F003` work. It contains no shell
+transcript, no conversational material and no live task status, so it adds no
+authority parallel to this plan.
 
 ## Objective
 
