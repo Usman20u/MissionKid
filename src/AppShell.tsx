@@ -18,6 +18,7 @@ import {
   type MessageKey,
   type SupportedLanguage,
 } from './localization';
+import { MissionCategorySelection } from './MissionDiscovery';
 import {
   createLocalProfileId,
   SetupFlow,
@@ -35,7 +36,8 @@ export type AppView =
   | 'setup-editing'
   | 'temporary-mode'
   | 'recovery'
-  | 'setup-complete-handoff';
+  | 'setup-complete-handoff'
+  | 'discovery-categories';
 
 type ViewContent = Readonly<{
   context: MessageKey;
@@ -71,6 +73,11 @@ const VIEW_CONTENT: Record<AppView, ViewContent> = {
     context: 'area.parent',
     title: 'view.setupCompleteHandoff.title',
   },
+  // The discovery doorway is the child-facing area, not the parent area.
+  'discovery-categories': {
+    context: 'app.brand',
+    title: 'view.discovery.title',
+  },
 };
 
 export function selectAppView(state: AppState): AppView {
@@ -90,9 +97,12 @@ export function selectAppView(state: AppState): AppView {
         case 'editing':
           return 'setup-editing';
         case 'handoff':
-          return isSetupContextComplete(state)
-            ? 'setup-complete-handoff'
-            : 'setup-incomplete';
+          // Discovery is reachable only from a valid completed F001 setup; an
+          // incomplete context falls back to the gate instead of inferring one.
+          if (!isSetupContextComplete(state)) {
+            return 'setup-incomplete';
+          }
+          return state.discovery ? 'discovery-categories' : 'setup-complete-handoff';
       }
     }
   }
@@ -206,13 +216,29 @@ export function AppShell({
               {t(state.resetUnconfirmed ? 'recovery.resetUnconfirmed' : 'recovery.blocked')}
             </p>
           ) : null}
-          {!state.resetConfirm && (state.status === 'ready' || state.status === 'degraded') ? (
-            <SetupFlow
-              adapter={adapter}
-              createProfileId={createProfileId}
-            />
+          {view === 'setup-incomplete' ? (
+            <p className="discovery-gate">{t('discovery.gate.body')}</p>
           ) : null}
-          {state.status !== 'pending' ? (
+          {!state.resetConfirm && (state.status === 'ready' || state.status === 'degraded') ? (
+            view === 'discovery-categories' ? (
+              <MissionCategorySelection />
+            ) : (
+              <SetupFlow
+                adapter={adapter}
+                createProfileId={createProfileId}
+              />
+            )
+          ) : null}
+          {view === 'setup-complete-handoff' && !state.resetConfirm ? (
+            <button
+              className="button button--primary"
+              onClick={() => dispatch({ type: 'discovery-opened' })}
+              type="button"
+            >
+              {t('discovery.action.open')}
+            </button>
+          ) : null}
+          {state.status !== 'pending' && view !== 'discovery-categories' ? (
             <div className="recovery-actions">
               {state.resetConfirm ? (
                 <section className="reset-panel" aria-labelledby="reset-heading" aria-describedby="reset-consequence">

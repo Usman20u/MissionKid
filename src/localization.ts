@@ -56,6 +56,39 @@ const englishMessages = {
   'setup.complete.language': 'Language',
   'setup.complete.age': 'Age group',
   'setup.action.edit': 'Change setup',
+  'view.discovery.title': 'What kind of Mission?',
+  'discovery.action.open': 'Find a Mission',
+  'discovery.context.age': 'Age group',
+  'discovery.categories.legend': 'Mission Category',
+  'discovery.categories.help':
+    'Choose one. You can change it at any time, and nothing is decided yet.',
+  'discovery.category.movement': 'Movement',
+  'discovery.category.creativity': 'Creativity',
+  'discovery.category.helpingAtHome': 'Helping at Home',
+  'discovery.category.learning': 'Learning',
+  'discovery.category.calm': 'Calm',
+  'discovery.selected': 'Selected',
+  'discovery.suggestions.heading': 'Three Missions',
+  'discovery.card.about': 'About',
+  'discovery.card.minutes': 'min',
+  'discovery.adult.nearby': 'Adult nearby',
+  'discovery.adult.participation': 'Adult takes part',
+  'discovery.card.safetyLabel': 'Before you start',
+  'discovery.card.choose': 'Choose this Mission',
+  'discovery.selection.conflict':
+    'A Mission is already chosen. Choose that same Mission again to carry on with it.',
+  'discovery.selection.conflictNamed':
+    'The Mission \u201c{mission}\u201d is already chosen. Choose that same Mission again to carry on with it.',
+  'discovery.selection.unconfirmed':
+    'That Mission could not be confirmed just now. Nothing has started. Choose it again, or choose a different one.',
+  'discovery.anotherSet': 'Another set',
+  'discovery.anotherSet.bounded':
+    "There aren't three more Missions in this category. Choose one of these three, or pick another category above.",
+  'discovery.unavailable.title': 'No Missions right now',
+  'discovery.unavailable.body':
+    'MissionKid has no complete set of three Missions for this Mission Category right now. Nothing went wrong, and you can pick another Mission Category above.',
+  'discovery.gate.body':
+    'Missions cannot be suggested yet. A parent needs to finish the age step below first. MissionKid never guesses an age group.',
 } as const;
 
 export type MessageKey = keyof typeof englishMessages;
@@ -120,6 +153,39 @@ export const INTERFACE_MESSAGES: CompleteInterfaceMessages = {
     'setup.complete.language': 'Sprache',
     'setup.complete.age': 'Altersgruppe',
     'setup.action.edit': 'Einrichtung ändern',
+    'view.discovery.title': 'Welche Art von Mission?',
+    'discovery.action.open': 'Mission finden',
+    'discovery.context.age': 'Altersgruppe',
+    'discovery.categories.legend': 'Missionskategorie',
+    'discovery.categories.help':
+      'Wähle eine aus. Du kannst sie jederzeit ändern, und noch ist nichts entschieden.',
+    'discovery.category.movement': 'Bewegung',
+    'discovery.category.creativity': 'Kreativität',
+    'discovery.category.helpingAtHome': 'Zu Hause helfen',
+    'discovery.category.learning': 'Lernen',
+    'discovery.category.calm': 'Ruhe',
+    'discovery.selected': 'Ausgewählt',
+    'discovery.suggestions.heading': 'Drei Missionen',
+    'discovery.card.about': 'Etwa',
+    'discovery.card.minutes': 'Min.',
+    'discovery.adult.nearby': 'Erwachsene Person in der Nähe',
+    'discovery.adult.participation': 'Erwachsene Person macht mit',
+    'discovery.card.safetyLabel': 'Vor dem Start',
+    'discovery.card.choose': 'Diese Mission wählen',
+    'discovery.selection.conflict':
+      'Es ist schon eine Mission gewählt. Wähle dieselbe Mission noch einmal, um mit ihr weiterzumachen.',
+    'discovery.selection.conflictNamed':
+      'Die Mission \u201e{mission}\u201c ist schon gewählt. Wähle dieselbe Mission noch einmal, um mit ihr weiterzumachen.',
+    'discovery.selection.unconfirmed':
+      'Diese Mission konnte gerade nicht bestätigt werden. Es wurde nichts gestartet. Wähle sie noch einmal oder wähle eine andere.',
+    'discovery.anotherSet': 'Weitere drei',
+    'discovery.anotherSet.bounded':
+      'Hier gibt es keine drei weiteren Missionen. Wähle eine von diesen dreien oder oben eine andere Kategorie.',
+    'discovery.unavailable.title': 'Gerade keine Missionen',
+    'discovery.unavailable.body':
+      'MissionKid hat für diese Missionskategorie gerade keinen vollständigen Satz aus drei Missionen. Es ist nichts schiefgegangen, und du kannst oben eine andere Missionskategorie wählen.',
+    'discovery.gate.body':
+      'Es können noch keine Missionen vorgeschlagen werden. Ein Erwachsener muss zuerst den Altersschritt unten abschließen. MissionKid errät niemals eine Altersgruppe.',
   },
   ru: {
     "recovery.pending": "Подождите. Это действие ещё не подтверждено.",
@@ -174,6 +240,39 @@ export const INTERFACE_MESSAGES: CompleteInterfaceMessages = {
     'setup.complete.language': 'Язык',
     'setup.complete.age': 'Возрастная группа',
     'setup.action.edit': 'Изменить настройку',
+    'view.discovery.title': 'Какая будет миссия?',
+    'discovery.action.open': 'Найти миссию',
+    'discovery.context.age': 'Возрастная группа',
+    'discovery.categories.legend': 'Категория миссии',
+    'discovery.categories.help':
+      'Выбери одну. Её можно поменять в любой момент, и пока ничего не решено.',
+    'discovery.category.movement': 'Движение',
+    'discovery.category.creativity': 'Творчество',
+    'discovery.category.helpingAtHome': 'Помощь по дому',
+    'discovery.category.learning': 'Обучение',
+    'discovery.category.calm': 'Спокойствие',
+    'discovery.selected': 'Выбрано',
+    'discovery.suggestions.heading': 'Три миссии',
+    'discovery.card.about': 'Около',
+    'discovery.card.minutes': 'мин',
+    'discovery.adult.nearby': 'Взрослый рядом',
+    'discovery.adult.participation': 'Взрослый участвует',
+    'discovery.card.safetyLabel': 'Перед началом',
+    'discovery.card.choose': 'Выбрать эту миссию',
+    'discovery.selection.conflict':
+      'Миссия уже выбрана. Выбери ту же миссию ещё раз, чтобы продолжить с ней.',
+    'discovery.selection.conflictNamed':
+      'Миссия «{mission}» уже выбрана. Выбери ту же миссию ещё раз, чтобы продолжить с ней.',
+    'discovery.selection.unconfirmed':
+      'Эту миссию сейчас не удалось подтвердить. Ничего не началось. Выбери её ещё раз или выбери другую.',
+    'discovery.anotherSet': 'Ещё три',
+    'discovery.anotherSet.bounded':
+      'Здесь уже нет ещё трёх новых миссий. Выбери одну из этих трёх или другую категорию выше.',
+    'discovery.unavailable.title': 'Сейчас миссий нет',
+    'discovery.unavailable.body':
+      'Для этой категории сейчас нет полного набора из трёх миссий. Ничего не сломалось — можно выбрать другую категорию выше.',
+    'discovery.gate.body':
+      'Пока миссии предложить нельзя. Сначала взрослому нужно завершить шаг с возрастом ниже. MissionKid никогда не угадывает возрастную группу.',
   },
 };
 

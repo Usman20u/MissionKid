@@ -7,6 +7,8 @@ import {
   type PropsWithChildren,
 } from 'react';
 
+import type { MissionCategory } from './catalog';
+import { SUGGESTION_SET_SIZE } from './missionSuggestions';
 import {
   DEFAULT_LANGUAGE,
   type SupportedLanguage,
@@ -15,6 +17,7 @@ import type {
   AgeBand,
   HydrationResult,
   MissionKidSnapshot,
+  SelectedMissionSession,
 } from './persistence';
 
 type SetupContext = Readonly<{
@@ -30,6 +33,19 @@ type ReadyAppState = SetupContext &
     saveStatus: 'idle' | 'unconfirmed';
   }>;
 
+// One discovery cycle is runtime-only. It is never written to the browser
+// snapshot, which holds no Mission Category, cycle or suggestion state.
+//
+// `shown` holds the Mission identifiers this cycle has already displayed, in the
+// order they were displayed. It is what makes bounded replacement bounded: the
+// next set is the next complete group of records that are not in it. It is
+// transient interaction state, not a record of anything, so it is never
+// persisted and never reaches a Mission record.
+type DiscoveryContext = Readonly<{
+  category: MissionCategory | null;
+  shown: readonly string[];
+}>;
+
 type RecoveryContext = Readonly<{
   // Last validated F001 facts, not a claim that storage is still available.
   lastDurable?: SetupContext;
@@ -37,6 +53,22 @@ type RecoveryContext = Readonly<{
   resetConfirm?: boolean;
   resetUnconfirmed?: boolean;
   temporaryComplete?: boolean;
+  discovery?: DiscoveryContext;
+  // The confirmed durable selection, mirrored into runtime only after the write
+  // was read back exactly. It is never set optimistically.
+  currentSession?: SelectedMissionSession;
+  // Why the last deliberate choice did not become a new Mission Session.
+  // `conflict` is a product state: one is already chosen. `unconfirmed` is a
+  // transition failure: nothing started, and the choice can be made again.
+  selectionIssue?: MissionSelectionIssue;
+  // Which attempt produced it. Choosing again after the same failure changes no
+  // wording, so without this the message is an unchanged node and assistive
+  // technology stays silent on the retry the message itself invites.
+  selectionAttempt?: number;
+  // The Mission a conflict is about. A stored session is not published into
+  // runtime by hydration, so without this the conflict could not name the
+  // Mission the family is being told to choose again.
+  selectionConflictMissionId?: string;
 }>;
 
 export type AppState = RecoveryContext & (
@@ -46,6 +78,8 @@ export type AppState = RecoveryContext & (
   | (SetupContext & Readonly<{ status: 'blocked-recovery' }>));
 
 export type ResolvedAppState = Exclude<AppState, { status: 'pending' }>;
+
+export type MissionSelectionIssue = 'conflict' | 'unconfirmed';
 
 export type AppStateAction =
   | { type: 'operation-started'; operation: 'save' | 'retry' | 'reset' }
@@ -59,6 +93,16 @@ export type AppStateAction =
   | { type: 'language-changed'; language: SupportedLanguage }
   | { type: 'age-band-changed'; ageBand: AgeBand }
   | { type: 'setup-editing-started' }
+  | { type: 'discovery-opened' }
+  | { type: 'discovery-category-selected'; category: MissionCategory }
+  | { type: 'discovery-another-set-requested'; missionIds: readonly string[] }
+  | { type: 'mission-selection-confirmed'; session: SelectedMissionSession }
+  | {
+      type: 'mission-selection-failed';
+      issue: MissionSelectionIssue;
+      // Present only for a conflict, which is always about one stored Mission.
+      conflictMissionId?: string;
+    }
   | {
       type: 'setup-save-unconfirmed';
       localProfileId: string | null;
@@ -126,6 +170,60 @@ export function isSetupContextComplete(
   );
 }
 
+// One discovery cycle is exactly one age band, one UI language and one Mission
+// Category. It is derived rather than stored, so changing any of the three yields
+// a different cycle and the previous request is discarded by construction.
+export type DiscoveryCycle = Readonly<{
+  ageBand: AgeBand;
+  language: SupportedLanguage;
+  category: MissionCategory;
+}>;
+
+// A confirmed selection exists and the start experience it leads to is
+// available. F003 owns that experience; this is only the typed fact that it can
+// begin, so nothing in this task renders a screen for it.
+export function selectMissionStartAvailable(state: AppState): boolean {
+  return state.currentSession !== undefined;
+}
+
+export function selectCurrentSession(
+  state: AppState,
+): SelectedMissionSession | null {
+  return state.currentSession ?? null;
+}
+
+export function selectSelectionIssue(
+  state: AppState,
+): MissionSelectionIssue | null {
+  return state.selectionIssue ?? null;
+}
+
+export function selectSelectionAttempt(state: AppState): number {
+  return state.selectionAttempt ?? 0;
+}
+
+export function selectConflictMissionId(state: AppState): string | null {
+  return state.selectionConflictMissionId ?? null;
+}
+
+// The Missions this cycle has already shown. Empty outside a cycle, so a fresh
+// cycle always starts at the first set.
+export function selectShownMissionIds(state: AppState): readonly string[] {
+  return state.discovery?.shown ?? [];
+}
+
+export function selectDiscoveryCycle(state: AppState): DiscoveryCycle | null {
+  if (state.status !== 'ready' || !isSetupContextComplete(state)) {
+    return null;
+  }
+
+  const category = state.discovery?.category;
+
+  return category && state.ageBand
+    ? { ageBand: state.ageBand, language: state.language, category }
+    : null;
+}
+
 export function appStateReducer(
   state: AppState,
   action: AppStateAction,
@@ -178,21 +276,96 @@ export function appStateReducer(
     case 'validated-state-received':
       return action.state;
     case 'language-changed':
+      // A cycle is one age band, one language and one Mission Category. The
+      // cycle itself is derived, so a new language already yields a new one;
+      // what has to be dropped explicitly is what the old cycle had shown. The
+      // chosen Mission Category is a separate choice and survives.
       return {
         ...state,
         temporaryComplete: false,
         language: action.language,
+        discovery: state.discovery ? { ...state.discovery, shown: [] } : undefined,
       };
     case 'age-band-changed':
       return {
         ...state,
         temporaryComplete: false,
         ageBand: action.ageBand,
+        discovery: state.discovery ? { ...state.discovery, shown: [] } : undefined,
       };
     case 'setup-editing-started':
+      // Leaving discovery for the parent-guided setup step ends the cycle.
       return state.status === 'ready'
-        ? { ...state, setupView: 'editing' }
+        ? { ...state, setupView: 'editing', discovery: undefined }
         : state;
+    case 'discovery-opened':
+      return state.status === 'ready' &&
+        state.setupView === 'handoff' &&
+        isSetupContextComplete(state)
+        ? { ...state, discovery: { category: null, shown: [] } }
+        : state;
+    case 'discovery-category-selected':
+      if (!state.discovery) return state;
+      // Re-choosing the same Mission Category is not a change, so the cycle and
+      // everything it has already shown continue. A different one is a
+      // different cycle and starts again at the first set.
+      return state.discovery.category === action.category
+        ? state
+        : {
+            ...state,
+            selectionIssue: undefined,
+            selectionAttempt: undefined,
+            selectionConflictMissionId: undefined,
+            discovery: { category: action.category, shown: [] },
+          };
+    case 'discovery-another-set-requested': {
+      const discovery = state.discovery;
+
+      // Only a complete group retires, and only Missions the cycle has not
+      // already retired. Anything else leaves the cycle exactly as it was, so a
+      // malformed request can never blank or partially replace what is on
+      // screen. The control itself is offered only while a further complete
+      // unseen group exists.
+      if (
+        !discovery?.category ||
+        action.missionIds.length !== SUGGESTION_SET_SIZE ||
+        new Set(action.missionIds).size !== SUGGESTION_SET_SIZE ||
+        action.missionIds.some((missionId) => discovery.shown.includes(missionId))
+      ) {
+        return state;
+      }
+
+      return {
+        ...state,
+        selectionIssue: undefined,
+        selectionAttempt: undefined,
+        selectionConflictMissionId: undefined,
+        discovery: { ...discovery, shown: [...discovery.shown, ...action.missionIds] },
+      };
+    }
+    case 'mission-selection-confirmed':
+      // Choosing a Mission ends the discovery cycle, so the shown identifiers
+      // go with it. The Mission Category the parent picked is a separate
+      // choice and is left alone.
+      return {
+        ...state,
+        currentSession: action.session,
+        selectionIssue: undefined,
+        selectionAttempt: undefined,
+        selectionConflictMissionId: undefined,
+        discovery: state.discovery ? { ...state.discovery, shown: [] } : undefined,
+      };
+    case 'mission-selection-failed':
+      // Nothing about the cycle changes: the same three Missions stay on screen
+      // and stay choosable, which is what makes choosing again the retry. Only
+      // the attempt advances, so a retry that fails the same way is still
+      // announced rather than passing in silence.
+      return {
+        ...state,
+        selectionIssue: action.issue,
+        selectionAttempt: (state.selectionAttempt ?? 0) + 1,
+        selectionConflictMissionId: action.conflictMissionId,
+      };
     case 'setup-save-unconfirmed': {
       // Recovery is newer evidence than the pre-write read; neither confirms the attempted save.
       const evidence = action.recovery.status === 'hydrated' || action.recovery.status === 'absent'

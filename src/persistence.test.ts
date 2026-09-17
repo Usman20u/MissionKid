@@ -383,3 +383,124 @@ describe('confirmed snapshot reset', () => {
     });
   });
 });
+
+describe('a selected Mission Session in the snapshot', () => {
+  const PROFILE_ID = 'profile-1';
+  const session = {
+    sessionId: 'session-1',
+    childProfileId: PROFILE_ID,
+    missionId: 'movement-02',
+    missionCategoryAtSelection: 'Movement',
+    ageBandAtSelection: '7–8',
+    durationSecondsAtSelection: 240,
+    state: 'selected',
+    selectedAt: 1_700_000_000_000,
+  } as const;
+
+  function storedSnapshot(currentSession: unknown) {
+    return JSON.stringify({
+      ...createEmptySnapshot(),
+      childProfile: { localProfileId: PROFILE_ID, ageBand: '7–8' },
+      currentSession,
+    });
+  }
+
+  it('hydrates a valid selected session unchanged', () => {
+    const memory = createMemoryStorage(storedSnapshot(session));
+    const result = createPersistenceAdapter(memory.storage).hydrate();
+
+    if (result.status !== 'hydrated') throw new Error('expected a hydrated snapshot');
+    expect(result.snapshot.currentSession).toEqual(session);
+    expect(result.snapshot.snapshotVersion).toBe(CURRENT_SNAPSHOT_VERSION);
+  });
+
+  it('still hydrates a snapshot with no session', () => {
+    const memory = createMemoryStorage(storedSnapshot(null));
+    const result = createPersistenceAdapter(memory.storage).hydrate();
+
+    if (result.status !== 'hydrated') throw new Error('expected a hydrated snapshot');
+    expect(result.snapshot.currentSession).toBeNull();
+  });
+
+  it.each([
+    ['a later lifecycle state', { ...session, state: 'active' }],
+    ['a started timestamp this task cannot produce', { ...session, startedAt: 1 }],
+    ['a completion period identity', { ...session, completionPeriodId: '2026-09' }],
+    ['a fractional duration', { ...session, durationSecondsAtSelection: 1.5 }],
+    ['a zero duration', { ...session, durationSecondsAtSelection: 0 }],
+    ['a negative timestamp', { ...session, selectedAt: -1 }],
+    ['a fractional timestamp', { ...session, selectedAt: 1.5 }],
+    ['an unknown Mission Category', { ...session, missionCategoryAtSelection: 'Cooking' }],
+    ['an unknown age band', { ...session, ageBandAtSelection: '11–12' }],
+    ['an empty Mission reference', { ...session, missionId: '  ' }],
+    ['a session owned by another profile', { ...session, childProfileId: 'someone-else' }],
+    ['embedded Mission wording', { ...session, title: 'Bear, Crab, Bird' }],
+  ])('refuses to hydrate %s', (_label, invalid) => {
+    const memory = createMemoryStorage(storedSnapshot(invalid));
+
+    // A stored session is untrusted input. None of these is silently repaired,
+    // because repairing one would invent a fact about the family's Mission.
+    expect(createPersistenceAdapter(memory.storage).hydrate().status).toBe('corrupted');
+  });
+
+  it('refuses to hydrate a session missing a required field', () => {
+    const { selectedAt: _dropped, ...incomplete } = session;
+    const memory = createMemoryStorage(storedSnapshot(incomplete));
+
+    expect(createPersistenceAdapter(memory.storage).hydrate().status).toBe('corrupted');
+  });
+
+  it('refuses a session with no profile to own it', () => {
+    const memory = createMemoryStorage(JSON.stringify({
+      ...createEmptySnapshot(),
+      childProfile: null,
+      currentSession: session,
+    }));
+
+    expect(createPersistenceAdapter(memory.storage).hydrate().status).toBe('corrupted');
+  });
+
+  it('confirms a written session only when every field reads back', () => {
+    const memory = createMemoryStorage(storedSnapshot(null));
+    memory.values.set('unrelated-key', 'untouched');
+    const adapter = createPersistenceAdapter(memory.storage);
+    const hydrated = adapter.hydrate();
+    if (hydrated.status !== 'hydrated') throw new Error('expected a hydrated snapshot');
+
+    const result = adapter.persist({ ...hydrated.snapshot, currentSession: session });
+
+    if (result.status !== 'confirmed') throw new Error('expected a confirmed write');
+    expect(result.snapshot.currentSession).toEqual(session);
+    expect(memory.values.get('unrelated-key')).toBe('untouched');
+  });
+
+  it.each([
+    ['sessionId', 'other-session'],
+    ['missionId', 'movement-10'],
+    ['selectedAt', 1_700_000_000_001],
+    ['durationSecondsAtSelection', 180],
+    ['missionCategoryAtSelection', 'Calm'],
+    ['ageBandAtSelection', '4–6'],
+  ] as const)('detects a read-back that differs only in %s', (field, value) => {
+    const memory = createMemoryStorage(storedSnapshot(null));
+    const hydrated = createPersistenceAdapter(memory.storage).hydrate();
+    if (hydrated.status !== 'hydrated') throw new Error('expected a hydrated snapshot');
+
+    // A structurally valid session differing in exactly one field. Reference
+    // equality would have confirmed this write; value equality must not.
+    const divergent: SnapshotStorage = {
+      getItem: (key) => memory.values.get(key) ?? null,
+      setItem: (key) => {
+        memory.values.set(key, storedSnapshot({ ...session, [field]: value }));
+      },
+      removeItem: (key) => memory.values.delete(key) as unknown as void,
+    };
+
+    expect(
+      createPersistenceAdapter(divergent).persist({
+        ...hydrated.snapshot,
+        currentSession: session,
+      }),
+    ).toEqual({ status: 'unconfirmed', reason: 'read-back-mismatch' });
+  });
+});
