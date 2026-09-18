@@ -1,11 +1,11 @@
 # MissionKid Implementation Plan 03 — Mission Session and Completion (F003) with the Reward Card and Monthly Goal completion message (F004 slice)
 
 **Date:** 2026-09-17
-**Status:** Approved — Tasks 1 to 6 complete under the approved execution allocation clarification; Tasks 7–19 not started
+**Status:** Approved — Tasks 1 to 7 complete under the approved execution allocation clarification; Tasks 8–19 not started
 
-This plan's scope and decisions are approved. Scope approval is not authorization to execute a task: each implementation task begins only when it is explicitly authorized. Tasks 1 to 6 were each explicitly authorized and are complete; no later task has begun.
+This plan's scope and decisions are approved. Scope approval is not authorization to execute a task: each implementation task begins only when it is explicitly authorized. Tasks 1 to 7 were each explicitly authorized and are complete; no later task has begun.
 
-The scope below plans `F003` in full, except the acceptance clauses explicitly deferred with the Mission History view, together with one deliberately bounded part of `F004`: the Reward Card and the Monthly Goal derivation and completion message that the card must display. That combined scope is approved as decision D1-A, with the History deferrals preserved exactly as documented. Every task below except Tasks 1 to 6 is pending implementation and verification; what those tasks actually changed is recorded in the implementation record at the end of this plan, and nothing else here is a claim about what the repository already does.
+The scope below plans `F003` in full, except the acceptance clauses explicitly deferred with the Mission History view, together with one deliberately bounded part of `F004`: the Reward Card and the Monthly Goal derivation and completion message that the card must display. That combined scope is approved as decision D1-A, with the History deferrals preserved exactly as documented. Every task below except Tasks 1 to 7 is pending implementation and verification; what those tasks actually changed is recorded in the implementation record at the end of this plan, and nothing else here is a claim about what the repository already does.
 
 ## Authorization basis
 
@@ -1228,6 +1228,135 @@ Mission through the interface: **Mission done** is Task 8 and the
 leave-without-completion path is Task 7, each with the operation it performs. No
 completion, cancellation, abandonment, conflict resolution, Reward Card or
 Monthly Goal behavior exists, and no placeholder stands in for any of them.
+
+### Task 7 authorization (2026-09-18)
+
+Task 7 was explicitly authorized for execution from `7560536`, with Task 6's
+source commit `2dba46b` and the approved control allocation `60963d9` as its
+basis. Tasks 8–19, push and merge are not authorized.
+
+### Task 7 completion (2026-09-18)
+
+Task 7 is complete and committed as `122224e`: both non-completion exits exist
+with the operations they perform, leaving an active Mission requires its
+confirmation, and the existing-session conflict `F002` surfaced without a control
+can now be resolved.
+
+| Gate | Result |
+| --- | --- |
+| `npm run typecheck` | Pass, no suppression |
+| `npm test` | 622 / 622 pass, 17 files, three consecutive runs |
+| `npm run build` | Pass |
+| `git diff --check` | Clean |
+| Snapshot schema, adapter contract, D4-B | Unchanged |
+| Completion facts written by either exit | None |
+| Global reset used by either exit | No |
+
+**One operation, two family decisions.** Ready cancellation and confirmed
+abandonment clear the same current session through the same confirmed-write
+path, and differ only in what the family had to do to ask for it. The request
+carries both the identity they acted on and the lifecycle state they acted from,
+and durable state is read fresh to decide it. A cancellation arriving after the
+Mission started never abandons a running Mission; an exit never clears a
+different session, even one holding the same Mission; and a session found in
+another state, or replaced by another, is preserved and handed back so the
+interface follows what is stored rather than what was assumed.
+
+**What leaving adds.** Nothing. No completed record, result pointer, reward,
+progress source, timestamp, identifier, abandonment history or extra lifecycle
+state, and every other snapshot fact is carried across untouched. A completed
+Mission Session is refused outright, keeping its completion and result reference.
+A repeated exit resolves an already absent session without writing again, and
+absence is never read as permission to clear whatever is current now.
+
+**Independent of time and content.** Neither exit consults remaining time, the
+stored duration or whether the Mission still resolves to reviewed content. A
+family may always stop, including at zero and for a Mission that can no longer be
+shown.
+
+**The confirmation.** One shared component serves both places that offer it, so
+the question is identical wherever it is asked. It names the action, states that
+the Mission will not be counted, puts the easy **Keep going** first as the
+primary choice, and keeps **Leave mission** explicit and visually separated on
+the same calm surface the reset confirmation already uses. Focus moves to its
+heading when the family opens it and returns to the control they opened when it
+is dismissed, by **Keep going** or by Escape. Opening, dismissing and re-opening
+change no durable fact, and the Mission keeps running throughout: guidance
+neither pauses nor restarts while the family decides.
+
+**Conflict resolution.** The conflict names the current Mission from reviewed
+catalog content and offers the approved choice: return to that session in
+whatever state it actually holds, or take the non-completion exit that state
+calls for, with an active Mission still requiring its confirmation. While it
+stands, no new Mission appears available to choose — the three stay fully
+readable and only choosing is withheld, through the native disabled cascade the
+recovery controls already use. That closes the presentation requirement that a
+new selection must not appear available until the conflict is resolved, which the
+shipped `F002` surface did not meet. Clearing the conflict returns the family to
+the suggestions and does not choose the Mission they had asked for.
+
+**Failure classes, in this operation's own words.** An established refusal leaves
+the Mission where it was and says the exit was not carried out. An interrupted
+write claims neither that the Mission was left nor that it was kept: durable
+state is re-read and whatever it shows is adopted — the session gone, the same
+session still present, or another session preserved and followed. No path writes
+a session back over an exit that may already be durable, and D4-B still refuses a
+replacement that would discard an unresolved completed record.
+
+**Delegated implementation choices, recorded rather than specified elsewhere.**
+Escape as a second way to take the safe choice, one shared confirmation component
+for both surfaces, the native disabled cascade for withholding selection, and
+carrying the Mission Category but not the shown identifiers back into Discovery
+are ordinary choices the owning specifications delegate. The conflict notice
+wording was changed in all three languages because it previously told the family
+to choose the same Mission again, which was the only route available when no
+control existed.
+
+**Verification.** The suite gained 44 tests. The domain covers both exits, an
+already absent session, a different session with the same Mission, a stale ready
+cancellation against a started Mission, a completed session and its pointer, an
+unusable duration with unresolvable content, class A, D4-B, a landed write whose
+confirmation was lost, an interrupted write that cannot be read back, an
+unconfirmed write found not to have landed, a newer session preserved during
+recovery, and the same session cleared twice. The rendered application covers
+both exits end to end, the confirmation's wording, order, styling and described
+region, dismissal by button and by Escape with focus returning, German and
+Russian, a Mission at zero, repeated activation writing once, a stale exit
+following the newer session, both failure classes, D4-B, guidance continuing
+while deciding and after keeping the Mission, no countdown outliving a left
+session, hiding and refreshing changing nothing, and every conflict path.
+
+**Browser review.** The served production build was inspected in Google Chrome at
+a true 360 CSS pixel viewport in Russian and at 1280 pixels in English, with
+layout measured rather than judged from a screenshot alone. Nothing overflowed
+and no horizontal scrolling appeared, including at a 150% root text size.
+Confirmed in the browser: focus entering the confirmation heading with a visible
+ring, Escape closing it and returning focus, the Mission and its guidance intact
+behind the question, and a confirmed exit reaching Discovery with the age context
+preserved and nothing pre-selected.
+
+**A regression found and fixed rather than accommodated.** An effect that reset
+confirmation state on mount forced a second render pass of a tree holding three
+Mission scenes, taking one suggestion-set test from 936 ms to past the 5-second
+limit. It was redundant — the panel is derived from the conflict that is current,
+not from a flag left behind — and removing it returned the test to 1146 ms.
+
+**Limitations.** Browser checking was visual and by measured layout only; no
+assistive technology was run, so no screen-reader behavior is claimed. The
+conflict surface was exercised by automated test only, because it requires
+durable state to change between a page's read and its write, which a seeded
+snapshot cannot reproduce in a browser. Completion does not exist, so a family
+can start and leave a Mission but cannot yet record a finished one. One full run
+reported two timeouts in two files; each passed in isolation in under 60 ms and
+six further full runs passed. They share the character of the unexplained
+failures recorded in Task 1, which did not recur here and remain unexplained
+rather than resolved.
+
+**Scope.** No completion, Reward Card, Monthly Goal, History or recognition
+behavior, and no placeholder for **Mission done**, which remains Task 8. The
+runtime conflict field now holds the whole stored session rather than its Mission
+identifier alone, because resolving a conflict needs the identity and state the
+exit must be made against; it remains runtime state and is never persisted.
 
 ## Approval record
 
