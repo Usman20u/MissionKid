@@ -639,17 +639,22 @@ describe('starting the ready Mission', () => {
 
     fireEvent.click(startControl());
 
-    // Completion is a later step and is not claimed here. The running Mission
-    // offers only the approved way out, and the approximate guidance it shows
-    // is calm text, not a ticking clock face.
+    // The running Mission offers finishing as its dominant action and the
+    // approved way out beside it. The approximate guidance it shows is calm
+    // text, not a ticking clock face.
     const actions = screen.getAllByRole('button');
-    expect(actions).toHaveLength(1);
-    expect(actions[0]!.textContent).toBe(translateMessage('en', 'session.action.leave'));
-    expect(actions[0]!.className).toContain('button--secondary');
+    expect(actions.map((action) => action.textContent)).toEqual([
+      translateMessage('en', 'session.action.done'),
+      translateMessage('en', 'session.action.leave'),
+    ]);
+    expect(actions[0]!.className).toContain('button--primary');
+    expect(actions[1]!.className).toContain('button--secondary');
     expect(container.querySelector('[role="timer"], progress')).toBeNull();
     expect(container.textContent).not.toMatch(/\d+:\d\d/);
+    // Starting shows no recognition or progress: those belong to the result a
+    // completion reaches, not to the Mission that has only just begun.
     expect(
-      screen.queryByText(/Mission done|Reward|Monthly Goal/i),
+      screen.queryByText(/Reward|Monthly Goal|missions/i),
     ).toBeNull();
   });
 

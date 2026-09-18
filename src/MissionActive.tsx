@@ -13,7 +13,13 @@ import {
   type SupportedLanguage,
 } from './localization';
 import { MissionLeaveConfirmation } from './MissionLeaveConfirmation';
-import { leaveMissionSession, resolveSessionMission } from './missionSession';
+import {
+  completeMissionSession,
+  leaveMissionSession,
+  readWallClock,
+  resolveSessionMission,
+  type WallClock,
+} from './missionSession';
 import {
   useMissionGuidance,
   type MissionGuidance,
@@ -24,9 +30,19 @@ import { persistenceAdapter, type PersistenceAdapter } from './persistence';
 // Leaving fails into its own truth, so it carries its own wording: an
 // established refusal leaves the Mission exactly where it was, and an
 // interrupted write claims neither that it was left nor that it was kept.
+// Both exits share these messages, so neither may describe the lifecycle state
+// the Mission is in: an unstarted selection is not running, and a running
+// Mission has not merely been chosen.
 const EXIT_MESSAGE_KEYS = {
   failed: 'session.exit.notLeft',
   unconfirmed: 'session.exit.unconfirmed',
+} as const satisfies Readonly<Record<'failed' | 'unconfirmed', MessageKey>>;
+
+// Completion fails into its own truth as well, and never borrows the exit's:
+// a Mission that could not be recorded as done has not been left either.
+const DONE_MESSAGE_KEYS = {
+  failed: 'session.done.notRecorded',
+  unconfirmed: 'session.done.unconfirmed',
 } as const satisfies Readonly<Record<'failed' | 'unconfirmed', MessageKey>>;
 
 const SECONDS_PER_MINUTE = 60;
@@ -65,6 +81,7 @@ function guidanceMessage(
 type MissionActiveProps = Readonly<{
   adapter?: PersistenceAdapter;
   clocks?: MissionTimerClocks;
+  now?: WallClock;
 }>;
 
 // The Mission that is running. It leads with what the family should be doing —
@@ -79,6 +96,7 @@ type MissionActiveProps = Readonly<{
 export function MissionActive({
   adapter = persistenceAdapter,
   clocks,
+  now = readWallClock,
 }: MissionActiveProps = {}) {
   const { dispatch, state } = useAppState();
   const session = selectCurrentSession(state);
@@ -118,6 +136,50 @@ export function MissionActive({
       exitEntry.current?.focus();
     }
   }, [confirming]);
+
+  // The one dominant action of the running Mission. It is deliberate, keyed by
+  // the identity the family acted on, and needs no waiting for zero, no proof
+  // and no second confirmation: finishing is the family's own report, and the
+  // approved result follows it directly.
+  function complete(sessionId: string) {
+    const result = completeMissionSession(adapter, sessionId, now, state.language);
+
+    switch (result.status) {
+      case 'completed':
+      case 'resolved':
+        dispatch({
+          type: 'mission-session-completed',
+          session: result.session,
+          completedSessions: result.completedSessions,
+        });
+        return;
+      // Durable state was read and still says the Mission is running: this
+      // completion did not happen, and the same action records it once.
+      case 'not-completed':
+        dispatch({
+          type: 'mission-session-transition-failed',
+          issue: { operation: 'done', outcome: 'failed' },
+        });
+        return;
+      // Nothing is known about the write's outcome, so nothing is claimed in
+      // either direction and no recognition or progress is shown.
+      case 'unconfirmed':
+        dispatch({
+          type: 'mission-session-transition-failed',
+          issue: { operation: 'done', outcome: 'unconfirmed' },
+        });
+        return;
+      case 'superseded':
+        dispatch({ type: 'mission-session-adopted', session: result.session });
+        return;
+      case 'unavailable':
+        dispatch({
+          type: 'mission-session-transition-failed',
+          issue: { operation: 'done', outcome: 'failed' },
+        });
+        return;
+    }
+  }
 
   // Leaving an active Mission is the confirmed exit. It is keyed by the identity
   // the family acted on and by the state they acted from, so a request that
@@ -210,6 +272,15 @@ export function MissionActive({
           {t('discovery.card.minutes')}
         </p>
       ) : null}
+      {issue?.operation === 'done' ? (
+        <p
+          className="mission-session__issue"
+          key={`done-${issue.outcome}-${attempt}`}
+          role="alert"
+        >
+          {t(DONE_MESSAGE_KEYS[issue.outcome])}
+        </p>
+      ) : null}
       {issue?.operation === 'exit' ? (
         <p
           className="mission-session__issue"
@@ -226,6 +297,15 @@ export function MissionActive({
           secondary to the **Mission done** action that will sit beside it. The
           Mission keeps running while the family decides, so the guidance above
           neither pauses nor restarts. */}
+      {/* Finishing is what the family came back to do, so it is the one
+          dominant action here and comes before the way out. */}
+      <button
+        className="button button--primary mission-session__done"
+        onClick={() => complete(active.sessionId)}
+        type="button"
+      >
+        {t('session.action.done')}
+      </button>
       {confirming ? (
         <MissionLeaveConfirmation
           language={state.language}

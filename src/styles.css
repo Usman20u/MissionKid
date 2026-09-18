@@ -1433,3 +1433,97 @@ input {
   padding: 0;
   border: 0;
 }
+
+/* The one dominant action of the running Mission: what the family came back to
+   do. It sits before the way out, which stays secondary beside it. */
+.mission-session__done {
+  margin-top: 1.25rem;
+  align-self: flex-start;
+}
+
+/* F004 Reward Card.
+   Short, calm recognition of one completed Mission. It is quiet by design: no
+   reveal, no motion, no rarity, nothing to wait for and nothing to open. */
+.mission-result {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.mission-result__recognition {
+  max-width: 48ch;
+  /* Clear of the view heading above it, which takes focus on entry and shows a
+     focus ring there. */
+  margin: 0.75rem 0 0;
+  color: #23423a;
+  font-size: 1.15rem;
+  font-weight: 800;
+  line-height: 1.5;
+}
+
+.mission-result__mission {
+  margin: 0.6rem 0 0;
+  font-size: 1.35rem;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.mission-result__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1rem;
+  margin: 0.5rem 0 0;
+  color: #4c625c;
+  font-size: 0.95rem;
+}
+
+.mission-result__category {
+  font-weight: 700;
+}
+
+/* Progress is information, not a score: the same calm surface as the rest, with
+   no bar to fill, no streak and no comparison. */
+.mission-result__goal {
+  width: 100%;
+  margin-top: 1.4rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid #d8e1da;
+  border-radius: 1.25rem;
+  background: rgb(255 255 255 / 92%);
+}
+
+.mission-result__goal-heading {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 800;
+}
+
+.mission-result__goal-progress {
+  margin: 0.3rem 0 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.mission-result__goal-complete {
+  max-width: 48ch;
+  margin: 0.7rem 0 0;
+  color: #4c625c;
+  line-height: 1.55;
+}
+
+.mission-result__issue {
+  max-width: 48ch;
+  margin: 1rem 0 0;
+  color: #8b2828;
+  line-height: 1.55;
+}
+
+.mission-result__state {
+  max-width: 48ch;
+  margin: 0;
+  line-height: 1.6;
+}
+
+.mission-result .button {
+  margin-top: 1.5rem;
+}

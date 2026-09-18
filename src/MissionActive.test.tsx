@@ -307,23 +307,30 @@ describe('the running Mission presentation', () => {
     const { clocks, pass } = movableClocks(STARTED_AT + 290_000);
     const { container } = renderActive(activeSession(), clocks);
 
-    // **Mission done** arrives with the operation it carries out; nothing here
-    // stands in for it. The approved way out is the one control, and it is
-    // secondary.
+    // Finishing is the one dominant action and comes first; the approved way
+    // out stands beside it and stays secondary.
     const actions = screen.getAllByRole('button');
-    expect(actions).toHaveLength(1);
-    expect(actions[0]!.textContent).toBe(t('session.action.leave'));
-    expect(actions[0]!.className).toContain('button--secondary');
-    expect(actions[0]!.className).not.toContain('button--primary');
+    expect(actions.map((action) => action.textContent)).toEqual([
+      t('session.action.done'),
+      t('session.action.leave'),
+    ]);
+    expect(actions[0]!.className).toContain('button--primary');
+    expect(actions[1]!.className).toContain('button--secondary');
+    expect(
+      actions.filter((action) => action.className.includes('button--primary')),
+    ).toHaveLength(1);
     expect(container.querySelector('[role="timer"], [aria-live], progress')).toBeNull();
     expect(container.textContent).not.toMatch(/\d+:\d\d/);
+    // Recognition and progress belong to the result, never to the Mission that
+    // is still running, and nothing here threatens or hurries.
     expect(
-      screen.queryByText(/Mission done|Reward|Monthly Goal|failed|overtime|hurry/i),
+      screen.queryByText(/Reward|Monthly Goal|missions|failed|overtime|hurry/i),
     ).toBeNull();
 
     pass(20_000);
-    // Crossing zero changes the wording and nothing else.
-    expect(screen.getAllByRole('button')).toHaveLength(1);
+    // Crossing zero changes the wording and nothing else: completing is offered
+    // on exactly the same terms before and after zero.
+    expect(screen.getAllByRole('button')).toHaveLength(2);
     expect(container.querySelector('[aria-live]')).toBeNull();
   });
 

@@ -17,6 +17,7 @@ import {
 import type {
   ActiveMissionSession,
   AgeBand,
+  CompletedMissionSession,
   CurrentMissionSession,
   HydrationResult,
   MissionKidSnapshot,
@@ -94,6 +95,14 @@ type RecoveryContext = Readonly<{
   // both need the identity and the lifecycle state the exit must be made
   // against.
   selectionConflictSession?: CurrentMissionSession;
+  // The validated completed Mission Sessions, mirrored from durable state so the
+  // Reward Card can derive Monthly Goal progress from the same records the
+  // snapshot holds. Nothing is counted or cached here: this is the durable
+  // collection as hydration produced it, and every figure is derived from it.
+  completedSessions?: readonly CompletedMissionSession[];
+  // Which completed Mission Session's result is open. A navigation reference,
+  // never a second completion record.
+  currentResultSessionId?: string;
 }>;
 
 export type AppState = RecoveryContext & (
@@ -106,7 +115,7 @@ export type ResolvedAppState = Exclude<AppState, { status: 'pending' }>;
 
 export type MissionSelectionIssue = 'conflict' | 'unconfirmed';
 
-export type MissionSessionOperation = 'ready' | 'start' | 'exit';
+export type MissionSessionOperation = 'ready' | 'start' | 'exit' | 'done' | 'result';
 
 export type MissionSessionOutcome = 'failed' | 'unconfirmed';
 
@@ -146,6 +155,20 @@ export type AppStateAction =
   // one a conflict is about, or one found in place of the session an exit named.
   // It is adopted exactly as stored rather than rebuilt from what was assumed.
   | { type: 'mission-session-adopted'; session: CurrentMissionSession }
+  // One completion, read back from durable state. It carries the whole result:
+  // the completed collection the snapshot now holds and the pointer naming this
+  // one, so nothing downstream has to recount or re-read anything.
+  | {
+      type: 'mission-session-completed';
+      session: CompletedMissionSession;
+      completedSessions: readonly CompletedMissionSession[];
+    }
+  // The result pointer was cleared through its own confirmed write. The
+  // completed sessions are untouched.
+  | { type: 'mission-result-left' }
+  // The pointer names another result than the one being left. It is followed
+  // rather than cleared.
+  | { type: 'mission-result-superseded'; sessionId: string }
   // Guidance was re-read from the session's own timestamps: on first sight of a
   // running Mission, and whenever the family comes back to the page.
   | { type: 'mission-timer-anchored'; anchor: GuidanceAnchor }
@@ -198,7 +221,13 @@ export function resolveHydrationResult(
         status: 'blocked-recovery',
       };
     case 'hydrated': {
-      const { childProfile, currentSession, settings } = result.snapshot;
+      const {
+        childProfile,
+        completedSessions,
+        currentResultSessionId,
+        currentSession,
+        settings,
+      } = result.snapshot;
 
       return {
         language: settings.language,
@@ -211,6 +240,13 @@ export function resolveHydrationResult(
         // `ready` or `active` is restored in that state rather than rebuilt,
         // and a `selected` one is what the ready transition then advances.
         ...(currentSession ? { currentSession } : {}),
+        // Mirrored only when there is something to mirror, like the current
+        // session above: an empty collection is the absence of completions, not
+        // a fact worth carrying.
+        ...(completedSessions.length > 0 ? { completedSessions } : {}),
+        // A valid pointer restores the same result the family last saw, with no
+        // completion effect repeated.
+        ...(currentResultSessionId ? { currentResultSessionId } : {}),
       };
     }
   }
@@ -485,6 +521,38 @@ export function appStateReducer(
           state.guidanceAnchor?.sessionId === action.session.sessionId
             ? state.guidanceAnchor
             : undefined,
+      };
+    case 'mission-session-completed':
+      // The Mission is finished. Its running session, timer anchor and any
+      // standing issue all belong to a state that no longer exists, and the
+      // result pointer now names the completion the family should see.
+      return {
+        ...state,
+        currentSession: undefined,
+        sessionIssue: undefined,
+        sessionAttempt: undefined,
+        guidanceAnchor: undefined,
+        completedSessions: action.completedSessions,
+        currentResultSessionId: action.session.sessionId,
+      };
+    case 'mission-result-left':
+      // Only the pointer goes. The completed sessions stay exactly as they are,
+      // so the same Mission keeps counting towards the Monthly Goal.
+      return {
+        ...state,
+        currentResultSessionId: undefined,
+        sessionIssue: undefined,
+        sessionAttempt: undefined,
+        discovery: isSetupContextComplete(state)
+          ? { category: state.discovery?.category ?? null, shown: [] }
+          : state.discovery,
+      };
+    case 'mission-result-superseded':
+      return {
+        ...state,
+        currentResultSessionId: action.sessionId,
+        sessionIssue: undefined,
+        sessionAttempt: undefined,
       };
     case 'mission-timer-anchored':
       return { ...state, guidanceAnchor: action.anchor };

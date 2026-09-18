@@ -18,7 +18,9 @@ import {
   type MessageKey,
   type SupportedLanguage,
 } from './localization';
+import { readWallClock, type WallClock } from './missionSession';
 import { MissionActive } from './MissionActive';
+import { MissionResult } from './MissionResult';
 import { MissionCategorySelection } from './MissionDiscovery';
 import { MissionReady } from './MissionReady';
 import {
@@ -43,7 +45,8 @@ export type AppView =
   // The one current Mission Session: reaching `ready`, there, and running.
   | 'session-opening'
   | 'session-ready'
-  | 'session-active';
+  | 'session-active'
+  | 'session-result';
 
 // The child-facing areas. The parent's recovery and reset controls do not
 // belong on them: a destructive action beside a Mission is not the child's to
@@ -53,6 +56,7 @@ const CHILD_FACING_VIEWS: readonly AppView[] = [
   'session-opening',
   'session-ready',
   'session-active',
+  'session-result',
 ];
 
 // Reaching `ready` and being `ready` are one context for the family: the
@@ -108,6 +112,10 @@ const VIEW_CONTENT: Record<AppView, ViewContent> = {
     context: 'app.brand',
     title: 'view.sessionReady.title',
   },
+  'session-result': {
+    context: 'app.brand',
+    title: 'view.sessionResult.title',
+  },
   'session-active': {
     context: 'app.brand',
     title: 'view.sessionActive.title',
@@ -146,6 +154,13 @@ export function selectAppView(state: AppState): AppView {
             return 'session-active';
           }
 
+          // A completed result takes precedence over discovery for the same
+          // reason a current session does: the family is in the flow that
+          // result belongs to.
+          if (state.currentResultSessionId) {
+            return 'session-result';
+          }
+
           if (session?.state === 'ready') {
             return 'session-ready';
           }
@@ -164,11 +179,13 @@ export function selectAppView(state: AppState): AppView {
 type AppShellProps = Readonly<{
   adapter?: PersistenceAdapter;
   createProfileId?: LocalProfileIdFactory;
+  now?: WallClock;
 }>;
 
 export function AppShell({
   adapter = persistenceAdapter,
   createProfileId = createLocalProfileId,
+  now = readWallClock,
 }: AppShellProps = {}) {
   const { state, dispatch } = useAppState();
   const view = selectAppView(state);
@@ -176,6 +193,12 @@ export function AppShell({
   const headingId = 'current-view-heading';
   const t = (key: MessageKey) => translateMessage(state.language, key);
   const busy = !!state.operation || state.status === 'pending';
+  // The completion the open result points at, resolved from the validated
+  // records rather than from any stored card.
+  const resultSession =
+    state.completedSessions?.find(
+      (record) => record.sessionId === state.currentResultSessionId,
+    ) ?? null;
 
   // One signal per materially different parent context. Language changes and
   // in-place feedback deliberately keep the same signal so focus is not stolen.
@@ -277,8 +300,16 @@ export function AppShell({
             <p className="discovery-gate">{t('discovery.gate.body')}</p>
           ) : null}
           {!state.resetConfirm && (state.status === 'ready' || state.status === 'degraded') ? (
-            view === 'session-active' ? (
-              <MissionActive adapter={adapter} />
+            view === 'session-result' ? (
+              resultSession ? (
+                <MissionResult adapter={adapter} session={resultSession} />
+              ) : (
+                // The pointer names no readable completion. The completed
+                // records are untouched; only this result cannot be shown.
+                <p className="mission-result__state">{t('result.unavailable')}</p>
+              )
+            ) : view === 'session-active' ? (
+              <MissionActive adapter={adapter} now={now} />
             ) : SESSION_VIEWS.includes(view) ? (
               <MissionReady adapter={adapter} />
             ) : view === 'discovery-categories' ? (

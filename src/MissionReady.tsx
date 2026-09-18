@@ -52,6 +52,17 @@ const ISSUE_MESSAGE_KEYS: Readonly<
     failed: 'session.exit.notLeft',
     unconfirmed: 'session.exit.unconfirmed',
   },
+  // Completion and leaving the result are the active view's and the result
+  // view's own operations. They are listed so the table stays exhaustive; this
+  // view never records either issue.
+  done: {
+    failed: 'session.done.notRecorded',
+    unconfirmed: 'session.done.unconfirmed',
+  },
+  result: {
+    failed: 'result.exit.notCleared',
+    unconfirmed: 'result.exit.unconfirmed',
+  },
 };
 
 type ReadyMissionDetailsProps = Readonly<{
