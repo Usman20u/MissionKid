@@ -89,6 +89,14 @@ const englishMessages = {
     'MissionKid has no complete set of three Missions for this Mission Category right now. Nothing went wrong, and you can pick another Mission Category above.',
   'discovery.gate.body':
     'Missions cannot be suggested yet. A parent needs to finish the age step below first. MissionKid never guesses an age group.',
+  'view.sessionOpening.title': 'Getting your Mission ready',
+  'view.sessionReady.title': 'Your Mission is ready',
+  'session.ready.notStarted': 'This Mission has not started yet.',
+  'session.transition.notCarriedOut':
+    'This Mission could not be opened just now, and nothing was saved. It has not started. Try again when you are ready.',
+  'session.transition.unconfirmed':
+    'MissionKid could not check whether this Mission was opened. It has not started. Try again to see what is saved.',
+  'session.action.retry': 'Try again',
 } as const;
 
 export type MessageKey = keyof typeof englishMessages;
@@ -186,6 +194,14 @@ export const INTERFACE_MESSAGES: CompleteInterfaceMessages = {
       'MissionKid hat für diese Missionskategorie gerade keinen vollständigen Satz aus drei Missionen. Es ist nichts schiefgegangen, und du kannst oben eine andere Missionskategorie wählen.',
     'discovery.gate.body':
       'Es können noch keine Missionen vorgeschlagen werden. Ein Erwachsener muss zuerst den Altersschritt unten abschließen. MissionKid errät niemals eine Altersgruppe.',
+    'view.sessionOpening.title': 'Deine Mission wird vorbereitet',
+    'view.sessionReady.title': 'Deine Mission ist bereit',
+    'session.ready.notStarted': 'Diese Mission hat noch nicht begonnen.',
+    'session.transition.notCarriedOut':
+      'Diese Mission konnte gerade nicht geöffnet werden, und es wurde nichts gespeichert. Sie hat nicht begonnen. Versuche es noch einmal, wenn du bereit bist.',
+    'session.transition.unconfirmed':
+      'MissionKid konnte nicht prüfen, ob diese Mission geöffnet wurde. Sie hat nicht begonnen. Versuche es noch einmal, um zu sehen, was gespeichert ist.',
+    'session.action.retry': 'Noch einmal versuchen',
   },
   ru: {
     "recovery.pending": "Подождите. Это действие ещё не подтверждено.",
@@ -273,6 +289,14 @@ export const INTERFACE_MESSAGES: CompleteInterfaceMessages = {
       'Для этой категории сейчас нет полного набора из трёх миссий. Ничего не сломалось — можно выбрать другую категорию выше.',
     'discovery.gate.body':
       'Пока миссии предложить нельзя. Сначала взрослому нужно завершить шаг с возрастом ниже. MissionKid никогда не угадывает возрастную группу.',
+    'view.sessionOpening.title': 'Готовим твою миссию',
+    'view.sessionReady.title': 'Твоя миссия готова',
+    'session.ready.notStarted': 'Эта миссия ещё не началась.',
+    'session.transition.notCarriedOut':
+      'Сейчас не удалось открыть эту миссию, и ничего не было сохранено. Она не началась. Попробуй ещё раз, когда будешь готов.',
+    'session.transition.unconfirmed':
+      'MissionKid не смог проверить, была ли открыта эта миссия. Она не началась. Попробуй ещё раз, чтобы увидеть, что сохранено.',
+    'session.action.retry': 'Попробовать ещё раз',
   },
 };
 

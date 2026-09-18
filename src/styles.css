@@ -1221,3 +1221,41 @@ input {
   }
 
 }
+
+/* --- The one current Mission Session. Task 2 shows only which Mission it is
+   and whether it has started; the ready screen's own content and its start
+   action are a later step, so nothing here is a control the family could
+   mistake for starting the Mission. */
+.mission-session {
+  margin-top: 1.5rem;
+}
+
+.mission-session__mission {
+  max-width: 24ch;
+  margin: 0;
+  color: #16302a;
+  font-size: 1.5rem;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.mission-session__state {
+  max-width: 48ch;
+  margin: 0.6rem 0 0;
+  color: #445752;
+  line-height: 1.6;
+}
+
+/* A transition that did not complete. It uses the same calm surface as the
+   discovery notice: nothing was lost and nothing was the child's doing. */
+.mission-session__issue {
+  max-width: 48ch;
+  margin: 1.15rem 0 0;
+  padding: 0.8rem 1rem;
+  border-left: 3px solid #b4650c;
+  border-radius: 0.5rem;
+  background: #fdf5ec;
+  color: #23423a;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}

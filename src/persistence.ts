@@ -617,21 +617,24 @@ export function createEmptySnapshot(): MissionKidSnapshot {
   };
 }
 
-// What storage currently holds, or nothing readable. A read that throws or finds
-// no entry says nothing about completed records, and the write that follows
-// reports what storage actually does rather than guessing here.
-function readStoredSnapshot(
-  storage: SnapshotStorage,
-): SnapshotValidationResult | null {
+// What storage currently holds, before anything replaces it.
+type StoredSnapshotRead =
+  | Readonly<{ status: 'absent' }>
+  | Readonly<{ status: 'unreadable' }>
+  | Readonly<{ status: 'read'; validation: SnapshotValidationResult }>;
+
+function readStoredSnapshot(storage: SnapshotStorage): StoredSnapshotRead {
   let rawSnapshot: string | null;
 
   try {
     rawSnapshot = storage.getItem(MISSIONKID_STORAGE_KEY);
   } catch {
-    return null;
+    return { status: 'unreadable' };
   }
 
-  return rawSnapshot === null ? null : parseStoredSnapshot(rawSnapshot);
+  return rawSnapshot === null
+    ? { status: 'absent' }
+    : { status: 'read', validation: parseStoredSnapshot(rawSnapshot) };
 }
 
 export function createPersistenceAdapter(
@@ -682,9 +685,18 @@ export function createPersistenceAdapter(
       // condition lets the same write through.
       const storedSnapshot = readStoredSnapshot(storage);
 
+      // Replacing the one stored value while unable to see what it holds is a
+      // blind overwrite: D4-B cannot be decided, and a completed record that
+      // must not be dropped could be dropped. The replacement is not attempted,
+      // so from the caller's side this is a write that did not happen.
+      if (storedSnapshot.status === 'unreadable') {
+        return { status: 'unconfirmed', reason: 'write-failed' };
+      }
+
       if (
-        storedSnapshot?.status === 'valid' &&
-        storedSnapshot.unresolvedCompletions
+        storedSnapshot.status === 'read' &&
+        storedSnapshot.validation.status === 'valid' &&
+        storedSnapshot.validation.unresolvedCompletions
       ) {
         return { status: 'unconfirmed', reason: 'blocked-completed-record' };
       }

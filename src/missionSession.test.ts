@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { MISSION_CATALOG } from './catalogContent';
 import type { MissionRecord } from './catalog';
-import { selectMission } from './missionSession';
+import { advanceSessionToReady, selectMission } from './missionSession';
 import type { SuggestionContext } from './missionSuggestions';
 import {
   MISSIONKID_STORAGE_KEY,
@@ -12,6 +12,7 @@ import {
   type ActiveMissionSession,
   type CurrentMissionSession,
   type ReadyMissionSession,
+  type SelectedMissionSession,
   type SnapshotStorage,
 } from './persistence';
 
@@ -42,6 +43,11 @@ const STORED_FACTS = {
   durationSecondsAtSelection: FIRST.durationSeconds,
   selectedAt: 1_700_000_000_000,
 } as const;
+
+const SELECTED_SESSION: SelectedMissionSession = {
+  ...STORED_FACTS,
+  state: 'selected',
+};
 
 const READY_SESSION: ReadyMissionSession = { ...STORED_FACTS, state: 'ready' };
 
@@ -235,7 +241,9 @@ describe('choosing a Mission', () => {
     harness.storage[method] = ((key: string, value?: string) => {
       if (method === 'setItem') throw new Error('write failed');
       writes += 1;
-      if (writes > 1) throw new Error('read-back failed');
+      // The domain's read and the adapter's pre-write read must both succeed,
+      // so only the read that confirms the write is made to fail.
+      if (writes > 2) throw new Error('read-back failed');
       return (original as (k: string) => string | null)(key);
     }) as never;
 
@@ -367,5 +375,203 @@ describe('choosing a Mission', () => {
     if (hydrated.status !== 'hydrated') throw new Error('expected a hydrated snapshot');
 
     expect(hydrated.snapshot.currentSession).toEqual(created.session);
+  });
+});
+
+
+function writeCount(storage: SnapshotStorage): number {
+  return (storage.setItem as ReturnType<typeof vi.fn>).mock.calls.length;
+}
+
+describe('reaching the ready state', () => {
+  it('advances a stored selected session, adding nothing to it', () => {
+    const harness = createHarness({ session: SELECTED_SESSION });
+
+    const result = advanceSessionToReady(harness.adapter);
+
+    if (result.status !== 'advanced') throw new Error('expected an advance');
+
+    // The same session, in the next state: every immutable selection fact is
+    // the one that was agreed to, and the only difference is `state`.
+    expect(result.session).toEqual({ ...SELECTED_SESSION, state: 'ready' });
+    expect(result.session.sessionId).toBe(SELECTED_SESSION.sessionId);
+    expect(writeCount(harness.storage)).toBe(1);
+
+    const session = stored(harness.values).currentSession;
+    expect(session.state).toBe('ready');
+    // Entering ready starts nothing, so no start timestamp can exist yet.
+    expect(Object.hasOwn(session, 'startedAt')).toBe(false);
+    expect(Object.hasOwn(session, 'completedAt')).toBe(false);
+    expect(Object.keys(session).sort()).toEqual(
+      Object.keys(SELECTED_SESSION).sort(),
+    );
+    expect(stored(harness.values).completedSessions).toEqual([]);
+    expect(stored(harness.values).currentResultSessionId).toBeNull();
+  });
+
+  it('resolves an already ready session without writing again', () => {
+    const harness = createHarness({ session: SELECTED_SESSION });
+
+    const first = advanceSessionToReady(harness.adapter);
+    const stored_before = harness.values.get(MISSIONKID_STORAGE_KEY);
+
+    // A repeat, a replayed effect, a remount and a retry all arrive here.
+    const again = advanceSessionToReady(harness.adapter);
+    const third = advanceSessionToReady(harness.adapter);
+
+    if (first.status !== 'advanced') throw new Error('expected an advance');
+    if (again.status !== 'resolved' || third.status !== 'resolved') {
+      throw new Error('expected the stored ready session');
+    }
+    expect(again.session).toEqual(first.session);
+    expect(third.session).toEqual(first.session);
+    expect(writeCount(harness.storage)).toBe(1);
+    expect(harness.values.get(MISSIONKID_STORAGE_KEY)).toBe(stored_before);
+  });
+
+  it('leaves a session that has already started exactly as it is', () => {
+    const harness = createHarness({ session: ACTIVE_SESSION });
+    const before = harness.values.get(MISSIONKID_STORAGE_KEY);
+
+    const result = advanceSessionToReady(harness.adapter);
+
+    // A session that advanced past ready is never rebuilt into an earlier
+    // state, and nothing about it is rewritten to say otherwise.
+    if (result.status !== 'inapplicable') throw new Error('expected no change');
+    expect(result.session).toEqual(ACTIVE_SESSION);
+    expect(writeCount(harness.storage)).toBe(0);
+    expect(harness.values.get(MISSIONKID_STORAGE_KEY)).toBe(before);
+  });
+
+  it('has nothing to advance when no session is stored', () => {
+    const harness = createHarness();
+
+    expect(advanceSessionToReady(harness.adapter)).toEqual({
+      status: 'inapplicable',
+      session: null,
+    });
+    expect(writeCount(harness.storage)).toBe(0);
+  });
+
+  it('writes nothing when durable state cannot be read', () => {
+    const harness = createHarness({ session: SELECTED_SESSION });
+    harness.values.set(MISSIONKID_STORAGE_KEY, '{corrupted');
+
+    expect(advanceSessionToReady(harness.adapter)).toEqual({
+      status: 'unavailable',
+    });
+    expect(writeCount(harness.storage)).toBe(0);
+    expect(harness.values.get(MISSIONKID_STORAGE_KEY)).toBe('{corrupted');
+  });
+
+  it('reports a failure established before storage changed, leaving the session selected', () => {
+    const harness = createHarness({ session: SELECTED_SESSION });
+    const before = harness.values.get(MISSIONKID_STORAGE_KEY);
+    harness.storage.setItem = vi.fn(() => {
+      throw new Error('write failed');
+    });
+
+    expect(advanceSessionToReady(harness.adapter)).toEqual({
+      status: 'not-advanced',
+      reason: 'write-failed',
+    });
+    expect(harness.values.get(MISSIONKID_STORAGE_KEY)).toBe(before);
+    expect(stored(harness.values).currentSession.state).toBe('selected');
+  });
+
+  it('is refused, byte for byte, while an unresolved completed record is stored', () => {
+    const completed = {
+      ...STORED_FACTS,
+      sessionId: 'session-broken',
+      state: 'completed',
+      startedAt: 1_700_000_060_000,
+      // Earlier than its own start: a completed record that cannot be retained.
+      completedAt: 1,
+      completionPeriodId: '2023-11',
+    };
+    const raw = JSON.stringify({
+      ...createEmptySnapshot(),
+      childProfile: { localProfileId: PROFILE_ID, ageBand: '7–8' },
+      currentSession: SELECTED_SESSION,
+      completedSessions: [completed],
+    });
+    const values = new Map([[MISSIONKID_STORAGE_KEY, raw]]);
+    const setItem = vi.fn((key: string, value: string) => {
+      values.set(key, value);
+    });
+    const adapter = createPersistenceAdapter({
+      getItem: (key) => values.get(key) ?? null,
+      setItem,
+      removeItem: vi.fn(),
+    });
+
+    expect(advanceSessionToReady(adapter)).toEqual({
+      status: 'not-advanced',
+      reason: 'blocked-completed-record',
+    });
+    expect(setItem).not.toHaveBeenCalled();
+    expect(values.get(MISSIONKID_STORAGE_KEY)).toBe(raw);
+  });
+
+  it('resolves the durable session when a landed write could not be confirmed', () => {
+    const harness = createHarness({ session: SELECTED_SESSION });
+    let reads = 0;
+    const realGet = harness.storage.getItem;
+    harness.storage.getItem = vi.fn((key: string) => {
+      reads += 1;
+      // The write lands; only the read that would confirm it fails.
+      if (reads === 3) throw new Error('read-back failed');
+      return (realGet as (k: string) => string | null)(key);
+    });
+
+    const result = advanceSessionToReady(harness.adapter);
+
+    // Neither success nor rollback was claimed: durable state was read again,
+    // and what it says is what comes back — the same session, already ready.
+    if (result.status !== 'resolved') throw new Error('expected the stored session');
+    expect(result.session).toEqual({ ...SELECTED_SESSION, state: 'ready' });
+    expect(result.session.sessionId).toBe(SELECTED_SESSION.sessionId);
+    expect(writeCount(harness.storage)).toBe(1);
+    expect(stored(harness.values).currentSession.state).toBe('ready');
+  });
+
+  it('claims neither outcome when the interrupted write cannot be read back at all', () => {
+    const harness = createHarness({ session: SELECTED_SESSION });
+    let reads = 0;
+    const realGet = harness.storage.getItem;
+    harness.storage.getItem = vi.fn((key: string) => {
+      reads += 1;
+      if (reads >= 3) throw new Error('storage unavailable');
+      return (realGet as (k: string) => string | null)(key);
+    });
+
+    expect(advanceSessionToReady(harness.adapter)).toEqual({
+      status: 'unconfirmed',
+      reason: 'read-back-failed',
+    });
+    // The write is not undone: rolling back a transition that may have
+    // succeeded would be a second guess written over durable state.
+    expect(writeCount(harness.storage)).toBe(1);
+    expect(stored(harness.values).currentSession.state).toBe('ready');
+  });
+
+  it('advances the same session once when a retry follows a failed write', () => {
+    const harness = createHarness({ session: SELECTED_SESSION });
+    const realSet = harness.storage.setItem;
+    let failWrite = true;
+    harness.storage.setItem = vi.fn((key: string, value: string) => {
+      if (failWrite) throw new Error('write failed');
+      (realSet as (k: string, v: string) => void)(key, value);
+    });
+
+    expect(advanceSessionToReady(harness.adapter).status).toBe('not-advanced');
+
+    failWrite = false;
+    const retried = advanceSessionToReady(harness.adapter);
+
+    if (retried.status !== 'advanced') throw new Error('expected an advance');
+    expect(retried.session.sessionId).toBe(SELECTED_SESSION.sessionId);
+    expect(retried.session.selectedAt).toBe(SELECTED_SESSION.selectedAt);
+    expect(stored(harness.values).currentSession.state).toBe('ready');
   });
 });

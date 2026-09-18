@@ -13,10 +13,12 @@ import {
   type MessageKey,
 } from './localization';
 
-// The views that present F002. Their strings must resolve in every language.
-const F002_VIEWS = [
+// The views that present a Mission to the family. Their strings must resolve in
+// every language, and none of their text may live in the component itself.
+const LOCALIZED_VIEWS = [
   'src/MissionDiscovery.tsx',
   'src/MissionSuggestionSet.tsx',
+  'src/MissionReady.tsx',
 ];
 
 describe('localization', () => {
@@ -51,8 +53,8 @@ describe('localization', () => {
     }
   });
 
-  it('resolves every message a discovery view asks for, in all three languages', () => {
-    const sources = F002_VIEWS.map((file) => readFileSync(file, 'utf8')).join('\n');
+  it('resolves every message a Mission view asks for, in all three languages', () => {
+    const sources = LOCALIZED_VIEWS.map((file) => readFileSync(file, 'utf8')).join('\n');
     const referenced = (Object.keys(INTERFACE_MESSAGES.en) as MessageKey[]).filter(
       (key) => sources.includes(`'${key}'`),
     );
@@ -67,8 +69,8 @@ describe('localization', () => {
     }
   });
 
-  it('keeps discovery view text in the dictionaries, not in the components', () => {
-    for (const file of F002_VIEWS) {
+  it('keeps Mission view text in the dictionaries, not in the components', () => {
+    for (const file of LOCALIZED_VIEWS) {
       const source = readFileSync(file, 'utf8');
 
       // German and Russian characters in a view would be copy that no language

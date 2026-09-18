@@ -624,8 +624,9 @@ describe('category selection and the discovery cycle', () => {
     let reads = 0;
     memory.storage.getItem = (key) => {
       reads += 1;
-      // The write lands; only the read that would confirm it fails.
-      if (failReadBack && reads > 1) throw new Error('read-back failed');
+      // The write lands: the domain's read and the adapter's pre-write read
+      // both succeed, and only the read that would confirm it fails.
+      if (failReadBack && reads > 2) throw new Error('read-back failed');
       return realGet(key);
     };
     const createId = vi.fn(() => 'session-1');

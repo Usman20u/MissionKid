@@ -18,6 +18,7 @@ import type {
   CurrentMissionSession,
   HydrationResult,
   MissionKidSnapshot,
+  ReadyMissionSession,
 } from './persistence';
 
 type SetupContext = Readonly<{
@@ -59,6 +60,14 @@ type RecoveryContext = Readonly<{
   // never set optimistically, and it keeps whichever lifecycle state the
   // session actually holds rather than a state the interface assumed.
   currentSession?: CurrentMissionSession;
+  // Why the current session did not reach `ready`. `not-carried-out` is
+  // established before storage changed, so the stored session is what it was.
+  // `unconfirmed` means the write may have landed and could not be confirmed:
+  // neither outcome is claimed until a later read settles it.
+  sessionIssue?: MissionTransitionIssue;
+  // Which attempt produced it, for the same reason `selectionAttempt` exists:
+  // a retry that fails the same way must still be announced.
+  sessionAttempt?: number;
   // Why the last deliberate choice did not become a new Mission Session.
   // `conflict` is a product state: one is already chosen. `unconfirmed` is a
   // transition failure: nothing started, and the choice can be made again.
@@ -83,6 +92,8 @@ export type ResolvedAppState = Exclude<AppState, { status: 'pending' }>;
 
 export type MissionSelectionIssue = 'conflict' | 'unconfirmed';
 
+export type MissionTransitionIssue = 'not-carried-out' | 'unconfirmed';
+
 export type AppStateAction =
   | { type: 'operation-started'; operation: 'save' | 'retry' | 'reset' }
   | { type: 'reset-confirmation'; open: boolean }
@@ -99,6 +110,10 @@ export type AppStateAction =
   | { type: 'discovery-category-selected'; category: MissionCategory }
   | { type: 'discovery-another-set-requested'; missionIds: readonly string[] }
   | { type: 'mission-selection-confirmed'; session: CurrentMissionSession }
+  // The durable session read back as `ready`, whether this attempt advanced it
+  // or found it already stored that way.
+  | { type: 'mission-session-ready'; session: ReadyMissionSession }
+  | { type: 'mission-session-transition-failed'; issue: MissionTransitionIssue }
   | {
       type: 'mission-selection-failed';
       issue: MissionSelectionIssue;
@@ -148,7 +163,7 @@ export function resolveHydrationResult(
         status: 'blocked-recovery',
       };
     case 'hydrated': {
-      const { childProfile, settings } = result.snapshot;
+      const { childProfile, currentSession, settings } = result.snapshot;
 
       return {
         language: settings.language,
@@ -157,6 +172,10 @@ export function resolveHydrationResult(
         status: 'ready',
         setupView: childProfile?.ageBand ? 'handoff' : 'incomplete',
         saveStatus: 'idle',
+        // Validated durable state, mirrored as it is. A session that is already
+        // `ready` or `active` is restored in that state rather than rebuilt,
+        // and a `selected` one is what the ready transition then advances.
+        ...(currentSession ? { currentSession } : {}),
       };
     }
   }
@@ -195,6 +214,16 @@ export function selectCurrentSession(
   state: AppState,
 ): CurrentMissionSession | null {
   return state.currentSession ?? null;
+}
+
+export function selectSessionIssue(
+  state: AppState,
+): MissionTransitionIssue | null {
+  return state.sessionIssue ?? null;
+}
+
+export function selectSessionAttempt(state: AppState): number {
+  return state.sessionAttempt ?? 0;
 }
 
 export function selectSelectionIssue(
@@ -358,7 +387,30 @@ export function appStateReducer(
         selectionIssue: undefined,
         selectionAttempt: undefined,
         selectionConflictMissionId: undefined,
+        // Any transition issue belonged to an earlier session, and leaving it
+        // standing would block this one from reaching `ready` at all.
+        sessionIssue: undefined,
+        sessionAttempt: undefined,
         discovery: state.discovery ? { ...state.discovery, shown: [] } : undefined,
+      };
+    case 'mission-session-ready':
+      // Publishing what storage confirmed. Any earlier transition issue
+      // described a state that no longer exists, so it goes with it.
+      return {
+        ...state,
+        currentSession: action.session,
+        sessionIssue: undefined,
+        sessionAttempt: undefined,
+      };
+    case 'mission-session-transition-failed':
+      // The runtime session is left exactly as it is: an established failure
+      // leaves the stored `selected` session standing, and an unconfirmed one
+      // is not evidence for rebuilding or removing anything. Recording the
+      // issue is also what stops the transition from retrying itself.
+      return {
+        ...state,
+        sessionIssue: action.issue,
+        sessionAttempt: (state.sessionAttempt ?? 0) + 1,
       };
     case 'mission-selection-failed':
       // Nothing about the cycle changes: the same three Missions stay on screen

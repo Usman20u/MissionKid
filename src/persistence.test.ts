@@ -270,10 +270,15 @@ describe('whole-snapshot persistence', () => {
 
   it('cannot confirm success when read-back throws after writing', () => {
     const memory = createMemoryStorage();
+    let reads = 0;
     const adapter = createPersistenceAdapter({
       ...memory.storage,
-      getItem() {
-        throw new Error('read-back failed');
+      getItem(key) {
+        reads += 1;
+        // The pre-write read succeeds, so the write is attempted; only the read
+        // that would confirm it fails.
+        if (reads > 1) throw new Error('read-back failed');
+        return memory.storage.getItem(key);
       },
     });
 
@@ -282,6 +287,27 @@ describe('whole-snapshot persistence', () => {
       reason: 'read-back-failed',
     });
     expect(memory.setCalls).toHaveLength(1);
+  });
+
+  it('does not replace a stored snapshot it cannot read first', () => {
+    const memory = createMemoryStorage(JSON.stringify(createEmptySnapshot()));
+    const adapter = createPersistenceAdapter({
+      ...memory.storage,
+      getItem() {
+        throw new Error('storage unavailable');
+      },
+    });
+
+    // Overwriting the one stored value while blind to what it holds would
+    // decide D4-B by not looking. Nothing is written and nothing is claimed.
+    expect(adapter.persist(createEmptySnapshot())).toEqual({
+      status: 'unconfirmed',
+      reason: 'write-failed',
+    });
+    expect(memory.setCalls).toEqual([]);
+    expect(memory.values.get(MISSIONKID_STORAGE_KEY)).toBe(
+      JSON.stringify(createEmptySnapshot()),
+    );
   });
 
   it('cannot confirm success when read-back is missing', () => {
