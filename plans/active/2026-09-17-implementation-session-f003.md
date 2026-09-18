@@ -1,11 +1,11 @@
 # MissionKid Implementation Plan 03 — Mission Session and Completion (F003) with the Reward Card and Monthly Goal completion message (F004 slice)
 
 **Date:** 2026-09-17
-**Status:** Approved — Tasks 1 to 7 complete under the approved execution allocation clarification; Tasks 8–19 not started
+**Status:** Approved — Tasks 1 to 10 complete under the approved execution allocation clarification; Tasks 11–19 not started
 
-This plan's scope and decisions are approved. Scope approval is not authorization to execute a task: each implementation task begins only when it is explicitly authorized. Tasks 1 to 7 were each explicitly authorized and are complete; no later task has begun.
+This plan's scope and decisions are approved. Scope approval is not authorization to execute a task: each implementation task begins only when it is explicitly authorized. Tasks 1 to 10 were each explicitly authorized and are complete; no later task has begun.
 
-The scope below plans `F003` in full, except the acceptance clauses explicitly deferred with the Mission History view, together with one deliberately bounded part of `F004`: the Reward Card and the Monthly Goal derivation and completion message that the card must display. That combined scope is approved as decision D1-A, with the History deferrals preserved exactly as documented. Every task below except Tasks 1 to 7 is pending implementation and verification; what those tasks actually changed is recorded in the implementation record at the end of this plan, and nothing else here is a claim about what the repository already does.
+The scope below plans `F003` in full, except the acceptance clauses explicitly deferred with the Mission History view, together with one deliberately bounded part of `F004`: the Reward Card and the Monthly Goal derivation and completion message that the card must display. That combined scope is approved as decision D1-A, with the History deferrals preserved exactly as documented. Every task below except Tasks 1 to 10 is pending implementation and verification; what those tasks actually changed is recorded in the implementation record at the end of this plan, and nothing else here is a claim about what the repository already does.
 
 ## Authorization basis
 
@@ -1376,6 +1376,119 @@ The Mission History view, its route and empty state, the localized
 unavailable-title fallback as History presents it, and any standalone Monthly
 Goal surface remain deferred as this plan already records. This batch claims no
 full `F003` acceptance and no MVP completion.
+
+### Tasks 8, 9 and 10 completion (2026-09-18)
+
+Tasks 8, 9 and 10 are complete and committed as `25c5f6e`, `283238e` and
+`d19de3f`, with the authorized Task 7 wording correction carried in the first of
+them. A Mission Session can now be recorded as done exactly once, Monthly Goal
+progress is derived from the completed records, and the approved Reward Card is
+reached, restored and left.
+
+| Gate | Result |
+| --- | --- |
+| `npm run typecheck` | Pass, no suppression |
+| `npm test` | 671 / 671 pass, 19 files |
+| `npm run build` | Pass |
+| `git diff --check` | Clean |
+| Snapshot schema, adapter contract, D4-B | Unchanged |
+| Counter, goal record, prompt flag, History collection persisted | None |
+
+**Task 8 — completion.** One deliberate action, keyed by the identity the family
+acted on and decided by freshly read durable state, performs one atomic snapshot
+replacement: the same session with its immutable facts untouched joins the
+completed collection once, the current session is cleared, and the result pointer
+names that completion. `completedAt` is the later of the injected reading and
+`startedAt`; `completionPeriodId` is the local calendar month of that normalized
+moment, built from local calendar parts rather than from an ISO string, which
+would name the UTC month and misfile a late-evening completion for anyone east of
+UTC. Completion facts are fixed once: a retry returns the stored completion with
+no second record, no moved timestamp, no recomputed period and no clock reading.
+Stale requests are refused, a newer current session is preserved rather than
+completed, and resolving an older completion never moves the pointer back from a
+newer result. Completion never consults remaining time and behaves identically
+before zero, at zero and under the approved malformed-duration and backward-clock
+fallbacks.
+
+**The already-approved malformed-duration exception needed no correction.** A
+Mission whose stored duration was malformed completes with that value preserved
+exactly, survives the exact read-back and hydrates again as a trustworthy
+completed record. The validator Task 1 built already admits this; that was
+verified by test rather than assumed, so nothing about it was changed and no
+specification contradiction arose.
+
+**Task 9 — derivation.** Progress counts unique completed session identifiers for
+one profile and one stored period. It reads the records a validated snapshot
+already produced, so the existing record-level trust rules — identical duplicates
+coalesced, conflicting copies excluded — are the ones that decide what counts; no
+competing policy was created. Two Mission Sessions of one Mission count
+separately. The display is capped at twenty while the raw count is kept, so later
+completions are preserved. The completion that reached the target is found by
+completion moment then by identifier compared by code unit rather than by locale,
+which is what makes the twentieth the same completion in every language, as
+`F004` requires of ordering and counts. Only that one carries the goal-complete
+message. Nothing is persisted and nothing is mutated.
+
+**Task 10 — the Reward Card.** **Mission done** is the running Mission's dominant
+action and records the completion on one activation, with no waiting for zero, no
+proof and no second confirmation. A confirmed completion transitions directly to
+the card; no "completed but no result yet" placeholder exists. The card derives
+recognition, the localized title, the immutable category, the localized
+completion date and Monthly Goal progress from the completed session and the
+static catalog. Progress is derived for the period that completion itself fixed,
+so a later clock, timezone, age or language change cannot reassign membership.
+Missing catalog content keeps the completion and its count behind the approved
+unavailable-title fallback. Restoration through the pointer repeats no completion
+effect, and a pointer naming no readable completion is rejected on its own with
+every record preserved. Leaving is its own confirmed write that clears only the
+pointer and never clears a newer result.
+
+**Shared integration dependency, recorded truthfully.** Task 8's domain
+obligations were met by its own commit, but its interface obligation — the
+visible **Mission done** action leading to the approved result — was met only by
+`d19de3f`. Neither task's interface criteria were claimed complete before that
+integration landed.
+
+**Verification.** The suite gained 49 tests: 14 at the completion domain, 13 for
+the derivation and 22 through the rendered application. They cover one atomic
+completion and repeated activation, stale identities and preserved newer sessions
+and results, completion before and after zero and under both timing fallbacks,
+class A and a landed write with failed confirmation separately for completion and
+for the result exit, the normalized timestamp and local-month boundaries at a
+month end and both ends of a year, unchanged completion facts under a device
+clock months later, unique counting with duplicates and conflicts, the cap, the
+deterministic twentieth identity proven by reversing the input, restoration, the
+unavailable title, a dropped dangling pointer, the pointer-only exit, and D4-B
+refusal with no lost record and no false success.
+
+**Browser review.** The served production build was inspected in Google Chrome at
+a true 360 CSS pixel viewport in Russian and at 1280 pixels in English, with
+layout measured rather than judged from a screenshot alone. Nothing overflowed
+and no horizontal scrolling appeared, including at a 150% root text size.
+Confirmed: completing a Mission and arriving at the card with focus on its
+heading, the localized Russian completion date, `5 / 20` after five completions,
+the goal message present at the twentieth result and absent at the twenty-first
+while the display stayed `20 / 20`, no live region on the card, and leaving the
+result returning to Discovery with the age context preserved. One spacing
+correction was made for this view: the recognition line now clears the heading's
+focus ring.
+
+**Limitations.** Browser checking was visual and by measured layout only; no
+assistive technology was run, so no screen-reader behavior is claimed. The
+Mission History view, its route and empty state, the localized unavailable-title
+fallback as History presents it, and any standalone Monthly Goal surface remain
+deferred, so full `F003` acceptance is not claimed and the MVP is not complete.
+Three Russian strings added in earlier tasks — `session.ready.missionBreak.body`,
+`session.active.zero` and `session.exit.unconfirmed` — use a masculine verb form
+for a child whose gender MissionKid never collects. They were left unchanged
+because only the `session.exit.notLeft` correction was authorized here, and they
+are recorded for a later authorized correction.
+
+**Scope.** No History view, no standalone Monthly Goal surface, no persisted
+progress of any kind, and no new dependency, storage key, snapshot version or
+migration. The three unexplained failures recorded in Task 1 and the two timeouts
+recorded in Task 7 remain separately recorded; neither recurred in this batch and
+no shared cause was established.
 
 ## Approval record
 
