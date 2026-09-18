@@ -18,6 +18,7 @@ import {
   type MessageKey,
   type SupportedLanguage,
 } from './localization';
+import { MissionActive } from './MissionActive';
 import { MissionCategorySelection } from './MissionDiscovery';
 import { MissionReady } from './MissionReady';
 import {
@@ -39,9 +40,10 @@ export type AppView =
   | 'recovery'
   | 'setup-complete-handoff'
   | 'discovery-categories'
-  // The one current Mission Session: reaching `ready`, and there.
+  // The one current Mission Session: reaching `ready`, there, and running.
   | 'session-opening'
-  | 'session-ready';
+  | 'session-ready'
+  | 'session-active';
 
 // The child-facing areas. The parent's recovery and reset controls do not
 // belong on them: a destructive action beside a Mission is not the child's to
@@ -50,11 +52,13 @@ const CHILD_FACING_VIEWS: readonly AppView[] = [
   'discovery-categories',
   'session-opening',
   'session-ready',
+  'session-active',
 ];
 
 // Reaching `ready` and being `ready` are one context for the family: the
 // transition resolves in place, so focus moves into this area once rather than
-// again for a change the family did not make.
+// again for a change the family did not make. Starting is a different context,
+// and the family asked for it, so it moves focus of its own.
 const SESSION_VIEWS: readonly AppView[] = ['session-opening', 'session-ready'];
 
 type ViewContent = Readonly<{
@@ -104,6 +108,10 @@ const VIEW_CONTENT: Record<AppView, ViewContent> = {
     context: 'app.brand',
     title: 'view.sessionReady.title',
   },
+  'session-active': {
+    context: 'app.brand',
+    title: 'view.sessionActive.title',
+  },
 };
 
 export function selectAppView(state: AppState): AppView {
@@ -131,9 +139,12 @@ export function selectAppView(state: AppState): AppView {
 
           // A current Mission Session takes precedence over discovery: the
           // family is in the flow that session belongs to, not choosing another
-          // Mission. An `active` session keeps its own surface, which is a
-          // later step, so it is left where it is rather than shown here.
+          // Mission.
           const session = state.currentSession;
+
+          if (session?.state === 'active') {
+            return 'session-active';
+          }
 
           if (session?.state === 'ready') {
             return 'session-ready';
@@ -266,7 +277,9 @@ export function AppShell({
             <p className="discovery-gate">{t('discovery.gate.body')}</p>
           ) : null}
           {!state.resetConfirm && (state.status === 'ready' || state.status === 'degraded') ? (
-            SESSION_VIEWS.includes(view) ? (
+            view === 'session-active' ? (
+              <MissionActive />
+            ) : SESSION_VIEWS.includes(view) ? (
               <MissionReady adapter={adapter} />
             ) : view === 'discovery-categories' ? (
               // The same adapter the shell was given: one storage boundary for

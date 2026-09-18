@@ -1329,6 +1329,13 @@ input {
   font-weight: 800;
 }
 
+/* The one dominant action of the ready Mission. It sits last, after everything
+   the family needs in order to decide, and nothing else on the view competes
+   with it. */
+.mission-session__start {
+  margin-top: 1.35rem;
+}
+
 /* A transition that did not complete. It uses the same calm surface as the
    discovery notice: nothing was lost and nothing was the child's doing. */
 .mission-session__issue {

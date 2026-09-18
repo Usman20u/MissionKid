@@ -104,6 +104,14 @@ const englishMessages = {
     'Start when you are ready, then leave the screen and do the Mission in real life. Come back when you are done.',
   'session.ready.missionUnavailable':
     'This Mission cannot be shown right now, so it is not ready to start.',
+  'session.action.start': 'Start mission',
+  'session.start.notStarted':
+    "We couldn't start this Mission just now. It is still ready to start. Try again.",
+  'session.start.unconfirmed':
+    "MissionKid couldn't check whether this Mission started. Try again to see.",
+  'view.sessionActive.title': 'Your Mission has started',
+  'session.active.away':
+    'Do the Mission away from the screen, then come back when you are done.',
 } as const;
 
 export type MessageKey = keyof typeof englishMessages;
@@ -238,6 +246,14 @@ export const INTERFACE_MESSAGES: CompleteInterfaceMessages = {
       'Starte, wenn du bereit bist, geh dann weg vom Bildschirm und mach die Mission in echt. Komm zurück, wenn du fertig bist.',
     'session.ready.missionUnavailable':
       'Diese Mission kann gerade nicht angezeigt werden und ist deshalb nicht startbereit.',
+    'session.action.start': 'Mission starten',
+    'session.start.notStarted':
+      'Diese Mission konnte gerade nicht gestartet werden. Sie ist weiterhin startbereit. Versuche es noch einmal.',
+    'session.start.unconfirmed':
+      'MissionKid konnte nicht prüfen, ob diese Mission gestartet wurde. Versuche es noch einmal, um es zu sehen.',
+    'view.sessionActive.title': 'Deine Mission läuft',
+    'session.active.away':
+      'Mach die Mission weg vom Bildschirm und komm zurück, wenn du fertig bist.',
   },
   ru: {
     "recovery.pending": "Подождите. Это действие ещё не подтверждено.",
@@ -338,6 +354,14 @@ export const INTERFACE_MESSAGES: CompleteInterfaceMessages = {
       'Начни, когда будешь готов, потом отойди от экрана и выполни миссию по-настоящему. Возвращайся, когда закончишь.',
     'session.ready.missionUnavailable':
       'Эту миссию сейчас нельзя показать, поэтому она не готова к старту.',
+    'session.action.start': 'Начать миссию',
+    'session.start.notStarted':
+      'Сейчас не удалось начать эту миссию. Она по-прежнему готова к старту. Попробуй ещё раз.',
+    'session.start.unconfirmed':
+      'MissionKid не смог проверить, началась ли эта миссия. Попробуй ещё раз, чтобы увидеть.',
+    'view.sessionActive.title': 'Твоя миссия началась',
+    'session.active.away':
+      'Выполни миссию не у экрана и возвращайся, когда закончишь.',
   },
 };
 

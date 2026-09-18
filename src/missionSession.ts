@@ -1,8 +1,12 @@
 import type { MissionRecord } from './catalog';
+import { MISSION_CATALOG } from './catalogContent';
 import { isEligibleForContext } from './catalogValidation';
+import type { SupportedLanguage } from './localization';
 import type { SuggestionContext } from './missionSuggestions';
 import type {
+  ActiveMissionSession,
   CurrentMissionSession,
+  MissionSession,
   PersistFailureReason,
   PersistenceAdapter,
   ReadyMissionSession,
@@ -217,4 +221,153 @@ export function advanceSessionToReady(
     recovered.sessionId === session.sessionId
     ? { status: 'resolved', session: recovered }
     : { status: 'unconfirmed', reason: result.reason };
+}
+
+
+// The Mission an existing session may still show and still start. A stored
+// reference keeps resolving only while its content stays reviewed, complete in
+// the family's language, and approved for the context the session froze when it
+// was chosen — never for the family's current setup, which cannot rewrite what
+// was agreed to or turn an existing session into a new selection.
+//
+// Discovery eligibility is deliberately not part of this: a Mission withdrawn
+// from future suggestions is not thereby unsafe for the session already holding
+// it, while a withdrawal of review is, and a withdrawn Mission is never started,
+// substituted or rewritten.
+export function resolveSessionMission(
+  session: MissionSession,
+  language: SupportedLanguage,
+): MissionRecord | null {
+  const mission = MISSION_CATALOG.find(
+    (record) => record.missionId === session.missionId,
+  );
+
+  if (
+    !mission ||
+    !mission.reviewed ||
+    !mission.ageBands.includes(session.ageBandAtSelection)
+  ) {
+    return null;
+  }
+
+  const content = mission.content[language];
+  const required = [
+    content.title,
+    content.instruction,
+    ...(mission.safetyNoteRequired ? [content.safetyNote] : []),
+    ...(mission.adultInvolvement === 'No special adult assistance required'
+      ? []
+      : [content.adultInvolvementNote]),
+  ];
+
+  return required.every((text) => text !== undefined && text.trim().length > 0)
+    ? mission
+    : null;
+}
+
+export type MissionStartResult =
+  // The durable session is `active`. `started` wrote this start and read it
+  // back; `resolved` found the session already running and wrote nothing,
+  // keeping the `startedAt` it already has.
+  | Readonly<{ status: 'started' | 'resolved'; session: ActiveMissionSession }>
+  // Durable state was read and says the session is still `ready`: this start
+  // did not happen, and the session can be started once by a later deliberate
+  // activation.
+  | Readonly<{
+      status: 'not-started';
+      reason: PersistFailureReason;
+      session: ReadyMissionSession;
+    }>
+  // The write may have landed and a fresh read could not establish what is
+  // stored. Neither a start nor the absence of one is claimed.
+  | Readonly<{ status: 'unconfirmed'; reason: PersistFailureReason }>
+  // Nothing here may be started: no readable snapshot, no session by that
+  // identity, a session in another state, or a Mission that no longer resolves
+  // to reviewed, safe content.
+  | Readonly<{ status: 'unavailable' }>;
+
+// Starting is the one deliberate action that moves a session to `active`. It is
+// keyed by the identity the family acted on and decided by durable state, so a
+// stale activation cannot start a different Mission and a repeat cannot start
+// anything twice. It writes one `startedAt` and adds nothing else: no
+// identifier, no lifecycle state, no expected end and no counter — remaining
+// time is derived from what is stored, never stored itself.
+export function startMissionSession(
+  adapter: PersistenceAdapter,
+  sessionId: string,
+  now: WallClock,
+  language: SupportedLanguage,
+): MissionStartResult {
+  const current = adapter.hydrate();
+
+  if (current.status !== 'hydrated') {
+    return { status: 'unavailable' };
+  }
+
+  const snapshot = current.snapshot;
+  const session = snapshot.currentSession;
+
+  // The request names the session the family acted on. Another current session
+  // is another Mission, and a stale activation must never start it.
+  if (session === null || session.sessionId !== sessionId) {
+    return { status: 'unavailable' };
+  }
+
+  // Already running: the session answers with the timestamp it already carries.
+  // Nothing is written, and a second reading of the clock never replaces it.
+  if (session.state === 'active') {
+    return { status: 'resolved', session };
+  }
+
+  // Only `ready` starts. An earlier state is not startable, and no path here
+  // rebuilds `ready` over a session that has moved on.
+  if (
+    session.state !== 'ready' ||
+    resolveSessionMission(session, language) === null
+  ) {
+    return { status: 'unavailable' };
+  }
+
+  const startedAt = now();
+
+  if (!Number.isInteger(startedAt) || startedAt < 0) {
+    return { status: 'unavailable' };
+  }
+
+  const active: ActiveMissionSession = { ...session, state: 'active', startedAt };
+  const result = adapter.persist({ ...snapshot, currentSession: active });
+
+  if (result.status === 'confirmed') {
+    const written = result.snapshot.currentSession;
+
+    return written !== null &&
+      written.state === 'active' &&
+      written.sessionId === sessionId
+      ? { status: 'started', session: written }
+      : { status: 'unconfirmed', reason: 'read-back-mismatch' };
+  }
+
+  if (!REASONS_THAT_MAY_HAVE_LANDED.includes(result.reason)) {
+    return { status: 'not-started', reason: result.reason, session };
+  }
+
+  // The outcome is unknown, so it is read rather than assumed. A session found
+  // running keeps the `startedAt` it has — this call never replaces it with a
+  // later reading — and a session found ready is reported as not started
+  // because that is what storage says, not because the write failed.
+  const recovery = adapter.hydrate();
+  const recovered =
+    recovery.status === 'hydrated' ? recovery.snapshot.currentSession : null;
+
+  if (recovered !== null && recovered.sessionId === sessionId) {
+    if (recovered.state === 'active') {
+      return { status: 'resolved', session: recovered };
+    }
+
+    if (recovered.state === 'ready') {
+      return { status: 'not-started', reason: result.reason, session: recovered };
+    }
+  }
+
+  return { status: 'unconfirmed', reason: result.reason };
 }

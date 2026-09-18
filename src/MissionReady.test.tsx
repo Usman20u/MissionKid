@@ -1,6 +1,6 @@
 import { StrictMode } from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { App } from './App';
 import { MISSION_CATALOG } from './catalogContent';
@@ -189,11 +189,12 @@ describe('reaching the ready Mission', () => {
     const h = harness(storedSnapshot(READY_SESSION));
     const { container } = render(<App adapter={h.adapter} />);
 
-    // Starting, timing, completing and recognition all belong to later steps,
-    // and an inert control for any of them would be a promise this build
-    // cannot keep.
+    // Starting is the one action this view carries. Timing, completing and
+    // recognition belong to later steps, and an inert control for any of them
+    // would be a promise this build cannot keep.
+    expect(screen.getByRole('button', { name: t('session.action.start') })).toBeTruthy();
     expect(
-      screen.queryByText(/Start mission|Mission done|Reward|Monthly Goal|min left/i),
+      screen.queryByText(/Mission done|Reward|Monthly Goal|min left/i),
     ).toBeNull();
     expect(container.querySelector('[role="timer"]')).toBeNull();
     expect(screen.queryByRole('alert')).toBeNull();
@@ -492,18 +493,22 @@ describe('what a ready Mission answers before it starts', () => {
     expect(h.writes).toEqual([]);
   });
 
-  it('adds no start, countdown, progression or reward to the ready Mission', () => {
+  it('offers exactly one dominant action, and no countdown, progression or reward', () => {
     const { container, h } = renderReady('movement-02');
 
-    // Starting, timing, completing and recognition arrive with the operations
-    // that carry them out; an inert control for any of them would be a promise
-    // this build cannot keep.
-    expect(screen.queryAllByRole('button')).toEqual([]);
+    // One primary action, and it is the start. Timing, completing and
+    // recognition arrive with the operations that carry them out; an inert
+    // control for any of them would be a promise this build cannot keep.
+    const actions = screen.getAllByRole('button');
+    expect(actions).toHaveLength(1);
+    expect(actions[0]!.textContent).toBe(translateMessage('en', 'session.action.start'));
+    expect(actions[0]!.className).toContain('button--primary');
     expect(container.querySelector('[role="timer"], [aria-live], progress')).toBeNull();
     expect(container.textContent).not.toMatch(/\d+:\d\d/);
     expect(
-      screen.queryByText(/Start mission|Mission done|Reward|Monthly Goal|History/i),
+      screen.queryByText(/Mission done|Reward|Monthly Goal|History/i),
     ).toBeNull();
+    // Rendering the ready Mission starts nothing on its own.
     expect(h.writes).toEqual([]);
     expect(h.stored().currentSession.state).toBe('ready');
   });
@@ -576,5 +581,209 @@ describe('what a ready Mission answers before it starts', () => {
         expect(message).not.toMatch(/completed|abgeschlossen|завершена/i);
       }
     }
+  });
+});
+
+const START_TIME = 1_700_000_500_000;
+
+function startControl() {
+  return screen.getByRole('button', { name: translateMessage('en', 'session.action.start') });
+}
+
+describe('starting the ready Mission', () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+    vi.setSystemTime(START_TIME);
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it('starts once and hands over to the running Mission', () => {
+    const mission = missionFor('creativity-06');
+    const { h } = renderReady('creativity-06');
+
+    fireEvent.click(startControl());
+
+    // The running Mission, not a fresh ready screen: no not-started line and no
+    // start action that looks available again.
+    expect(heading().textContent).toBe(t('view.sessionActive.title'));
+    expect(screen.getByRole('heading', { level: 2 }).textContent).toBe(mission.content.en.title);
+    expect(screen.getByText(t('session.active.away'))).toBeTruthy();
+    expect(screen.queryByText(t('session.ready.notStarted'))).toBeNull();
+    expect(
+      screen.queryByRole('button', { name: t('session.action.start') }),
+    ).toBeNull();
+    // The guidance the family read before starting stays with the Mission.
+    expect(screen.getByText(mission.content.en.adultInvolvementNote!)).toBeTruthy();
+    expect(screen.getByText(mission.content.en.safetyNote!)).toBeTruthy();
+
+    const session = h.stored().currentSession;
+    expect(session.state).toBe('active');
+    expect(session.startedAt).toBe(START_TIME);
+    expect(session.sessionId).toBe('session-creativity-06');
+    expect(h.writes).toHaveLength(1);
+  });
+
+  it('starts no countdown, completion or recognition with the Mission', () => {
+    const { container } = renderReady('movement-02');
+
+    fireEvent.click(startControl());
+
+    // Timer derivation, the full active presentation, completion and the exit
+    // path are later steps, and none of them is claimed here.
+    expect(screen.queryAllByRole('button')).toEqual([]);
+    expect(container.querySelector('[role="timer"], progress')).toBeNull();
+    expect(container.textContent).not.toMatch(/\d+:\d\d/);
+    expect(
+      screen.queryByText(/Mission done|Reward|Monthly Goal|min left|remaining/i),
+    ).toBeNull();
+  });
+
+  it('keeps one start when the action is activated twice', () => {
+    const { h } = renderReady('movement-02');
+    const control = startControl();
+
+    fireEvent.click(control);
+    fireEvent.click(control);
+
+    // A second press cannot start a second countdown or move the timestamp.
+    expect(h.writes).toHaveLength(1);
+    expect(h.stored().currentSession.startedAt).toBe(START_TIME);
+    expect(h.stored().currentSession.state).toBe('active');
+  });
+
+  it('offers a keyboard-activatable native control and moves focus on the handover', () => {
+    renderReady('movement-02');
+    const control = startControl();
+
+    expect(control.tagName).toBe('BUTTON');
+    expect(control.getAttribute('type')).toBe('button');
+
+    const focus = vi.spyOn(HTMLElement.prototype, 'focus');
+    // What a keyboard Enter or Space produces on a native button.
+    fireEvent.click(control);
+
+    // Starting is a context the family asked for, so focus follows it once.
+    expect(focus).toHaveBeenCalledTimes(1);
+    expect(document.activeElement).toBe(heading());
+    expect(heading().textContent).toBe(t('view.sessionActive.title'));
+    focus.mockRestore();
+  });
+
+  it('restores a running Mission without starting or restarting anything', () => {
+    const raw = storedSnapshot({
+      ...readySessionFor('movement-02'),
+      state: 'active',
+      startedAt: START_TIME - 60_000,
+    });
+    const h = harness(raw);
+    render(<App adapter={h.adapter} />);
+
+    expect(heading().textContent).toBe(t('view.sessionActive.title'));
+    expect(h.values.get(MISSIONKID_STORAGE_KEY)).toBe(raw);
+    expect(h.writes).toEqual([]);
+    expect(h.stored().currentSession.startedAt).toBe(START_TIME - 60_000);
+  });
+
+  it('does not start a ready Mission by opening, rendering or restoring it', () => {
+    const { h } = renderReady('movement-02');
+
+    expect(heading().textContent).toBe(t('view.sessionReady.title'));
+    expect(h.writes).toEqual([]);
+    expect(h.stored().currentSession.state).toBe('ready');
+    expect(Object.hasOwn(h.stored().currentSession, 'startedAt')).toBe(false);
+  });
+
+  it('offers no start for a Mission that cannot be resolved', () => {
+    const h = harness(storedSnapshot(
+      readySessionFor('movement-02', { missionId: 'movement-99' }),
+    ));
+    render(<App adapter={h.adapter} />);
+
+    expect(screen.queryAllByRole('button')).toEqual([]);
+    expect(h.writes).toEqual([]);
+  });
+
+  it.each(['de', 'ru'] as const)('presents the running Mission in %s', (language) => {
+    renderReady('creativity-06', language);
+
+    fireEvent.click(
+      screen.getByRole('button', { name: translateMessage(language, 'session.action.start') }),
+    );
+
+    expect(heading().textContent).toBe(t('view.sessionActive.title', language));
+    expect(screen.getByRole('heading', { level: 2 }).textContent)
+      .toBe(missionFor('creativity-06').content[language].title);
+    expect(screen.getByText(t('session.active.away', language))).toBeTruthy();
+  });
+});
+
+describe('a start that did not complete', () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+    vi.setSystemTime(START_TIME);
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it('keeps the ready Mission and says the start did not happen', () => {
+    const raw = storedSnapshot(readySessionFor('movement-02'));
+    const h = harness(raw);
+    h.faults.write = true;
+    render(<App adapter={h.adapter} />);
+
+    fireEvent.click(startControl());
+
+    expect(screen.getByRole('alert').textContent).toBe(t('session.start.notStarted'));
+    // Wording follows the evidence: durable state was read and is still ready.
+    expect(screen.getByRole('alert').textContent)
+      .not.toBe(t('session.transition.notCarriedOut'));
+    expect(heading().textContent).toBe(t('view.sessionReady.title'));
+    expect(h.values.get(MISSIONKID_STORAGE_KEY)).toBe(raw);
+    expect(h.stored().currentSession.state).toBe('ready');
+    // The same action is the retry; no second control claims to repeat it.
+    expect(screen.getAllByRole('button')).toHaveLength(1);
+
+    h.faults.write = false;
+    fireEvent.click(startControl());
+
+    expect(heading().textContent).toBe(t('view.sessionActive.title'));
+    expect(h.stored().currentSession.startedAt).toBe(START_TIME);
+    expect(screen.queryByRole('alert')).toBeNull();
+  });
+
+  it('claims neither a start nor its absence when the outcome is unknown', () => {
+    const h = harness(storedSnapshot(readySessionFor('movement-02')));
+    h.faults.readsAfterWrite = 99;
+    render(<App adapter={h.adapter} />);
+
+    fireEvent.click(startControl());
+
+    const alert = screen.getByRole('alert').textContent;
+    expect(alert).toBe(t('session.start.unconfirmed'));
+    // It must not borrow the ready transition's claim that nothing started.
+    expect(alert).not.toBe(t('session.transition.unconfirmed'));
+    expect(alert).not.toMatch(/has not started/i);
+    // No rollback over a start that may already be durable.
+    expect(h.writes).toHaveLength(1);
+    expect(h.stored().currentSession.state).toBe('active');
+    expect(h.stored().currentSession.startedAt).toBe(START_TIME);
+  });
+
+  it('adopts the running Mission when only the confirmation was lost', () => {
+    const h = harness(storedSnapshot(readySessionFor('movement-02')));
+    h.faults.readsAfterWrite = 1;
+    render(<App adapter={h.adapter} />);
+
+    fireEvent.click(startControl());
+
+    expect(heading().textContent).toBe(t('view.sessionActive.title'));
+    expect(screen.queryByRole('alert')).toBeNull();
+    expect(h.writes).toHaveLength(1);
+    expect(h.stored().currentSession.startedAt).toBe(START_TIME);
   });
 });

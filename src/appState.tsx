@@ -14,6 +14,7 @@ import {
   type SupportedLanguage,
 } from './localization';
 import type {
+  ActiveMissionSession,
   AgeBand,
   CurrentMissionSession,
   HydrationResult,
@@ -60,11 +61,13 @@ type RecoveryContext = Readonly<{
   // never set optimistically, and it keeps whichever lifecycle state the
   // session actually holds rather than a state the interface assumed.
   currentSession?: CurrentMissionSession;
-  // Why the current session did not reach `ready`. `not-carried-out` is
-  // established before storage changed, so the stored session is what it was.
-  // `unconfirmed` means the write may have landed and could not be confirmed:
-  // neither outcome is claimed until a later read settles it.
-  sessionIssue?: MissionTransitionIssue;
+  // Which lifecycle transition did not complete, and what is known about it.
+  // `failed` means durable state was read and still shows the state before the
+  // transition. `unconfirmed` means the write may have landed and a fresh read
+  // could not establish what is stored, so neither outcome is claimed. The
+  // operation travels with it because each one fails into a different truth,
+  // and wording that described the wrong operation would be a false claim.
+  sessionIssue?: MissionSessionIssue;
   // Which attempt produced it, for the same reason `selectionAttempt` exists:
   // a retry that fails the same way must still be announced.
   sessionAttempt?: number;
@@ -92,7 +95,14 @@ export type ResolvedAppState = Exclude<AppState, { status: 'pending' }>;
 
 export type MissionSelectionIssue = 'conflict' | 'unconfirmed';
 
-export type MissionTransitionIssue = 'not-carried-out' | 'unconfirmed';
+export type MissionSessionOperation = 'ready' | 'start';
+
+export type MissionSessionOutcome = 'failed' | 'unconfirmed';
+
+export type MissionSessionIssue = Readonly<{
+  operation: MissionSessionOperation;
+  outcome: MissionSessionOutcome;
+}>;
 
 export type AppStateAction =
   | { type: 'operation-started'; operation: 'save' | 'retry' | 'reset' }
@@ -113,7 +123,10 @@ export type AppStateAction =
   // The durable session read back as `ready`, whether this attempt advanced it
   // or found it already stored that way.
   | { type: 'mission-session-ready'; session: ReadyMissionSession }
-  | { type: 'mission-session-transition-failed'; issue: MissionTransitionIssue }
+  // The durable session read back as `active`, whether this attempt started it
+  // or found it already running.
+  | { type: 'mission-session-started'; session: ActiveMissionSession }
+  | { type: 'mission-session-transition-failed'; issue: MissionSessionIssue }
   | {
       type: 'mission-selection-failed';
       issue: MissionSelectionIssue;
@@ -218,7 +231,7 @@ export function selectCurrentSession(
 
 export function selectSessionIssue(
   state: AppState,
-): MissionTransitionIssue | null {
+): MissionSessionIssue | null {
   return state.sessionIssue ?? null;
 }
 
@@ -394,6 +407,7 @@ export function appStateReducer(
         discovery: state.discovery ? { ...state.discovery, shown: [] } : undefined,
       };
     case 'mission-session-ready':
+    case 'mission-session-started':
       // Publishing what storage confirmed. Any earlier transition issue
       // described a state that no longer exists, so it goes with it.
       return {

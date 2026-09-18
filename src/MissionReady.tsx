@@ -5,10 +5,10 @@ import {
   selectSessionAttempt,
   selectSessionIssue,
   useAppState,
-  type MissionTransitionIssue,
+  type MissionSessionOperation,
+  type MissionSessionOutcome,
 } from './appState';
 import type { MissionRecord } from './catalog';
-import { MISSION_CATALOG } from './catalogContent';
 import {
   MISSION_ADULT_LABEL_KEYS,
   MISSION_CATEGORY_LABEL_KEYS,
@@ -16,43 +16,35 @@ import {
   type MessageKey,
   type SupportedLanguage,
 } from './localization';
-import { advanceSessionToReady } from './missionSession';
+import {
+  advanceSessionToReady,
+  readWallClock,
+  resolveSessionMission,
+  startMissionSession,
+  type WallClock,
+} from './missionSession';
 import {
   persistenceAdapter,
   type PersistenceAdapter,
   type ReadyMissionSession,
 } from './persistence';
 
-// Both messages describe this transition only: reaching `ready` writes no
-// `startedAt` and records no completion, so neither may stand in for a start or
-// a completion whose durable outcome is a different question.
-const TRANSITION_ISSUE_KEYS: Readonly<
-  Record<MissionTransitionIssue, MessageKey>
+// Each transition fails into its own truth, so each has its own wording.
+// Reaching `ready` writes no `startedAt`, so its messages may say the Mission
+// has not started; a start's durable outcome is exactly the question at issue,
+// so its messages never borrow that claim.
+const ISSUE_MESSAGE_KEYS: Readonly<
+  Record<MissionSessionOperation, Readonly<Record<MissionSessionOutcome, MessageKey>>>
 > = {
-  'not-carried-out': 'session.transition.notCarriedOut',
-  unconfirmed: 'session.transition.unconfirmed',
+  ready: {
+    failed: 'session.transition.notCarriedOut',
+    unconfirmed: 'session.transition.unconfirmed',
+  },
+  start: {
+    failed: 'session.start.notStarted',
+    unconfirmed: 'session.start.unconfirmed',
+  },
 };
-
-// A stored Mission reference resolves to presentation only while its content is
-// still reviewed and complete in the current language. A Mission whose safety
-// approval was withdrawn must not come back as though it were still approved,
-// and nothing about it is guessed, substituted or mixed across languages.
-function resolveReviewedMission(
-  missionId: string,
-  language: SupportedLanguage,
-): MissionRecord | null {
-  const mission = MISSION_CATALOG.find(
-    (record) => record.missionId === missionId,
-  );
-
-  if (!mission || !mission.reviewed) {
-    return null;
-  }
-
-  const content = mission.content[language];
-
-  return content.title.trim() && content.instruction.trim() ? mission : null;
-}
 
 type ReadyMissionDetailsProps = Readonly<{
   session: ReadyMissionSession;
@@ -125,6 +117,7 @@ function ReadyMissionDetails({
 
 type MissionReadyProps = Readonly<{
   adapter?: PersistenceAdapter;
+  now?: WallClock;
 }>;
 
 // The surface of the one current Mission Session while it reaches `ready` and
@@ -132,12 +125,12 @@ type MissionReadyProps = Readonly<{
 // stays identifiable while the transition resolves, and the state it shows is
 // the state storage confirmed, never one the interface assumed.
 //
-// Nothing here starts anything. There is no start action, no countdown and no
-// completion, so the Mission cannot be committed to from this view; the
-// **Start mission** action and the return to suggestions arrive with the
-// operations they carry out.
+// The one thing this view does is start the Mission, deliberately and once.
+// There is no countdown, no completion and no automatic progression; the
+// secondary return to suggestions arrives with the cancellation it performs.
 export function MissionReady({
   adapter = persistenceAdapter,
+  now = readWallClock,
 }: MissionReadyProps = {}) {
   const { dispatch, state } = useAppState();
   const t = (key: MessageKey) => translateMessage(state.language, key);
@@ -146,9 +139,7 @@ export function MissionReady({
   const attempt = selectSessionAttempt(state);
   const sessionId = session?.sessionId ?? null;
   const sessionState = session?.state ?? null;
-  const mission = session
-    ? resolveReviewedMission(session.missionId, state.language)
-    : null;
+  const mission = session ? resolveSessionMission(session, state.language) : null;
 
   function advance() {
     const result = advanceSessionToReady(adapter);
@@ -164,19 +155,54 @@ export function MissionReady({
       case 'unavailable':
         dispatch({
           type: 'mission-session-transition-failed',
-          issue: 'not-carried-out',
+          issue: { operation: 'ready', outcome: 'failed' },
         });
         return;
       case 'unconfirmed':
         dispatch({
           type: 'mission-session-transition-failed',
-          issue: 'unconfirmed',
+          issue: { operation: 'ready', outcome: 'unconfirmed' },
         });
         return;
       // Durable state holds nothing this transition may change. Rebuilding an
       // earlier state over it, or reporting a failure that did not happen,
       // would both be inventions.
       case 'inapplicable':
+        return;
+    }
+  }
+
+  // The one deliberate action on this view. It is keyed by the identity the
+  // family acted on, so an activation that arrives after durable state moved on
+  // cannot start a different Mission, and pressing it again resolves the session
+  // that is already running rather than starting anything twice.
+  function start(sessionId: string) {
+    const result = startMissionSession(adapter, sessionId, now, state.language);
+
+    switch (result.status) {
+      case 'started':
+      case 'resolved':
+        dispatch({ type: 'mission-session-started', session: result.session });
+        return;
+      // Durable state was read and still says `ready`: this start did not
+      // happen, and the same action can start it once.
+      case 'not-started':
+        dispatch({
+          type: 'mission-session-transition-failed',
+          issue: { operation: 'start', outcome: 'failed' },
+        });
+        return;
+      // Nothing is known about the write's outcome, so nothing is claimed in
+      // either direction and no rollback is written over it.
+      case 'unconfirmed':
+        dispatch({
+          type: 'mission-session-transition-failed',
+          issue: { operation: 'start', outcome: 'unconfirmed' },
+        });
+        return;
+      // Nothing here may be started. Rebuilding an earlier state or reporting a
+      // failure that did not happen would both be inventions.
+      case 'unavailable':
         return;
     }
   }
@@ -219,25 +245,39 @@ export function MissionReady({
         />
       ) : null}
       {issue ? (
-        <>
-          <p
-            className="mission-session__issue"
-            // Each attempt is its own message, for the reason the discovery
-            // notice already records: a retry that fails the same way leaves an
-            // unchanged node that no live region reports.
-            key={`${issue}-${attempt}`}
-            role="alert"
-          >
-            {t(TRANSITION_ISSUE_KEYS[issue])}
-          </p>
-          <button
-            className="button button--secondary"
-            onClick={advance}
-            type="button"
-          >
-            {t('session.action.retry')}
-          </button>
-        </>
+        <p
+          className="mission-session__issue"
+          // Each attempt is its own message, for the reason the discovery
+          // notice already records: a retry that fails the same way leaves an
+          // unchanged node that no live region reports.
+          key={`${issue.operation}-${issue.outcome}-${attempt}`}
+          role="alert"
+        >
+          {t(ISSUE_MESSAGE_KEYS[issue.operation][issue.outcome])}
+        </p>
+      ) : null}
+      {/* Starting is deliberate and is the one dominant action here. It exists
+          only for a session that is actually ready and a Mission that still
+          resolves to reviewed, safe content, so nothing offers to start what
+          cannot be started. After a start that did not happen, this same action
+          is the retry: no second control claims to repeat it. */}
+      {session.state === 'ready' && mission ? (
+        <button
+          className="button button--primary mission-session__start"
+          onClick={() => start(session.sessionId)}
+          type="button"
+        >
+          {t('session.action.start')}
+        </button>
+      ) : null}
+      {issue?.operation === 'ready' ? (
+        <button
+          className="button button--secondary"
+          onClick={advance}
+          type="button"
+        >
+          {t('session.action.retry')}
+        </button>
       ) : null}
     </div>
   );
