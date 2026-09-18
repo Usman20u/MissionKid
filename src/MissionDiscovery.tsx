@@ -21,18 +21,12 @@ import {
   type PersistenceAdapter,
 } from './persistence';
 import { MISSION_CATEGORIES, type MissionCategory } from './catalog';
-import { translateMessage, type MessageKey } from './localization';
+import {
+  MISSION_CATEGORY_LABEL_KEYS,
+  translateMessage,
+  type MessageKey,
+} from './localization';
 import { MissionSuggestionSet } from './MissionSuggestionSet';
-
-// Canonical categories are the identity; these keys only resolve the visible
-// label. A localized label is never used as identity.
-const CATEGORY_LABEL_KEYS: Readonly<Record<MissionCategory, MessageKey>> = {
-  Movement: 'discovery.category.movement',
-  Creativity: 'discovery.category.creativity',
-  'Helping at Home': 'discovery.category.helpingAtHome',
-  Learning: 'discovery.category.learning',
-  Calm: 'discovery.category.calm',
-};
 
 // A structural cue for each category so meaning never rests on colour alone.
 // The visible label stays authoritative; these are decorative.
@@ -154,7 +148,7 @@ export function MissionCategorySelection({
               <span className="mission-world__frame" aria-hidden="true" />
               <CategoryGlyph category={category} />
               <span className="mission-world__label">
-                {t(CATEGORY_LABEL_KEYS[category])}
+                {t(MISSION_CATEGORY_LABEL_KEYS[category])}
               </span>
               <span className="mission-world__state" aria-hidden="true">
                 {selected === category ? (

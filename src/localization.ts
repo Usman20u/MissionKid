@@ -1,3 +1,5 @@
+import type { AdultInvolvement, MissionCategory } from './catalog';
+
 export const SUPPORTED_LANGUAGES = ['en', 'de', 'ru'] as const;
 
 export type SupportedLanguage = (typeof SUPPORTED_LANGUAGES)[number];
@@ -93,13 +95,42 @@ const englishMessages = {
   'view.sessionReady.title': 'Your Mission is ready',
   'session.ready.notStarted': 'This Mission has not started yet.',
   'session.transition.notCarriedOut':
-    'This Mission could not be opened just now, and nothing was saved. It has not started. Try again when you are ready.',
+    "We couldn't get this Mission ready just now. It has not started. Try again.",
   'session.transition.unconfirmed':
-    'MissionKid could not check whether this Mission was opened. It has not started. Try again to see what is saved.',
+    "MissionKid couldn't check whether this Mission is ready. It has not started. Try again.",
   'session.action.retry': 'Try again',
+  'session.ready.missionBreak.lead': 'Time for a Mission.',
+  'session.ready.missionBreak.body':
+    'Start when you are ready, then leave the screen and do the Mission in real life. Come back when you are done.',
+  'session.ready.missionUnavailable':
+    'This Mission cannot be shown right now, so it is not ready to start.',
 } as const;
 
 export type MessageKey = keyof typeof englishMessages;
+
+// Canonical values are the identity; these keys only resolve the visible label,
+// and a localized label is never used as identity. They live here so every view
+// that names a Mission Category or an adult-involvement requirement names it the
+// same way.
+export const MISSION_CATEGORY_LABEL_KEYS: Readonly<
+  Record<MissionCategory, MessageKey>
+> = {
+  Movement: 'discovery.category.movement',
+  Creativity: 'discovery.category.creativity',
+  'Helping at Home': 'discovery.category.helpingAtHome',
+  Learning: 'discovery.category.learning',
+  Calm: 'discovery.category.calm',
+};
+
+// The two required levels stay distinguishable in words, in every language.
+// "No special adult assistance required" resolves to no label: showing one would
+// read as a promise that ordinary parental judgement can be skipped.
+export const MISSION_ADULT_LABEL_KEYS: Readonly<
+  Partial<Record<AdultInvolvement, MessageKey>>
+> = {
+  'Adult nearby required': 'discovery.adult.nearby',
+  'Adult participation required': 'discovery.adult.participation',
+};
 
 type CompleteInterfaceMessages = Readonly<
   Record<SupportedLanguage, Readonly<Record<MessageKey, string>>>
@@ -198,10 +229,15 @@ export const INTERFACE_MESSAGES: CompleteInterfaceMessages = {
     'view.sessionReady.title': 'Deine Mission ist bereit',
     'session.ready.notStarted': 'Diese Mission hat noch nicht begonnen.',
     'session.transition.notCarriedOut':
-      'Diese Mission konnte gerade nicht geöffnet werden, und es wurde nichts gespeichert. Sie hat nicht begonnen. Versuche es noch einmal, wenn du bereit bist.',
+      'Diese Mission konnte gerade nicht vorbereitet werden. Sie hat nicht begonnen. Versuche es noch einmal.',
     'session.transition.unconfirmed':
-      'MissionKid konnte nicht prüfen, ob diese Mission geöffnet wurde. Sie hat nicht begonnen. Versuche es noch einmal, um zu sehen, was gespeichert ist.',
+      'MissionKid konnte nicht prüfen, ob diese Mission bereit ist. Sie hat nicht begonnen. Versuche es noch einmal.',
     'session.action.retry': 'Noch einmal versuchen',
+    'session.ready.missionBreak.lead': 'Zeit für eine Mission.',
+    'session.ready.missionBreak.body':
+      'Starte, wenn du bereit bist, geh dann weg vom Bildschirm und mach die Mission in echt. Komm zurück, wenn du fertig bist.',
+    'session.ready.missionUnavailable':
+      'Diese Mission kann gerade nicht angezeigt werden und ist deshalb nicht startbereit.',
   },
   ru: {
     "recovery.pending": "Подождите. Это действие ещё не подтверждено.",
@@ -293,10 +329,15 @@ export const INTERFACE_MESSAGES: CompleteInterfaceMessages = {
     'view.sessionReady.title': 'Твоя миссия готова',
     'session.ready.notStarted': 'Эта миссия ещё не началась.',
     'session.transition.notCarriedOut':
-      'Сейчас не удалось открыть эту миссию, и ничего не было сохранено. Она не началась. Попробуй ещё раз, когда будешь готов.',
+      'Сейчас не удалось подготовить эту миссию. Она не началась. Попробуй ещё раз.',
     'session.transition.unconfirmed':
-      'MissionKid не смог проверить, была ли открыта эта миссия. Она не началась. Попробуй ещё раз, чтобы увидеть, что сохранено.',
+      'MissionKid не смог проверить, готова ли эта миссия. Она не началась. Попробуй ещё раз.',
     'session.action.retry': 'Попробовать ещё раз',
+    'session.ready.missionBreak.lead': 'Время для миссии.',
+    'session.ready.missionBreak.body':
+      'Начни, когда будешь готов, потом отойди от экрана и выполни миссию по-настоящему. Возвращайся, когда закончишь.',
+    'session.ready.missionUnavailable':
+      'Эту миссию сейчас нельзя показать, поэтому она не готова к старту.',
   },
 };
 

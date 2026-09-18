@@ -2,26 +2,16 @@ import { useEffect, useRef } from 'react';
 
 import { MISSION_CATALOG } from './catalogContent';
 import type { MissionCategory, MissionRecord } from './catalog';
-import { translateMessage, type MessageKey, type SupportedLanguage } from './localization';
+import {
+  MISSION_ADULT_LABEL_KEYS,
+  MISSION_CATEGORY_LABEL_KEYS,
+  translateMessage,
+  type MessageKey,
+  type SupportedLanguage,
+} from './localization';
 import { MissionScene, MissionSceneDefs } from './MissionScene';
 import type { MissionSelectionIssue } from './appState';
 import { deriveSuggestionSet, type SuggestionContext } from './missionSuggestions';
-
-const CATEGORY_LABEL_KEYS: Readonly<Record<MissionCategory, MessageKey>> = {
-  Movement: 'discovery.category.movement',
-  Creativity: 'discovery.category.creativity',
-  'Helping at Home': 'discovery.category.helpingAtHome',
-  Learning: 'discovery.category.learning',
-  Calm: 'discovery.category.calm',
-};
-
-// The two required levels stay distinguishable in words, in every language.
-// "No special adult assistance required" shows nothing: it is not a promise that
-// ordinary parental judgement can be skipped.
-const ADULT_LABEL_KEYS: Readonly<Partial<Record<string, MessageKey>>> = {
-  'Adult nearby required': 'discovery.adult.nearby',
-  'Adult participation required': 'discovery.adult.participation',
-};
 
 type CardProps = Readonly<{
   mission: MissionRecord;
@@ -34,7 +24,7 @@ type CardProps = Readonly<{
 function MissionCard({ mission, language, onChoose }: CardProps) {
   const t = (key: MessageKey) => translateMessage(language, key);
   const content = mission.content[language];
-  const adultLabelKey = ADULT_LABEL_KEYS[mission.adultInvolvement];
+  const adultLabelKey = MISSION_ADULT_LABEL_KEYS[mission.adultInvolvement];
   const minutes = Math.round(mission.durationSeconds / 60);
   const titleId = `mission-title-${mission.missionId}`;
 
@@ -50,7 +40,7 @@ function MissionCard({ mission, language, onChoose }: CardProps) {
       <div className="mission-card__content">
         <p className="mission-card__meta">
           <span className="mission-card__category">
-            {t(CATEGORY_LABEL_KEYS[mission.category])}
+            {t(MISSION_CATEGORY_LABEL_KEYS[mission.category])}
           </span>
           <span className="mission-card__duration">
             {t('discovery.card.about')} {minutes} {t('discovery.card.minutes')}
@@ -108,7 +98,7 @@ function SuggestionAnnouncement({
   language: SupportedLanguage;
   stateKey: MessageKey;
 }>) {
-  const label = translateMessage(language, CATEGORY_LABEL_KEYS[category]);
+  const label = translateMessage(language, MISSION_CATEGORY_LABEL_KEYS[category]);
 
   return (
     <p aria-atomic="true" aria-live="polite" className="a11y-only" role="status">

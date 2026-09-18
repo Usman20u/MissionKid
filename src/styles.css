@@ -1246,6 +1246,89 @@ input {
   line-height: 1.6;
 }
 
+/* Quiet context line: present, never competing with the title. The same pair
+   the Mission card shows, resolved here from the session's own immutable facts
+   so a later setup edit or catalog release cannot rewrite them. */
+.mission-session__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.75rem;
+  margin: 0.5rem 0 0;
+  color: #5a6d67;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.mission-session__duration {
+  font-weight: 650;
+}
+
+.mission-session__instruction {
+  max-width: 48ch;
+  margin: 0.75rem 0 0;
+  color: #23423a;
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+
+/* Required adult and safety content: its own material layer, always visible,
+   never behind disclosure, and close enough to the Mission action to read as
+   part of it. */
+.mission-session__note {
+  position: relative;
+  max-width: 48ch;
+  margin: 0.85rem 0 0;
+  padding: 0.75rem 0.9rem 0.75rem 1.15rem;
+  border-radius: 0.6rem;
+  color: #23423a;
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+.mission-session__note-mark {
+  position: absolute;
+  top: 0.75rem;
+  bottom: 0.75rem;
+  left: 0.45rem;
+  width: 3px;
+  border-radius: 2px;
+}
+
+.mission-session__note-label {
+  display: block;
+  font-weight: 750;
+  letter-spacing: 0.01em;
+}
+
+.mission-session__note--adult {
+  background: #eef4f1;
+}
+
+.mission-session__note--adult .mission-session__note-mark {
+  background: #3f6f5f;
+}
+
+.mission-session__note--safety {
+  background: #fbf3e6;
+}
+
+.mission-session__note--safety .mission-session__note-mark {
+  background: #a8752f;
+}
+
+/* Mission Break: the brief step towards the real-life Mission. It is calm
+   supporting text, not a banner and not a second decision. */
+.mission-session__break {
+  max-width: 48ch;
+  margin: 1.1rem 0 0;
+  color: #23423a;
+  line-height: 1.6;
+}
+
+.mission-session__break-lead {
+  font-weight: 800;
+}
+
 /* A transition that did not complete. It uses the same calm surface as the
    discovery notice: nothing was lost and nothing was the child's doing. */
 .mission-session__issue {

@@ -7,20 +7,121 @@ import {
   useAppState,
   type MissionTransitionIssue,
 } from './appState';
+import type { MissionRecord } from './catalog';
 import { MISSION_CATALOG } from './catalogContent';
-import { translateMessage, type MessageKey } from './localization';
+import {
+  MISSION_ADULT_LABEL_KEYS,
+  MISSION_CATEGORY_LABEL_KEYS,
+  translateMessage,
+  type MessageKey,
+  type SupportedLanguage,
+} from './localization';
 import { advanceSessionToReady } from './missionSession';
 import {
   persistenceAdapter,
   type PersistenceAdapter,
+  type ReadyMissionSession,
 } from './persistence';
 
+// Both messages describe this transition only: reaching `ready` writes no
+// `startedAt` and records no completion, so neither may stand in for a start or
+// a completion whose durable outcome is a different question.
 const TRANSITION_ISSUE_KEYS: Readonly<
   Record<MissionTransitionIssue, MessageKey>
 > = {
   'not-carried-out': 'session.transition.notCarriedOut',
   unconfirmed: 'session.transition.unconfirmed',
 };
+
+// A stored Mission reference resolves to presentation only while its content is
+// still reviewed and complete in the current language. A Mission whose safety
+// approval was withdrawn must not come back as though it were still approved,
+// and nothing about it is guessed, substituted or mixed across languages.
+function resolveReviewedMission(
+  missionId: string,
+  language: SupportedLanguage,
+): MissionRecord | null {
+  const mission = MISSION_CATALOG.find(
+    (record) => record.missionId === missionId,
+  );
+
+  if (!mission || !mission.reviewed) {
+    return null;
+  }
+
+  const content = mission.content[language];
+
+  return content.title.trim() && content.instruction.trim() ? mission : null;
+}
+
+type ReadyMissionDetailsProps = Readonly<{
+  session: ReadyMissionSession;
+  mission: MissionRecord;
+  language: SupportedLanguage;
+}>;
+
+// What the family needs before deciding to begin, answered here rather than
+// behind further navigation or optional disclosure: what the Mission is and
+// what they will do, which Mission Category it belongs to, roughly how long it
+// may take, whether an adult must be nearby or take part, any essential safety
+// guidance, and that the Mission has not started.
+//
+// The Mission Category and the duration come from the session's own immutable
+// facts, so a later setup edit or a later catalog release cannot rewrite what
+// the family agreed to. The words come from the reviewed catalog in the current
+// language.
+function ReadyMissionDetails({
+  session,
+  mission,
+  language,
+}: ReadyMissionDetailsProps) {
+  const t = (key: MessageKey) => translateMessage(language, key);
+  const content = mission.content[language];
+  const adultLabelKey = MISSION_ADULT_LABEL_KEYS[mission.adultInvolvement];
+  const minutes = Math.round(session.durationSecondsAtSelection / 60);
+
+  return (
+    <>
+      <p className="mission-session__meta">
+        <span className="mission-session__category">
+          {t(MISSION_CATEGORY_LABEL_KEYS[session.missionCategoryAtSelection])}
+        </span>
+        <span className="mission-session__duration">
+          {t('discovery.card.about')} {minutes} {t('discovery.card.minutes')}
+        </span>
+      </p>
+      <p className="mission-session__instruction">{content.instruction}</p>
+      {adultLabelKey && content.adultInvolvementNote ? (
+        <p className="mission-session__note mission-session__note--adult">
+          <span aria-hidden="true" className="mission-session__note-mark" />
+          <span className="mission-session__note-label">{t(adultLabelKey)}</span>
+          {content.adultInvolvementNote}
+        </p>
+      ) : null}
+      {content.safetyNote ? (
+        <p className="mission-session__note mission-session__note--safety">
+          <span aria-hidden="true" className="mission-session__note-mark" />
+          <span className="mission-session__note-label">
+            {t('discovery.card.safetyLabel')}
+          </span>
+          {content.safetyNote}
+        </p>
+      ) : null}
+      {/* Mission Break: the brief step from the screen to the real-life
+          Mission. It describes what the family does and nothing more — it
+          blocks no device, controls or inspects no other app, claims no
+          parental-control capability, watches nothing, and asks for no proof
+          that the Mission happened. */}
+      <p className="mission-session__break">
+        <span className="mission-session__break-lead">
+          {t('session.ready.missionBreak.lead')}
+        </span>{' '}
+        {t('session.ready.missionBreak.body')}
+      </p>
+      <p className="mission-session__state">{t('session.ready.notStarted')}</p>
+    </>
+  );
+}
 
 type MissionReadyProps = Readonly<{
   adapter?: PersistenceAdapter;
@@ -32,8 +133,9 @@ type MissionReadyProps = Readonly<{
 // the state storage confirmed, never one the interface assumed.
 //
 // Nothing here starts anything. There is no start action, no countdown and no
-// completion, so the Mission cannot be committed to from this view; the start
-// screen's own content and its **Start mission** action are a later step.
+// completion, so the Mission cannot be committed to from this view; the
+// **Start mission** action and the return to suggestions arrive with the
+// operations they carry out.
 export function MissionReady({
   adapter = persistenceAdapter,
 }: MissionReadyProps = {}) {
@@ -44,13 +146,8 @@ export function MissionReady({
   const attempt = selectSessionAttempt(state);
   const sessionId = session?.sessionId ?? null;
   const sessionState = session?.state ?? null;
-
-  // The Mission's wording comes from the reviewed catalog in the current
-  // language, never from the stored session, and stays absent rather than being
-  // guessed when the stored Mission no longer resolves to reviewed content.
-  const missionTitle = session
-    ? MISSION_CATALOG.find((record) => record.missionId === session.missionId)
-        ?.content[state.language].title ?? null
+  const mission = session
+    ? resolveReviewedMission(session.missionId, state.language)
     : null;
 
   function advance() {
@@ -103,11 +200,23 @@ export function MissionReady({
 
   return (
     <div className="mission-session">
-      {missionTitle ? (
-        <h2 className="mission-session__mission">{missionTitle}</h2>
-      ) : null}
-      {sessionState === 'ready' && issue === null ? (
-        <p className="mission-session__state">{t('session.ready.notStarted')}</p>
+      {mission ? (
+        <h2 className="mission-session__mission">
+          {mission.content[state.language].title}
+        </h2>
+      ) : (
+        // The Mission cannot be shown, so it is not offered as startable and
+        // none of its content is guessed at. Its session is untouched.
+        <p className="mission-session__state">
+          {t('session.ready.missionUnavailable')}
+        </p>
+      )}
+      {session.state === 'ready' && mission ? (
+        <ReadyMissionDetails
+          language={state.language}
+          mission={mission}
+          session={session}
+        />
       ) : null}
       {issue ? (
         <>

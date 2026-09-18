@@ -348,3 +348,233 @@ describe('the gates a ready transition inherits', () => {
     expect(h.values.get(MISSIONKID_STORAGE_KEY)).toBe(raw);
   });
 });
+
+function readySessionFor(
+  missionId: string,
+  overrides: Readonly<Record<string, unknown>> = {},
+) {
+  const mission = missionFor(missionId);
+
+  return {
+    sessionId: `session-${missionId}`,
+    childProfileId: PROFILE_ID,
+    missionId,
+    missionCategoryAtSelection: mission.category,
+    ageBandAtSelection: '7–8',
+    durationSecondsAtSelection: mission.durationSeconds,
+    state: 'ready',
+    selectedAt: 1_700_000_000_000,
+    ...overrides,
+  };
+}
+
+function renderReady(missionId: string, language: SupportedLanguage = 'en', overrides = {}) {
+  const h = harness(storedSnapshot(readySessionFor(missionId, overrides), language));
+  const view = render(<App adapter={h.adapter} />);
+
+  return { ...view, h };
+}
+
+describe('what a ready Mission answers before it starts', () => {
+  it.each(['en', 'de', 'ru'] as const)(
+    'answers every required question in %s, from the catalog in that language',
+    (language) => {
+      const mission = missionFor('creativity-06');
+      const content = mission.content[language];
+      const { container, h } = renderReady('creativity-06', language);
+
+      // What is the Mission, and what will the family do?
+      expect(screen.getByRole('heading', { level: 2 }).textContent).toBe(content.title);
+      expect(screen.getByText(content.instruction)).toBeTruthy();
+      // Which Mission Category, in words, and roughly how long?
+      const meta = container.querySelector('.mission-session__meta')!.textContent;
+      expect(meta).toContain(
+        translateMessage(language, 'discovery.category.creativity'),
+      );
+      expect(meta).toContain(String(Math.round(mission.durationSeconds / 60)));
+      expect(meta).toContain(translateMessage(language, 'discovery.card.minutes'));
+      // Must an adult be nearby or take part, and is there safety guidance?
+      expect(
+        screen.getByText(translateMessage(language, 'discovery.adult.nearby')),
+      ).toBeTruthy();
+      expect(screen.getByText(content.adultInvolvementNote!)).toBeTruthy();
+      expect(
+        screen.getByText(translateMessage(language, 'discovery.card.safetyLabel')),
+      ).toBeTruthy();
+      expect(screen.getByText(content.safetyNote!)).toBeTruthy();
+      // Has it started, and what happens next?
+      expect(
+        screen.getByText(translateMessage(language, 'session.ready.notStarted')),
+      ).toBeTruthy();
+      expect(
+        screen.getByText(translateMessage(language, 'session.ready.missionBreak.lead')),
+      ).toBeTruthy();
+      expect(
+        screen.getByText(translateMessage(language, 'session.ready.missionBreak.body')),
+      ).toBeTruthy();
+      // Answering all of it required no navigation and changed nothing.
+      expect(h.writes).toEqual([]);
+    },
+  );
+
+  it.each([
+    ['creativity-06', 'discovery.adult.nearby', 'discovery.adult.participation'],
+    ['helping-03', 'discovery.adult.participation', 'discovery.adult.nearby'],
+  ] as const)('keeps the requirement of %s distinguishable in words', (missionId, present, absent) => {
+    const mission = missionFor(missionId);
+    renderReady(missionId);
+
+    expect(screen.getByText(translateMessage('en', present))).toBeTruthy();
+    expect(screen.queryByText(translateMessage('en', absent))).toBeNull();
+    expect(screen.getByText(mission.content.en.adultInvolvementNote!)).toBeTruthy();
+  });
+
+  it('claims nothing for a Mission with no adult-involvement requirement', () => {
+    const { container } = renderReady('movement-02');
+
+    // Silence is the approved treatment: a visible "no adult needed" line would
+    // read as a promise that ordinary parental judgement can be skipped.
+    expect(container.querySelector('.mission-session__note--adult')).toBeNull();
+    expect(screen.queryByText(translateMessage('en', 'discovery.adult.nearby'))).toBeNull();
+    expect(
+      screen.queryByText(translateMessage('en', 'discovery.adult.participation')),
+    ).toBeNull();
+    // The safety guidance this Mission does carry is still there.
+    expect(screen.getByText(missionFor('movement-02').content.en.safetyNote!)).toBeTruthy();
+  });
+
+  it('invents no safety guidance for a Mission that carries none', () => {
+    const mission = missionFor('calm-07');
+    const { container } = renderReady('calm-07');
+
+    expect(mission.safetyNoteRequired).toBe(false);
+    expect(container.querySelector('.mission-session__note--safety')).toBeNull();
+    expect(
+      screen.queryByText(translateMessage('en', 'discovery.card.safetyLabel')),
+    ).toBeNull();
+    expect(screen.getByText(mission.content.en.instruction)).toBeTruthy();
+  });
+
+  it('shows the duration the session recorded, not the catalog default', () => {
+    const catalogMinutes = Math.round(missionFor('movement-02').durationSeconds / 60);
+    const { container } = renderReady('movement-02', 'en', {
+      durationSecondsAtSelection: 600,
+    });
+
+    // The selection facts are what the family agreed to. A later catalog
+    // release cannot rewrite them, and neither can a later setup edit.
+    const meta = container.querySelector('.mission-session__meta')!.textContent;
+    expect(meta).toContain('10');
+    expect(meta).not.toContain(String(catalogMinutes));
+  });
+
+  it('shows the Mission Category the session recorded', () => {
+    const { container } = renderReady('movement-02', 'en', {
+      missionCategoryAtSelection: 'Calm',
+    });
+
+    const meta = container.querySelector('.mission-session__meta')!.textContent;
+    expect(meta).toContain(translateMessage('en', 'discovery.category.calm'));
+    expect(meta).not.toContain(translateMessage('en', 'discovery.category.movement'));
+  });
+
+  it('is unchanged by a current age band that no longer matches the selection', () => {
+    const h = harness(JSON.stringify({
+      ...createEmptySnapshot(),
+      childProfile: { localProfileId: PROFILE_ID, ageBand: '9–10' },
+      currentSession: readySessionFor('movement-02', { ageBandAtSelection: '4–6' }),
+    }));
+    render(<App adapter={h.adapter} />);
+
+    expect(screen.getByRole('heading', { level: 2 }).textContent)
+      .toBe(missionFor('movement-02').content.en.title);
+    expect(h.stored().currentSession.ageBandAtSelection).toBe('4–6');
+    expect(h.writes).toEqual([]);
+  });
+
+  it('adds no start, countdown, progression or reward to the ready Mission', () => {
+    const { container, h } = renderReady('movement-02');
+
+    // Starting, timing, completing and recognition arrive with the operations
+    // that carry them out; an inert control for any of them would be a promise
+    // this build cannot keep.
+    expect(screen.queryAllByRole('button')).toEqual([]);
+    expect(container.querySelector('[role="timer"], [aria-live], progress')).toBeNull();
+    expect(container.textContent).not.toMatch(/\d+:\d\d/);
+    expect(
+      screen.queryByText(/Start mission|Mission done|Reward|Monthly Goal|History/i),
+    ).toBeNull();
+    expect(h.writes).toEqual([]);
+    expect(h.stored().currentSession.state).toBe('ready');
+  });
+
+  it.each(['en', 'de', 'ru'] as const)(
+    'introduces the Mission Break in %s without claiming control of anything',
+    (language) => {
+      const wording = [
+        translateMessage(language, 'session.ready.missionBreak.lead'),
+        translateMessage(language, 'session.ready.missionBreak.body'),
+      ].join(' ');
+
+      // Mission Break is a step the family takes, never something MissionKid
+      // does to the device, to other apps, or to the child.
+      expect(wording).not.toMatch(
+        /block|lock|disable|control|monitor|track|enforce|supervis|parental control|screen time/i,
+      );
+      expect(wording).not.toMatch(
+        /sperr|blockier|überwach|kontrolli|verfolg|Bildschirmzeit|Kindersicherung/i,
+      );
+      expect(wording).not.toMatch(
+        /блокир|контрол|следи|отслежив|запрет|родительск/i,
+      );
+      // It does say what the family does: start, leave the screen, come back.
+      const { container } = renderReady('movement-02', language);
+      const rendered = container.querySelector('.mission-session__break')!.textContent;
+      expect(rendered).toContain(
+        translateMessage(language, 'session.ready.missionBreak.lead'),
+      );
+      expect(rendered).toContain(
+        translateMessage(language, 'session.ready.missionBreak.body'),
+      );
+    },
+  );
+
+  it('does not present a Mission it cannot resolve as ready to start', () => {
+    const raw = storedSnapshot(
+      readySessionFor('movement-02', { missionId: 'movement-99' }),
+    );
+    const h = harness(raw);
+    const { container } = render(<App adapter={h.adapter} />);
+
+    // No title, no instruction, no invented content, and nothing startable.
+    expect(
+      screen.getByText(translateMessage('en', 'session.ready.missionUnavailable')),
+    ).toBeTruthy();
+    expect(screen.queryByRole('heading', { level: 2 })).toBeNull();
+    expect(container.querySelector('.mission-session__instruction')).toBeNull();
+    expect(container.querySelector('.mission-session__note')).toBeNull();
+    expect(
+      screen.queryByText(translateMessage('en', 'session.ready.missionBreak.body')),
+    ).toBeNull();
+    // The session itself is untouched: it is not completed, cleared or counted.
+    expect(h.values.get(MISSIONKID_STORAGE_KEY)).toBe(raw);
+    expect(h.writes).toEqual([]);
+  });
+
+  it('keeps the transition failure wording specific to getting the Mission ready', () => {
+    for (const language of ['en', 'de', 'ru'] as const) {
+      for (const key of [
+        'session.transition.notCarriedOut',
+        'session.transition.unconfirmed',
+      ] as const) {
+        const message = translateMessage(language, key);
+
+        // A durable `selected` session already exists before this transition,
+        // so neither message may claim that nothing at all was saved, and
+        // neither describes a start or a completion.
+        expect(message).not.toMatch(/nothing was saved|nichts gespeichert|ничего не было сохранено/i);
+        expect(message).not.toMatch(/completed|abgeschlossen|завершена/i);
+      }
+    }
+  });
+});
