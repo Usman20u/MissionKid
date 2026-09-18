@@ -137,11 +137,11 @@ const englishMessages = {
   'view.sessionResult.title': 'Mission complete',
   'result.recognition': 'You did it.',
   'result.completedOn': 'Completed',
-  'result.missionUnavailable': 'Mission',
-  'result.goal.heading': 'This month',
+  'result.missionUnavailable': 'This Mission cannot be shown right now',
+  'result.goal.heading': 'Monthly goal',
   'result.goal.progress': '{done} / {target} missions',
   'result.goal.complete':
-    'You have reached this month\u2019s goal. Talk with your parent about a small real-life reward you would both like.',
+    'You reached the goal for {period}. If you and your parent agree, you could choose a small real-life reward together.',
   'result.action.next': 'Find another Mission',
   'result.unavailable':
     'This result cannot be shown right now. Your completed Mission is safe. Try again.',
@@ -316,11 +316,11 @@ export const INTERFACE_MESSAGES: CompleteInterfaceMessages = {
     'view.sessionResult.title': 'Mission geschafft',
     'result.recognition': 'Du hast es geschafft.',
     'result.completedOn': 'Erledigt',
-    'result.missionUnavailable': 'Mission',
-    'result.goal.heading': 'Diesen Monat',
+    'result.missionUnavailable': 'Diese Mission kann gerade nicht angezeigt werden',
+    'result.goal.heading': 'Monatsziel',
     'result.goal.progress': '{done} / {target} Missionen',
     'result.goal.complete':
-      'Du hast das Monatsziel erreicht. Sprich mit deinen Eltern über eine kleine Belohnung im echten Leben, die euch beiden gefällt.',
+      'Du hast das Ziel für {period} erreicht. Wenn deine Eltern einverstanden sind, könnt ihr zusammen eine kleine Belohnung im echten Leben aussuchen.',
     'result.action.next': 'Neue Mission finden',
     'result.unavailable':
       'Dieses Ergebnis kann gerade nicht angezeigt werden. Deine erledigte Mission ist sicher gespeichert. Versuche es noch einmal.',
@@ -425,7 +425,7 @@ export const INTERFACE_MESSAGES: CompleteInterfaceMessages = {
     'session.action.retry': 'Попробовать ещё раз',
     'session.ready.missionBreak.lead': 'Время для миссии.',
     'session.ready.missionBreak.body':
-      'Начни, когда будешь готов, потом отойди от экрана и выполни миссию по-настоящему. Возвращайся, когда закончишь.',
+      'Начни, когда будет удобно, потом отойди от экрана и выполни миссию по-настоящему. Возвращайся, когда закончишь.',
     'session.ready.missionUnavailable':
       'Эту миссию сейчас нельзя показать, поэтому она не готова к старту.',
     'session.action.start': 'Начать миссию',
@@ -438,7 +438,7 @@ export const INTERFACE_MESSAGES: CompleteInterfaceMessages = {
       'Выполни миссию не у экрана и возвращайся, когда закончишь.',
     'session.active.remaining': 'Осталось около {minutes} мин',
     'session.active.lessThanMinute': 'Осталось меньше минуты',
-    'session.active.zero': 'Не спеши — заканчивай, когда будешь готов.',
+    'session.active.zero': 'Не спеши — заканчивай, когда будет удобно.',
     'session.active.timingUnavailable':
       'Подсказка о времени сейчас недоступна. Твоя миссия продолжается.',
     'session.active.missionUnavailable':
@@ -451,7 +451,7 @@ export const INTERFACE_MESSAGES: CompleteInterfaceMessages = {
     'session.exit.notLeft':
       'Сейчас не удалось выйти из этой миссии. Попробуй ещё раз.',
     'session.exit.unconfirmed':
-      'MissionKid не смог проверить, вышел ли ты из этой миссии. Попробуй ещё раз, чтобы увидеть.',
+      'MissionKid не смог проверить, удалось ли выйти из этой миссии. Попробуй ещё раз, чтобы увидеть.',
     'session.conflict.return': 'Назад к своей миссии',
     'session.action.done': 'Миссия выполнена',
     'session.done.notRecorded':
@@ -461,11 +461,11 @@ export const INTERFACE_MESSAGES: CompleteInterfaceMessages = {
     'view.sessionResult.title': 'Миссия выполнена',
     'result.recognition': 'У тебя получилось.',
     'result.completedOn': 'Выполнено',
-    'result.missionUnavailable': 'Миссия',
-    'result.goal.heading': 'В этом месяце',
+    'result.missionUnavailable': 'Эту миссию сейчас нельзя показать',
+    'result.goal.heading': 'Цель месяца',
     'result.goal.progress': '{done} / {target} миссий',
     'result.goal.complete':
-      'Цель этого месяца выполнена. Поговори с родителями о небольшой награде в реальной жизни, которая понравится вам обоим.',
+      'Цель за {period} выполнена. Если родители согласны, вы можете вместе выбрать небольшую награду в реальной жизни.',
     'result.action.next': 'Найти другую миссию',
     'result.unavailable':
       'Этот результат сейчас нельзя показать. Твоя выполненная миссия сохранена. Попробуй ещё раз.',
