@@ -1,11 +1,11 @@
 # MissionKid Implementation Plan 03 — Mission Session and Completion (F003) with the Reward Card and Monthly Goal completion message (F004 slice)
 
 **Date:** 2026-09-17
-**Status:** Approved — Tasks 1 to 5 complete under the approved execution allocation clarification; Tasks 6–19 not started
+**Status:** Approved — Tasks 1 to 6 complete under the approved execution allocation clarification; Tasks 7–19 not started
 
-This plan's scope and decisions are approved. Scope approval is not authorization to execute a task: each implementation task begins only when it is explicitly authorized. Tasks 1 to 5 were each explicitly authorized and are complete; no later task has begun.
+This plan's scope and decisions are approved. Scope approval is not authorization to execute a task: each implementation task begins only when it is explicitly authorized. Tasks 1 to 6 were each explicitly authorized and are complete; no later task has begun.
 
-The scope below plans `F003` in full, except the acceptance clauses explicitly deferred with the Mission History view, together with one deliberately bounded part of `F004`: the Reward Card and the Monthly Goal derivation and completion message that the card must display. That combined scope is approved as decision D1-A, with the History deferrals preserved exactly as documented. Every task below except Tasks 1 to 5 is pending implementation and verification; what those tasks actually changed is recorded in the implementation record at the end of this plan, and nothing else here is a claim about what the repository already does.
+The scope below plans `F003` in full, except the acceptance clauses explicitly deferred with the Mission History view, together with one deliberately bounded part of `F004`: the Reward Card and the Monthly Goal derivation and completion message that the card must display. That combined scope is approved as decision D1-A, with the History deferrals preserved exactly as documented. Every task below except Tasks 1 to 6 is pending implementation and verification; what those tasks actually changed is recorded in the implementation record at the end of this plan, and nothing else here is a claim about what the repository already does.
 
 ## Authorization basis
 
@@ -1114,6 +1114,120 @@ recorded in Task 1 did not recur and remain unexplained rather than resolved.
 **Scope.** No countdown presentation, no active-view redesign, no control and no
 lifecycle operation. Completion and abandonment are not made conditional on
 remaining time; their controls and operations remain later work.
+
+### Task 6 authorization (2026-09-18)
+
+Task 6 was explicitly authorized for execution from `774c779`, with Task 5's
+source commit `ed52ff8` and the approved control allocation `60963d9` as its
+basis, together with any narrowly necessary correction exposed by integrating the
+timer consumer. Tasks 7–19, push and merge are not authorized.
+
+### Task 6 completion (2026-09-18)
+
+Task 6 is complete and committed as `2dba46b`: the running Mission has its
+presentation, built on the derivation Task 5 already produces, and the anchor
+that derivation hands it now measures time without rounding it early.
+
+| Gate | Result |
+| --- | --- |
+| `npm run typecheck` | Pass, no suppression |
+| `npm test` | 578 / 578 pass, 16 files, four consecutive runs |
+| `npm run build` | Pass |
+| `git diff --check` | Clean |
+| Snapshot schema, adapter contract, D4-B | Unchanged |
+| Timer values persisted | None |
+| Controls added | None |
+
+**Reading order.** What to do now leads: leave the screen and come back when the
+Mission is done. Then the Mission identity and its short action reminder, then
+the adult-involvement and safety guidance the family read before starting, then
+approximate remaining time last, as support. That is the order the visual
+specification prioritizes, and it leaves the places where **Mission done** and
+the leave-without-completion path will sit without standing in for either.
+
+**One timer, one owner.** The view calls the existing derivation and its
+schedule. It starts no second countdown, adds no clock loop, listener or stored
+timing value, and writes nothing on render, on a tick, at zero, or when the page
+is hidden and returned to. Remaining time is worded in whole minutes, so the text
+changes about once a minute: there is no ticking number to watch and nothing for
+a screen reader to repeat every second. No live region is used.
+
+**Precision correction, exposed by this consumer.** The anchor stored remaining
+time already rounded up to whole seconds, so an anchor established part-way
+through a second carried that rounding into every tick until the next
+re-anchoring. Measured: a ten-second Mission anchored 600 ms in still showed one
+second left at its real expiry and reached zero 600 ms late, and repeated returns
+to the page within a second kept re-reading the same rounded value. Remaining
+time is now carried in milliseconds and rounded only where it is read, so a
+second still shows while any of it is left, zero is reached at the real expiry
+through the anchor as well as through the direct derivation, and re-anchoring
+gains nothing. Task 5's recorded rounding behavior was true of the direct
+derivation; this makes it true of the anchored path too. It aligns the anchor
+with the existing Technical Architecture rule that recovery never extends the
+child's waiting period, so no specification needed a change and none was made.
+
+**Typed reasons, not a flattened number.** A structurally invalid `startedAt` is
+presented through session recovery rather than as an ordinary running Mission
+showing zero. An otherwise valid session with a malformed duration, or a wall
+clock earlier than its own start, stays active and shows zero guidance with its
+stored facts untouched. An unreadable clock says so calmly and keeps the Mission
+instructions, the guidance and the duration the session itself recorded; no
+number is invented and the catalog's duration never replaces a malformed stored
+one. A Mission that no longer resolves to reviewed content approved for the age
+band the session froze is withheld through the same recovery path the ready view
+already uses.
+
+**Delegated implementation choices, recorded rather than specified elsewhere.**
+Minute-granular wording with a separate under-a-minute phrase, rounding displayed
+minutes up so the label never understates what is left, and reusing the existing
+duration wording for the unreadable-clock fallback are ordinary choices the
+owning specifications delegate. They are documented where the code makes them.
+
+**Verification.** The suite gained 24 tests. The rendered view is covered in all
+three languages for the leave-the-screen instruction, Mission identity, action
+reminder, adult-involvement and safety wording and approximate guidance, with
+reading order asserted and the substituted minutes asserted to actually reach the
+family in each language. Representative Mission shapes — an adult who must take
+part, no adult but safety guidance, and neither — are covered separately, each
+asserted to show what it requires in full words with no disclosure or ellipsis.
+Live behavior is covered for initial rendering, mid-session recovery at real
+remaining time, a tick that changes nothing visible, minute changes, crossing
+under a minute, rest at zero with nothing scheduled, and a return to the page
+recalculating from timestamps. Rendering, ticks, zero and page events are
+asserted to write no storage, leave `startedAt` and every stored fact unchanged,
+restart nothing and create no completion fact; the view schedules exactly one
+tick and moves focus on none of them. Every typed fallback and recovery case is
+covered through the rendered view. Two targeted tests cover the correction: an
+anchor taken part-way through a second reaching zero at the real expiry, and
+twenty re-anchorings a tenth of a second apart gaining no time. The active view
+was added to the localization test's scanned views, and that guard was confirmed
+to fail when a German string was temporarily blanked.
+
+**Browser review.** The served production build was inspected in Google Chrome at
+a true 360 CSS pixel viewport in Russian and German and at 1280 pixels in
+English, in a mid-session and an elapsed state, with layout measured rather than
+judged from a screenshot alone. Nothing overflowed and no horizontal scrolling
+appeared in any case, including at a 150% root text size, where the page reflows
+and grows taller. The guidance renders as the smallest, most muted text in last
+position in every case, unchanged in weight or colour at zero. No correction was
+needed for this view.
+
+**Limitations.** Browser checking was visual and by measured layout only. No
+assistive technology was run, so no screen-reader behavior is claimed; the
+accessibility evidence is reading order, text-only guidance, the absence of a
+live region, focus behavior and reflow. Entry focus remains the shell's, which
+treats the running Mission as its own context; restoration deliberately does not
+move focus. The unreadable-clock branch is covered by test only — a browser does
+not produce a non-finite clock reading. The seeded-snapshot end-to-end cases,
+including completion and abandonment under a malformed duration or a backward
+clock, remain Task 11. The unexplained failures recorded in Task 1 did not recur
+and remain unexplained rather than resolved.
+
+**Scope.** No control was added. The family cannot yet finish or leave a started
+Mission through the interface: **Mission done** is Task 8 and the
+leave-without-completion path is Task 7, each with the operation it performs. No
+completion, cancellation, abandonment, conflict resolution, Reward Card or
+Monthly Goal behavior exists, and no placeholder stands in for any of them.
 
 ## Approval record
 
