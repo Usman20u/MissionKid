@@ -1610,6 +1610,17 @@ not complete. The three unexplained failures recorded in Task 1 and the two
 timeouts recorded in Task 7 remain separately recorded; neither recurred here and
 no shared cause was established.
 
+### Tasks 13, 14, 15 and 16 authorization (2026-09-18)
+
+Tasks 13, 14, 15 and 16 were explicitly authorized for execution as one
+verification and refinement batch, in their existing order, from `7945c3d`. Task
+17 onward, push and merge are not authorized.
+
+All nineteen tasks, their acceptance obligations, the approved decisions and
+every existing completion record are preserved unchanged. The Mission History
+view and any standalone Monthly Goal surface remain deferred, and this batch
+claims no full `F003` acceptance, no MVP completion and no release readiness.
+
 ## Approval record
 
 | Item | State |
