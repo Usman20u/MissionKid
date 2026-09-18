@@ -1,11 +1,11 @@
 # MissionKid Implementation Plan 03 — Mission Session and Completion (F003) with the Reward Card and Monthly Goal completion message (F004 slice)
 
 **Date:** 2026-09-17
-**Status:** Approved — Task 1 complete; Tasks 2–19 not started
+**Status:** Approved — Tasks 1 and 2 complete; Tasks 3–19 not started
 
-This plan's scope and decisions are approved. Scope approval is not authorization to execute a task: each implementation task begins only when it is explicitly authorized. Task 1 was explicitly authorized and is complete; no later task has begun.
+This plan's scope and decisions are approved. Scope approval is not authorization to execute a task: each implementation task begins only when it is explicitly authorized. Tasks 1 and 2 were each explicitly authorized and are complete; no later task has begun.
 
-The scope below plans `F003` in full, except the acceptance clauses explicitly deferred with the Mission History view, together with one deliberately bounded part of `F004`: the Reward Card and the Monthly Goal derivation and completion message that the card must display. That combined scope is approved as decision D1-A, with the History deferrals preserved exactly as documented. Every task below except Task 1 is pending implementation and verification; what Task 1 actually changed is recorded in the implementation record at the end of this plan, and nothing else here is a claim about what the repository already does.
+The scope below plans `F003` in full, except the acceptance clauses explicitly deferred with the Mission History view, together with one deliberately bounded part of `F004`: the Reward Card and the Monthly Goal derivation and completion message that the card must display. That combined scope is approved as decision D1-A, with the History deferrals preserved exactly as documented. Every task below except Tasks 1 and 2 is pending implementation and verification; what those tasks actually changed is recorded in the implementation record at the end of this plan, and nothing else here is a claim about what the repository already does.
 
 ## Authorization basis
 
@@ -661,6 +661,111 @@ cancellation, abandonment, or ready, active or Reward Card view exists. `F002`
 selection behavior, the Mission catalog, Mission scenes and the accepted
 presentation are unchanged.
 
+### Task 2 authorization (2026-09-18)
+
+Task 2 was explicitly authorized for execution from `44802c9`, with Task 1's source
+commit `704b4cc` as its basis. No later task, push or merge is authorized by that
+authorization or by this record.
+
+### Task 2 completion (2026-09-18)
+
+Task 2 is complete and committed as `9d56eae`: a confirmed selection continues to
+a persisted `ready` session without another family decision, a stored `selected`
+session advances on load, and a stored `ready` session restores unchanged.
+
+| Gate | Result |
+| --- | --- |
+| `npm run typecheck` | Pass, no suppression |
+| `npm test` | 471 / 471 pass, 14 files |
+| `npm run build` | Pass |
+| `git diff --check` | Clean |
+| Full-suite runs | 5 pass, one under concurrent build load |
+| Manual browser check | Pass — headless Chrome 153.0.8010.37, served production build |
+| `snapshotVersion`, storage key, adapter | Unchanged |
+| Interface strings added | 6, in EN/DE/RU, listed below |
+
+**Transition.** `advanceSessionToReady` runs the existing five-step path on the
+session that is actually stored. It carries every immutable selection fact
+unchanged, keeps the same `sessionId` and `selectedAt`, mints no identifier,
+writes no timestamp, and writes no `startedAt`. Durable state decides the
+operation, which is what makes it idempotent by session identity: a repeat, a
+replayed or remounted effect, a refresh and a family retry all read a session
+that is already `ready` and write nothing. A session past `ready` is never
+rebuilt into an earlier state, and a stored `active` session is left untouched.
+
+**Restoration and presentation.** Hydration mirrors the validated durable current
+session into runtime, so restoration presents the state storage holds rather than
+one the interface assumed. A current session takes precedence over discovery in
+view selection. The Mission stays identifiable while the transition resolves, and
+the ready surface names the Mission from the reviewed catalog in the current
+language and states that it has not started. Focus enters the Mission area once
+and is not taken again when the transition resolves in place. The parent's
+recovery and reset controls stay out of the child-facing Mission area.
+
+**Failure classes.** A failure established before storage changed leaves the
+stored `selected` session as it was and says the transition was not carried out.
+An interrupted confirmation claims neither success nor rollback: durable state is
+read again, the same session is presented as `ready` where storage now says so,
+and otherwise only the unknown outcome is stated. Nothing retries itself — a
+recorded issue is what stops an ordinary render from becoming a write loop — and
+no rollback is written over a transition that may have succeeded. A D4-B refusal
+leaves the stored snapshot byte for byte as it was and reaches the family through
+the existing calm retry.
+
+**Adapter hardening required by this task's authorization.** Task 1's pre-write
+read previously continued when the stored value could not be read, which would
+have replaced the one stored snapshot while blind to what it held: D4-B could not
+be decided and a completed record could have been dropped. An unreadable
+pre-write read now refuses the replacement as a write that did not happen.
+D4-B's approved behavior, tolerant hydration and strict write confirmation are
+otherwise unchanged. Three existing fixtures were made more precise so their
+faults still mean what they claimed — the pre-write read succeeds and only the
+read that confirms the write fails — with their assertions unchanged.
+
+**Added interface strings, for human review.**
+
+| Key | English |
+| --- | --- |
+| `view.sessionOpening.title` | Getting your Mission ready |
+| `view.sessionReady.title` | Your Mission is ready |
+| `session.ready.notStarted` | This Mission has not started yet. |
+| `session.transition.notCarriedOut` | This Mission could not be opened just now, and nothing was saved. It has not started. Try again when you are ready. |
+| `session.transition.unconfirmed` | MissionKid could not check whether this Mission was opened. It has not started. Try again to see what is saved. |
+| `session.action.retry` | Try again |
+
+German and Russian carry the same meaning in the informal child-facing register
+already used by discovery. The unknown-outcome string asserts no durable negative
+beyond the one the evidence supports in every case: no `startedAt` exists on any
+of these paths, so "it has not started" is true whether or not the transition
+landed.
+
+**Manual verification.** Against the served production build in headless Chrome,
+a seeded `selected` session advanced on load to the `session-ready` view showing
+the German Mission title from the reviewed catalog and the not-started statement;
+browser storage afterwards held the same `sessionId` and `selectedAt` in
+`state: "ready"` with no `startedAt`, an empty completed collection, a null
+pointer and `snapshotVersion` `1`; and a refresh in `ready` restored the same
+Mission with no countdown.
+
+**Documentation.** The owning specifications already cover this behavior —
+`F003` lifecycle and acceptance criteria 1 and 8, the Data and State Model
+record-level trust rules for a valid current session, the Visual and Ergonomic
+selection-transition, ready and restored-session rows, and the Technical
+Architecture refresh behavior and five-step path — so no specification changed and
+no conflict was found.
+
+**Limitations.** Until the ready screen gains its approved return-to-suggestions
+action in later work, this view offers no route back to Mission choosing; a
+refused transition offers its retry and a reload restores the same truthful state.
+No assistive technology, second browser, viewport or ergonomic review was
+exercised, and none is claimed. The three unexplained test failures recorded in
+Task 1 did not recur and remain unexplained rather than resolved.
+
+**Scope.** No start action, countdown, completion, cancellation, abandonment,
+conflict control, Reward Card or Monthly Goal behavior, and no `active` or result
+view. `F001` and `F002` behavior, the catalog, Mission scenes and the accepted
+presentation are unchanged.
+
 ## Approval record
 
 | Item | State |
@@ -673,5 +778,5 @@ presentation are unchanged.
 | D3 — exact EN/DE/RU wording delegated to implementation, added strings reported for review | Approved 2026-09-17 |
 | D4-B — refuse snapshot-replacing writes while an unresolved invalid or conflicting completed record persists | Approved 2026-09-17 |
 | Scope and decisions approved | Yes |
-| Implementation task authorized | Task 1 only, authorized 2026-09-18; every later task requires its own explicit authorization |
-| Tasks started | Task 1 — complete, committed as `704b4cc`; Tasks 2–19 not started |
+| Implementation task authorized | Tasks 1 and 2, each authorized 2026-09-18; every later task requires its own explicit authorization |
+| Tasks started | Task 1 — complete, committed as `704b4cc`; Task 2 — complete, committed as `9d56eae`; Tasks 3–19 not started |
