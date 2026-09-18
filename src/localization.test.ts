@@ -19,6 +19,7 @@ const LOCALIZED_VIEWS = [
   'src/MissionDiscovery.tsx',
   'src/MissionSuggestionSet.tsx',
   'src/MissionReady.tsx',
+  'src/MissionActive.tsx',
 ];
 
 describe('localization', () => {

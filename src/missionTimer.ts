@@ -64,8 +64,79 @@ function guidanceDurationSeconds(session: ActiveMissionSession): number {
     : 0;
 }
 
-function clampSeconds(seconds: number, durationSeconds: number): number {
-  return Math.min(Math.max(seconds, 0), durationSeconds);
+// Remaining time is carried in milliseconds everywhere it is measured, and
+// rounded only where it is read. Rounding the measurement instead would extend
+// the Mission: an anchor taken part-way through a second would round up, and
+// re-anchoring repeatedly within a second would keep rounding the same fraction
+// up and push the moment of zero further away each time.
+type RemainingMilliseconds = Readonly<{
+  remainingMilliseconds: number;
+  durationSeconds: number;
+  basis: GuidanceBasis;
+}>;
+
+function clampMilliseconds(
+  milliseconds: number,
+  durationSeconds: number,
+): number {
+  return Math.min(
+    Math.max(milliseconds, 0),
+    durationSeconds * MILLISECONDS_PER_SECOND,
+  );
+}
+
+// Rounded up, so a second is shown while any of it is left and zero is read
+// exactly when the remaining time is gone.
+function toGuidance(remaining: RemainingMilliseconds): MissionGuidance {
+  return {
+    remainingSeconds: Math.ceil(
+      remaining.remainingMilliseconds / MILLISECONDS_PER_SECOND,
+    ),
+    durationSeconds: remaining.durationSeconds,
+    basis: remaining.basis,
+  };
+}
+
+function measureRemaining(
+  session: ActiveMissionSession,
+  wallClockMilliseconds: number,
+): RemainingMilliseconds {
+  const durationSeconds = guidanceDurationSeconds(session);
+
+  if (!isEpochMilliseconds(session.startedAt)) {
+    return { remainingMilliseconds: 0, durationSeconds, basis: 'invalid-session' };
+  }
+
+  if (durationSeconds === 0) {
+    return {
+      remainingMilliseconds: 0,
+      durationSeconds,
+      basis: 'malformed-duration',
+    };
+  }
+
+  if (!Number.isFinite(wallClockMilliseconds)) {
+    return { remainingMilliseconds: 0, durationSeconds, basis: 'unreadable-clock' };
+  }
+
+  if (wallClockMilliseconds < session.startedAt) {
+    return {
+      remainingMilliseconds: 0,
+      durationSeconds,
+      basis: 'clock-before-start',
+    };
+  }
+
+  const elapsedMilliseconds = wallClockMilliseconds - session.startedAt;
+
+  return {
+    remainingMilliseconds: clampMilliseconds(
+      durationSeconds * MILLISECONDS_PER_SECOND - elapsedMilliseconds,
+      durationSeconds,
+    ),
+    durationSeconds,
+    basis: 'derived',
+  };
 }
 
 // The whole derivation: two durable facts and one wall-clock reading in, one
@@ -76,42 +147,7 @@ export function deriveGuidance(
   session: ActiveMissionSession,
   wallClockMilliseconds: number,
 ): MissionGuidance {
-  const durationSeconds = guidanceDurationSeconds(session);
-
-  if (!isEpochMilliseconds(session.startedAt)) {
-    return { remainingSeconds: 0, durationSeconds, basis: 'invalid-session' };
-  }
-
-  if (durationSeconds === 0) {
-    return { remainingSeconds: 0, durationSeconds, basis: 'malformed-duration' };
-  }
-
-  if (!Number.isFinite(wallClockMilliseconds)) {
-    return { remainingSeconds: 0, durationSeconds, basis: 'unreadable-clock' };
-  }
-
-  if (wallClockMilliseconds < session.startedAt) {
-    return {
-      remainingSeconds: 0,
-      durationSeconds,
-      basis: 'clock-before-start',
-    };
-  }
-
-  const elapsedMilliseconds = wallClockMilliseconds - session.startedAt;
-  const remainingMilliseconds =
-    durationSeconds * MILLISECONDS_PER_SECOND - elapsedMilliseconds;
-
-  return {
-    // Rounded up, so a second is shown while any of it is left and zero is
-    // reached exactly when the duration has elapsed.
-    remainingSeconds: clampSeconds(
-      Math.ceil(remainingMilliseconds / MILLISECONDS_PER_SECOND),
-      durationSeconds,
-    ),
-    durationSeconds,
-    basis: 'derived',
-  };
+  return toGuidance(measureRemaining(session, wallClockMilliseconds));
 }
 
 // What the display ticks from between recoveries: a value read from durable
@@ -119,7 +155,9 @@ export function deriveGuidance(
 // page lifetime, and it is runtime data that is never written anywhere.
 export type GuidanceAnchor = Readonly<{
   sessionId: string;
-  remainingSecondsAtAnchor: number;
+  // Unrounded, so repeated anchoring measures the same time rather than
+  // rounding the same fraction of a second up again and again.
+  remainingMillisecondsAtAnchor: number;
   durationSeconds: number;
   basis: GuidanceBasis;
   monotonicMillisecondsAtAnchor: number;
@@ -133,16 +171,20 @@ export function guidanceAt(
   anchor: GuidanceAnchor,
   monotonicMilliseconds: number,
 ): MissionGuidance {
+  return toGuidance(remainingAt(anchor, monotonicMilliseconds));
+}
+
+function remainingAt(
+  anchor: GuidanceAnchor,
+  monotonicMilliseconds: number,
+): RemainingMilliseconds {
   const elapsedMilliseconds = Number.isFinite(monotonicMilliseconds)
     ? Math.max(0, monotonicMilliseconds - anchor.monotonicMillisecondsAtAnchor)
     : 0;
 
   return {
-    remainingSeconds: clampSeconds(
-      Math.ceil(
-        anchor.remainingSecondsAtAnchor -
-          elapsedMilliseconds / MILLISECONDS_PER_SECOND,
-      ),
+    remainingMilliseconds: clampMilliseconds(
+      anchor.remainingMillisecondsAtAnchor - elapsedMilliseconds,
       anchor.durationSeconds,
     ),
     durationSeconds: anchor.durationSeconds,
@@ -169,20 +211,20 @@ export function anchorGuidance(
   readings: ClockReadings,
   previous: GuidanceAnchor | null,
 ): GuidanceAnchor {
-  const derived = deriveGuidance(session, readings.wallClockMilliseconds);
+  const measured = measureRemaining(session, readings.wallClockMilliseconds);
   const carried =
     previous !== null && previous.sessionId === session.sessionId
-      ? guidanceAt(previous, readings.monotonicMilliseconds).remainingSeconds
+      ? remainingAt(previous, readings.monotonicMilliseconds).remainingMilliseconds
       : null;
 
   return {
     sessionId: session.sessionId,
-    remainingSecondsAtAnchor:
+    remainingMillisecondsAtAnchor:
       carried === null
-        ? derived.remainingSeconds
-        : Math.min(derived.remainingSeconds, carried),
-    durationSeconds: derived.durationSeconds,
-    basis: derived.basis,
+        ? measured.remainingMilliseconds
+        : Math.min(measured.remainingMilliseconds, carried),
+    durationSeconds: measured.durationSeconds,
+    basis: measured.basis,
     monotonicMillisecondsAtAnchor: readings.monotonicMilliseconds,
   };
 }

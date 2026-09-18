@@ -631,13 +631,14 @@ describe('starting the ready Mission', () => {
 
     fireEvent.click(startControl());
 
-    // Timer derivation, the full active presentation, completion and the exit
-    // path are later steps, and none of them is claimed here.
+    // Completion and the exit path are later steps, and neither is claimed
+    // here. The approximate guidance the running Mission shows is calm text,
+    // not a ticking clock face.
     expect(screen.queryAllByRole('button')).toEqual([]);
     expect(container.querySelector('[role="timer"], progress')).toBeNull();
     expect(container.textContent).not.toMatch(/\d+:\d\d/);
     expect(
-      screen.queryByText(/Mission done|Reward|Monthly Goal|min left|remaining/i),
+      screen.queryByText(/Mission done|Reward|Monthly Goal/i),
     ).toBeNull();
   });
 

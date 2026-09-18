@@ -157,7 +157,7 @@ describe('anchoring guidance to a monotonic reading', () => {
   it('ticks from elapsed time rather than from the number of callbacks', () => {
     const anchor = anchorGuidance(activeSession(), readings(STARTED_AT, 5_000), null);
 
-    expect(anchor.remainingSecondsAtAnchor).toBe(DURATION_SECONDS);
+    expect(anchor.remainingMillisecondsAtAnchor).toBe(DURATION_SECONDS * 1000);
     // One reading taken ten seconds later says ten seconds passed, whether that
     // was one callback or ten: a late or coalesced tick cannot run slow.
     expect(guidanceAt(anchor, 15_000).remainingSeconds).toBe(DURATION_SECONDS - 10);
@@ -182,7 +182,7 @@ describe('anchoring guidance to a monotonic reading', () => {
       first,
     );
 
-    expect(later.remainingSecondsAtAnchor).toBe(140);
+    expect(later.remainingMillisecondsAtAnchor).toBe(140_000);
   });
 
   it('does not extend guidance when the wall clock is rolled back after the start', () => {
@@ -194,9 +194,10 @@ describe('anchoring guidance to a monotonic reading', () => {
       first,
     );
 
-    expect(first.remainingSecondsAtAnchor).toBe(140);
-    expect(rolled.remainingSecondsAtAnchor).toBe(110);
-    expect(rolled.remainingSecondsAtAnchor).toBeLessThan(first.remainingSecondsAtAnchor);
+    expect(first.remainingMillisecondsAtAnchor).toBe(140_000);
+    expect(rolled.remainingMillisecondsAtAnchor).toBe(110_000);
+    expect(rolled.remainingMillisecondsAtAnchor)
+      .toBeLessThan(first.remainingMillisecondsAtAnchor);
   });
 
   it('reads zero when the wall clock is rolled back before the start', () => {
@@ -208,7 +209,7 @@ describe('anchoring guidance to a monotonic reading', () => {
     );
 
     expect(rolled).toMatchObject({
-      remainingSecondsAtAnchor: 0,
+      remainingMillisecondsAtAnchor: 0,
       basis: 'clock-before-start',
     });
   });
@@ -222,16 +223,53 @@ describe('anchoring guidance to a monotonic reading', () => {
     );
 
     // A ceiling belongs to the session it was learned for.
-    expect(first.remainingSecondsAtAnchor).toBe(40);
-    expect(other.remainingSecondsAtAnchor).toBe(230);
+    expect(first.remainingMillisecondsAtAnchor).toBe(40_000);
+    expect(other.remainingMillisecondsAtAnchor).toBe(230_000);
     expect(other.sessionId).toBe('session-2');
+  });
+
+  it('reaches zero at the real expiry when anchored part-way through a second', () => {
+    const session = activeSession({ durationSecondsAtSelection: 10 });
+    // Anchored 600ms in: 9.4 seconds are really left, and the display rounds
+    // that up to 10 without the measurement being rounded with it.
+    const anchor = anchorGuidance(session, readings(STARTED_AT + 600, 600), null);
+
+    expect(anchor.remainingMillisecondsAtAnchor).toBe(9_400);
+    expect(guidanceAt(anchor, 600).remainingSeconds).toBe(10);
+    expect(guidanceAt(anchor, 9_999).remainingSeconds).toBe(1);
+    expect(guidanceAt(anchor, 10_000).remainingSeconds).toBe(0);
+  });
+
+  it('gains no time from re-anchoring repeatedly within a second', () => {
+    const session = activeSession({ durationSecondsAtSelection: 10 });
+    let wall = STARTED_AT + 600;
+    let monotonic = 600;
+    let anchor = anchorGuidance(session, readings(wall, monotonic), null);
+
+    // Twenty returns to the page, a tenth of a second apart. Each one measures
+    // the same elapsed time; none of them rounds a fraction of a second up into
+    // the anchor and pushes the moment of zero further away.
+    for (let repeat = 0; repeat < 20; repeat += 1) {
+      wall += 100;
+      monotonic += 100;
+      anchor = anchorGuidance(session, readings(wall, monotonic), anchor);
+    }
+
+    expect(anchor.remainingMillisecondsAtAnchor).toBe(7_400);
+    expect(
+      anchor.monotonicMillisecondsAtAnchor + anchor.remainingMillisecondsAtAnchor,
+    ).toBe(10_000);
+    expect(guidanceAt(anchor, 10_000).remainingSeconds).toBe(0);
   });
 
   it('keeps a malformed duration at zero through anchoring and ticking', () => {
     const session = activeSession({ durationSecondsAtSelection: 0 });
     const anchor = anchorGuidance(session, readings(STARTED_AT, 0), null);
 
-    expect(anchor).toMatchObject({ remainingSecondsAtAnchor: 0, basis: 'malformed-duration' });
+    expect(anchor).toMatchObject({
+      remainingMillisecondsAtAnchor: 0,
+      basis: 'malformed-duration',
+    });
     expect(guidanceAt(anchor, 60_000).remainingSeconds).toBe(0);
   });
 
@@ -519,7 +557,7 @@ describe('the running Mission timer', () => {
     const { clocks } = movableClocks(STARTED_AT + 60_000, 60_000);
     const anchor: GuidanceAnchor = {
       sessionId: 'someone-elses-session',
-      remainingSecondsAtAnchor: 10,
+      remainingMillisecondsAtAnchor: 10_000,
       durationSeconds: DURATION_SECONDS,
       basis: 'derived',
       monotonicMillisecondsAtAnchor: 0,

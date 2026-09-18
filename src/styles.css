@@ -1329,6 +1329,36 @@ input {
   font-weight: 800;
 }
 
+/* What the family should be doing: the step away from the screen leads the
+   running Mission, before the reminder of what the Mission is. */
+.mission-session__away {
+  max-width: 48ch;
+  margin: 0;
+  color: #23423a;
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.6;
+}
+
+.mission-session__away + .mission-session__mission {
+  margin-top: 0.9rem;
+}
+
+/* Supporting information, never the centrepiece: quiet, still, and the same
+   calm surface as the rest of the Mission. It has no urgency colour, no motion,
+   no alarm and no overtime, and it does not grow louder as it approaches zero. */
+.mission-session__guidance {
+  max-width: 48ch;
+  margin: 1.1rem 0 0;
+  color: #5a6d67;
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+.mission-session__guidance + .mission-session__guidance {
+  margin-top: 0.3rem;
+}
+
 /* The one dominant action of the ready Mission. It sits last, after everything
    the family needs in order to decide, and nothing else on the view competes
    with it. */

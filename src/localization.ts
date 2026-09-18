@@ -112,6 +112,13 @@ const englishMessages = {
   'view.sessionActive.title': 'Your Mission has started',
   'session.active.away':
     'Do the Mission away from the screen, then come back when you are done.',
+  'session.active.remaining': 'About {minutes} min left',
+  'session.active.lessThanMinute': 'Less than a minute left',
+  'session.active.zero': 'Ready when you are.',
+  'session.active.timingUnavailable':
+    'The time guide is not available right now. Your Mission is still on.',
+  'session.active.missionUnavailable':
+    'This Mission cannot be shown right now, so it cannot safely continue.',
 } as const;
 
 export type MessageKey = keyof typeof englishMessages;
@@ -254,6 +261,13 @@ export const INTERFACE_MESSAGES: CompleteInterfaceMessages = {
     'view.sessionActive.title': 'Deine Mission läuft',
     'session.active.away':
       'Mach die Mission weg vom Bildschirm und komm zurück, wenn du fertig bist.',
+    'session.active.remaining': 'Noch etwa {minutes} Min.',
+    'session.active.lessThanMinute': 'Weniger als eine Minute übrig',
+    'session.active.zero': 'Nimm dir so viel Zeit, wie du brauchst.',
+    'session.active.timingUnavailable':
+      'Die Zeitangabe ist gerade nicht verfügbar. Deine Mission läuft weiter.',
+    'session.active.missionUnavailable':
+      'Diese Mission kann gerade nicht angezeigt werden und kann deshalb nicht sicher weitergehen.',
   },
   ru: {
     "recovery.pending": "Подождите. Это действие ещё не подтверждено.",
@@ -362,6 +376,13 @@ export const INTERFACE_MESSAGES: CompleteInterfaceMessages = {
     'view.sessionActive.title': 'Твоя миссия началась',
     'session.active.away':
       'Выполни миссию не у экрана и возвращайся, когда закончишь.',
+    'session.active.remaining': 'Осталось около {minutes} мин',
+    'session.active.lessThanMinute': 'Осталось меньше минуты',
+    'session.active.zero': 'Не спеши — заканчивай, когда будешь готов.',
+    'session.active.timingUnavailable':
+      'Подсказка о времени сейчас недоступна. Твоя миссия продолжается.',
+    'session.active.missionUnavailable':
+      'Эту миссию сейчас нельзя показать, поэтому она не может безопасно продолжаться.',
   },
 };
 
