@@ -1,11 +1,11 @@
 # MissionKid Implementation Plan 03 — Mission Session and Completion (F003) with the Reward Card and Monthly Goal completion message (F004 slice)
 
 **Date:** 2026-09-17
-**Status:** Approved — Tasks 1 to 4 complete under the approved execution allocation clarification; Tasks 5–19 not started
+**Status:** Approved — Tasks 1 to 5 complete under the approved execution allocation clarification; Tasks 6–19 not started
 
-This plan's scope and decisions are approved. Scope approval is not authorization to execute a task: each implementation task begins only when it is explicitly authorized. Tasks 1 to 4 were each explicitly authorized and are complete; no later task has begun.
+This plan's scope and decisions are approved. Scope approval is not authorization to execute a task: each implementation task begins only when it is explicitly authorized. Tasks 1 to 5 were each explicitly authorized and are complete; no later task has begun.
 
-The scope below plans `F003` in full, except the acceptance clauses explicitly deferred with the Mission History view, together with one deliberately bounded part of `F004`: the Reward Card and the Monthly Goal derivation and completion message that the card must display. That combined scope is approved as decision D1-A, with the History deferrals preserved exactly as documented. Every task below except Tasks 1 to 4 is pending implementation and verification; what those tasks actually changed is recorded in the implementation record at the end of this plan, and nothing else here is a claim about what the repository already does.
+The scope below plans `F003` in full, except the acceptance clauses explicitly deferred with the Mission History view, together with one deliberately bounded part of `F004`: the Reward Card and the Monthly Goal derivation and completion message that the card must display. That combined scope is approved as decision D1-A, with the History deferrals preserved exactly as documented. Every task below except Tasks 1 to 5 is pending implementation and verification; what those tasks actually changed is recorded in the implementation record at the end of this plan, and nothing else here is a claim about what the repository already does.
 
 ## Authorization basis
 
@@ -1025,6 +1025,96 @@ presentation, ready cancellation, confirmed abandonment, conflict resolution,
 the completion write, the Reward Card and Monthly Goal derivation, and the
 acceptance obligations that depend on them, all remain open.
 
+### Task 5 authorization (2026-09-18)
+
+Task 5 was explicitly authorized for execution from `c51948c`, with Task 4's
+source commit `2dafce2` and the approved control allocation `60963d9` as its
+basis. Tasks 6–19, push and merge are not authorized.
+
+### Task 5 completion (2026-09-18)
+
+Task 5 is complete and committed as `ed52ff8`: remaining guidance is derived from
+the running session's own durable facts, anchored for live ticks, recalculated on
+every return to the page, and never persisted.
+
+| Gate | Result |
+| --- | --- |
+| `npm run typecheck` | Pass, no suppression |
+| `npm test` | 554 / 554 pass, 15 files |
+| `npm run build` | Pass, no circular-import warning |
+| `git diff --check` | Clean |
+| Snapshot schema, adapter contract, D4-B | Unchanged |
+| Timer values persisted | None |
+| Interface strings added or changed | None |
+
+**The calculation.** `startedAt` and the duration frozen at selection, plus one
+injected wall-clock reading, produce one bounded result: a whole number of
+seconds clamped between zero and that duration, rounded up so a second shows
+while any of it is left and zero is reached exactly at expiry. Units are explicit
+— stored facts in epoch milliseconds and whole seconds, readings in milliseconds.
+The function is total: an unusable reading, a malformed duration, a clock earlier
+than the start and a structurally invalid start timestamp each return a typed
+zero result with the reason attached, and no input produces a throw, a NaN, an
+infinity or an invented timestamp.
+
+**Clock ownership.** Both clocks are injected; the defaults read wall time and a
+monotonic reading, falling back to wall time only where the browser provides no
+monotonic clock. A monotonic reading measures elapsed time within one page
+lifetime and nothing else: it is never stored, never compared with a wall-clock
+timestamp, and never carried across a reload. Elapsed time is clamped at zero, so
+a reading that appears to move backwards holds guidance still rather than raising
+it.
+
+**Recovery and re-anchoring.** Guidance is re-read from the timestamps on first
+sight of a running Mission and on every visibility or focus return, so time that
+passed while the page was hidden is accounted for by the facts rather than by
+anything the page counted, and a refresh recovers the real remaining time instead
+of resetting to the full duration. Within one page lifetime the value can only
+fall: a wall clock rolled back to a time still after the start is capped by what
+the previous anchor's elapsed time says, and a rollback to before the start reads
+zero. That ceiling is runtime knowledge only — no counter is stored to hold it.
+Anchors are keyed by session identity, so one naming another session guides
+nothing.
+
+**Runtime integration.** The anchor lives in runtime application state, which
+refers to it by type only, so no import cycle reaches the build. A display update
+is scheduled only while the page is visible and guidance is above zero; nothing
+is scheduled before a Mission is running, at zero, while hidden, or after
+unmount, and listeners are removed with the effect. An effect replay leaves one
+scheduled tick, not two. Ticks recompute from the anchor, so a late or coalesced
+callback shows the time that actually passed.
+
+**Delegated implementation choices, recorded rather than specified elsewhere.**
+Rounding up to whole seconds, a one-second scheduling interval, the runtime-only
+non-increase ceiling, and the wall-clock fallback where no monotonic clock exists
+are ordinary choices the owning specifications delegate. They are documented where
+the code makes them; no specification needed a change and none was made.
+
+**Verification.** The suite gained 40 tests with injected clocks and controlled
+scheduling and no real-time waits: the derivation at the start, one second in,
+midway, under a second, at exact expiry and long past it, at both clamp ends, for
+all five malformed-duration cases with the stored value asserted unchanged, for a
+clock before the start, for unusable readings, for an invalid start timestamp and
+across extreme arithmetic inputs; anchoring for elapsed-time ticking, a single
+delayed callback, out-of-order and unusable monotonic readings, a wall clock
+moving on, both rollback kinds and separation between session identities; and the
+wiring for a session that is not running, midway recovery, a delayed callback,
+rest at zero, a hidden page and its return, four repeated visibility and focus
+events, both rollback kinds, a malformed duration, a StrictMode effect replay,
+cleanup on unmount, a stale anchor, and the absence of any browser-storage write
+from ticks, anchoring or page events.
+
+**Limitations.** Unit and wiring tests do not by themselves prove every rendered
+recovery flow; the seeded-snapshot end-to-end cases, including completion and
+abandonment under a malformed duration or a backward clock, remain Task 11. The
+derivation has no rendered consumer yet, which is this plan's split between
+derivation and the active presentation that follows it. The unexplained failures
+recorded in Task 1 did not recur and remain unexplained rather than resolved.
+
+**Scope.** No countdown presentation, no active-view redesign, no control and no
+lifecycle operation. Completion and abandonment are not made conditional on
+remaining time; their controls and operations remain later work.
+
 ## Approval record
 
 | Item | State |
@@ -1038,5 +1128,5 @@ acceptance obligations that depend on them, all remain open.
 | D4-B — refuse snapshot-replacing writes while an unresolved invalid or conflicting completed record persists | Approved 2026-09-17 |
 | Scope and decisions approved | Yes |
 | Execution allocation clarification — each functional control built by the task implementing its operation | Approved 2026-09-18 |
-| Implementation task authorized | Tasks 1 to 4, each authorized 2026-09-18; every later task requires its own explicit authorization |
-| Tasks started | Task 1 — complete, committed as `704b4cc`; Task 2 — complete, committed as `9d56eae`; Task 3 — complete, committed as `f6f0c20`; Task 4 — complete, committed as `2dafce2`; Tasks 5–19 not started |
+| Implementation task authorized | Tasks 1 to 5, each authorized 2026-09-18; every later task requires its own explicit authorization |
+| Tasks started | Task 1 — complete, committed as `704b4cc`; Task 2 — complete, committed as `9d56eae`; Task 3 — complete, committed as `f6f0c20`; Task 4 — complete, committed as `2dafce2`; Task 5 — complete, committed as `ed52ff8`; Tasks 6–19 not started |
