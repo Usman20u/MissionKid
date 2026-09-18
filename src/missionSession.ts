@@ -488,9 +488,10 @@ export function leaveMissionSession(
 
 // D2: the period identity is the family's own local calendar month, fixed once
 // at completion and never recomputed. It is built from local calendar parts
-// rather than from an ISO string, because an ISO timestamp names the UTC month
-// and would put a completion made late on the last evening of a month into the
-// next one for anyone east of UTC.
+// rather than from an ISO string, because an ISO timestamp names the UTC month,
+// which diverges from the family's month at both ends of it: east of UTC early
+// on the first local day, where UTC is still in the previous month, and west of
+// UTC late on the last local day, where UTC has already entered the next one.
 export function localCompletionPeriodId(epochMilliseconds: number): string {
   const moment = new Date(epochMilliseconds);
   const month = moment.getMonth() + 1;

@@ -1,3 +1,5 @@
+import { Component, useState, type PropsWithChildren, type ReactNode } from 'react';
+
 import {
   selectSessionAttempt,
   selectSessionIssue,
@@ -10,7 +12,11 @@ import {
   type MessageKey,
   type SupportedLanguage,
 } from './localization';
-import { deriveMonthlyGoal } from './missionProgress';
+import {
+  completionPeriodLabel,
+  deriveMonthlyGoal,
+  type MonthlyGoalProgress,
+} from './missionProgress';
 import { leaveMissionResult } from './missionSession';
 import {
   persistenceAdapter,
@@ -43,9 +49,19 @@ function completionContext(
   }
 }
 
+type DeriveProgress = (
+  completedSessions: readonly CompletedMissionSession[],
+  childProfileId: string,
+  completionPeriodId: string,
+) => MonthlyGoalProgress;
+
 type MissionResultProps = Readonly<{
   adapter?: PersistenceAdapter;
   session: CompletedMissionSession;
+  // The derivation the card reads, injected like the adapter and the clock so a
+  // test can drive the display-failure path at a real boundary. There is no
+  // production switch: the default is the one derivation.
+  deriveProgress?: DeriveProgress;
 }>;
 
 // The Reward Card: short recognition of one completed Mission Session, derived
@@ -56,9 +72,10 @@ type MissionResultProps = Readonly<{
 // It promises nothing, reveals nothing, ranks nobody and asks for no further
 // interaction to keep the completion. The one action leads back to the core
 // flow, and taking it clears only the pointer that says which result is open.
-export function MissionResult({
+function MissionResultCard({
   adapter = persistenceAdapter,
   session,
+  deriveProgress = deriveMonthlyGoal,
 }: MissionResultProps) {
   const { dispatch, state } = useAppState();
   const t = (key: MessageKey) => translateMessage(state.language, key);
@@ -70,14 +87,22 @@ export function MissionResult({
   );
   // A Mission the catalog no longer carries still completed, still counts and
   // is still shown. Only its reviewed wording is missing, so the approved
-  // fallback stands in for the title rather than the card being withheld.
+  // fallback says so plainly in place of the title rather than leaving a bare
+  // word that could be mistaken for the Mission's own name.
   const title =
     mission?.content[state.language].title ?? t('result.missionUnavailable');
+  // The period this completion belongs to, named from the identity it fixed.
+  // A card restored in a later month still names its own month rather than
+  // calling that period "this month".
+  const periodLabel = completionPeriodLabel(
+    session.completionPeriodId,
+    state.language,
+  );
 
   // Progress belongs to the period this completion itself fixed, never to a
   // month recomputed from the device's clock now. A later clock, timezone, age
   // or language change therefore cannot move this completion between periods.
-  const progress = deriveMonthlyGoal(
+  const progress = deriveProgress(
     state.completedSessions ?? [],
     session.childProfileId,
     session.completionPeriodId,
@@ -128,6 +153,7 @@ export function MissionResult({
         <h3 className="mission-result__goal-heading" id="result-goal-heading">
           {t('result.goal.heading')}
         </h3>
+        <p className="mission-result__goal-period">{periodLabel}</p>
         <p className="mission-result__goal-progress">
           {t('result.goal.progress')
             .replace('{done}', String(progress.displayedCount))
@@ -137,7 +163,9 @@ export function MissionResult({
             actually reached the target. It invites a reward the parent chooses
             and approves; MissionKid neither delivers nor promises one. */}
         {progress.goalCompletingSessionId === session.sessionId ? (
-          <p className="mission-result__goal-complete">{t('result.goal.complete')}</p>
+          <p className="mission-result__goal-complete">
+            {t('result.goal.complete').replace('{period}', periodLabel)}
+          </p>
         ) : null}
       </section>
       {issue?.operation === 'result' ? (
@@ -153,5 +181,76 @@ export function MissionResult({
         {t('result.action.next')}
       </button>
     </div>
+  );
+}
+
+type ResultBoundaryProps = PropsWithChildren<{
+  language: SupportedLanguage;
+  onRetry: () => void;
+}>;
+
+type ResultBoundaryState = { failed: boolean };
+
+// A recovery boundary around the Reward Card alone. A completion is durable
+// before anything here runs, so a card that cannot be derived or rendered is a
+// display problem and nothing more: the completed record, its identity, its
+// period and its place in the Monthly Goal are untouched, and the family is
+// offered the same result again rather than the whole application failing.
+//
+// Retrying re-renders from the same durable facts. It repeats no completion
+// operation, mints no identifier, moves no timestamp, recomputes no period and
+// writes nothing at all.
+class MissionResultBoundary extends Component<
+  ResultBoundaryProps,
+  ResultBoundaryState
+> {
+  state: ResultBoundaryState = { failed: false };
+
+  static getDerivedStateFromError(): ResultBoundaryState {
+    return { failed: true };
+  }
+
+  render(): ReactNode {
+    const t = (key: MessageKey) => translateMessage(this.props.language, key);
+
+    if (this.state.failed) {
+      return (
+        <div className="mission-result">
+          <p className="mission-result__state" role="alert">
+            {t('result.unavailable')}
+          </p>
+          <button
+            className="button button--primary"
+            onClick={() => {
+              this.setState({ failed: false });
+              this.props.onRetry();
+            }}
+            type="button"
+          >
+            {t('session.action.retry')}
+          </button>
+        </div>
+      );
+    }
+
+    return this.props.children;
+  }
+}
+
+// The Reward Card with the recovery its own display failure needs. The retry
+// remounts the card from the durable facts it already had; nothing is re-read,
+// re-derived from a different source, or written.
+export function MissionResult(props: MissionResultProps) {
+  const { state } = useAppState();
+  const [attempt, setAttempt] = useState(0);
+
+  return (
+    <MissionResultBoundary
+      key={attempt}
+      language={state.language}
+      onRetry={() => setAttempt((previous) => previous + 1)}
+    >
+      <MissionResultCard {...props} />
+    </MissionResultBoundary>
   );
 }

@@ -2,9 +2,15 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
 import { App } from './App';
+import { AppStateProvider, type AppState } from './appState';
 import { MISSION_CATALOG } from './catalogContent';
 import { translateMessage, type SupportedLanguage } from './localization';
-import { MONTHLY_GOAL_TARGET } from './missionProgress';
+import {
+  MONTHLY_GOAL_TARGET,
+  completionPeriodLabel,
+  deriveMonthlyGoal,
+} from './missionProgress';
+import { MissionResult } from './MissionResult';
 import {
   MISSIONKID_STORAGE_KEY,
   createEmptySnapshot,
@@ -428,7 +434,16 @@ describe('the Reward Card', () => {
       }),
     );
     render(<App adapter={goal.adapter} now={() => DONE_AT} />);
-    expect(screen.getByText(t('result.goal.complete'))).toBeTruthy();
+    const goalMessage = t('result.goal.complete').replace(
+      '{period}',
+      completionPeriodLabel(PERIOD, 'en'),
+    );
+    expect(screen.getByText(goalMessage)).toBeTruthy();
+    // The invitation is optional and rests on the parent agreeing; it promises
+    // and guarantees nothing.
+    expect(goalMessage).toMatch(/if you and your parent agree/i);
+    expect(goalMessage).not.toMatch(/\bwill get\b|\bwin\b|\bprize\b|\bearn(ed)?\b/i);
+    expect(goalMessage).not.toContain('{period}');
     screen.getByRole('button', { name: t('result.action.next') });
 
     // A different result in the same complete period carries no second prompt.
@@ -440,7 +455,7 @@ describe('the Reward Card', () => {
       }),
     );
     render(<App adapter={later.adapter} now={() => DONE_AT} />);
-    expect(screen.queryAllByText(t('result.goal.complete'))).toHaveLength(1);
+    expect(screen.queryAllByText(goalMessage)).toHaveLength(1);
   });
 
   it('holds no prize, purchase, reveal or pressure behaviour', () => {
@@ -526,5 +541,102 @@ describe('the Reward Card', () => {
 
     expect(screen.getByText(progressText(1))).toBeTruthy();
     expect(h.stored().completedSessions[0].completionPeriodId).toBe(PERIOD);
+  });
+});
+
+describe('a Reward Card that cannot be displayed', () => {
+  const RECORD = {
+    ...SESSION_FACTS,
+    state: 'completed',
+    startedAt: STARTED_AT,
+    completedAt: DONE_AT,
+    completionPeriodId: PERIOD,
+  } as const;
+
+  function failingHarness() {
+    const h = harness(
+      storedSnapshot({
+        currentResultSessionId: 'session-1',
+        completedSessions: [RECORD],
+      }),
+    );
+    // A real derivation boundary, failed on demand. There is no production
+    // switch: the card's default derivation is the one derivation.
+    let failing = true;
+    const deriveProgress = ((completedSessions, childProfileId, periodId) => {
+      if (failing) throw new Error('PRIVATE DERIVATION FAILURE');
+      return deriveMonthlyGoal(completedSessions, childProfileId, periodId);
+    }) as typeof deriveMonthlyGoal;
+
+    const state = {
+      language: 'en',
+      ageBand: '7–8',
+      localProfileId: PROFILE_ID,
+      status: 'ready',
+      setupView: 'handoff',
+      saveStatus: 'idle',
+      completedSessions: [RECORD],
+      currentResultSessionId: 'session-1',
+    } as unknown as AppState;
+
+    render(
+      <AppStateProvider initialState={state}>
+        <MissionResult
+          adapter={h.adapter}
+          deriveProgress={deriveProgress}
+          session={RECORD}
+        />
+      </AppStateProvider>,
+    );
+
+    return { h, recover: () => { failing = false; } };
+  }
+
+  it('keeps the completion and offers a retry that restores the same result', () => {
+    const { h, recover } = failingHarness();
+
+    // The display failed; the completion behind it did not.
+    expect(screen.getByRole('alert').textContent).toBe(t('result.unavailable'));
+    expect(screen.queryByText(t('result.recognition'))).toBeNull();
+    expect(h.stored().completedSessions).toHaveLength(1);
+    expect(h.stored().completedSessions[0].sessionId).toBe('session-1');
+    expect(h.stored().currentResultSessionId).toBe('session-1');
+    expect(h.writes).toEqual([]);
+
+    recover();
+    fireEvent.click(screen.getByRole('button', { name: t('session.action.retry') }));
+
+    // The same result, derived again from the same durable facts.
+    expect(screen.getByText(t('result.recognition'))).toBeTruthy();
+    expect(screen.getByRole('heading', { level: 2 }).textContent).toBe(
+      MISSION.content.en.title,
+    );
+    expect(screen.getByText(progressText(1))).toBeTruthy();
+  });
+
+  it('recreates no completion operation, timestamp, period, count or pointer', () => {
+    const { h, recover } = failingHarness();
+    const before = h.values.get(MISSIONKID_STORAGE_KEY);
+
+    recover();
+    fireEvent.click(screen.getByRole('button', { name: t('session.action.retry') }));
+
+    // Nothing at all was written by failing or by recovering.
+    expect(h.writes).toEqual([]);
+    expect(h.values.get(MISSIONKID_STORAGE_KEY)).toBe(before);
+    const record = h.stored().completedSessions[0];
+    expect(record.completedAt).toBe(DONE_AT);
+    expect(record.completionPeriodId).toBe(PERIOD);
+    expect(h.stored().completedSessions).toHaveLength(1);
+    expect(h.stored().currentResultSessionId).toBe('session-1');
+  });
+
+  it('contains the failure to the card rather than the whole application', () => {
+    failingHarness();
+
+    // The terminal application error screen is not what a display failure
+    // reaches; the card's own recovery is.
+    expect(screen.queryByText(t('error.unexpected.title'))).toBeNull();
+    expect(screen.getByRole('button', { name: t('session.action.retry') })).toBeTruthy();
   });
 });

@@ -1,4 +1,36 @@
+import type { SupportedLanguage } from './localization';
 import type { CompletedMissionSession } from './persistence';
+
+const PERIOD_PATTERN = /^(\d{4})-(0[1-9]|1[0-2])$/;
+
+// The stored period, named in the family's language. It is read from the
+// identity the completion already fixed and formatted in UTC on the first of
+// that month, so no device timezone can shift the label into a neighbouring
+// month the way a local reading of a stored instant could.
+//
+// A card restored in a later month therefore still names the month its
+// completion belongs to, rather than calling that period "this month".
+export function completionPeriodLabel(
+  completionPeriodId: string,
+  language: SupportedLanguage,
+): string {
+  const parts = PERIOD_PATTERN.exec(completionPeriodId);
+
+  if (parts === null) {
+    return completionPeriodId;
+  }
+
+  try {
+    return new Intl.DateTimeFormat(language, {
+      year: 'numeric',
+      month: 'long',
+      timeZone: 'UTC',
+    }).format(new Date(Date.UTC(Number(parts[1]), Number(parts[2]) - 1, 1)));
+  } catch {
+    // A device without the locale data still names the period truthfully.
+    return completionPeriodId;
+  }
+}
 
 // The fixed MVP target for one Child Profile in one monthly goal period.
 export const MONTHLY_GOAL_TARGET = 20;

@@ -1154,8 +1154,9 @@ describe('recording a completion exactly once', () => {
   });
 
   it('derives the period from the local calendar month, not the UTC one', () => {
-    // 23:30 on the last day of a local month. An ISO month would read the next
-    // one for any zone east of UTC, and the wrong one for any zone west of it.
+    // The two ends where a local month and the UTC month actually diverge are
+    // covered under fixed timezones in the calendar suite below. This case only
+    // fixes that the local parts, not the ISO string, decide the identity.
     const localMidnightEve = new Date(2024, 2, 31, 23, 30).getTime();
     const harness = createHarness({
       session: { ...ACTIVE_SESSION, startedAt: localMidnightEve - 60_000 },

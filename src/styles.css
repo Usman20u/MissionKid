@@ -1527,3 +1527,11 @@ input {
 .mission-result .button {
   margin-top: 1.5rem;
 }
+
+/* Which month the progress belongs to, named from the completion's own stored
+   period so a card restored later never calls an earlier month "this month". */
+.mission-result__goal-period {
+  margin: 0.15rem 0 0;
+  color: #4c625c;
+  font-size: 0.95rem;
+}
