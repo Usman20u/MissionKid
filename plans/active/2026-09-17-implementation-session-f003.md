@@ -1,11 +1,11 @@
 # MissionKid Implementation Plan 03 — Mission Session and Completion (F003) with the Reward Card and Monthly Goal completion message (F004 slice)
 
 **Date:** 2026-09-17
-**Status:** Approved — Tasks 1 to 10 complete under the approved execution allocation clarification; Tasks 11–19 not started
+**Status:** Approved — Tasks 1 to 12 complete under the approved execution allocation clarification; Tasks 13–19 not started
 
-This plan's scope and decisions are approved. Scope approval is not authorization to execute a task: each implementation task begins only when it is explicitly authorized. Tasks 1 to 10 were each explicitly authorized and are complete; no later task has begun.
+This plan's scope and decisions are approved. Scope approval is not authorization to execute a task: each implementation task begins only when it is explicitly authorized. Tasks 1 to 12 were each explicitly authorized and are complete; no later task has begun.
 
-The scope below plans `F003` in full, except the acceptance clauses explicitly deferred with the Mission History view, together with one deliberately bounded part of `F004`: the Reward Card and the Monthly Goal derivation and completion message that the card must display. That combined scope is approved as decision D1-A, with the History deferrals preserved exactly as documented. Every task below except Tasks 1 to 10 is pending implementation and verification; what those tasks actually changed is recorded in the implementation record at the end of this plan, and nothing else here is a claim about what the repository already does.
+The scope below plans `F003` in full, except the acceptance clauses explicitly deferred with the Mission History view, together with one deliberately bounded part of `F004`: the Reward Card and the Monthly Goal derivation and completion message that the card must display. That combined scope is approved as decision D1-A, with the History deferrals preserved exactly as documented. Every task below except Tasks 1 to 12 is pending implementation and verification; what those tasks actually changed is recorded in the implementation record at the end of this plan, and nothing else here is a claim about what the repository already does.
 
 ## Authorization basis
 
@@ -1502,6 +1502,113 @@ deferred History work, push and merge are not authorized.
 
 All nineteen tasks, their order, the approved scope and every existing completion
 record are preserved unchanged.
+
+### Tasks 11 and 12 completion (2026-09-18)
+
+Tasks 11 and 12 are complete and committed as `a06ec32` and `a20663a`. Every
+implemented restoration path is proven through the rendered application, a real
+Reward Card display failure now recovers, a restored card names its own period,
+and the three-language review is complete and guarded.
+
+| Gate | Result |
+| --- | --- |
+| `npm run typecheck` | Pass, no suppression |
+| `npm test` | 714 / 714 pass, 21 files |
+| `npm run build` | Pass |
+| `git diff --check` | Clean |
+| Snapshot schema, adapter contract, D4-B | Unchanged |
+| Parallel recovery subsystem, automatic reset | None |
+
+**Task 11 — restoration proven through the application.** Seeded snapshots were
+driven through the real adapter and the rendered interface for: `selected`
+continuing to `ready` without starting; `ready` unchanged with no write; `active`
+midway at its real remaining time; `active` after its duration elapsed while
+away, still active and nothing auto-completed; `active` with a malformed duration
+and with a clock behind its own start, both showing zero guidance and both
+completing and abandoning successfully from that state; a current Mission whose
+content is gone, neither started nor completed nor substituted, with its approved
+exit working; a valid pointer restoring the same card; an invalid pointer
+rejected alone with every completion preserved; a completed Mission whose content
+is gone keeping its completion, category and membership; identical duplicates
+coalescing and conflicting copies counting for nothing; corrupted and
+unsupported-version snapshots untouched and explained with reset still a
+deliberate parent decision; temporary mode claiming nothing durable; and an
+incomplete age context keeping trustworthy completed facts.
+
+**D4-B end to end.** While an unresolved conflicting record is stored the next
+snapshot-replacing write is refused with no stored byte changed and nothing
+deleted; a later valid re-read lifts the block and the same action then succeeds.
+Identical duplicates and pointer-only problems never block a write, and the
+approved malformed-duration exception still completes.
+
+**A real display failure, proven separately.** Dropping an invalid pointer is
+correct but does not exercise failure to display a valid completed result. A
+recovery boundary now contains a derivation or render failure to the card rather
+than letting it reach the terminal application error screen: the completion, its
+identity, its period and its count are untouched, the family is told the result
+cannot be shown, and a retry re-renders the same result from the same durable
+facts, writing nothing. The derivation is injected the way the adapter and clock
+already are, so the failure is driven at a real boundary with no production fault
+switch.
+
+**Period-correct restoration.** A card restored in a later month called its
+progress "this month". The goal section now carries a period-neutral heading and
+names the period the completion itself fixed, formatted from the stored year and
+month in UTC so no device timezone can move the label into a neighbouring month.
+
+**A corrected explanation, not a corrected behavior.** A local month and the UTC
+month diverge at both ends: east of UTC early on the first local day, where UTC
+is still in the previous month, and west of UTC late on the last local day, where
+UTC has already entered the next one. The note retained from the previous batch
+attributed this to a late evening east of UTC, which is wrong in both halves. The
+derivation was always correct; it is now proven under fixed `Asia/Tokyo` and
+`America/Los_Angeles` contexts rather than the test machine's own timezone.
+
+**Task 12 — three-language completeness.** The checks now cover every implemented
+surface, including the shell and the setup flow, and assert identical key sets,
+non-empty values, identical interpolation tokens, every token actually
+substituted by a view that resolves it, no unused message, and no raw key
+reaching the family. The two-class wording rule is now a check: every
+unknown-outcome message says only that MissionKid could not check, and none
+claims a durable negative. The shipped `F002` selection-unconfirmed wording was
+re-read against that rule and left unchanged, because a failed selection precedes
+both the ready transition and the start it would otherwise be claiming about.
+Neither completion-failure message may congratulate, mention a reward or show
+progress.
+
+**Approved copy corrections.** The three Russian strings no longer assume the
+child's gender while keeping readiness, calm guidance and uncertainty; no gender
+field or preference was added. The twentieth-completion invitation is explicitly
+optional and conditional on the parent agreeing, with nothing promised,
+guaranteed or entitled, and remains wording only. `result.missionUnavailable` was
+the single word "Mission" and could be mistaken for a Mission's own title; it now
+states plainly that the Mission cannot be shown, leaving the completed record,
+its category and its membership unchanged.
+
+**Two defects found in the guard itself.** Verifying the gender check rather than
+trusting it exposed both: JavaScript word boundaries are defined over ASCII, so
+the first version never matched beside a Cyrillic letter and passed on
+everything; and flagging the forms everywhere was wrong, because the same forms
+agreeing with a noun are correct Russian. The check now flags second-person
+agreement only and asserts that it catches the three corrected strings and spares
+the legitimate noun agreements.
+
+**Verification.** The suite gained 43 tests: 25 restoration cases through the
+rendered application, 3 for the display failure and its retry, 6 calendar cases
+under fixed timezones, and 9 localization checks. The served production build was
+inspected in Google Chrome at a true 360 CSS pixel viewport in Russian and at
+1280 pixels in English, with layout measured; a card restored for a prior period
+reads its own month in both, and nothing overflowed at either width or at a 150%
+root text size.
+
+**Limitations.** Browser checking was visual and by measured layout only; no
+assistive technology was run, so no screen-reader behavior is claimed and this
+closes neither the later accessibility task nor the manual-verification task. The
+Mission History view, its route and empty state, and any standalone Monthly Goal
+surface remain deferred, so full `F003` acceptance is not claimed and the MVP is
+not complete. The three unexplained failures recorded in Task 1 and the two
+timeouts recorded in Task 7 remain separately recorded; neither recurred here and
+no shared cause was established.
 
 ## Approval record
 
