@@ -1,11 +1,11 @@
 # MissionKid Implementation Plan 03 — Mission Session and Completion (F003) with the Reward Card and Monthly Goal completion message (F004 slice)
 
 **Date:** 2026-09-17
-**Status:** Approved — Tasks 1, 2 and 3 complete under the approved execution allocation clarification; Tasks 4–19 not started
+**Status:** Approved — Tasks 1 to 4 complete under the approved execution allocation clarification; Tasks 5–19 not started
 
-This plan's scope and decisions are approved. Scope approval is not authorization to execute a task: each implementation task begins only when it is explicitly authorized. Tasks 1, 2 and 3 were each explicitly authorized and are complete; no later task has begun.
+This plan's scope and decisions are approved. Scope approval is not authorization to execute a task: each implementation task begins only when it is explicitly authorized. Tasks 1 to 4 were each explicitly authorized and are complete; no later task has begun.
 
-The scope below plans `F003` in full, except the acceptance clauses explicitly deferred with the Mission History view, together with one deliberately bounded part of `F004`: the Reward Card and the Monthly Goal derivation and completion message that the card must display. That combined scope is approved as decision D1-A, with the History deferrals preserved exactly as documented. Every task below except Tasks 1, 2 and 3 is pending implementation and verification; what those tasks actually changed is recorded in the implementation record at the end of this plan, and nothing else here is a claim about what the repository already does.
+The scope below plans `F003` in full, except the acceptance clauses explicitly deferred with the Mission History view, together with one deliberately bounded part of `F004`: the Reward Card and the Monthly Goal derivation and completion message that the card must display. That combined scope is approved as decision D1-A, with the History deferrals preserved exactly as documented. Every task below except Tasks 1 to 4 is pending implementation and verification; what those tasks actually changed is recorded in the implementation record at the end of this plan, and nothing else here is a claim about what the repository already does.
 
 ## Authorization basis
 
@@ -915,6 +915,116 @@ abandonment, completion or reward behavior, and no inert control standing in for
 one. `F001`, `F002` and Task 2 behavior, the catalog, Mission scenes and the
 accepted presentation are unchanged.
 
+### Task 4 authorization (2026-09-18)
+
+Task 4 was explicitly authorized for execution from `889fad5`, together with the
+execution allocation clarification recorded above and the truthful closure of
+Task 3 under it. Tasks 5–19, push and merge are not authorized.
+
+### Task 4 completion (2026-09-18)
+
+Task 4 is complete and committed as `2dafce2`: the ready view carries
+**Start mission** as its one dominant action, and that action starts the stored
+session exactly once.
+
+| Gate | Result |
+| --- | --- |
+| `npm run typecheck` | Pass, no suppression |
+| `npm test` | 514 / 514 pass, 14 files |
+| `npm run build` | Pass |
+| `git diff --check` | Clean |
+| Manual browser check | Pass — headless Chrome 153.0.8010.37 driven over the DevTools protocol |
+| Specifications changed | None |
+| Interface strings added | 5, in EN/DE/RU, listed below |
+
+**Start.** Keyed by the session identity the family acted on and decided by
+durable state: the requested identity must match the stored current session, that
+session must be `ready`, and its Mission must still resolve to reviewed content
+that is complete in the current language and still approved for the age context
+the session froze at selection. One start writes one `startedAt` from the
+injected clock and adds nothing else — no identifier, no invented lifecycle
+state, no expected end, countdown or counter — and every immutable selection fact
+and unrelated snapshot section is carried through unchanged.
+
+**Idempotence.** Repeated activation resolves the running session and returns the
+`startedAt` it already holds: no second write, no later clock reading replacing a
+durable timestamp, no second session. A stale activation cannot start a different
+Mission, a `selected` session is not startable, `ready` is never rebuilt over a
+running session, and opening, rendering, restoring or refreshing starts nothing.
+
+**Failure classes, decided by evidence rather than by category.** Where durable
+state is read and still says `ready` — a write refused before storage changed, a
+D4-B refusal, the adapter's refusal to replace a snapshot it cannot read, or an
+unconfirmed write found not to have landed — the interface says the Mission did
+not start and is still ready to start, and the same action is the retry. Where a
+fresh read cannot establish what is stored, it says only that MissionKid could
+not check whether the Mission started: neither a start nor its absence is
+claimed, no rollback is written over a start that may already be durable, and the
+ready transition's claim that the Mission has not started is never borrowed.
+Where the write landed and only its confirmation was lost, the durable session
+and its original `startedAt` are adopted unchanged. Runtime issue state now
+carries the operation alongside the outcome, so no message can describe an
+operation it did not belong to.
+
+**Handover.** A confirmed start replaces the ready presentation with the running
+Mission: which Mission it is, that it happens away from the screen, and the
+adult-involvement and safety guidance the family read before starting. No
+not-started statement and no start action remain. Timer derivation and display,
+the full active presentation, **Mission done** and the leave-without-completion
+path stay with Tasks 5, 6, 7 and 8; none is stubbed here. The guidance carried
+over is a deliberate choice so that starting does not drop content the visual
+specification requires the active presentation to retain, and is not a claim that
+Task 6 is done.
+
+**Added interface strings, for human review.**
+
+| Key | English | German | Russian |
+| --- | --- | --- | --- |
+| `session.action.start` | Start mission | Mission starten | Начать миссию |
+| `session.start.notStarted` | We couldn't start this Mission just now. It is still ready to start. Try again. | Diese Mission konnte gerade nicht gestartet werden. Sie ist weiterhin startbereit. Versuche es noch einmal. | Сейчас не удалось начать эту миссию. Она по-прежнему готова к старту. Попробуй ещё раз. |
+| `session.start.unconfirmed` | MissionKid couldn't check whether this Mission started. Try again to see. | MissionKid konnte nicht prüfen, ob diese Mission gestartet wurde. Versuche es noch einmal, um es zu sehen. | MissionKid не смог проверить, началась ли эта миссия. Попробуй ещё раз, чтобы увидеть. |
+| `view.sessionActive.title` | Your Mission has started | Deine Mission läuft | Твоя миссия началась |
+| `session.active.away` | Do the Mission away from the screen, then come back when you are done. | Mach die Mission weg vom Bildschirm und komm zurück, wenn du fertig bist. | Выполни миссию не у экрана и возвращайся, когда закончишь. |
+
+**Verification.** The suite gained 27 tests. At the domain: one start writing one
+timestamp with the exact expected field set; repeated activation resolving the
+same session with its original timestamp and no second write; a stale request and
+a not-yet-ready session starting nothing; an unresolvable Mission and one no
+longer approved for its own frozen age context refusing to start; and the three
+reads a start makes — the domain's read of durable state, the adapter's pre-write
+guard and the read that confirms the write — failed individually so each failure
+names the read it comes from. Both classes are covered separately, including a
+landed write whose confirmation failed, an unconfirmed write found not to have
+landed, a D4-B refusal with the stored bytes unchanged, and a retry that starts
+the same session once. Through the rendered application: the handover, one start
+under a double activation, a native keyboard-activatable control, focus following
+the handover, restoration that neither starts nor restarts, no startable action
+for unresolved content, the running Mission in German and Russian, and both
+failure classes with wording asserted to differ from the ready transition's.
+
+**Manual verification.** The served production build was driven in headless
+Chrome over the DevTools protocol with a seeded Russian `ready` session. At a
+true 360 CSS-pixel layout and at 1280 pixels the document scroll width equalled
+the client width with no element past the viewport, and the ready view read in
+order with one dominant action at the end. One Tab reached **Start mission**, a
+real Enter key activated it, and the application moved to the running Mission
+with its heading, Mission title, away-from-screen line and both guidance notes,
+no control offered, and focus on the new heading with a visible focus ring.
+Browser storage then held the same identifier, selection timestamp, duration and
+category with `state: "active"` and one `startedAt`; a refresh left both
+unchanged and wrote nothing further.
+
+**Limitations.** No assistive technology and no second browser were exercised,
+and neither is claimed; the active presentation checked here is the minimal
+handover this operation requires, not the full active view. The unexplained
+failures recorded in Task 1 did not recur and remain unexplained rather than
+resolved.
+
+**Pending after this task.** Timer derivation and display, the full active
+presentation, ready cancellation, confirmed abandonment, conflict resolution,
+the completion write, the Reward Card and Monthly Goal derivation, and the
+acceptance obligations that depend on them, all remain open.
+
 ## Approval record
 
 | Item | State |
@@ -928,5 +1038,5 @@ accepted presentation are unchanged.
 | D4-B — refuse snapshot-replacing writes while an unresolved invalid or conflicting completed record persists | Approved 2026-09-17 |
 | Scope and decisions approved | Yes |
 | Execution allocation clarification — each functional control built by the task implementing its operation | Approved 2026-09-18 |
-| Implementation task authorized | Tasks 1, 2 and 3, each authorized 2026-09-18; every later task requires its own explicit authorization |
-| Tasks started | Task 1 — complete, committed as `704b4cc`; Task 2 — complete, committed as `9d56eae`; Task 3 — complete, committed as `f6f0c20`; Tasks 4–19 not started |
+| Implementation task authorized | Tasks 1 to 4, each authorized 2026-09-18; every later task requires its own explicit authorization |
+| Tasks started | Task 1 — complete, committed as `704b4cc`; Task 2 — complete, committed as `9d56eae`; Task 3 — complete, committed as `f6f0c20`; Task 4 — complete, committed as `2dafce2`; Tasks 5–19 not started |
