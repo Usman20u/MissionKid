@@ -88,7 +88,12 @@ type RecoveryContext = Readonly<{
   // The Mission a conflict is about. A stored session is not published into
   // runtime by hydration, so without this the conflict could not name the
   // Mission the family is being told to choose again.
-  selectionConflictMissionId?: string;
+  // The Mission Session a conflict is about, exactly as durable state holds it.
+  // The whole session is kept rather than its Mission identifier alone, because
+  // resolving the conflict means returning to that session or leaving it, and
+  // both need the identity and the lifecycle state the exit must be made
+  // against.
+  selectionConflictSession?: CurrentMissionSession;
 }>;
 
 export type AppState = RecoveryContext & (
@@ -101,7 +106,7 @@ export type ResolvedAppState = Exclude<AppState, { status: 'pending' }>;
 
 export type MissionSelectionIssue = 'conflict' | 'unconfirmed';
 
-export type MissionSessionOperation = 'ready' | 'start';
+export type MissionSessionOperation = 'ready' | 'start' | 'exit';
 
 export type MissionSessionOutcome = 'failed' | 'unconfirmed';
 
@@ -133,14 +138,22 @@ export type AppStateAction =
   // or found it already running.
   | { type: 'mission-session-started'; session: ActiveMissionSession }
   | { type: 'mission-session-transition-failed'; issue: MissionSessionIssue }
+  // The current Mission Session was left without completion and durable state
+  // says so. Nothing about it is kept: the runtime session, its timer anchor and
+  // any standing issue all belong to a Mission that is no longer current.
+  | { type: 'mission-session-left' }
+  // Durable state holds a Mission Session this runtime was not following — the
+  // one a conflict is about, or one found in place of the session an exit named.
+  // It is adopted exactly as stored rather than rebuilt from what was assumed.
+  | { type: 'mission-session-adopted'; session: CurrentMissionSession }
   // Guidance was re-read from the session's own timestamps: on first sight of a
   // running Mission, and whenever the family comes back to the page.
   | { type: 'mission-timer-anchored'; anchor: GuidanceAnchor }
   | {
       type: 'mission-selection-failed';
       issue: MissionSelectionIssue;
-      // Present only for a conflict, which is always about one stored Mission.
-      conflictMissionId?: string;
+      // Present only for a conflict, which is always about one stored session.
+      conflictSession?: CurrentMissionSession;
     }
   | {
       type: 'setup-save-unconfirmed';
@@ -258,8 +271,10 @@ export function selectSelectionAttempt(state: AppState): number {
   return state.selectionAttempt ?? 0;
 }
 
-export function selectConflictMissionId(state: AppState): string | null {
-  return state.selectionConflictMissionId ?? null;
+export function selectConflictSession(
+  state: AppState,
+): CurrentMissionSession | null {
+  return state.selectionConflictSession ?? null;
 }
 
 // The Missions this cycle has already shown. Empty outside a cycle, so a fresh
@@ -371,7 +386,7 @@ export function appStateReducer(
             ...state,
             selectionIssue: undefined,
             selectionAttempt: undefined,
-            selectionConflictMissionId: undefined,
+            selectionConflictSession: undefined,
             discovery: { category: action.category, shown: [] },
           };
     case 'discovery-another-set-requested': {
@@ -395,7 +410,7 @@ export function appStateReducer(
         ...state,
         selectionIssue: undefined,
         selectionAttempt: undefined,
-        selectionConflictMissionId: undefined,
+        selectionConflictSession: undefined,
         discovery: { ...discovery, shown: [...discovery.shown, ...action.missionIds] },
       };
     }
@@ -408,7 +423,7 @@ export function appStateReducer(
         currentSession: action.session,
         selectionIssue: undefined,
         selectionAttempt: undefined,
-        selectionConflictMissionId: undefined,
+        selectionConflictSession: undefined,
         // Any transition issue belonged to an earlier session, and leaving it
         // standing would block this one from reaching `ready` at all.
         sessionIssue: undefined,
@@ -435,6 +450,42 @@ export function appStateReducer(
         sessionIssue: action.issue,
         sessionAttempt: (state.sessionAttempt ?? 0) + 1,
       };
+    case 'mission-session-left':
+      // Returning to the approved Discovery path with the setup and language
+      // context that are already current. The Mission Category the parent
+      // picked is kept because it is their standing choice; the cycle's shown
+      // identifiers are not, so an ended cycle is never resurrected. None of
+      // this is persisted: it is navigation state for this page lifetime.
+      return {
+        ...state,
+        currentSession: undefined,
+        sessionIssue: undefined,
+        sessionAttempt: undefined,
+        guidanceAnchor: undefined,
+        selectionIssue: undefined,
+        selectionAttempt: undefined,
+        selectionConflictSession: undefined,
+        discovery: isSetupContextComplete(state)
+          ? { category: state.discovery?.category ?? null, shown: [] }
+          : state.discovery,
+      };
+    case 'mission-session-adopted':
+      // Following durable state rather than the assumption that brought us
+      // here. Any conflict or transition issue described the moment before this
+      // session was read, so none of it survives the reading.
+      return {
+        ...state,
+        currentSession: action.session,
+        sessionIssue: undefined,
+        sessionAttempt: undefined,
+        selectionIssue: undefined,
+        selectionAttempt: undefined,
+        selectionConflictSession: undefined,
+        guidanceAnchor:
+          state.guidanceAnchor?.sessionId === action.session.sessionId
+            ? state.guidanceAnchor
+            : undefined,
+      };
     case 'mission-timer-anchored':
       return { ...state, guidanceAnchor: action.anchor };
     case 'mission-selection-failed':
@@ -446,7 +497,7 @@ export function appStateReducer(
         ...state,
         selectionIssue: action.issue,
         selectionAttempt: (state.selectionAttempt ?? 0) + 1,
-        selectionConflictMissionId: action.conflictMissionId,
+        selectionConflictSession: action.conflictSession,
       };
     case 'setup-save-unconfirmed': {
       // Recovery is newer evidence than the pre-write read; neither confirms the attempted save.

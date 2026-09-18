@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 
 import {
-  selectConflictMissionId,
+  selectConflictSession,
   selectDiscoveryCycle,
   selectSelectionAttempt,
   selectSelectionIssue,
@@ -11,6 +11,7 @@ import {
 import { MISSION_CATALOG } from './catalogContent';
 import {
   createSessionId,
+  leaveMissionSession,
   readWallClock,
   selectMission,
   type SessionIdFactory,
@@ -109,11 +110,53 @@ export function MissionCategorySelection({
   // that Mission the state's dominant information. Its wording comes from the
   // catalog in the current language, never from the stored session, and stays
   // absent if the Mission no longer resolves to reviewed content.
-  const conflictMissionId = selectConflictMissionId(state);
-  const chosenMissionTitle = conflictMissionId
-    ? MISSION_CATALOG.find((record) => record.missionId === conflictMissionId)
-        ?.content[state.language].title ?? null
+  const conflictSession = selectConflictSession(state);
+  const chosenMissionTitle = conflictSession
+    ? MISSION_CATALOG.find(
+        (record) => record.missionId === conflictSession.missionId,
+      )?.content[state.language].title ?? null
     : null;
+
+  // Resolving a conflict is the same pair of operations the session views
+  // offer, reached from the place the family hit it. Returning follows durable
+  // state into the Mission that is actually stored; leaving is the same keyed,
+  // freshly-read exit, made against the state that session is really in.
+  function returnToSession() {
+    if (conflictSession) {
+      dispatch({ type: 'mission-session-adopted', session: conflictSession });
+    }
+  }
+
+  function leaveConflictSession() {
+    if (!conflictSession || conflictSession.state === 'selected') {
+      return;
+    }
+
+    const result = leaveMissionSession(
+      adapter,
+      conflictSession.sessionId,
+      conflictSession.state,
+    );
+
+    switch (result.status) {
+      case 'left':
+      case 'resolved':
+        dispatch({ type: 'mission-session-left' });
+        return;
+      // Durable state holds something else than the conflict described. It is
+      // preserved and followed rather than cleared.
+      case 'superseded':
+        dispatch({ type: 'mission-session-adopted', session: result.session });
+        return;
+      case 'not-left':
+      case 'unavailable':
+        dispatch({ type: 'mission-selection-failed', issue: 'unconfirmed' });
+        return;
+      case 'unconfirmed':
+        dispatch({ type: 'mission-selection-failed', issue: 'unconfirmed' });
+        return;
+    }
+  }
 
   return (
     <div className="mission-discovery">
@@ -200,11 +243,15 @@ export function MissionCategorySelection({
             dispatch({
               type: 'mission-selection-failed',
               issue: result.status === 'conflict' ? 'conflict' : 'unconfirmed',
-              conflictMissionId:
-                result.status === 'conflict' ? result.session.missionId : undefined,
+              conflictSession:
+                result.status === 'conflict' ? result.session : undefined,
             });
           }}
           chosenMissionTitle={chosenMissionTitle}
+          conflictSessionState={conflictSession?.state ?? null}
+          language={state.language}
+          onLeaveSession={leaveConflictSession}
+          onReturnToSession={returnToSession}
           selectionAttempt={selectSelectionAttempt(state)}
           selectionIssue={selectSelectionIssue(state)}
           shown={selectShownMissionIds(state)}

@@ -18,6 +18,7 @@ import {
 } from './localization';
 import {
   advanceSessionToReady,
+  leaveMissionSession,
   readWallClock,
   resolveSessionMission,
   startMissionSession,
@@ -43,6 +44,13 @@ const ISSUE_MESSAGE_KEYS: Readonly<
   start: {
     failed: 'session.start.notStarted',
     unconfirmed: 'session.start.unconfirmed',
+  },
+  // Leaving fails into its own truth as well: an established refusal leaves the
+  // Mission exactly where it was, and an interrupted one claims neither that it
+  // was left nor that it was kept.
+  exit: {
+    failed: 'session.exit.notLeft',
+    unconfirmed: 'session.exit.unconfirmed',
   },
 };
 
@@ -207,6 +215,40 @@ export function MissionReady({
     }
   }
 
+  // Ending an unstarted selection. It needs no confirmation of its own: nothing
+  // has started, nothing is counted, and returning to the three suggestions is
+  // the approved way out of `ready`. It is keyed by the identity the family
+  // acted on and by the state they acted from, so a cancellation that arrives
+  // after the Mission started never abandons a running Mission.
+  function cancel(sessionId: string) {
+    const result = leaveMissionSession(adapter, sessionId, 'ready');
+
+    switch (result.status) {
+      case 'left':
+      case 'resolved':
+        dispatch({ type: 'mission-session-left' });
+        return;
+      // Durable state holds something else than the session this request named.
+      // It is preserved and followed rather than cleared.
+      case 'superseded':
+        dispatch({ type: 'mission-session-adopted', session: result.session });
+        return;
+      case 'not-left':
+      case 'unavailable':
+        dispatch({
+          type: 'mission-session-transition-failed',
+          issue: { operation: 'exit', outcome: 'failed' },
+        });
+        return;
+      case 'unconfirmed':
+        dispatch({
+          type: 'mission-session-transition-failed',
+          issue: { operation: 'exit', outcome: 'unconfirmed' },
+        });
+        return;
+    }
+  }
+
   // Entering `ready` follows a selection without another family decision, so it
   // happens on its own rather than through a second control. It runs once for a
   // stored `selected` session: a confirmed transition moves that session past
@@ -277,6 +319,18 @@ export function MissionReady({
           type="button"
         >
           {t('session.action.retry')}
+        </button>
+      ) : null}
+      {/* The approved way out of `ready`, secondary to starting and never
+          competing with it. The unstarted selection simply ends: no timer, no
+          completion, no recognition and no progress follow from it. */}
+      {session.state === 'ready' ? (
+        <button
+          className="button button--secondary mission-session__exit"
+          onClick={() => cancel(session.sessionId)}
+          type="button"
+        >
+          {t('session.action.backToSuggestions')}
         </button>
       ) : null}
     </div>

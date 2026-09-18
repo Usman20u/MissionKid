@@ -278,7 +278,7 @@ export function AppShell({
           ) : null}
           {!state.resetConfirm && (state.status === 'ready' || state.status === 'degraded') ? (
             view === 'session-active' ? (
-              <MissionActive />
+              <MissionActive adapter={adapter} />
             ) : SESSION_VIEWS.includes(view) ? (
               <MissionReady adapter={adapter} />
             ) : view === 'discovery-categories' ? (

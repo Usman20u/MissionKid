@@ -307,9 +307,14 @@ describe('the running Mission presentation', () => {
     const { clocks, pass } = movableClocks(STARTED_AT + 290_000);
     const { container } = renderActive(activeSession(), clocks);
 
-    // **Mission done** and the leave-without-completion path arrive with the
-    // operations they carry out; nothing here stands in for them.
-    expect(screen.queryAllByRole('button')).toEqual([]);
+    // **Mission done** arrives with the operation it carries out; nothing here
+    // stands in for it. The approved way out is the one control, and it is
+    // secondary.
+    const actions = screen.getAllByRole('button');
+    expect(actions).toHaveLength(1);
+    expect(actions[0]!.textContent).toBe(t('session.action.leave'));
+    expect(actions[0]!.className).toContain('button--secondary');
+    expect(actions[0]!.className).not.toContain('button--primary');
     expect(container.querySelector('[role="timer"], [aria-live], progress')).toBeNull();
     expect(container.textContent).not.toMatch(/\d+:\d\d/);
     expect(
@@ -318,7 +323,7 @@ describe('the running Mission presentation', () => {
 
     pass(20_000);
     // Crossing zero changes the wording and nothing else.
-    expect(screen.queryAllByRole('button')).toEqual([]);
+    expect(screen.getAllByRole('button')).toHaveLength(1);
     expect(container.querySelector('[aria-live]')).toBeNull();
   });
 

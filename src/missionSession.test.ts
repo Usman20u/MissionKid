@@ -5,6 +5,7 @@ import { MISSION_CATALOG } from './catalogContent';
 import type { MissionRecord } from './catalog';
 import {
   advanceSessionToReady,
+  leaveMissionSession,
   selectMission,
   startMissionSession,
 } from './missionSession';
@@ -839,5 +840,285 @@ describe('starting a Mission', () => {
     expect(started.session.startedAt).toBe(ACTIVE_SESSION.startedAt);
     expect(writeCount(harness.storage)).toBe(0);
     expect(harness.values.get(MISSIONKID_STORAGE_KEY)).toBe(before);
+  });
+});
+
+const COMPLETED_SESSION = {
+  ...STORED_FACTS,
+  sessionId: 'session-done',
+  state: 'completed',
+  startedAt: 1_700_000_060_000,
+  completedAt: 1_700_000_360_000,
+  completionPeriodId: '2023-11',
+} as const;
+
+// A snapshot whose completed collection matters to the case under test, which
+// the shared harness deliberately leaves empty.
+function createHarnessWith(
+  snapshot: Record<string, unknown>,
+) {
+  const values = new Map<string, string>();
+  values.set('unrelated-key', 'untouched');
+  values.set(
+    MISSIONKID_STORAGE_KEY,
+    JSON.stringify({
+      ...createEmptySnapshot(),
+      childProfile: { localProfileId: PROFILE_ID, ageBand: '7–8' },
+      ...snapshot,
+    }),
+  );
+
+  const storage: SnapshotStorage = {
+    getItem: vi.fn((key: string) => values.get(key) ?? null),
+    setItem: vi.fn((key: string, value: string) => {
+      values.set(key, value);
+    }),
+    removeItem: vi.fn(),
+  };
+
+  return { values, storage, adapter: createPersistenceAdapter(storage) };
+}
+
+describe('leaving a Mission without completing it', () => {
+  it.each([
+    ['a ready cancellation', READY_SESSION, 'ready'],
+    ['a confirmed abandonment', ACTIVE_SESSION, 'active'],
+  ] as const)('clears the current session for %s', (_label, session, from) => {
+    const harness = createHarness({ session });
+
+    expect(leaveMissionSession(harness.adapter, 'session-1', from)).toEqual({
+      status: 'left',
+    });
+
+    const after = stored(harness.values);
+    expect(after.currentSession).toBeNull();
+    // Nothing is created by leaving: no completion, no pointer, no history.
+    expect(after.completedSessions).toEqual([]);
+    expect(after.currentResultSessionId).toBeNull();
+    expect(writeCount(harness.storage)).toBe(1);
+    // One targeted replacement, never a global reset.
+    expect(harness.storage.removeItem).not.toHaveBeenCalled();
+    expect(harness.values.get('unrelated-key')).toBe('untouched');
+  });
+
+  it('carries every unrelated durable fact across untouched', () => {
+    const harness = createHarnessWith({
+      settings: { language: 'ru' },
+      currentSession: ACTIVE_SESSION,
+      completedSessions: [COMPLETED_SESSION],
+    });
+
+    expect(leaveMissionSession(harness.adapter, 'session-1', 'active')).toEqual({
+      status: 'left',
+    });
+
+    const after = stored(harness.values);
+    expect(after.settings).toEqual({ language: 'ru' });
+    expect(after.childProfile).toEqual({ localProfileId: PROFILE_ID, ageBand: '7–8' });
+    expect(after.completedSessions).toEqual([COMPLETED_SESSION]);
+    expect(after.snapshotVersion).toBe(1);
+  });
+
+  it('resolves an already absent session without writing again', () => {
+    const harness = createHarness({ session: null });
+
+    expect(leaveMissionSession(harness.adapter, 'session-1', 'active')).toEqual({
+      status: 'resolved',
+    });
+    // Nothing is recreated, and nothing is written a second time.
+    expect(writeCount(harness.storage)).toBe(0);
+    expect(stored(harness.values).currentSession).toBeNull();
+  });
+
+  it('never clears a different session that holds the same Mission', () => {
+    const replacement = { ...READY_SESSION, sessionId: 'session-2' };
+    const harness = createHarness({ session: replacement });
+
+    const result = leaveMissionSession(harness.adapter, 'session-1', 'ready');
+
+    expect(result).toEqual({ status: 'superseded', session: replacement });
+    expect(writeCount(harness.storage)).toBe(0);
+    expect(stored(harness.values).currentSession.sessionId).toBe('session-2');
+  });
+
+  it('does not abandon a session that has since started', () => {
+    const harness = createHarness({ session: ACTIVE_SESSION });
+
+    // A ready cancellation that arrives late names a state the session has
+    // left. Honouring it would abandon a running Mission without the
+    // confirmation abandonment requires.
+    const result = leaveMissionSession(harness.adapter, 'session-1', 'ready');
+
+    expect(result).toEqual({ status: 'superseded', session: ACTIVE_SESSION });
+    expect(writeCount(harness.storage)).toBe(0);
+    expect(stored(harness.values).currentSession.state).toBe('active');
+  });
+
+  it('refuses to cancel or abandon a completed Mission Session', () => {
+    const harness = createHarnessWith({
+      currentSession: null,
+      currentResultSessionId: 'session-done',
+      completedSessions: [COMPLETED_SESSION],
+    });
+    const raw = harness.values.get(MISSIONKID_STORAGE_KEY)!;
+
+    for (const from of ['ready', 'active'] as const) {
+      expect(leaveMissionSession(harness.adapter, 'session-done', from)).toEqual({
+        status: 'unavailable',
+      });
+    }
+
+    // The completion and the result reference it is recovered through both
+    // stand exactly as they were.
+    expect(writeCount(harness.storage)).toBe(0);
+    expect(harness.values.get(MISSIONKID_STORAGE_KEY)).toBe(raw);
+  });
+
+  it('leaves a Mission whose guidance and content can no longer be shown', () => {
+    const harness = createHarness({
+      session: {
+        ...ACTIVE_SESSION,
+        missionId: 'movement-99',
+        durationSecondsAtSelection: 0,
+      } as never,
+    });
+
+    // Stopping never depends on remaining time, a usable duration or content
+    // that still resolves.
+    expect(leaveMissionSession(harness.adapter, 'session-1', 'active')).toEqual({
+      status: 'left',
+    });
+    expect(stored(harness.values).currentSession).toBeNull();
+  });
+
+  it('reports no exit and keeps the session when the write is refused', () => {
+    const harness = createHarness({ session: ACTIVE_SESSION });
+    const raw = harness.values.get(MISSIONKID_STORAGE_KEY)!;
+    harness.storage.setItem = vi.fn(() => {
+      throw new Error('write failed');
+    });
+
+    expect(leaveMissionSession(harness.adapter, 'session-1', 'active')).toEqual({
+      status: 'not-left',
+      reason: 'write-failed',
+      session: ACTIVE_SESSION,
+    });
+    expect(harness.values.get(MISSIONKID_STORAGE_KEY)).toBe(raw);
+  });
+
+  it('refuses the exit while an unresolved completed record is stored', () => {
+    const harness = createHarnessWith({
+      currentSession: ACTIVE_SESSION,
+      completedSessions: [
+        { ...COMPLETED_SESSION, completedAt: 1 },
+      ],
+    });
+    const raw = harness.values.get(MISSIONKID_STORAGE_KEY)!;
+
+    // D4-B is not bypassed to make an exit look successful: a replacement that
+    // would discard an unresolved completed record is refused, and the stored
+    // bytes are exactly what they were.
+    expect(leaveMissionSession(harness.adapter, 'session-1', 'active')).toEqual({
+      status: 'not-left',
+      reason: 'blocked-completed-record',
+      session: ACTIVE_SESSION,
+    });
+    expect(writeCount(harness.storage)).toBe(0);
+    expect(harness.values.get(MISSIONKID_STORAGE_KEY)).toBe(raw);
+  });
+
+  it('adopts the cleared session when a landed write could not be confirmed', () => {
+    const harness = createHarness({ session: ACTIVE_SESSION });
+    failReads(harness, [READS.readBack]);
+
+    // The write landed and only its confirmation was lost. Durable state is
+    // read again and the outcome it shows is adopted without writing again.
+    expect(leaveMissionSession(harness.adapter, 'session-1', 'active')).toEqual({
+      status: 'resolved',
+    });
+    expect(writeCount(harness.storage)).toBe(1);
+    expect(stored(harness.values).currentSession).toBeNull();
+  });
+
+  it('claims neither outcome when the interrupted write cannot be read back', () => {
+    const harness = createHarness({ session: ACTIVE_SESSION });
+    failReads(harness, [READS.readBack, READS.recovery]);
+
+    expect(leaveMissionSession(harness.adapter, 'session-1', 'active')).toEqual({
+      status: 'unconfirmed',
+      reason: 'read-back-failed',
+    });
+    // No session is written back over an exit that may already be durable.
+    expect(writeCount(harness.storage)).toBe(1);
+    expect(stored(harness.values).currentSession).toBeNull();
+  });
+
+  it('reports the session still present when an unconfirmed write did not land', () => {
+    const harness = createHarness({ session: ACTIVE_SESSION });
+    const before = harness.values.get(MISSIONKID_STORAGE_KEY)!;
+    harness.storage.setItem = vi.fn((key: string) => {
+      harness.values.set(key, before);
+    });
+
+    expect(leaveMissionSession(harness.adapter, 'session-1', 'active')).toEqual({
+      status: 'not-left',
+      reason: 'read-back-mismatch',
+      session: ACTIVE_SESSION,
+    });
+    expect(stored(harness.values).currentSession.sessionId).toBe('session-1');
+  });
+
+  it('preserves a newer session found after an interrupted exit', () => {
+    const harness = createHarness({ session: ACTIVE_SESSION });
+    const replacement = { ...READY_SESSION, sessionId: 'session-2' };
+    let reads = 0;
+    const values = harness.values;
+
+    harness.storage.getItem = vi.fn((key: string) => {
+      reads += 1;
+      if (reads === READS.readBack) throw new Error('storage unavailable');
+      // By the recovery read another Mission Session has become current.
+      if (reads === READS.recovery) {
+        return JSON.stringify({
+          ...JSON.parse(values.get(MISSIONKID_STORAGE_KEY)!),
+          currentSession: replacement,
+        });
+      }
+      return values.get(key) ?? null;
+    });
+
+    const result = leaveMissionSession(harness.adapter, 'session-1', 'active');
+
+    // The newer session is preserved and handed back rather than cleared by a
+    // retry that belonged to the Mission before it.
+    expect(result).toEqual({ status: 'superseded', session: replacement });
+    expect(writeCount(harness.storage)).toBe(1);
+  });
+
+  it('is unavailable when the snapshot cannot be read at all', () => {
+    const harness = createHarness({ session: ACTIVE_SESSION });
+    harness.storage.getItem = vi.fn(() => {
+      throw new Error('storage unavailable');
+    });
+
+    expect(leaveMissionSession(harness.adapter, 'session-1', 'active')).toEqual({
+      status: 'unavailable',
+    });
+    expect(writeCount(harness.storage)).toBe(0);
+  });
+
+  it('clears the same session twice to the same outcome', () => {
+    const harness = createHarness({ session: ACTIVE_SESSION });
+
+    expect(leaveMissionSession(harness.adapter, 'session-1', 'active')).toEqual({
+      status: 'left',
+    });
+    // The retry is safe: the session is gone, so nothing is written and nothing
+    // is recreated.
+    expect(leaveMissionSession(harness.adapter, 'session-1', 'active')).toEqual({
+      status: 'resolved',
+    });
+    expect(writeCount(harness.storage)).toBe(1);
+    expect(stored(harness.values).currentSession).toBeNull();
   });
 });

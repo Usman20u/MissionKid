@@ -1379,3 +1379,57 @@ input {
   font-size: 0.95rem;
   line-height: 1.5;
 }
+
+/* The approved leave-without-completion path. It stays discoverable and stays
+   secondary: it sits after the Mission and its guidance, carries no emphasis of
+   its own, and never competes with the dominant action of its view. */
+.mission-session__exit {
+  margin-top: 1.25rem;
+  align-self: flex-start;
+}
+
+/* The confirmation leaving an active Mission requires. It uses the same calm,
+   restrained surface as the other confirmation in the product: the consequence
+   is stated plainly, staying comes first and reads as the easy choice, and
+   leaving is explicit and visually separated. Nothing here hurries the family. */
+.mission-session__confirm {
+  margin-top: 1.25rem;
+  padding: 1.1rem 1.2rem;
+  border: 1px solid #d8e1da;
+  border-radius: 1.25rem;
+  background: rgb(255 255 255 / 92%);
+}
+
+.mission-session__confirm-title {
+  margin: 0 0 0.35rem;
+  font-size: 1.05rem;
+  font-weight: 800;
+}
+
+.mission-session__confirm p {
+  max-width: 48ch;
+  margin: 0;
+  color: #4c625c;
+  line-height: 1.55;
+}
+
+.mission-session__confirm-actions,
+.mission-suggestions__conflict-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.mission-suggestions__conflict-actions {
+  margin-bottom: 1.25rem;
+}
+
+/* The suggestion set's choices as one group, so an unresolved existing session
+   can withhold choosing through the native disabled cascade without changing
+   the layout or hiding any Mission the family is reading. */
+.mission-suggestions__choices {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}

@@ -78,9 +78,9 @@ const englishMessages = {
   'discovery.card.safetyLabel': 'Before you start',
   'discovery.card.choose': 'Choose this Mission',
   'discovery.selection.conflict':
-    'A Mission is already chosen. Choose that same Mission again to carry on with it.',
+    'A Mission is already chosen. Go back to it, or leave it, before choosing another.',
   'discovery.selection.conflictNamed':
-    'The Mission \u201c{mission}\u201d is already chosen. Choose that same Mission again to carry on with it.',
+    'The Mission \u201c{mission}\u201d is already chosen. Go back to it, or leave it, before choosing another.',
   'discovery.selection.unconfirmed':
     'That Mission could not be confirmed just now. Nothing has started. Choose it again, or choose a different one.',
   'discovery.anotherSet': 'Another set',
@@ -119,6 +119,16 @@ const englishMessages = {
     'The time guide is not available right now. Your Mission is still on.',
   'session.active.missionUnavailable':
     'This Mission cannot be shown right now, so it cannot safely continue.',
+  'session.action.backToSuggestions': 'Back to suggestions',
+  'session.action.leave': 'Leave mission',
+  'session.action.keepGoing': 'Keep going',
+  'session.leave.title': 'Leave this mission?',
+  'session.leave.consequence': "It won't be counted.",
+  'session.exit.notLeft':
+    "We couldn't leave this Mission just now. It is still here. Try again.",
+  'session.exit.unconfirmed':
+    "MissionKid couldn't check whether this Mission was left. Try again to see.",
+  'session.conflict.return': 'Back to your Mission',
 } as const;
 
 export type MessageKey = keyof typeof englishMessages;
@@ -227,9 +237,9 @@ export const INTERFACE_MESSAGES: CompleteInterfaceMessages = {
     'discovery.card.safetyLabel': 'Vor dem Start',
     'discovery.card.choose': 'Diese Mission wählen',
     'discovery.selection.conflict':
-      'Es ist schon eine Mission gewählt. Wähle dieselbe Mission noch einmal, um mit ihr weiterzumachen.',
+      'Es ist schon eine Mission gewählt. Geh zu ihr zurück oder verlasse sie, bevor du eine andere wählst.',
     'discovery.selection.conflictNamed':
-      'Die Mission \u201e{mission}\u201c ist schon gewählt. Wähle dieselbe Mission noch einmal, um mit ihr weiterzumachen.',
+      'Die Mission \u201e{mission}\u201c ist schon gewählt. Geh zu ihr zurück oder verlasse sie, bevor du eine andere wählst.',
     'discovery.selection.unconfirmed':
       'Diese Mission konnte gerade nicht bestätigt werden. Es wurde nichts gestartet. Wähle sie noch einmal oder wähle eine andere.',
     'discovery.anotherSet': 'Weitere drei',
@@ -268,6 +278,16 @@ export const INTERFACE_MESSAGES: CompleteInterfaceMessages = {
       'Die Zeitangabe ist gerade nicht verfügbar. Deine Mission läuft weiter.',
     'session.active.missionUnavailable':
       'Diese Mission kann gerade nicht angezeigt werden und kann deshalb nicht sicher weitergehen.',
+    'session.action.backToSuggestions': 'Zurück zu den Vorschlägen',
+    'session.action.leave': 'Mission verlassen',
+    'session.action.keepGoing': 'Weitermachen',
+    'session.leave.title': 'Diese Mission verlassen?',
+    'session.leave.consequence': 'Sie zählt dann nicht.',
+    'session.exit.notLeft':
+      'Diese Mission konnte gerade nicht verlassen werden. Sie läuft weiter. Versuche es noch einmal.',
+    'session.exit.unconfirmed':
+      'MissionKid konnte nicht prüfen, ob diese Mission verlassen wurde. Versuche es noch einmal, um es zu sehen.',
+    'session.conflict.return': 'Zurück zu deiner Mission',
   },
   ru: {
     "recovery.pending": "Подождите. Это действие ещё не подтверждено.",
@@ -342,9 +362,9 @@ export const INTERFACE_MESSAGES: CompleteInterfaceMessages = {
     'discovery.card.safetyLabel': 'Перед началом',
     'discovery.card.choose': 'Выбрать эту миссию',
     'discovery.selection.conflict':
-      'Миссия уже выбрана. Выбери ту же миссию ещё раз, чтобы продолжить с ней.',
+      'Миссия уже выбрана. Вернись к ней или выйди из неё, прежде чем выбирать другую.',
     'discovery.selection.conflictNamed':
-      'Миссия «{mission}» уже выбрана. Выбери ту же миссию ещё раз, чтобы продолжить с ней.',
+      'Миссия «{mission}» уже выбрана. Вернись к ней или выйди из неё, прежде чем выбирать другую.',
     'discovery.selection.unconfirmed':
       'Эту миссию сейчас не удалось подтвердить. Ничего не началось. Выбери её ещё раз или выбери другую.',
     'discovery.anotherSet': 'Ещё три',
@@ -383,6 +403,16 @@ export const INTERFACE_MESSAGES: CompleteInterfaceMessages = {
       'Подсказка о времени сейчас недоступна. Твоя миссия продолжается.',
     'session.active.missionUnavailable':
       'Эту миссию сейчас нельзя показать, поэтому она не может безопасно продолжаться.',
+    'session.action.backToSuggestions': 'Назад к предложениям',
+    'session.action.leave': 'Выйти из миссии',
+    'session.action.keepGoing': 'Продолжить',
+    'session.leave.title': 'Выйти из этой миссии?',
+    'session.leave.consequence': 'Она не будет засчитана.',
+    'session.exit.notLeft':
+      'Сейчас не удалось выйти из этой миссии. Она продолжается. Попробуй ещё раз.',
+    'session.exit.unconfirmed':
+      'MissionKid не смог проверить, вышел ли ты из этой миссии. Попробуй ещё раз, чтобы увидеть.',
+    'session.conflict.return': 'Назад к своей миссии',
   },
 };
 

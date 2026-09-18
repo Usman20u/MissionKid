@@ -1,16 +1,33 @@
-import { selectCurrentSession, useAppState } from './appState';
+import { useEffect, useRef, useState } from 'react';
+
+import {
+  selectCurrentSession,
+  selectSessionAttempt,
+  selectSessionIssue,
+  useAppState,
+} from './appState';
 import {
   MISSION_ADULT_LABEL_KEYS,
   translateMessage,
   type MessageKey,
   type SupportedLanguage,
 } from './localization';
-import { resolveSessionMission } from './missionSession';
+import { MissionLeaveConfirmation } from './MissionLeaveConfirmation';
+import { leaveMissionSession, resolveSessionMission } from './missionSession';
 import {
   useMissionGuidance,
   type MissionGuidance,
   type MissionTimerClocks,
 } from './missionTimer';
+import { persistenceAdapter, type PersistenceAdapter } from './persistence';
+
+// Leaving fails into its own truth, so it carries its own wording: an
+// established refusal leaves the Mission exactly where it was, and an
+// interrupted write claims neither that it was left nor that it was kept.
+const EXIT_MESSAGE_KEYS = {
+  failed: 'session.exit.notLeft',
+  unconfirmed: 'session.exit.unconfirmed',
+} as const satisfies Readonly<Record<'failed' | 'unconfirmed', MessageKey>>;
 
 const SECONDS_PER_MINUTE = 60;
 
@@ -46,6 +63,7 @@ function guidanceMessage(
 }
 
 type MissionActiveProps = Readonly<{
+  adapter?: PersistenceAdapter;
   clocks?: MissionTimerClocks;
 }>;
 
@@ -58,8 +76,11 @@ type MissionActiveProps = Readonly<{
 // completion path, and adds neither: those controls arrive with the operations
 // they carry out. Nothing here asks for interaction or proof while the Mission
 // happens, and nothing here writes anything.
-export function MissionActive({ clocks }: MissionActiveProps = {}) {
-  const { state } = useAppState();
+export function MissionActive({
+  adapter = persistenceAdapter,
+  clocks,
+}: MissionActiveProps = {}) {
+  const { dispatch, state } = useAppState();
   const session = selectCurrentSession(state);
   const active = session?.state === 'active' ? session : null;
   // One timer for one running Mission: the derivation and its schedule are
@@ -67,6 +88,71 @@ export function MissionActive({ clocks }: MissionActiveProps = {}) {
   const guidance = useMissionGuidance(active, clocks);
   const mission = active ? resolveSessionMission(active, state.language) : null;
   const t = (key: MessageKey) => translateMessage(state.language, key);
+  const issue = selectSessionIssue(state);
+  const attempt = selectSessionAttempt(state);
+  const sessionId = active?.sessionId ?? null;
+
+  // A pending confirmation belongs to the Mission it was opened for. Holding the
+  // identity rather than a flag is what stops a confirmation opened for one
+  // session from ever confirming another.
+  const [confirmingSessionId, setConfirmingSessionId] = useState<string | null>(
+    null,
+  );
+  const confirming = confirmingSessionId !== null && confirmingSessionId === sessionId;
+  const exitEntry = useRef<HTMLButtonElement>(null);
+  const wasConfirming = useRef(false);
+
+  // Focus follows the family's own decision to open or dismiss the confirmation,
+  // and nothing else: a tick, zero, a language change and an ordinary rerender
+  // all leave it exactly where it was.
+  useEffect(() => {
+    if (confirming === wasConfirming.current) {
+      return;
+    }
+
+    wasConfirming.current = confirming;
+
+    // Focus into the panel is the panel's own; returning it to the control the
+    // family opened is this view's, because only this side still has it.
+    if (!confirming) {
+      exitEntry.current?.focus();
+    }
+  }, [confirming]);
+
+  // Leaving an active Mission is the confirmed exit. It is keyed by the identity
+  // the family acted on and by the state they acted from, so a request that
+  // arrives after durable state moved on clears nothing it did not name. It
+  // writes no completion, no recognition and no progress of any kind.
+  function leave(sessionId: string) {
+    const result = leaveMissionSession(adapter, sessionId, 'active');
+
+    setConfirmingSessionId(null);
+
+    switch (result.status) {
+      case 'left':
+      case 'resolved':
+        dispatch({ type: 'mission-session-left' });
+        return;
+      // Durable state holds something other than the session this request
+      // named. It is preserved and followed rather than cleared.
+      case 'superseded':
+        dispatch({ type: 'mission-session-adopted', session: result.session });
+        return;
+      case 'not-left':
+      case 'unavailable':
+        dispatch({
+          type: 'mission-session-transition-failed',
+          issue: { operation: 'exit', outcome: 'failed' },
+        });
+        return;
+      case 'unconfirmed':
+        dispatch({
+          type: 'mission-session-transition-failed',
+          issue: { operation: 'exit', outcome: 'unconfirmed' },
+        });
+        return;
+    }
+  }
 
   if (active === null) {
     return null;
@@ -124,6 +210,38 @@ export function MissionActive({ clocks }: MissionActiveProps = {}) {
           {t('discovery.card.minutes')}
         </p>
       ) : null}
+      {issue?.operation === 'exit' ? (
+        <p
+          className="mission-session__issue"
+          // Each attempt is its own message, for the reason the discovery notice
+          // already records: a retry that fails the same way leaves an unchanged
+          // node that no live region reports.
+          key={`exit-${issue.outcome}-${attempt}`}
+          role="alert"
+        >
+          {t(EXIT_MESSAGE_KEYS[issue.outcome])}
+        </p>
+      ) : null}
+      {/* The approved leave-without-completion path: discoverable, and visually
+          secondary to the **Mission done** action that will sit beside it. The
+          Mission keeps running while the family decides, so the guidance above
+          neither pauses nor restarts. */}
+      {confirming ? (
+        <MissionLeaveConfirmation
+          language={state.language}
+          onKeepGoing={() => setConfirmingSessionId(null)}
+          onLeave={() => leave(active.sessionId)}
+        />
+      ) : (
+        <button
+          className="button button--secondary mission-session__exit"
+          onClick={() => setConfirmingSessionId(active.sessionId)}
+          ref={exitEntry}
+          type="button"
+        >
+          {t('session.action.leave')}
+        </button>
+      )}
     </div>
   );
 }

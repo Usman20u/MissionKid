@@ -496,13 +496,21 @@ describe('what a ready Mission answers before it starts', () => {
   it('offers exactly one dominant action, and no countdown, progression or reward', () => {
     const { container, h } = renderReady('movement-02');
 
-    // One primary action, and it is the start. Timing, completing and
-    // recognition arrive with the operations that carry them out; an inert
-    // control for any of them would be a promise this build cannot keep.
+    // One primary action, and it is the start. Beside it, the approved way out
+    // of `ready` is present and secondary, never competing with it. Completing
+    // and recognition arrive with the operations that carry them out; an inert
+    // control for either would be a promise this build cannot keep.
     const actions = screen.getAllByRole('button');
-    expect(actions).toHaveLength(1);
+    expect(actions).toHaveLength(2);
     expect(actions[0]!.textContent).toBe(translateMessage('en', 'session.action.start'));
     expect(actions[0]!.className).toContain('button--primary');
+    expect(actions[1]!.textContent).toBe(
+      translateMessage('en', 'session.action.backToSuggestions'),
+    );
+    expect(actions[1]!.className).toContain('button--secondary');
+    expect(
+      actions.filter((action) => action.className.includes('button--primary')),
+    ).toHaveLength(1);
     expect(container.querySelector('[role="timer"], [aria-live], progress')).toBeNull();
     expect(container.textContent).not.toMatch(/\d+:\d\d/);
     expect(
@@ -631,10 +639,13 @@ describe('starting the ready Mission', () => {
 
     fireEvent.click(startControl());
 
-    // Completion and the exit path are later steps, and neither is claimed
-    // here. The approximate guidance the running Mission shows is calm text,
-    // not a ticking clock face.
-    expect(screen.queryAllByRole('button')).toEqual([]);
+    // Completion is a later step and is not claimed here. The running Mission
+    // offers only the approved way out, and the approximate guidance it shows
+    // is calm text, not a ticking clock face.
+    const actions = screen.getAllByRole('button');
+    expect(actions).toHaveLength(1);
+    expect(actions[0]!.textContent).toBe(translateMessage('en', 'session.action.leave'));
+    expect(actions[0]!.className).toContain('button--secondary');
     expect(container.querySelector('[role="timer"], progress')).toBeNull();
     expect(container.textContent).not.toMatch(/\d+:\d\d/);
     expect(
@@ -703,7 +714,13 @@ describe('starting the ready Mission', () => {
     ));
     render(<App adapter={h.adapter} />);
 
-    expect(screen.queryAllByRole('button')).toEqual([]);
+    // No start is offered for content that cannot be shown. Leaving is still
+    // available: a family may always stop, and stopping needs no Mission text.
+    const actions = screen.getAllByRole('button');
+    expect(actions).toHaveLength(1);
+    expect(actions[0]!.textContent).toBe(
+      translateMessage('en', 'session.action.backToSuggestions'),
+    );
     expect(h.writes).toEqual([]);
   });
 
@@ -746,8 +763,13 @@ describe('a start that did not complete', () => {
     expect(heading().textContent).toBe(t('view.sessionReady.title'));
     expect(h.values.get(MISSIONKID_STORAGE_KEY)).toBe(raw);
     expect(h.stored().currentSession.state).toBe('ready');
-    // The same action is the retry; no second control claims to repeat it.
-    expect(screen.getAllByRole('button')).toHaveLength(1);
+    // The same action is the retry; no second control claims to repeat it. The
+    // approved way out stands beside it as it always does.
+    const afterFailure = screen.getAllByRole('button').map((b) => b.textContent);
+    expect(afterFailure).toEqual([
+      t('session.action.start'),
+      t('session.action.backToSuggestions'),
+    ]);
 
     h.faults.write = false;
     fireEvent.click(startControl());

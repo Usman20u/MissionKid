@@ -371,3 +371,116 @@ export function startMissionSession(
 
   return { status: 'unconfirmed', reason: result.reason };
 }
+
+export type MissionExitResult =
+  // The current session was cleared and the replacement was read back.
+  | Readonly<{ status: 'left' }>
+  // Durable state holds no current session under this identity, so there is
+  // nothing to clear and nothing was written. A repeat, a remount or a retry
+  // after an interrupted confirmation finds this, and none of them recreates a
+  // session that is already gone.
+  | Readonly<{ status: 'resolved' }>
+  // Established before storage changed: this session is still the current one.
+  | Readonly<{
+      status: 'not-left';
+      reason: PersistFailureReason;
+      session: CurrentMissionSession;
+    }>
+  // Durable state holds a different current session, or this one in a lifecycle
+  // state the request was not made against. It is preserved exactly as it is and
+  // handed back so the interface follows what is actually stored: a ready
+  // cancellation that arrives late never abandons a Mission that has since
+  // started, and no exit ever clears a session the family did not act on.
+  | Readonly<{ status: 'superseded'; session: CurrentMissionSession }>
+  // The write may have landed and a fresh read could not establish what is
+  // stored. Neither leaving nor keeping the Mission is claimed.
+  | Readonly<{ status: 'unconfirmed'; reason: PersistFailureReason }>
+  // No readable snapshot, or an identity that is not the current session's to
+  // leave — a completed Mission Session above all, which this operation never
+  // touches.
+  | Readonly<{ status: 'unavailable' }>;
+
+// Which lifecycle state the family acted from. It travels with the request
+// because the two exits are different family decisions with different
+// confirmation requirements, and a request must never be honoured against a
+// state it was not made against.
+export type MissionExitFrom = 'ready' | 'active';
+
+// Leaving a Mission without completing it: ready cancellation and confirmed
+// abandonment are the same durable operation — the current session is cleared —
+// and differ only in what the family had to do to ask for it.
+//
+// It is keyed by the identity the family acted on and decided by freshly read
+// durable state, so a stale request cannot clear a Mission that replaced the one
+// it named, and clearing the same session twice is the same outcome rather than
+// a second effect. It adds nothing: no completed record, no result pointer, no
+// timestamp, no identifier and no abandonment history. Everything the snapshot
+// holds besides the current session is carried across untouched.
+//
+// Nothing here consults remaining time, the stored duration or the Mission's
+// content: a family may always stop, including when guidance has fallen back to
+// zero and when the Mission can no longer be shown.
+export function leaveMissionSession(
+  adapter: PersistenceAdapter,
+  sessionId: string,
+  from: MissionExitFrom,
+): MissionExitResult {
+  const current = adapter.hydrate();
+
+  if (current.status !== 'hydrated') {
+    return { status: 'unavailable' };
+  }
+
+  const snapshot = current.snapshot;
+
+  // A completed Mission Session is not cancellable or abandonable, and its
+  // completion and result reference are never rewritten by this path.
+  if (
+    snapshot.completedSessions.some((record) => record.sessionId === sessionId)
+  ) {
+    return { status: 'unavailable' };
+  }
+
+  const session = snapshot.currentSession;
+
+  if (session === null) {
+    return { status: 'resolved' };
+  }
+
+  // Absence is never read as permission to clear whatever is there now.
+  if (session.sessionId !== sessionId || session.state !== from) {
+    return { status: 'superseded', session };
+  }
+
+  const result = adapter.persist({ ...snapshot, currentSession: null });
+
+  if (result.status === 'confirmed') {
+    return result.snapshot.currentSession === null
+      ? { status: 'left' }
+      : { status: 'unconfirmed', reason: 'read-back-mismatch' };
+  }
+
+  if (!REASONS_THAT_MAY_HAVE_LANDED.includes(result.reason)) {
+    return { status: 'not-left', reason: result.reason, session };
+  }
+
+  // The outcome is unknown, so it is read rather than assumed. A session found
+  // gone is reported as gone — not as a claim about this write — and is never
+  // written back. A session found still present is reported as still present,
+  // so the retry runs under the same confirmation the first attempt did.
+  const recovery = adapter.hydrate();
+
+  if (recovery.status !== 'hydrated') {
+    return { status: 'unconfirmed', reason: result.reason };
+  }
+
+  const recovered = recovery.snapshot.currentSession;
+
+  if (recovered === null) {
+    return { status: 'resolved' };
+  }
+
+  return recovered.sessionId === sessionId && recovered.state === from
+    ? { status: 'not-left', reason: result.reason, session: recovered }
+    : { status: 'superseded', session: recovered };
+}
