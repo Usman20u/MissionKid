@@ -15,9 +15,9 @@ import {
 } from './localization';
 import type {
   AgeBand,
+  CurrentMissionSession,
   HydrationResult,
   MissionKidSnapshot,
-  SelectedMissionSession,
 } from './persistence';
 
 type SetupContext = Readonly<{
@@ -54,9 +54,11 @@ type RecoveryContext = Readonly<{
   resetUnconfirmed?: boolean;
   temporaryComplete?: boolean;
   discovery?: DiscoveryContext;
-  // The confirmed durable selection, mirrored into runtime only after the write
-  // was read back exactly. It is never set optimistically.
-  currentSession?: SelectedMissionSession;
+  // The durable current session, mirrored into runtime only after a write was
+  // read back exactly or an existing session was read back from storage. It is
+  // never set optimistically, and it keeps whichever lifecycle state the
+  // session actually holds rather than a state the interface assumed.
+  currentSession?: CurrentMissionSession;
   // Why the last deliberate choice did not become a new Mission Session.
   // `conflict` is a product state: one is already chosen. `unconfirmed` is a
   // transition failure: nothing started, and the choice can be made again.
@@ -96,7 +98,7 @@ export type AppStateAction =
   | { type: 'discovery-opened' }
   | { type: 'discovery-category-selected'; category: MissionCategory }
   | { type: 'discovery-another-set-requested'; missionIds: readonly string[] }
-  | { type: 'mission-selection-confirmed'; session: SelectedMissionSession }
+  | { type: 'mission-selection-confirmed'; session: CurrentMissionSession }
   | {
       type: 'mission-selection-failed';
       issue: MissionSelectionIssue;
@@ -179,16 +181,19 @@ export type DiscoveryCycle = Readonly<{
   category: MissionCategory;
 }>;
 
-// A confirmed selection exists and the start experience it leads to is
-// available. F003 owns that experience; this is only the typed fact that it can
-// begin, so nothing in this task renders a screen for it.
+// A current session exists whose start is still ahead of it: `selected` has not
+// reached the start screen and `ready` is on it. An `active` session has already
+// been started, so the start experience is not what it leads back to. This is
+// the typed fact alone; the screens each state leads to are later F003 work.
 export function selectMissionStartAvailable(state: AppState): boolean {
-  return state.currentSession !== undefined;
+  const session = selectCurrentSession(state);
+
+  return session?.state === 'selected' || session?.state === 'ready';
 }
 
 export function selectCurrentSession(
   state: AppState,
-): SelectedMissionSession | null {
+): CurrentMissionSession | null {
   return state.currentSession ?? null;
 }
 

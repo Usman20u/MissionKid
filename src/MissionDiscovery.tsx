@@ -188,9 +188,14 @@ export function MissionCategorySelection({
               now,
             );
 
-            // Runtime only learns of a selection the storage confirmed. Every
-            // other outcome leaves the three Missions exactly as they are and
-            // is explained rather than swallowed.
+            // Runtime only learns of a session the storage confirmed, and it
+            // learns the lifecycle state that session is actually in: `created`
+            // is a new Mission Session in `selected`, while `resolved` is the
+            // one that already exists, answering in `selected`, `ready` or
+            // `active`. Neither is republished as a state it is not in; the
+            // surface each state leads to is later F003 work. Every other
+            // outcome leaves the three Missions exactly as they are and is
+            // explained rather than swallowed.
             if (result.status === 'created' || result.status === 'resolved') {
               dispatch({ type: 'mission-selection-confirmed', session: result.session });
               return;

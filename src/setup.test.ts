@@ -79,7 +79,9 @@ describe('F001 save operation', () => {
     const createId = vi.fn(() => 'profile-1');
     const result = saveSetup(harness.adapter, choices, createId);
 
-    expect(harness.events).toEqual(['read', 'write', 'read']);
+    // The second read is the adapter's own: it decides D4-B against what is
+    // actually stored, before anything is replaced.
+    expect(harness.events).toEqual(['read', 'read', 'write', 'read']);
     expect(result).toEqual({
       status: 'confirmed',
       snapshot: {
@@ -168,13 +170,17 @@ describe('F001 save operation', () => {
       before: { status: 'hydrated', snapshot },
       recovery: { status: 'hydrated', snapshot },
     });
-    expect(harness.storage.getItem).toHaveBeenCalledTimes(2);
+    expect(harness.storage.getItem).toHaveBeenCalledTimes(3);
     expect(JSON.parse(harness.values.get(MISSIONKID_STORAGE_KEY)!)).toEqual(snapshot);
   });
 
   it('keeps a failed read-back unconfirmed even when a later recovery read succeeds', () => {
     const harness = createHarness();
     vi.mocked(harness.storage.getItem)
+      // The domain read, then the adapter's pre-write read: storage is empty,
+      // so no completed record can block this write. Only the read that would
+      // confirm the write fails.
+      .mockReturnValueOnce(null)
       .mockReturnValueOnce(null)
       .mockImplementationOnce(() => { throw new Error('read-back blocked'); });
 
@@ -182,7 +188,7 @@ describe('F001 save operation', () => {
       status: 'unconfirmed', reason: 'read-back-failed', localProfileId: 'profile',
       recovery: { status: 'hydrated', snapshot: { childProfile: { localProfileId: 'profile' } } },
     });
-    expect(harness.storage.getItem).toHaveBeenCalledTimes(3);
+    expect(harness.storage.getItem).toHaveBeenCalledTimes(4);
   });
 
   it('does not overwrite corrupted read-back data on the next attempt', () => {

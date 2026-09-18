@@ -2,6 +2,7 @@ import type { MissionRecord } from './catalog';
 import { isEligibleForContext } from './catalogValidation';
 import type { SuggestionContext } from './missionSuggestions';
 import type {
+  CurrentMissionSession,
   PersistFailureReason,
   PersistenceAdapter,
   SelectedMissionSession,
@@ -24,12 +25,18 @@ export function readWallClock(): number {
 }
 
 export type MissionSelectionResult =
+  // A created session is `selected` by construction: nothing else can be true
+  // of a Mission Session that has only just been written.
+  | Readonly<{ status: 'created'; session: SelectedMissionSession }>
   // `resolved` is the same session answering a repeated choice: nothing was
-  // minted, nothing was written, and nothing about it moved.
-  | Readonly<{ status: 'created' | 'resolved'; session: SelectedMissionSession }>
-  // Another Mission already owns the current session. Task 8 presents the
-  // return-or-abandon choice; this result only carries what it will need.
-  | Readonly<{ status: 'conflict'; session: SelectedMissionSession }>
+  // minted, nothing was written, and nothing about it moved. It carries the
+  // lifecycle state the session is actually in, so a Mission that has already
+  // reached `ready` or `active` returns to that session instead of being
+  // published again as a fresh selection; the caller routes it by that state.
+  | Readonly<{ status: 'resolved'; session: CurrentMissionSession }>
+  // Another Mission already owns the current session, in whatever state it
+  // reached. This result only carries what the return-or-abandon choice needs.
+  | Readonly<{ status: 'conflict'; session: CurrentMissionSession }>
   | Readonly<{ status: 'unavailable' }>
   | Readonly<{ status: 'unconfirmed'; reason: PersistFailureReason }>;
 
@@ -77,8 +84,9 @@ export function selectMission(
 
   if (existing) {
     // The same Mission answering twice is one choice pressed twice, not a
-    // second choice. It resolves to the session that already exists: no new
-    // identifier, no new timestamp, no second write.
+    // second choice. It resolves to the session that already exists, in the
+    // state that session is actually in: no new identifier, no new timestamp,
+    // no second write, and no lifecycle state rebuilt from the choice.
     return existing.missionId === request.mission.missionId
       ? { status: 'resolved', session: existing }
       : { status: 'conflict', session: existing };
@@ -103,9 +111,16 @@ export function selectMission(
 
   const result = adapter.persist({ ...snapshot, currentSession: session });
 
-  return result.status === 'confirmed' && result.snapshot.currentSession
-    ? { status: 'created', session: result.snapshot.currentSession }
-    : result.status === 'confirmed'
-      ? { status: 'unconfirmed', reason: 'read-back-mismatch' }
-      : { status: 'unconfirmed', reason: result.reason };
+  if (result.status !== 'confirmed') {
+    return { status: 'unconfirmed', reason: result.reason };
+  }
+
+  // What is published is what storage confirmed, narrowed by the discriminant
+  // rather than assumed: a confirmed creation is `selected`, and a stored
+  // session in any other state is not the selection this call intended.
+  const written = result.snapshot.currentSession;
+
+  return written !== null && written.state === 'selected'
+    ? { status: 'created', session: written }
+    : { status: 'unconfirmed', reason: 'read-back-mismatch' };
 }

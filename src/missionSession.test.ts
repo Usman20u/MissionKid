@@ -9,7 +9,9 @@ import {
   MISSIONKID_STORAGE_KEY,
   createEmptySnapshot,
   createPersistenceAdapter,
-  type SelectedMissionSession,
+  type ActiveMissionSession,
+  type CurrentMissionSession,
+  type ReadyMissionSession,
   type SnapshotStorage,
 } from './persistence';
 
@@ -29,8 +31,28 @@ function missionFor(missionId: string): MissionRecord {
 const FIRST = missionFor('movement-02');
 const SECOND = missionFor('movement-10');
 
+// The facts a session written by the shipped build carries, as a later
+// lifecycle state would hold them.
+const STORED_FACTS = {
+  sessionId: 'session-1',
+  childProfileId: PROFILE_ID,
+  missionId: FIRST.missionId,
+  missionCategoryAtSelection: FIRST.category,
+  ageBandAtSelection: '7–8',
+  durationSecondsAtSelection: FIRST.durationSeconds,
+  selectedAt: 1_700_000_000_000,
+} as const;
+
+const READY_SESSION: ReadyMissionSession = { ...STORED_FACTS, state: 'ready' };
+
+const ACTIVE_SESSION: ActiveMissionSession = {
+  ...STORED_FACTS,
+  state: 'active',
+  startedAt: 1_700_000_060_000,
+};
+
 function createHarness(
-  overrides: { session?: SelectedMissionSession | null; ageBand?: string } = {},
+  overrides: { session?: CurrentMissionSession | null; ageBand?: string } = {},
 ) {
   const values = new Map<string, string>();
   values.set('unrelated-key', 'untouched');
@@ -162,8 +184,8 @@ describe('choosing a Mission', () => {
 
     if (result.status !== 'conflict') throw new Error('expected a conflict');
 
-    // The conflict carries the session in the way so Task 8 can offer the
-    // return-or-abandon choice. Nothing was minted, timed or written.
+    // The conflict carries the session in the way so the return-or-abandon
+    // choice can be offered. Nothing was minted, timed or written.
     expect(result.session.missionId).toBe('movement-02');
     expect(createId).not.toHaveBeenCalled();
     expect(now).not.toHaveBeenCalled();
@@ -276,6 +298,59 @@ describe('choosing a Mission', () => {
     expect(snapshot.snapshotVersion).toBe(1);
     expect(snapshot.completedSessions).toEqual([]);
     expect(snapshot.currentResultSessionId).toBeNull();
+  });
+
+  it.each([
+    ['ready', READY_SESSION],
+    ['active', ACTIVE_SESSION],
+  ] as const)('answers with a stored %s session rather than a new selection', (state, session) => {
+    const harness = createHarness({ session });
+    const createId = vi.fn(() => 'must-not-be-minted');
+    const now = vi.fn(() => 2_000_000_000_000);
+    const before = harness.values.get(MISSIONKID_STORAGE_KEY);
+
+    const result = selectMission(
+      harness.adapter,
+      { mission: FIRST, context: CONTEXT },
+      createId,
+      now,
+    );
+
+    if (result.status !== 'resolved') throw new Error('expected the stored session');
+
+    // Choosing the Mission that is already under way returns that session in
+    // the state it is actually in. It is not a repeatable selection: nothing is
+    // minted, nothing is written, and no lifecycle state is rebuilt from it.
+    expect(result.session.state).toBe(state);
+    expect(result.session).toEqual(session);
+    expect(createId).not.toHaveBeenCalled();
+    expect(now).not.toHaveBeenCalled();
+    expect(harness.values.get(MISSIONKID_STORAGE_KEY)).toBe(before);
+  });
+
+  it.each([
+    ['ready', READY_SESSION],
+    ['active', ACTIVE_SESSION],
+  ] as const)('refuses a different Mission while a %s session exists', (state, session) => {
+    const harness = createHarness({ session });
+    const before = harness.values.get(MISSIONKID_STORAGE_KEY);
+    const createId = vi.fn(() => 'session-2');
+
+    const result = selectMission(
+      harness.adapter,
+      { mission: SECOND, context: CONTEXT },
+      createId,
+      () => 2_000_000_000_000,
+    );
+
+    if (result.status !== 'conflict') throw new Error('expected a conflict');
+
+    // The conflict carries the session in the way, in its own state, so the
+    // return-or-abandon choice can be about the Mission that is really running.
+    expect(result.session.state).toBe(state);
+    expect(result.session.missionId).toBe(FIRST.missionId);
+    expect(createId).not.toHaveBeenCalled();
+    expect(harness.values.get(MISSIONKID_STORAGE_KEY)).toBe(before);
   });
 
   it('restores the same session on a later load', () => {
