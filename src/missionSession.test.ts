@@ -5,7 +5,9 @@ import { MISSION_CATALOG } from './catalogContent';
 import type { MissionRecord } from './catalog';
 import {
   advanceSessionToReady,
+  completeMissionSession,
   leaveMissionSession,
+  localCompletionPeriodId,
   selectMission,
   startMissionSession,
 } from './missionSession';
@@ -1120,5 +1122,254 @@ describe('leaving a Mission without completing it', () => {
     });
     expect(writeCount(harness.storage)).toBe(1);
     expect(stored(harness.values).currentSession).toBeNull();
+  });
+});
+
+const DONE_CLOCK = 1_700_000_360_000;
+
+describe('recording a completion exactly once', () => {
+  it('replaces the whole snapshot in one write', () => {
+    const harness = createHarness({ session: ACTIVE_SESSION });
+    const now = vi.fn(() => DONE_CLOCK);
+
+    const result = completeMissionSession(harness.adapter, 'session-1', now, 'en');
+
+    if (result.status !== 'completed') throw new Error('expected a completion');
+    // The same session, its immutable facts untouched, plus exactly the two
+    // completion facts.
+    expect(result.session).toEqual({
+      ...ACTIVE_SESSION,
+      state: 'completed',
+      completedAt: DONE_CLOCK,
+      completionPeriodId: localCompletionPeriodId(DONE_CLOCK),
+    });
+
+    const after = stored(harness.values);
+    expect(after.currentSession).toBeNull();
+    expect(after.completedSessions).toHaveLength(1);
+    expect(after.currentResultSessionId).toBe('session-1');
+    expect(now).toHaveBeenCalledTimes(1);
+    expect(writeCount(harness.storage)).toBe(1);
+    expect(harness.values.get('unrelated-key')).toBe('untouched');
+  });
+
+  it('derives the period from the local calendar month, not the UTC one', () => {
+    // 23:30 on the last day of a local month. An ISO month would read the next
+    // one for any zone east of UTC, and the wrong one for any zone west of it.
+    const localMidnightEve = new Date(2024, 2, 31, 23, 30).getTime();
+    const harness = createHarness({
+      session: { ...ACTIVE_SESSION, startedAt: localMidnightEve - 60_000 },
+    });
+
+    const result = completeMissionSession(
+      harness.adapter,
+      'session-1',
+      () => localMidnightEve,
+      'en',
+    );
+
+    if (result.status !== 'completed') throw new Error('expected a completion');
+    expect(result.session.completionPeriodId).toBe('2024-03');
+    expect(localCompletionPeriodId(new Date(2024, 0, 1, 0, 0).getTime())).toBe('2024-01');
+    expect(localCompletionPeriodId(new Date(2024, 11, 31, 23, 59).getTime())).toBe('2024-12');
+  });
+
+  it('never records a Mission as finishing before it started', () => {
+    const harness = createHarness({ session: ACTIVE_SESSION });
+
+    // The device clock moved back behind the start.
+    const result = completeMissionSession(
+      harness.adapter,
+      'session-1',
+      () => ACTIVE_SESSION.startedAt - 90_000,
+      'en',
+    );
+
+    if (result.status !== 'completed') throw new Error('expected a completion');
+    expect(result.session.completedAt).toBe(ACTIVE_SESSION.startedAt);
+    expect(result.session.completionPeriodId).toBe(
+      localCompletionPeriodId(ACTIVE_SESSION.startedAt),
+    );
+  });
+
+  it('completes a Mission whose stored duration is malformed, inventing none', () => {
+    const malformed = { ...ACTIVE_SESSION, durationSecondsAtSelection: 0 };
+    const harness = createHarness({ session: malformed });
+
+    const result = completeMissionSession(
+      harness.adapter,
+      'session-1',
+      () => DONE_CLOCK,
+      'en',
+    );
+
+    if (result.status !== 'completed') throw new Error('expected a completion');
+    // The malformed value survives exact read-back rather than being repaired
+    // into a number or dropped.
+    expect(result.session.durationSecondsAtSelection).toBe(0);
+    expect(stored(harness.values).completedSessions[0].durationSecondsAtSelection).toBe(0);
+
+    // And it hydrates again as a trustworthy completed record.
+    const rehydrated = harness.adapter.hydrate();
+    if (rehydrated.status !== 'hydrated') throw new Error('expected a readable snapshot');
+    expect(rehydrated.snapshot.completedSessions).toHaveLength(1);
+    expect(rehydrated.snapshot.completedSessions[0]!.durationSecondsAtSelection).toBe(0);
+    expect(rehydrated.snapshot.currentResultSessionId).toBe('session-1');
+  });
+
+  it('resolves an existing completion without writing or re-reading the clock', () => {
+    const harness = createHarness({ session: ACTIVE_SESSION });
+    completeMissionSession(harness.adapter, 'session-1', () => DONE_CLOCK, 'en');
+    const raw = harness.values.get(MISSIONKID_STORAGE_KEY)!;
+    const later = vi.fn(() => DONE_CLOCK + 900_000);
+
+    const again = completeMissionSession(harness.adapter, 'session-1', later, 'en');
+
+    if (again.status !== 'resolved') throw new Error('expected the same completion');
+    expect(again.session.completedAt).toBe(DONE_CLOCK);
+    expect(again.session.completionPeriodId).toBe(localCompletionPeriodId(DONE_CLOCK));
+    // No second record, no moved timestamp, no recomputed period, no clock read.
+    expect(later).not.toHaveBeenCalled();
+    expect(writeCount(harness.storage)).toBe(1);
+    expect(harness.values.get(MISSIONKID_STORAGE_KEY)).toBe(raw);
+  });
+
+  it('does not move the pointer back when a newer result is current', () => {
+    const harness = createHarnessWith({
+      currentSession: null,
+      currentResultSessionId: 'session-newer',
+      completedSessions: [
+        { ...COMPLETED_SESSION, sessionId: 'session-1' },
+        { ...COMPLETED_SESSION, sessionId: 'session-newer', completedAt: DONE_CLOCK + 10 },
+      ],
+    });
+
+    const result = completeMissionSession(harness.adapter, 'session-1', () => DONE_CLOCK, 'en');
+
+    // Resolving the older completion returns its facts and leaves navigation
+    // pointing at the newer result.
+    if (result.status !== 'resolved') throw new Error('expected the stored completion');
+    expect(result.session.sessionId).toBe('session-1');
+    expect(writeCount(harness.storage)).toBe(0);
+    expect(stored(harness.values).currentResultSessionId).toBe('session-newer');
+  });
+
+  it('preserves a newer current session rather than completing it', () => {
+    const replacement = { ...ACTIVE_SESSION, sessionId: 'session-2' };
+    const harness = createHarness({ session: replacement });
+
+    const result = completeMissionSession(harness.adapter, 'session-1', () => DONE_CLOCK, 'en');
+
+    expect(result).toEqual({ status: 'superseded', session: replacement });
+    expect(writeCount(harness.storage)).toBe(0);
+    expect(stored(harness.values).completedSessions).toEqual([]);
+  });
+
+  it('completes nothing that is not a running, resolvable Mission', () => {
+    for (const session of [READY_SESSION, SELECTED_SESSION]) {
+      const harness = createHarness({ session });
+      expect(
+        completeMissionSession(harness.adapter, 'session-1', () => DONE_CLOCK, 'en'),
+      ).toEqual({ status: 'unavailable' });
+      expect(writeCount(harness.storage)).toBe(0);
+    }
+
+    const withdrawn = createHarness({
+      session: { ...ACTIVE_SESSION, missionId: 'movement-99' } as never,
+    });
+    expect(
+      completeMissionSession(withdrawn.adapter, 'session-1', () => DONE_CLOCK, 'en'),
+    ).toEqual({ status: 'unavailable' });
+    expect(writeCount(withdrawn.storage)).toBe(0);
+  });
+
+  it('keeps the running Mission when the write is refused', () => {
+    const harness = createHarness({ session: ACTIVE_SESSION });
+    const raw = harness.values.get(MISSIONKID_STORAGE_KEY)!;
+    harness.storage.setItem = vi.fn(() => {
+      throw new Error('write failed');
+    });
+
+    expect(
+      completeMissionSession(harness.adapter, 'session-1', () => DONE_CLOCK, 'en'),
+    ).toEqual({
+      status: 'not-completed',
+      reason: 'write-failed',
+      session: ACTIVE_SESSION,
+    });
+    expect(harness.values.get(MISSIONKID_STORAGE_KEY)).toBe(raw);
+  });
+
+  it('refuses completion while an unresolved completed record is stored', () => {
+    const harness = createHarnessWith({
+      currentSession: ACTIVE_SESSION,
+      completedSessions: [{ ...COMPLETED_SESSION, completedAt: 1 }],
+    });
+    const raw = harness.values.get(MISSIONKID_STORAGE_KEY)!;
+
+    expect(
+      completeMissionSession(harness.adapter, 'session-1', () => DONE_CLOCK, 'en'),
+    ).toEqual({
+      status: 'not-completed',
+      reason: 'blocked-completed-record',
+      session: ACTIVE_SESSION,
+    });
+    expect(writeCount(harness.storage)).toBe(0);
+    expect(harness.values.get(MISSIONKID_STORAGE_KEY)).toBe(raw);
+  });
+
+  it('adopts a landed completion whose confirmation was lost', () => {
+    const harness = createHarness({ session: ACTIVE_SESSION });
+    failReads(harness, [READS.readBack]);
+
+    const result = completeMissionSession(harness.adapter, 'session-1', () => DONE_CLOCK, 'en');
+
+    if (result.status !== 'resolved') throw new Error('expected the stored completion');
+    expect(result.session.completedAt).toBe(DONE_CLOCK);
+    expect(writeCount(harness.storage)).toBe(1);
+    expect(stored(harness.values).completedSessions).toHaveLength(1);
+  });
+
+  it('claims neither outcome when the interrupted write cannot be read back', () => {
+    const harness = createHarness({ session: ACTIVE_SESSION });
+    failReads(harness, [READS.readBack, READS.recovery]);
+
+    expect(
+      completeMissionSession(harness.adapter, 'session-1', () => DONE_CLOCK, 'en'),
+    ).toEqual({ status: 'unconfirmed', reason: 'read-back-failed' });
+    // No completion that may already be durable is removed, and no active
+    // session is rebuilt over it.
+    expect(writeCount(harness.storage)).toBe(1);
+    expect(stored(harness.values).completedSessions).toHaveLength(1);
+    expect(stored(harness.values).currentSession).toBeNull();
+  });
+
+  it('reports the Mission still running when an unconfirmed write did not land', () => {
+    const harness = createHarness({ session: ACTIVE_SESSION });
+    const before = harness.values.get(MISSIONKID_STORAGE_KEY)!;
+    harness.storage.setItem = vi.fn((key: string) => {
+      harness.values.set(key, before);
+    });
+
+    expect(
+      completeMissionSession(harness.adapter, 'session-1', () => DONE_CLOCK, 'en'),
+    ).toEqual({
+      status: 'not-completed',
+      reason: 'read-back-mismatch',
+      session: ACTIVE_SESSION,
+    });
+    expect(stored(harness.values).completedSessions).toEqual([]);
+  });
+
+  it('completes the same session once however often it is asked', () => {
+    const harness = createHarness({ session: ACTIVE_SESSION });
+
+    for (let attempt = 0; attempt < 4; attempt += 1) {
+      completeMissionSession(harness.adapter, 'session-1', () => DONE_CLOCK + attempt, 'en');
+    }
+
+    expect(writeCount(harness.storage)).toBe(1);
+    expect(stored(harness.values).completedSessions).toHaveLength(1);
+    expect(stored(harness.values).completedSessions[0].completedAt).toBe(DONE_CLOCK);
   });
 });

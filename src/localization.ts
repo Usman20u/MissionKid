@@ -125,10 +125,30 @@ const englishMessages = {
   'session.leave.title': 'Leave this mission?',
   'session.leave.consequence': "It won't be counted.",
   'session.exit.notLeft':
-    "We couldn't leave this Mission just now. It is still here. Try again.",
+    "We couldn't leave this Mission just now. Try again.",
   'session.exit.unconfirmed':
     "MissionKid couldn't check whether this Mission was left. Try again to see.",
   'session.conflict.return': 'Back to your Mission',
+  'session.action.done': 'Mission done',
+  'session.done.notRecorded':
+    "We couldn't record this Mission as done just now. Try again.",
+  'session.done.unconfirmed':
+    "MissionKid couldn't check whether this Mission was recorded as done. Try again to see.",
+  'view.sessionResult.title': 'Mission complete',
+  'result.recognition': 'You did it.',
+  'result.completedOn': 'Completed',
+  'result.missionUnavailable': 'Mission',
+  'result.goal.heading': 'This month',
+  'result.goal.progress': '{done} / {target} missions',
+  'result.goal.complete':
+    'You have reached this month\u2019s goal. Talk with your parent about a small real-life reward you would both like.',
+  'result.action.next': 'Find another Mission',
+  'result.unavailable':
+    'This result cannot be shown right now. Your completed Mission is safe. Try again.',
+  'result.exit.notCleared':
+    "We couldn't leave this result just now. Your completed Mission is safe. Try again.",
+  'result.exit.unconfirmed':
+    "MissionKid couldn't check whether you left this result. Your completed Mission is safe. Try again to see.",
 } as const;
 
 export type MessageKey = keyof typeof englishMessages;
@@ -284,10 +304,30 @@ export const INTERFACE_MESSAGES: CompleteInterfaceMessages = {
     'session.leave.title': 'Diese Mission verlassen?',
     'session.leave.consequence': 'Sie zählt dann nicht.',
     'session.exit.notLeft':
-      'Diese Mission konnte gerade nicht verlassen werden. Sie läuft weiter. Versuche es noch einmal.',
+      'Diese Mission konnte gerade nicht verlassen werden. Versuche es noch einmal.',
     'session.exit.unconfirmed':
       'MissionKid konnte nicht prüfen, ob diese Mission verlassen wurde. Versuche es noch einmal, um es zu sehen.',
     'session.conflict.return': 'Zurück zu deiner Mission',
+    'session.action.done': 'Mission erledigt',
+    'session.done.notRecorded':
+      'Diese Mission konnte gerade nicht als erledigt gespeichert werden. Versuche es noch einmal.',
+    'session.done.unconfirmed':
+      'MissionKid konnte nicht prüfen, ob diese Mission als erledigt gespeichert wurde. Versuche es noch einmal, um es zu sehen.',
+    'view.sessionResult.title': 'Mission geschafft',
+    'result.recognition': 'Du hast es geschafft.',
+    'result.completedOn': 'Erledigt',
+    'result.missionUnavailable': 'Mission',
+    'result.goal.heading': 'Diesen Monat',
+    'result.goal.progress': '{done} / {target} Missionen',
+    'result.goal.complete':
+      'Du hast das Monatsziel erreicht. Sprich mit deinen Eltern über eine kleine Belohnung im echten Leben, die euch beiden gefällt.',
+    'result.action.next': 'Neue Mission finden',
+    'result.unavailable':
+      'Dieses Ergebnis kann gerade nicht angezeigt werden. Deine erledigte Mission ist sicher gespeichert. Versuche es noch einmal.',
+    'result.exit.notCleared':
+      'Dieses Ergebnis konnte gerade nicht verlassen werden. Deine erledigte Mission ist sicher gespeichert. Versuche es noch einmal.',
+    'result.exit.unconfirmed':
+      'MissionKid konnte nicht prüfen, ob du dieses Ergebnis verlassen hast. Deine erledigte Mission ist sicher gespeichert. Versuche es noch einmal, um es zu sehen.',
   },
   ru: {
     "recovery.pending": "Подождите. Это действие ещё не подтверждено.",
@@ -409,10 +449,30 @@ export const INTERFACE_MESSAGES: CompleteInterfaceMessages = {
     'session.leave.title': 'Выйти из этой миссии?',
     'session.leave.consequence': 'Она не будет засчитана.',
     'session.exit.notLeft':
-      'Сейчас не удалось выйти из этой миссии. Она продолжается. Попробуй ещё раз.',
+      'Сейчас не удалось выйти из этой миссии. Попробуй ещё раз.',
     'session.exit.unconfirmed':
       'MissionKid не смог проверить, вышел ли ты из этой миссии. Попробуй ещё раз, чтобы увидеть.',
     'session.conflict.return': 'Назад к своей миссии',
+    'session.action.done': 'Миссия выполнена',
+    'session.done.notRecorded':
+      'Сейчас не удалось записать эту миссию как выполненную. Попробуй ещё раз.',
+    'session.done.unconfirmed':
+      'MissionKid не смог проверить, записана ли эта миссия как выполненная. Попробуй ещё раз, чтобы увидеть.',
+    'view.sessionResult.title': 'Миссия выполнена',
+    'result.recognition': 'У тебя получилось.',
+    'result.completedOn': 'Выполнено',
+    'result.missionUnavailable': 'Миссия',
+    'result.goal.heading': 'В этом месяце',
+    'result.goal.progress': '{done} / {target} миссий',
+    'result.goal.complete':
+      'Ты достиг цели этого месяца. Поговори с родителями о небольшой награде в реальной жизни, которая понравится вам обоим.',
+    'result.action.next': 'Найти другую миссию',
+    'result.unavailable':
+      'Этот результат сейчас нельзя показать. Твоя выполненная миссия сохранена. Попробуй ещё раз.',
+    'result.exit.notCleared':
+      'Сейчас не удалось выйти из этого результата. Твоя выполненная миссия сохранена. Попробуй ещё раз.',
+    'result.exit.unconfirmed':
+      'MissionKid не смог проверить, вышел ли ты из этого результата. Твоя выполненная миссия сохранена. Попробуй ещё раз, чтобы увидеть.',
   },
 };
 

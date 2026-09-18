@@ -5,6 +5,7 @@ import type { SupportedLanguage } from './localization';
 import type { SuggestionContext } from './missionSuggestions';
 import type {
   ActiveMissionSession,
+  CompletedMissionSession,
   CurrentMissionSession,
   MissionSession,
   PersistFailureReason,
@@ -483,4 +484,256 @@ export function leaveMissionSession(
   return recovered.sessionId === sessionId && recovered.state === from
     ? { status: 'not-left', reason: result.reason, session: recovered }
     : { status: 'superseded', session: recovered };
+}
+
+// D2: the period identity is the family's own local calendar month, fixed once
+// at completion and never recomputed. It is built from local calendar parts
+// rather than from an ISO string, because an ISO timestamp names the UTC month
+// and would put a completion made late on the last evening of a month into the
+// next one for anyone east of UTC.
+export function localCompletionPeriodId(epochMilliseconds: number): string {
+  const moment = new Date(epochMilliseconds);
+  const month = moment.getMonth() + 1;
+
+  return `${String(moment.getFullYear()).padStart(4, '0')}-${String(month).padStart(2, '0')}`;
+}
+
+export type MissionCompletionResult =
+  // The durable snapshot holds this session as completed, `currentSession` is
+  // cleared, and the result pointer names it. `completed` wrote it and read it
+  // back; `resolved` found the completion already stored and wrote nothing,
+  // which is what a repeat, a refresh or a retry after an interrupted
+  // confirmation finds.
+  | Readonly<{
+      status: 'completed' | 'resolved';
+      session: CompletedMissionSession;
+      // The validated completed collection this result belongs to, so the
+      // caller derives progress from the records storage actually holds rather
+      // than from a count assembled anywhere else.
+      completedSessions: readonly CompletedMissionSession[];
+    }>
+  // Established before storage changed: the session is still the stored
+  // `active` one and may be completed once by a later deliberate activation.
+  | Readonly<{
+      status: 'not-completed';
+      reason: PersistFailureReason;
+      session: ActiveMissionSession;
+    }>
+  // The write may have landed and a fresh read could not establish what is
+  // stored. Neither a completion nor its absence is claimed.
+  | Readonly<{ status: 'unconfirmed'; reason: PersistFailureReason }>
+  // Durable state holds a different current session than the one this request
+  // named. It is preserved exactly and handed back so the interface follows
+  // what is stored rather than completing a Mission the family did not finish.
+  | Readonly<{ status: 'superseded'; session: CurrentMissionSession }>
+  // Nothing here may be completed: no readable snapshot, no session by that
+  // identity, a session in another state, or a Mission that no longer resolves
+  // to reviewed, safe content.
+  | Readonly<{ status: 'unavailable' }>;
+
+// Completing is the one deliberate action that moves a session to `completed`.
+// It is keyed by the identity the family acted on and decided by freshly read
+// durable state, so a stale activation cannot complete a different Mission and a
+// repeat cannot complete anything twice.
+//
+// One atomic snapshot replacement carries the whole result: the same session,
+// with its immutable selection and start facts untouched, joins the completed
+// collection exactly once; the current session is cleared; and the result
+// pointer names that completion. Nothing about remaining time is consulted —
+// completing before zero, at zero and under the approved timing fallbacks is the
+// same operation — and no duration is invented for a session whose stored one
+// was already malformed.
+export function completeMissionSession(
+  adapter: PersistenceAdapter,
+  sessionId: string,
+  now: WallClock,
+  language: SupportedLanguage,
+): MissionCompletionResult {
+  const current = adapter.hydrate();
+
+  if (current.status !== 'hydrated') {
+    return { status: 'unavailable' };
+  }
+
+  const snapshot = current.snapshot;
+
+  // Already completed: the session answers with the facts it already carries.
+  // No timestamp is taken, no period is recomputed and nothing is written, so a
+  // stale repeat can never move a completion that is already durable.
+  const existing = snapshot.completedSessions.find(
+    (record) => record.sessionId === sessionId,
+  );
+
+  if (existing !== undefined) {
+    return {
+      status: 'resolved',
+      session: existing,
+      completedSessions: snapshot.completedSessions,
+    };
+  }
+
+  const session = snapshot.currentSession;
+
+  if (session === null) {
+    return { status: 'unavailable' };
+  }
+
+  // The request names the session the family finished. Another current session
+  // is another Mission, and a stale activation must never complete it.
+  if (session.sessionId !== sessionId) {
+    return { status: 'superseded', session };
+  }
+
+  // Only a running Mission completes, and only one whose content still resolves
+  // to reviewed wording approved for the context the session froze.
+  if (
+    session.state !== 'active' ||
+    resolveSessionMission(session, language) === null
+  ) {
+    return { status: 'unavailable' };
+  }
+
+  const reading = now();
+
+  if (!Number.isInteger(reading) || reading < 0) {
+    return { status: 'unavailable' };
+  }
+
+  // A device clock that has moved backwards must not record a Mission as
+  // finishing before it started. Normalizing to the start keeps the record
+  // possible without delaying or refusing a self-reported completion.
+  const completedAt = Math.max(reading, session.startedAt);
+  const completed: CompletedMissionSession = {
+    ...session,
+    state: 'completed',
+    completedAt,
+    completionPeriodId: localCompletionPeriodId(completedAt),
+  };
+
+  const result = adapter.persist({
+    ...snapshot,
+    currentSession: null,
+    completedSessions: [...snapshot.completedSessions, completed],
+    currentResultSessionId: completed.sessionId,
+  });
+
+  if (result.status === 'confirmed') {
+    const written = result.snapshot.completedSessions.find(
+      (record) => record.sessionId === sessionId,
+    );
+
+    return written !== undefined &&
+      result.snapshot.currentSession === null &&
+      result.snapshot.currentResultSessionId === sessionId
+      ? {
+          status: 'completed',
+          session: written,
+          completedSessions: result.snapshot.completedSessions,
+        }
+      : { status: 'unconfirmed', reason: 'read-back-mismatch' };
+  }
+
+  if (!REASONS_THAT_MAY_HAVE_LANDED.includes(result.reason)) {
+    return { status: 'not-completed', reason: result.reason, session };
+  }
+
+  // The outcome is unknown, so it is read rather than assumed. A completion
+  // found durable is adopted exactly as stored — this call never replaces its
+  // timestamp or recomputes its period — and a session found still running is
+  // reported as not completed because that is what storage says.
+  const recovery = adapter.hydrate();
+
+  if (recovery.status !== 'hydrated') {
+    return { status: 'unconfirmed', reason: result.reason };
+  }
+
+  const recovered = recovery.snapshot.completedSessions.find(
+    (record) => record.sessionId === sessionId,
+  );
+
+  if (recovered !== undefined) {
+    return {
+      status: 'resolved',
+      session: recovered,
+      completedSessions: recovery.snapshot.completedSessions,
+    };
+  }
+
+  const stillCurrent = recovery.snapshot.currentSession;
+
+  if (stillCurrent !== null && stillCurrent.sessionId === sessionId) {
+    return stillCurrent.state === 'active'
+      ? { status: 'not-completed', reason: result.reason, session: stillCurrent }
+      : { status: 'superseded', session: stillCurrent };
+  }
+
+  return stillCurrent !== null
+    ? { status: 'superseded', session: stillCurrent }
+    : { status: 'unconfirmed', reason: result.reason };
+}
+
+export type MissionResultExitResult =
+  // The pointer is clear. `cleared` wrote it and read it back; `resolved` found
+  // it already clear and wrote nothing.
+  | Readonly<{ status: 'cleared' | 'resolved' }>
+  // Established before storage changed: the pointer still names this result.
+  | Readonly<{ status: 'not-cleared'; reason: PersistFailureReason }>
+  // The pointer names another result now. It is left exactly as it is, so a
+  // late exit from an older card cannot clear a newer one.
+  | Readonly<{ status: 'superseded'; sessionId: string }>
+  | Readonly<{ status: 'unconfirmed'; reason: PersistFailureReason }>
+  | Readonly<{ status: 'unavailable' }>;
+
+// Leaving the result clears one navigation reference and nothing else. The
+// completed sessions are the durable record and are never touched here: this
+// write removes the pointer that decides which result is being shown, so the
+// same completion stays countable, derivable and recoverable afterwards.
+export function leaveMissionResult(
+  adapter: PersistenceAdapter,
+  sessionId: string,
+): MissionResultExitResult {
+  const current = adapter.hydrate();
+
+  if (current.status !== 'hydrated') {
+    return { status: 'unavailable' };
+  }
+
+  const snapshot = current.snapshot;
+  const pointer = snapshot.currentResultSessionId;
+
+  if (pointer === null) {
+    return { status: 'resolved' };
+  }
+
+  if (pointer !== sessionId) {
+    return { status: 'superseded', sessionId: pointer };
+  }
+
+  const result = adapter.persist({ ...snapshot, currentResultSessionId: null });
+
+  if (result.status === 'confirmed') {
+    return result.snapshot.currentResultSessionId === null
+      ? { status: 'cleared' }
+      : { status: 'unconfirmed', reason: 'read-back-mismatch' };
+  }
+
+  if (!REASONS_THAT_MAY_HAVE_LANDED.includes(result.reason)) {
+    return { status: 'not-cleared', reason: result.reason };
+  }
+
+  const recovery = adapter.hydrate();
+
+  if (recovery.status !== 'hydrated') {
+    return { status: 'unconfirmed', reason: result.reason };
+  }
+
+  const recovered = recovery.snapshot.currentResultSessionId;
+
+  if (recovered === null) {
+    return { status: 'resolved' };
+  }
+
+  return recovered === sessionId
+    ? { status: 'not-cleared', reason: result.reason }
+    : { status: 'superseded', sessionId: recovered };
 }
