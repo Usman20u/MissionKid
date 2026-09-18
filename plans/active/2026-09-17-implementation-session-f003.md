@@ -1,11 +1,11 @@
 # MissionKid Implementation Plan 03 — Mission Session and Completion (F003) with the Reward Card and Monthly Goal completion message (F004 slice)
 
 **Date:** 2026-09-17
-**Status:** Approved — Tasks 1 and 2 complete; Task 3 complete except its action-hierarchy clause, which awaits the adjustment proposed in its record; Tasks 4–19 not started
+**Status:** Approved — Tasks 1, 2 and 3 complete under the approved execution allocation clarification; Tasks 4–19 not started
 
-This plan's scope and decisions are approved. Scope approval is not authorization to execute a task: each implementation task begins only when it is explicitly authorized. Tasks 1, 2 and 3 were each explicitly authorized. Tasks 1 and 2 are complete, and Task 3 is complete except its action-hierarchy clause; no later task has begun.
+This plan's scope and decisions are approved. Scope approval is not authorization to execute a task: each implementation task begins only when it is explicitly authorized. Tasks 1, 2 and 3 were each explicitly authorized and are complete; no later task has begun.
 
-The scope below plans `F003` in full, except the acceptance clauses explicitly deferred with the Mission History view, together with one deliberately bounded part of `F004`: the Reward Card and the Monthly Goal derivation and completion message that the card must display. That combined scope is approved as decision D1-A, with the History deferrals preserved exactly as documented. Every task below except Tasks 1, 2 and 3 is pending implementation and verification; what those tasks actually changed, and what Task 3 deliberately left unmet, is recorded in the implementation record at the end of this plan, and nothing else here is a claim about what the repository already does.
+The scope below plans `F003` in full, except the acceptance clauses explicitly deferred with the Mission History view, together with one deliberately bounded part of `F004`: the Reward Card and the Monthly Goal derivation and completion message that the card must display. That combined scope is approved as decision D1-A, with the History deferrals preserved exactly as documented. Every task below except Tasks 1, 2 and 3 is pending implementation and verification; what those tasks actually changed is recorded in the implementation record at the end of this plan, and nothing else here is a claim about what the repository already does.
 
 ## Authorization basis
 
@@ -276,6 +276,32 @@ These are the exact places where this plan meets what `F002` already delivers. T
 | The shipped selection-unconfirmed message states that nothing has started | Re-read it against the two failure classes in Task 12: for a selection it remains literally true, and no new message may copy its shape into a claim about a start or a completion | 12 |
 | The discovery gate refuses `degraded` and `blocked-recovery` states | The session and result views inherit the same gate: temporary in-memory mode claims no durable session, completion or progress | 11 |
 
+## Execution allocation clarification (approved 2026-09-18)
+
+Approved: each functional control is built by the task that implements the
+operation it carries out. A presentation task builds the content, wording and
+reading hierarchy of its view; the control that performs an operation, and the
+action-hierarchy obligation that goes with it, belong to the task that makes that
+operation work. Rendering a control whose operation is assigned to a later task
+would put a no-op in the product, which `AGENTS.md` forbids as an unexplained
+broken control.
+
+| Control | Built by | Operation it performs |
+| --- | --- | --- |
+| Ready **Start mission** | Task 4 | Exactly-once deliberate start |
+| Ready return to suggestions | Task 7 | Ready cancellation |
+| Active leave-without-completion control and its confirmation | Task 7 | Confirmed abandonment |
+| Active **Mission done** | Task 8 | Exactly-once completion write |
+
+This is an execution-plan clarification only. It changes no approved product
+behavior, no owning specification, no task, no task order and no final acceptance
+requirement: all nineteen tasks remain, and every control, integration and
+action-hierarchy verification obligation moved below is carried by its owning
+task rather than dropped. The whole-plan completion requirements under
+**Definition of Plan 03 complete** are unchanged and still require the ready
+presentation to carry one dominant start action, and the active presentation to
+carry **Mission done** and a secondary leave-without-completion path.
+
 ## Sequential implementation tasks
 
 Each task states its outcome, specification trace, dependencies, likely files, and verification intent. Each is independently verifiable and must leave type checking, tests and the production build passing.
@@ -318,7 +344,7 @@ Both write-failure classes are handled truthfully. A class-A failure leaves the 
 
 ### Task 3 — Ready start screen, safety guidance and Mission Break wording
 
-**Outcome.** The ready view answers, without extra navigation, what the Mission is, what the family will do, its Mission Category, what is needed, its approximate duration, whether an adult must be nearby or take part, any essential safety guidance, and that the Mission has not started. Mission Break wording introduces the brief transition to the real-life Mission in all three languages without implying device blocking, app control, monitoring or enforcement. **Start mission** is the one visually dominant action; returning to suggestions is available and secondary. Nothing animates, counts down or auto-progresses.
+**Outcome.** The ready view answers, without extra navigation, what the Mission is, what the family will do, its Mission Category, what is needed, its approximate duration, whether an adult must be nearby or take part, any essential safety guidance, and that the Mission has not started. Mission Break wording introduces the brief transition to the real-life Mission in all three languages without implying device blocking, app control, monitoring or enforcement. The view's reading hierarchy leaves room for the one dominant **Start mission** action Task 4 builds and the secondary return to suggestions Task 7 builds, and adds neither itself. Nothing animates, counts down or auto-progresses.
 
 **Specification trace.** `F003` ready state and mission start screen, Mission Break, acceptance criteria 2, 3, 19; Visual and Ergonomic — ready presentation, Mission Break transition, action hierarchy, safety and adult-involvement presentation; Mission Catalog and Safety — unweakened safety and adult-involvement meaning.
 
@@ -326,11 +352,11 @@ Both write-failure classes are handled truthfully. A class-A failure leaves the 
 
 **Likely files.** ready view module and its test, `src/localization.ts`, `src/localization.test.ts`, `src/styles.css`.
 
-**Verification intent.** Test that every required element renders in EN, DE and RU from catalog content in the selected language; that required safety and adult-involvement wording appears in words before any start is possible; that exactly one primary action exists; that no countdown, timer element, reward preview, recommendation or extra choice appears; and that Mission Break wording makes no blocking, control, monitoring or enforcement claim.
+**Verification intent.** Test that every required element renders in EN, DE and RU from catalog content in the selected language; that required safety and adult-involvement wording appears in words before any start is possible; that no countdown, timer element, reward preview, recommendation or extra choice appears; that no control stands in for an operation this task does not implement; and that Mission Break wording makes no blocking, control, monitoring or enforcement claim. The action-hierarchy obligation — exactly one dominant primary action on the ready view — is verified by Task 4 with the action it builds.
 
 ### Task 4 — Exactly-once deliberate start
 
-**Outcome.** **Start mission** performs one confirmed transition from `ready` to `active`, writing one immutable `startedAt` from the injected clock. Repeated input — double press, rapid keyboard activation, or a retry after an interrupted confirmation — resolves the same active session without a second session, a second identifier, a moved `startedAt` or a restarted countdown.
+**Outcome.** The ready view gains **Start mission** as its one visually dominant action, and it performs one confirmed transition from `ready` to `active`, writing one immutable `startedAt` from the injected clock. Repeated input — double press, rapid keyboard activation, or a retry after an interrupted confirmation — resolves the same active session without a second session, a second identifier, a moved `startedAt` or a restarted countdown.
 
 Failure handling distinguishes the two classes. Class A: nothing was written, the session is still `ready`, the interface says the Mission has not started and offers a retry. Class B: the interface claims neither a start nor the absence of one; it re-reads durable state and presents what is there. If the stored session is already `active`, the same session and its existing `startedAt` are adopted as they are — never removed, rewritten or replaced with a later reading — and the countdown derives from that stored timestamp. If the stored session is still `ready`, the retry starts it once.
 
@@ -340,7 +366,7 @@ Failure handling distinguishes the two classes. Class A: nothing was written, th
 
 **Likely files.** `src/missionSession.ts`, `src/missionSession.test.ts`, `src/appState.tsx`, ready view, `src/localization.ts`.
 
-**Verification intent.** Test with injected clock and identifier that one start writes one `startedAt`; that a second activation resolves the same session, consumes no identifier and moves no timestamp. Test class A: a throwing write leaves the stored session in `ready` with no `startedAt`, and the interface claims no start. Test class B separately: a write that lands under a failing read-back leaves a durable `active` session with its original `startedAt`; the interface claims no unverified success and no rollback; rehydration presents the active session; and the retry resolves it with the same identifier and the same `startedAt`, starting no second countdown. Assert explicitly that no path deletes a `startedAt` that may already be durable.
+**Verification intent.** Test that the ready view offers exactly one dominant primary action and that it is **Start mission**, and that no startable action is offered for a Mission whose content does not resolve to reviewed, safe wording. Test with injected clock and identifier that one start writes one `startedAt`; that a second activation resolves the same session, consumes no identifier and moves no timestamp. Test class A: a throwing write leaves the stored session in `ready` with no `startedAt`, and the interface claims no start. Test class B separately: a write that lands under a failing read-back leaves a durable `active` session with its original `startedAt`; the interface claims no unverified success and no rollback; rehydration presents the active session; and the retry resolves it with the same identifier and the same `startedAt`, starting no second countdown. Assert explicitly that no path deletes a `startedAt` that may already be durable.
 
 ### Task 5 — Timer derivation
 
@@ -356,7 +382,7 @@ Failure handling distinguishes the two classes. Class A: nothing was written, th
 
 ### Task 6 — Active presentation
 
-**Outcome.** The active view leads with the instruction to leave the screen and do the Mission, keeps the Mission identity and action reminder, keeps applicable adult-involvement and safety guidance readable, shows calm approximate time guidance as supporting information, and offers **Mission done** for the family's return plus a secondary leave-without-completion path. It requires no interaction while the Mission happens, asks for no proof, and adds no game, score, achievement, recommendation or repeated prompt. At zero the wording becomes neutral guidance without urgency.
+**Outcome.** The active view leads with the instruction to leave the screen and do the Mission, keeps the Mission identity and action reminder, keeps applicable adult-involvement and safety guidance readable, and shows calm approximate time guidance as supporting information. Its reading hierarchy leaves room for the **Mission done** action Task 8 builds and the secondary leave-without-completion path Task 7 builds, and adds neither itself. It requires no interaction while the Mission happens, asks for no proof, and adds no game, score, achievement, recommendation or repeated prompt. At zero the wording becomes neutral guidance without urgency.
 
 **Specification trace.** `F003` active state and timer items 3–5, leaving and returning, safety and healthy engagement; Visual and Ergonomic — Mission Break transition and active presentation, action hierarchy, motion and feedback, anti-manipulation rules.
 
@@ -364,11 +390,11 @@ Failure handling distinguishes the two classes. Class A: nothing was written, th
 
 **Likely files.** active view module and its test, `src/localization.ts`, `src/localization.test.ts`, `src/styles.css`, `src/AppShell.tsx`.
 
-**Verification intent.** Test in EN, DE and RU that the leave-the-screen instruction, Mission reminder, safety wording, approximate guidance and **Mission done** are present; that the timer is not the visual centerpiece and uses no urgency, alarm, overtime or failure styling; that zero reads as neutral guidance with the session still active; that nothing requests proof or interaction; and that the view is stable when left alone.
+**Verification intent.** Test in EN, DE and RU that the leave-the-screen instruction, Mission reminder, safety wording and approximate guidance are present, and that no control stands in for an operation this task does not implement; the presence and prominence of **Mission done** and of the leave-without-completion path are verified by Tasks 8 and 7 with the actions they build. that the timer is not the visual centerpiece and uses no urgency, alarm, overtime or failure styling; that zero reads as neutral guidance with the session still active; that nothing requests proof or interaction; and that the view is stable when left alone.
 
 ### Task 7 — Ready cancellation, confirmed abandonment, and conflict resolution
 
-**Outcome.** From `ready`, the family can return to the three suggestions; the unstarted selection ends with no timer, completion, or downstream effect, and the current session is cleared through a confirmed write. From `active`, leaving through MissionKid requires an explicit confirmation that states the consequence, makes **Keep going** easy and **Leave mission** explicit, and on confirmation clears the current session with no completion, recognition, progress, penalty or shame. Ordinary hiding, closing or navigation is never treated as abandonment. An existing-session conflict — including the one `F002` currently surfaces without a control — presents the current Mission and the approved choice to return to it or confirm abandonment before another Mission can be selected.
+**Outcome.** This task builds the secondary return to suggestions on the ready view and the secondary leave-without-completion control and its confirmation on the active view, each with the operation it performs. From `ready`, the family can return to the three suggestions; the unstarted selection ends with no timer, completion, or downstream effect, and the current session is cleared through a confirmed write. From `active`, leaving through MissionKid requires an explicit confirmation that states the consequence, makes **Keep going** easy and **Leave mission** explicit, and on confirmation clears the current session with no completion, recognition, progress, penalty or shame. Ordinary hiding, closing or navigation is never treated as abandonment. An existing-session conflict — including the one `F002` currently surfaces without a control — presents the current Mission and the approved choice to return to it or confirm abandonment before another Mission can be selected.
 
 Both exits are writes, so both failure classes apply. Class A leaves the session exactly as it was and says the exit was not carried out. Class B claims neither that the Mission was left nor that it was kept: durable state is re-read, and whichever it shows — the session cleared or still present — is what the interface presents. A retry after class B is safe because clearing the same `sessionId` twice is the same outcome; no path recreates a session that may already be gone or writes a completion.
 
@@ -378,11 +404,11 @@ Both exits are writes, so both failure classes apply. Class A leaves the session
 
 **Likely files.** `src/missionSession.ts`, `src/missionSession.test.ts`, `src/appState.tsx`, ready and active views, `src/MissionSuggestionSet.tsx`, `src/MissionDiscovery.tsx`, `src/localization.ts`, `src/styles.css`, view tests.
 
-**Verification intent.** Test that cancellation from `ready` clears the session and produces no completed record, pointer or progress source; that abandonment requires confirmation and that cancelling the confirmation changes nothing; that confirmed abandonment clears the session and writes no completion; that hiding or navigating away leaves the session intact; and that a conflict offers return or confirmed abandonment and blocks a second session until resolved. Test both failure classes for both exits: a throwing write leaves the session present and claims no exit; a landed write with a failing read-back leads to rehydration showing the cleared session, with the interface claiming neither outcome before that read and the retry producing no duplicate effect.
+**Verification intent.** Test that each exit is present as a secondary action beside the dominant action of its view, never competing with it. Test that cancellation from `ready` clears the session and produces no completed record, pointer or progress source; that abandonment requires confirmation and that cancelling the confirmation changes nothing; that confirmed abandonment clears the session and writes no completion; that hiding or navigating away leaves the session intact; and that a conflict offers return or confirmed abandonment and blocks a second session until resolved. Test both failure classes for both exits: a throwing write leaves the session present and claims no exit; a landed write with a failing read-back leads to rehydration showing the cleared session, with the interface claiming neither outcome before that read and the retry producing no duplicate effect.
 
 ### Task 8 — Exactly-once completion write
 
-**Outcome.** **Mission done** performs one atomic snapshot replacement: the same session moves into the completed collection with `state: 'completed'`, `completedAt` normalized to the later of the current wall-clock reading and `startedAt`, and its immutable `completionPeriodId`; `currentSession` is cleared; `currentResultSessionId` points at that completed session. Completion is keyed by `sessionId`: a repeat, a refresh, or a retry after an interrupted confirmation resolves the existing completed session rather than appending another. Completion works identically before and after zero.
+**Outcome.** The active view gains **Mission done** as its one dominant action, and it performs one atomic snapshot replacement: the same session moves into the completed collection with `state: 'completed'`, `completedAt` normalized to the later of the current wall-clock reading and `startedAt`, and its immutable `completionPeriodId`; `currentSession` is cleared; `currentResultSessionId` points at that completed session. Completion is keyed by `sessionId`: a repeat, a refresh, or a retry after an interrupted confirmation resolves the existing completed session rather than appending another. Completion works identically before and after zero.
 
 Failure handling distinguishes the two classes. Class A: nothing was written, the session remains the stored `active` one, no recognition or progress is shown, and the retry completes it once. Class B: the interface claims no success and equally claims no failure of the underlying write; it re-reads durable state. If the completion landed, the same completed session, its `completedAt` and its `completionPeriodId` are adopted unchanged and the flow continues to the Reward Card; the retry resolves that completion and never appends a second record, moves a timestamp, or recomputes a period. If it did not land, the retry completes the active session once. No path deletes a completion that may already be durable or reconstructs the `active` state over it.
 
@@ -392,7 +418,7 @@ Failure handling distinguishes the two classes. Class A: nothing was written, th
 
 **Likely files.** `src/missionSession.ts`, `src/missionSession.test.ts`, `src/persistence.ts`, `src/persistence.test.ts`, `src/appState.tsx`, active view, `src/localization.ts`.
 
-**Verification intent.** Test that one completion produces exactly one completed record, a cleared current session and a matching pointer in one write; that `completedAt` is never earlier than `startedAt` under a backward clock; that `completionPeriodId` matches the local calendar month of the normalized timestamp; that a second **Mission done** and a refresh both resolve the same completed session. Test the two failure classes separately. Class A: a throwing write leaves the stored session `active`, shows no recognition or progress, and the retry completes it once. Class B: a write that lands under a failing read-back leaves a durable completed session; the interface shows no unverified success and asserts no rollback; rehydration presents the completed result; and the retry resolves that same completion with no second record, no moved `completedAt`, no changed period and no recreated `active` session. Assert explicitly that no path removes a completion that may already be durable.
+**Verification intent.** Test that the active view offers **Mission done** as its one dominant action beside the secondary exit Task 7 built. Test that one completion produces exactly one completed record, a cleared current session and a matching pointer in one write; that `completedAt` is never earlier than `startedAt` under a backward clock; that `completionPeriodId` matches the local calendar month of the normalized timestamp; that a second **Mission done** and a refresh both resolve the same completed session. Test the two failure classes separately. Class A: a throwing write leaves the stored session `active`, shows no recognition or progress, and the retry completes it once. Class B: a write that lands under a failing read-back leaves a durable completed session; the interface shows no unverified success and asserts no rollback; rehydration presents the completed result; and the retry resolves that same completion with no second record, no moved `completedAt`, no changed period and no recreated `active` session. Assert explicitly that no path removes a completion that may already be durable.
 
 ### Task 9 — Monthly Goal derivation
 
@@ -775,10 +801,9 @@ record.
 
 ### Task 3 completion (2026-09-18)
 
-Task 3 is complete except its action-hierarchy clause, and is committed as
-`f6f0c20`. The ready view now answers every question the specification requires
-before a Mission can be started; the two approved actions remain unimplemented
-because the operations they carry out belong to Tasks 4 and 7.
+Task 3 is complete and committed as `f6f0c20`. The ready view answers every
+question the specification requires before a Mission can be started, in all three
+languages, and adds no control for an operation it does not implement.
 
 | Gate | Result |
 | --- | --- |
@@ -790,26 +815,24 @@ because the operations they carry out belong to Tasks 4 and 7.
 | Specifications changed | None |
 | Interface strings added | 3; 2 corrected — all EN/DE/RU, listed below |
 
-**Unmet clause and the dependency behind it.** Task 3's outcome states that
+**How the action-hierarchy clause was resolved.** As first delivered, Task 3 was
+recorded as complete *except* its action-hierarchy clause: its outcome then read
 "**Start mission** is the one visually dominant action; returning to suggestions
-is available and secondary". Task 4 owns the deliberate start and Task 7 owns
-ready cancellation, and both already list the ready view among their likely
-files. The plan contains no provision for rendering an action before the
-operation it performs, and rendering either control now would mean a no-op
-handler or misleading navigation in the product, which the authorization for this
-task forbids and which `AGENTS.md` would treat as an unexplained broken control.
-Neither control was implemented, and this clause is recorded as unmet rather than
-satisfied.
+is available and secondary", while Task 4 owned the deliberate start and Task 7
+owned ready cancellation. Rendering either control without its operation would
+have put a no-op handler or misleading navigation in the product, so neither was
+built and the clause was reported unmet together with a proposed reallocation.
 
-**Proposed smallest execution-plan adjustment, for approval.** Each action moves
-to the task that already owns its operation: Task 4 renders **Start mission** as
-the one visually dominant action when it implements the deliberate start, and
-Task 7 renders the secondary return to suggestions when it implements ready
-cancellation. Task 3's action-hierarchy clause is then verified across those two
-tasks — one dominant primary action once Task 4 lands, the secondary exit once
-Task 7 lands — with no new task, no re-sequencing and no change to any other
-task's scope. Until that adjustment is approved, Plan 03 must not record Task 3
-as fully complete.
+That reallocation was approved on 2026-09-18 and is recorded under **Execution
+allocation clarification** above: **Start mission** is built by Task 4 and the
+return to suggestions by Task 7, each with the operation it performs, and the
+action-hierarchy verification travels with them. Under the clarified allocation
+Task 3's own obligations — content, wording, reading hierarchy and the absence of
+any stand-in control — are all satisfied by `f6f0c20` and the verification below,
+so Task 3 is closed. Nothing was dropped: the ready view must still carry one
+dominant start action and a secondary return before Plan 03 is complete, and
+those requirements now sit with Tasks 4 and 7 and in the unchanged **Definition
+of Plan 03 complete**.
 
 **Ready content.** Mission title and short instruction, Mission Category,
 approximate duration, required adult involvement, applicable safety guidance,
@@ -904,5 +927,6 @@ accepted presentation are unchanged.
 | D3 — exact EN/DE/RU wording delegated to implementation, added strings reported for review | Approved 2026-09-17 |
 | D4-B — refuse snapshot-replacing writes while an unresolved invalid or conflicting completed record persists | Approved 2026-09-17 |
 | Scope and decisions approved | Yes |
+| Execution allocation clarification — each functional control built by the task implementing its operation | Approved 2026-09-18 |
 | Implementation task authorized | Tasks 1, 2 and 3, each authorized 2026-09-18; every later task requires its own explicit authorization |
-| Tasks started | Task 1 — complete, committed as `704b4cc`; Task 2 — complete, committed as `9d56eae`; Task 3 — committed as `f6f0c20`, complete except its action-hierarchy clause; Tasks 4–19 not started |
+| Tasks started | Task 1 — complete, committed as `704b4cc`; Task 2 — complete, committed as `9d56eae`; Task 3 — complete, committed as `f6f0c20`; Tasks 4–19 not started |
