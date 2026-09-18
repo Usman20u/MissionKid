@@ -1358,6 +1358,25 @@ runtime conflict field now holds the whole stored session rather than its Missio
 identifier alone, because resolving a conflict needs the identity and state the
 exit must be made against; it remains runtime state and is never persisted.
 
+### Tasks 8, 9 and 10 authorization (2026-09-18)
+
+Tasks 8, 9 and 10 were explicitly authorized for execution as one integration
+batch, in that order, from `51dffb7`, with Task 7's source commit `122224e` as
+its basis. One narrow correction to the Task 7 exit-failure wording was
+authorized with them. Task 11 onward, push and merge are not authorized.
+
+All nineteen tasks and their order are preserved. The batch builds the completion
+domain first, the Monthly Goal derivation second, and the Reward Card integration
+third. Tasks 8 and 10 share an integration dependency and are recorded honestly:
+Task 8's domain obligations are met by its own commit, but its **Mission done**
+action and the approved result it must reach are only true once Task 10 lands, so
+neither task's interface criteria are claimed complete before the batch closes.
+
+The Mission History view, its route and empty state, the localized
+unavailable-title fallback as History presents it, and any standalone Monthly
+Goal surface remain deferred as this plan already records. This batch claims no
+full `F003` acceptance and no MVP completion.
+
 ## Approval record
 
 | Item | State |
