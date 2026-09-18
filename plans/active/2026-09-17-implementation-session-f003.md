@@ -1,11 +1,11 @@
 # MissionKid Implementation Plan 03 — Mission Session and Completion (F003) with the Reward Card and Monthly Goal completion message (F004 slice)
 
 **Date:** 2026-09-17
-**Status:** Approved — implementation not started
+**Status:** Approved — Task 1 complete; Tasks 2–19 not started
 
-This plan's scope and decisions are approved. Scope approval is not authorization to execute a task: each implementation task begins only when it is explicitly authorized, and no task has begun.
+This plan's scope and decisions are approved. Scope approval is not authorization to execute a task: each implementation task begins only when it is explicitly authorized. Task 1 was explicitly authorized and is complete; no later task has begun.
 
-The scope below plans `F003` in full, except the acceptance clauses explicitly deferred with the Mission History view, together with one deliberately bounded part of `F004`: the Reward Card and the Monthly Goal derivation and completion message that the card must display. That combined scope is approved as decision D1-A, with the History deferrals preserved exactly as documented. Every task below is pending implementation and verification; nothing in this plan is a claim about what the repository already does.
+The scope below plans `F003` in full, except the acceptance clauses explicitly deferred with the Mission History view, together with one deliberately bounded part of `F004`: the Reward Card and the Monthly Goal derivation and completion message that the card must display. That combined scope is approved as decision D1-A, with the History deferrals preserved exactly as documented. Every task below except Task 1 is pending implementation and verification; what Task 1 actually changed is recorded in the implementation record at the end of this plan, and nothing else here is a claim about what the repository already does.
 
 ## Authorization basis
 
@@ -562,6 +562,105 @@ Plan 03 is complete only when all of the following are true:
 
 Plan 03 completion is not MissionKid MVP completion, and it is not full `F003` acceptance: the History-visible clauses of `F003` criteria 11 and 12, the Mission History view, its empty state and route, the localized unavailable-title fallback as it appears in History, and any standalone Monthly Goal surface remain `F004` work requiring separately approved plan scope.
 
+## Implementation record
+
+### Task 1 authorization (2026-09-18)
+
+Task 1 was explicitly authorized for execution on branch `feat/implementation-session-f003` from
+`5591639`. No later task is authorized by that authorization or by this record.
+
+### Task 1 completion (2026-09-18)
+
+Task 1 is complete and committed as `704b4cc`: the persisted lifecycle is widened
+to `selected`, `ready`, `active` and `completed` in their approved positions, and
+every consumer of that contract is adapted in the same change.
+
+| Gate | Result |
+| --- | --- |
+| `npm run typecheck` | Pass, no suppression |
+| `npm test` | 443 / 443 pass, 13 files |
+| `npm run build` | Pass |
+| `git diff --check` | Clean |
+| `snapshotVersion` | `1`, unchanged, no migration |
+| Storage key and adapter | Unchanged |
+| `F001` / `F002` snapshot compatibility | Hydrates unchanged and still writable |
+| Interface strings added | None |
+
+**Schema.** One discriminated union on `state` over shared immutable selection
+facts. `ready` carries no `startedAt`; `active` requires one structurally valid
+`startedAt` and no completion facts; `completed` requires `startedAt`, a
+`completedAt` not earlier than it, and one `completionPeriodId` validated against
+the approved `YYYY-MM` form. A completed session cannot occupy the current
+position, a current session and a current-result pointer cannot both be present,
+and one identifier cannot name both an unfinished and a finished session.
+
+**Recovery.** Completed sessions are validated per record, so one unreadable
+record no longer makes the snapshot unreadable; identical duplicates coalesce by
+identifier; copies of one identifier that disagree are excluded from counting;
+an invalid pointer is rejected alone; an invalid age band leaves completions
+intact; an otherwise valid `active` session with a missing, null, zero, negative
+or fractional duration hydrates as `active` with the stored value preserved
+exactly. No read writes, trims or reorders the stored entry.
+
+**D4-B.** Enforced inside the existing adapter, against the value it reads from
+storage rather than the snapshot it is handed, so a filtered snapshot cannot pass
+the condition. The refusal uses the existing `unconfirmed` result under the added
+`blocked-completed-record` reason, leaves the stored value unchanged, keeps the
+trustworthy completed facts readable, reaches the family through the existing
+parent-facing recovery and retry path, leaves reset available as a parent
+decision, and lifts as soon as a later read no longer finds the condition.
+Identical duplicates, an invalid pointer and a malformed duration never block a
+write. Every confirmed write therefore reads the stored value once before
+replacing it; the rest of the five-step path is unchanged.
+
+**Confirmation.** Completed sessions are compared field by field, keyed by
+identifier rather than by length or position; a missing record is a mismatch; and
+a read-back whose parsing normalized, coalesced or excluded anything is
+unconfirmed rather than silently equal.
+
+**Consumers.** `MissionSelectionResult` separates a created session, which is
+`selected` by construction, from an existing session returned in its actual
+lifecycle state and from a conflict carrying the same. Choosing the Mission of a
+session already in `ready` or `active` returns that session rather than
+republishing it as a fresh selection, minting no identifier and writing nothing.
+Application state holds the current-session union, start availability narrows by
+discriminant, and the Discovery handler carries the state it was given. No cast,
+no `any`, no suppression, and no contract widened merely to compile.
+
+**Decisions recorded in the implementation.** Three choices delegated by the
+approved specifications were made and are named here rather than left implicit:
+
+1. The stored `completionPeriodId` is validated for shape only and never
+   recomputed from `completedAt`, because D2 fixes the period at completion and a
+   later timezone change must not reassign it.
+2. A pointer that arrives beside a current session is rejected alone, keeping
+   both the unfinished session and the completed record, because the Technical
+   Architecture rejects only the invalid navigation reference.
+3. D4-B is scoped to a stored snapshot that parses to a valid top-level shape. An
+   unparseable or unsupported-version snapshot keeps its own already-specified
+   blocked-recovery behavior, and the domain services already refuse to write
+   over it.
+
+**Verification.** The suite gained 64 tests: every accepted lifecycle shape and
+each forbidden combination independently, the record-level recovery contracts,
+malformed-duration recovery, D4-B refusal with the stored value unchanged and
+recovery once valid data is available, exact read-back mismatch detection
+including a coalesced or excluded read-back, `F001` and `F002` compatibility, and
+lifecycle-state narrowing for created, existing and conflicting sessions. Six
+existing assertions were updated to the widened contract and the added pre-write
+read rather than weakened.
+
+**Limitations.** One full-suite run during this work reported three failures
+across three files; their identity was not captured, and eight consecutive full
+runs since, including one under concurrent build load, passed 443 of 443. No
+browser or assistive-technology verification applies to this task, which adds no
+presentation.
+
+**Scope.** No `selected` to `ready` advancement, start, completion, timer,
+cancellation, abandonment, or ready, active or Reward Card view exists. `F002`
+selection behavior, the Mission catalog, Mission scenes and the accepted
+presentation are unchanged.
+
 ## Approval record
 
 | Item | State |
@@ -574,5 +673,5 @@ Plan 03 completion is not MissionKid MVP completion, and it is not full `F003` a
 | D3 — exact EN/DE/RU wording delegated to implementation, added strings reported for review | Approved 2026-09-17 |
 | D4-B — refuse snapshot-replacing writes while an unresolved invalid or conflicting completed record persists | Approved 2026-09-17 |
 | Scope and decisions approved | Yes |
-| Implementation task authorized | No — each task requires its own explicit authorization |
-| Tasks started | None |
+| Implementation task authorized | Task 1 only, authorized 2026-09-18; every later task requires its own explicit authorization |
+| Tasks started | Task 1 — complete, committed as `704b4cc`; Tasks 2–19 not started |
