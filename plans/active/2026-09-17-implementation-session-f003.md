@@ -1,11 +1,11 @@
 # MissionKid Implementation Plan 03 — Mission Session and Completion (F003) with the Reward Card and Monthly Goal completion message (F004 slice)
 
 **Date:** 2026-09-17
-**Status:** Approved — Tasks 1 and 2 complete; Tasks 3–19 not started
+**Status:** Approved — Tasks 1 and 2 complete; Task 3 complete except its action-hierarchy clause, which awaits the adjustment proposed in its record; Tasks 4–19 not started
 
-This plan's scope and decisions are approved. Scope approval is not authorization to execute a task: each implementation task begins only when it is explicitly authorized. Tasks 1 and 2 were each explicitly authorized and are complete; no later task has begun.
+This plan's scope and decisions are approved. Scope approval is not authorization to execute a task: each implementation task begins only when it is explicitly authorized. Tasks 1, 2 and 3 were each explicitly authorized. Tasks 1 and 2 are complete, and Task 3 is complete except its action-hierarchy clause; no later task has begun.
 
-The scope below plans `F003` in full, except the acceptance clauses explicitly deferred with the Mission History view, together with one deliberately bounded part of `F004`: the Reward Card and the Monthly Goal derivation and completion message that the card must display. That combined scope is approved as decision D1-A, with the History deferrals preserved exactly as documented. Every task below except Tasks 1 and 2 is pending implementation and verification; what those tasks actually changed is recorded in the implementation record at the end of this plan, and nothing else here is a claim about what the repository already does.
+The scope below plans `F003` in full, except the acceptance clauses explicitly deferred with the Mission History view, together with one deliberately bounded part of `F004`: the Reward Card and the Monthly Goal derivation and completion message that the card must display. That combined scope is approved as decision D1-A, with the History deferrals preserved exactly as documented. Every task below except Tasks 1, 2 and 3 is pending implementation and verification; what those tasks actually changed, and what Task 3 deliberately left unmet, is recorded in the implementation record at the end of this plan, and nothing else here is a claim about what the repository already does.
 
 ## Authorization basis
 
@@ -766,6 +766,132 @@ conflict control, Reward Card or Monthly Goal behavior, and no `active` or resul
 view. `F001` and `F002` behavior, the catalog, Mission scenes and the accepted
 presentation are unchanged.
 
+### Task 3 authorization (2026-09-18)
+
+Task 3 was explicitly authorized for execution from `1a0d411`, together with a
+narrow correction to the two ready-transition messages added in Task 2. No other
+lifecycle task, push or merge is authorized by that authorization or by this
+record.
+
+### Task 3 completion (2026-09-18)
+
+Task 3 is complete except its action-hierarchy clause, and is committed as
+`f6f0c20`. The ready view now answers every question the specification requires
+before a Mission can be started; the two approved actions remain unimplemented
+because the operations they carry out belong to Tasks 4 and 7.
+
+| Gate | Result |
+| --- | --- |
+| `npm run typecheck` | Pass, no suppression |
+| `npm test` | 487 / 487 pass, 14 files |
+| `npm run build` | Pass |
+| `git diff --check` | Clean |
+| Manual browser check | Pass — headless Chrome 153.0.8010.37, 360 CSS px Russian and 1280 px |
+| Specifications changed | None |
+| Interface strings added | 3; 2 corrected — all EN/DE/RU, listed below |
+
+**Unmet clause and the dependency behind it.** Task 3's outcome states that
+"**Start mission** is the one visually dominant action; returning to suggestions
+is available and secondary". Task 4 owns the deliberate start and Task 7 owns
+ready cancellation, and both already list the ready view among their likely
+files. The plan contains no provision for rendering an action before the
+operation it performs, and rendering either control now would mean a no-op
+handler or misleading navigation in the product, which the authorization for this
+task forbids and which `AGENTS.md` would treat as an unexplained broken control.
+Neither control was implemented, and this clause is recorded as unmet rather than
+satisfied.
+
+**Proposed smallest execution-plan adjustment, for approval.** Each action moves
+to the task that already owns its operation: Task 4 renders **Start mission** as
+the one visually dominant action when it implements the deliberate start, and
+Task 7 renders the secondary return to suggestions when it implements ready
+cancellation. Task 3's action-hierarchy clause is then verified across those two
+tasks — one dominant primary action once Task 4 lands, the secondary exit once
+Task 7 lands — with no new task, no re-sequencing and no change to any other
+task's scope. Until that adjustment is approved, Plan 03 must not record Task 3
+as fully complete.
+
+**Ready content.** Mission title and short instruction, Mission Category,
+approximate duration, required adult involvement, applicable safety guidance,
+Mission Break wording and the statement that the Mission has not started, all
+without extra navigation and none behind optional disclosure. Mission Category
+and duration come from the session's own immutable selection facts, so a later
+setup edit or catalog release cannot rewrite them; the words come from the
+reviewed catalog in the selected language. **Adult nearby** and **Adult takes
+part** stay distinguishable in words, and a Mission with no Mission-specific
+adult requirement shows no adult line rather than a statement that could read as
+a promise that ordinary parental judgment can be skipped. Nothing about
+equipment, supervision or safety is invented: the catalog carries no separate
+materials field because what a Mission needs belongs to its reviewed instruction
+and its safety note, which the Mission Catalog and Safety specification defines
+as the home for a safety, material or environment requirement. That is a
+deliberate reading of existing specifications, not a gap, so no specification
+changed.
+
+**Mission Break.** Start when ready, leave the screen, do the Mission in real
+life, come back when done — in all three languages, with no device-blocking,
+app-control, parental-control, monitoring, enforcement or proof claim, and no
+further decision. Asserted in the suite against those claims in each language.
+
+**Unresolvable Mission content.** A stored Mission that no longer resolves to
+reviewed, complete content in the current language is not presented as ready to
+start: every part of its content is withheld rather than guessed, the family is
+told calmly that it cannot be shown, and the session is left untouched. All 54
+published Missions are reviewed, so this path is reached only by a stored
+reference the catalog no longer carries. The calm retry and the explicit return
+without completion that this state also requires belong to Task 11.
+
+**Task 2 wording correction.** A durable `selected` session already exists before
+the ready transition, so neither transition message may claim that nothing at all
+was saved. The established-failure message now says only that the Mission could
+not be got ready, that it has not started, and that the family can try again; the
+unconfirmed message says only that MissionKid could not check whether the Mission
+is ready. Both remain specific to this transition, neither may stand in for an
+unconfirmed start or completion, and the two failure classes and the retry
+behavior are unchanged.
+
+**Strings, for human review.** Every string this plan has added to the Mission
+Session views, in all three languages:
+
+| Key | English | German | Russian |
+| --- | --- | --- | --- |
+| `view.sessionOpening.title` | Getting your Mission ready | Deine Mission wird vorbereitet | Готовим твою миссию |
+| `view.sessionReady.title` | Your Mission is ready | Deine Mission ist bereit | Твоя миссия готова |
+| `session.ready.notStarted` | This Mission has not started yet. | Diese Mission hat noch nicht begonnen. | Эта миссия ещё не началась. |
+| `session.action.retry` | Try again | Noch einmal versuchen | Попробовать ещё раз |
+| `session.transition.notCarriedOut` (corrected) | We couldn't get this Mission ready just now. It has not started. Try again. | Diese Mission konnte gerade nicht vorbereitet werden. Sie hat nicht begonnen. Versuche es noch einmal. | Сейчас не удалось подготовить эту миссию. Она не началась. Попробуй ещё раз. |
+| `session.transition.unconfirmed` (corrected) | MissionKid couldn't check whether this Mission is ready. It has not started. Try again. | MissionKid konnte nicht prüfen, ob diese Mission bereit ist. Sie hat nicht begonnen. Versuche es noch einmal. | MissionKid не смог проверить, готова ли эта миссия. Она не началась. Попробуй ещё раз. |
+| `session.ready.missionBreak.lead` (new) | Time for a Mission. | Zeit für eine Mission. | Время для миссии. |
+| `session.ready.missionBreak.body` (new) | Start when you are ready, then leave the screen and do the Mission in real life. Come back when you are done. | Starte, wenn du bereit bist, geh dann weg vom Bildschirm und mach die Mission in echt. Komm zurück, wenn du fertig bist. | Начни, когда будешь готов, потом отойди от экрана и выполни миссию по-настоящему. Возвращайся, когда закончишь. |
+| `session.ready.missionUnavailable` (new) | This Mission cannot be shown right now, so it is not ready to start. | Diese Mission kann gerade nicht angezeigt werden und ist deshalb nicht startbereit. | Эту миссию сейчас нельзя показать, поэтому она не готова к старту. |
+
+The ready view reuses the existing reviewed labels for Mission Category, adult
+involvement, the safety label and the duration phrasing rather than adding
+parallel wording. Those label maps moved into the localization module so a third
+view did not add a third copy; no label, key or behavior changed with the move.
+
+**Manual verification.** Against the served production build in headless Chrome
+with a seeded Russian `ready` session: at a true 360 CSS-pixel layout the
+document scroll width equals the client width and no element extends past the
+viewport, and title, category and duration, instruction, adult-involvement note,
+safety note, Mission Break wording and the not-started line all wrap and stay
+fully visible with nothing ellipsized; at 1280 pixels the same content renders in
+the same reading order. Source order matches visual order at both widths. The
+view holds exactly one element with a tab index — the programmatic heading
+target — and no button or link, so there is no inert control and no keyboard
+trap, and its tab order is empty while its actions remain unimplemented.
+
+**Limitations.** No assistive technology, no second browser and no reduced-motion,
+contrast or larger-text measurement was exercised, and none is claimed; the
+ergonomic review required by the visual specification remains later work. The
+unexplained failures recorded in Task 1 did not recur and remain unexplained
+rather than resolved.
+
+**Scope.** No lifecycle operation, timer, automatic progression, cancellation,
+abandonment, completion or reward behavior, and no inert control standing in for
+one. `F001`, `F002` and Task 2 behavior, the catalog, Mission scenes and the
+accepted presentation are unchanged.
+
 ## Approval record
 
 | Item | State |
@@ -778,5 +904,5 @@ presentation are unchanged.
 | D3 — exact EN/DE/RU wording delegated to implementation, added strings reported for review | Approved 2026-09-17 |
 | D4-B — refuse snapshot-replacing writes while an unresolved invalid or conflicting completed record persists | Approved 2026-09-17 |
 | Scope and decisions approved | Yes |
-| Implementation task authorized | Tasks 1 and 2, each authorized 2026-09-18; every later task requires its own explicit authorization |
-| Tasks started | Task 1 — complete, committed as `704b4cc`; Task 2 — complete, committed as `9d56eae`; Tasks 3–19 not started |
+| Implementation task authorized | Tasks 1, 2 and 3, each authorized 2026-09-18; every later task requires its own explicit authorization |
+| Tasks started | Task 1 — complete, committed as `704b4cc`; Task 2 — complete, committed as `9d56eae`; Task 3 — committed as `f6f0c20`, complete except its action-hierarchy clause; Tasks 4–19 not started |
