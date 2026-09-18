@@ -1490,6 +1490,19 @@ migration. The three unexplained failures recorded in Task 1 and the two timeout
 recorded in Task 7 remain separately recorded; neither recurred in this batch and
 no shared cause was established.
 
+### Tasks 11 and 12 authorization (2026-09-18)
+
+Tasks 11 and 12 were explicitly authorized for execution in that order from
+`be6c0ff`, together with the report corrections recorded with them: a real Reward
+Card display-failure path proven separately from the dropped-pointer case,
+period-correct wording on a restored card, the three approved Russian gender
+corrections, an explicit unavailable-title message, and a corrected explanation of
+which local/UTC month boundary cases actually diverge. Task 13 onward, the
+deferred History work, push and merge are not authorized.
+
+All nineteen tasks, their order, the approved scope and every existing completion
+record are preserved unchanged.
+
 ## Approval record
 
 | Item | State |
