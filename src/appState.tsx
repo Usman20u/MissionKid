@@ -8,6 +8,7 @@ import {
 } from 'react';
 
 import type { MissionCategory } from './catalog';
+import type { GuidanceAnchor } from './missionTimer';
 import { SUGGESTION_SET_SIZE } from './missionSuggestions';
 import {
   DEFAULT_LANGUAGE,
@@ -71,6 +72,11 @@ type RecoveryContext = Readonly<{
   // Which attempt produced it, for the same reason `selectionAttempt` exists:
   // a retry that fails the same way must still be announced.
   sessionAttempt?: number;
+  // What the live timer ticks from for the running Mission. It is derived from
+  // durable timestamps, belongs to one session and to this page lifetime alone,
+  // and is never written to storage: remaining time is recalculated, never
+  // counted down into a record.
+  guidanceAnchor?: GuidanceAnchor;
   // Why the last deliberate choice did not become a new Mission Session.
   // `conflict` is a product state: one is already chosen. `unconfirmed` is a
   // transition failure: nothing started, and the choice can be made again.
@@ -127,6 +133,9 @@ export type AppStateAction =
   // or found it already running.
   | { type: 'mission-session-started'; session: ActiveMissionSession }
   | { type: 'mission-session-transition-failed'; issue: MissionSessionIssue }
+  // Guidance was re-read from the session's own timestamps: on first sight of a
+  // running Mission, and whenever the family comes back to the page.
+  | { type: 'mission-timer-anchored'; anchor: GuidanceAnchor }
   | {
       type: 'mission-selection-failed';
       issue: MissionSelectionIssue;
@@ -426,6 +435,8 @@ export function appStateReducer(
         sessionIssue: action.issue,
         sessionAttempt: (state.sessionAttempt ?? 0) + 1,
       };
+    case 'mission-timer-anchored':
+      return { ...state, guidanceAnchor: action.anchor };
     case 'mission-selection-failed':
       // Nothing about the cycle changes: the same three Missions stay on screen
       // and stay choosable, which is what makes choosing again the retry. Only
