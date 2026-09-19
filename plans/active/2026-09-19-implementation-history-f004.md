@@ -1,7 +1,7 @@
 # MissionKid Implementation Plan 04 — Mission History and the current Monthly Goal
 
 **Date:** 2026-09-19
-**Status:** Draft — pending approval. Implementation has not started; no product code exists for this plan.
+**Status:** Approved and authorized — Tasks 1–7 approved as one bounded implementation batch. Execution in progress.
 
 ## Authorization basis
 
@@ -9,7 +9,7 @@ The durable specification-completion evidence is [`plans/completed/2026-08-17-mi
 
 It continues [`plans/completed/2026-09-17-implementation-session-f003.md`](../completed/2026-09-17-implementation-session-f003.md) — Plan 03, `F003` with the approved bounded `F004` slice — together with [`plans/completed/2026-09-19-pr4-review-corrections.md`](../completed/2026-09-19-pr4-review-corrections.md) and [`plans/completed/2026-09-19-unknown-start-followup.md`](../completed/2026-09-19-unknown-start-followup.md). All three are historical evidence and are not reopened. Plan 03 recorded exactly which clauses it deferred with the Mission History view; this plan takes up those and nothing else.
 
-Approval of this plan authorizes implementation of the scope below. Until then, no product code, dependency or configuration change is authorized.
+The instruction that approved this plan authorizes implementation of Tasks 1–7 as one bounded batch, with the decisions and boundaries recorded below. Ordinary implementation choices inside that scope need no further approval; work stops only for a real authority conflict or for required behaviour outside this scope. Push, pull request, merge and deployment are **not** authorized in this batch.
 
 ## Remaining scope
 
@@ -40,23 +40,35 @@ No duplicate History or counter store, no persisted navigation state, no persist
 | `MissionResultBoundary` pattern in `MissionResult.tsx` | The shape of a derived-view recovery boundary whose retry re-derives and writes nothing. |
 | `AppShell` view selection and focus rules | Navigation, precedence and deliberate focus movement. |
 
-## Decisions that need approval before implementation
+## Approved decisions
 
-These are genuine gaps: no owning specification answers them, and each changes what gets built.
+**D1 — Where Mission History is entered.** A *secondary* History entry appears in two places: on the `setup-complete-handoff` view, and in Discovery alongside the existing settings entry. History must stay directly reachable after the existing confirmed Reward Card exit returns the family to Discovery, with no reload and no settings edit in between. The entry sits outside Mission cards and never competes with the primary action on either surface.
 
-**D1 — Where Mission History is entered.** The Visual and Ergonomic specification defines History's content, its reading order, its empty state and its route *out* to Mission Category Selection, but no specification names a route *in*: no control, no label and no host surface. The Technical Architecture forbids URL routes, so a view must be selected from state by some control.
+**D2 — Where current-local-month progress is presented.** One section inside the Mission History view, shown whether or not History has entries, including when it is empty. No second destination and no second action are introduced for it. It stays distinct from a restored Reward Card, which continues to name the period its own completion fixed.
 
-*Recommendation:* a parent-area control on the `setup-complete-handoff` view, beside **Find a Mission**. The Visual and Ergonomic view inventory marks History "Parent-oriented private context", and User Story `P6` is a parent story. Alternatives: on the Reward Card — but its next step is specified as a short step back to the core flow, and a second destination competes with it; or on the child-facing discovery doorway — but that surface deliberately carries no parent-oriented controls.
+**D3 — Precedence.** `selected`, `ready`, `active` and current-result precedence are preserved exactly. Opening History never ends a session and never clears a result pointer. Navigation stays runtime-only and root-only: nothing about it is persisted and no URL changes.
 
-**D2 — Where current-local-month Monthly Goal progress is presented.** The Visual and Ergonomic specification lists Monthly Goal as its own presentation row — "Current progress as `X / 20 missions`", "No new action is invented by this specification" — and User Stories `C6` and `P7` both expect the current period to be visible. The Reward Card shows the period *its own completion* fixed, which is not the current period once a month has rolled over. No specification says which surface hosts the current-period figure.
+## Approved implementation boundaries
 
-*Recommendation:* one section on the Mission History view. It needs no new destination and no new action, it keeps both derived views on one surface, and it satisfies `C6` and `P7`. Alternative: a section on `setup-complete-handoff`, which would make it visible without opening History but adds a second place where progress is stated.
+- History spans **all** completion periods for the current Child Profile. Only the Monthly Goal calculation filters to the current period.
+- Reuse the validated completed facts and the existing progress, ordering, localization and recovery logic.
+- Immutable completion periods, session identifiers and timestamps are preserved exactly.
+- The source collection is never mutated, and the existing ascending twentieth-completion order is never changed to obtain newest-first History.
+- Record-level trust rules are reused; no competing validation policy is introduced.
+- `F002`'s discovery-cycle reset rule is preserved when the family leaves Discovery: a cycle ends when a Mission is chosen, when age band, language or Mission Category changes, **or when the family leaves discovery** — opening History is leaving discovery.
+- The current period is re-read on entry to History, so a calendar rollover between visits is reflected.
+- No persisted History, counter, navigation or prompt-seen flag; no router, dependency, dashboard or extra feature.
 
-**D3 — Whether History is reachable while a Mission Session or a completed result is open.** Not addressed by any specification, but the existing precedence rules already decide it.
+## Choices made under delegated authority
 
-*Recommendation, made under delegated authority and flagged for confirmation rather than treated as a blocker:* it is not. An `active` session, an open result, a `ready` session and a `selected` session each keep precedence exactly as they do now, and the History entry does not appear on those surfaces. History is runtime-only navigation for this page lifetime; it is never persisted, and it never displaces a recovered session or result.
+Recorded for review, not asked as questions:
 
-Ordinary implementation choices that are **not** blockers and will be made and verified without further approval: whether the derivation lives in `missionProgress.ts` or its own module; the exact class names and DOM shape; whether the History unavailable-title reuses `result.missionUnavailable` or takes its own key, decided by whether the existing wording is truthful in a list; and how the empty-state route dispatches the existing discovery-opened action.
+- The derivation lives in `missionProgress.ts` beside `deriveMonthlyGoal`, reusing its `byCompletionOrder` comparator negated for newest-first, rather than in a second module with a second ordering.
+- History reuses `result.missionUnavailable`, `result.completedOn`, `result.goal.heading`, `result.goal.progress`, `completionPeriodLabel` and `discovery.action.open`; only four genuinely new strings are added.
+- History's one action is the existing route to Mission Category Selection, which is also the empty state's approved route, so no new action is invented.
+- The goal-complete message is **not** repeated on History. It belongs to the twentieth completion's Reward Card, and a second surface stating it would read as the repeated prompt `F004` criterion 8 forbids. History shows the plain capped figure.
+- The destructive parent reset entry does not render on History, which is reachable from the child-facing discovery doorway.
+- The current period is read from the injected clock during render, so entering History again after a rollover shows the new period. A rollover that happens while History is left open on screen is picked up on the next entry; no timer is added for it.
 
 ## Acceptance mapping
 
@@ -102,13 +114,13 @@ Dependency-ordered. Each task is complete only when its verification passes.
 
 ### Task 2 — Reach Mission History and return
 
-**Outcome.** A `history` application view selected from runtime state alone, with the approved entry control (D1) and a return to where the family came from. An `active` session, an open completed result, a `ready` session and a `selected` session keep their existing precedence; the entry does not appear on those surfaces. Focus moves to the view heading exactly as other deliberate context changes do. Nothing about navigation is persisted, and no URL changes.
+**Outcome.** A `history` application view selected from runtime state alone, with the approved secondary entry on both the `setup-complete-handoff` view and Discovery (D1), and one route back to Mission Category Selection. An `active` session, an open completed result, a `ready` session and a `selected` session keep their existing precedence, and opening History ends neither (D3). Opening History from Discovery ends the discovery cycle, as `F002` already requires of leaving discovery. Focus moves to the view heading exactly as other deliberate context changes do. Nothing about navigation is persisted, and no URL changes.
 
 **Source references.** Technical Architecture — root-only navigation, app shell and navigation responsibilities; `F003` refresh and recovery behavior; Visual and Ergonomic — action hierarchy and deliberate focus movement.
 
 **Likely files.** `src/AppShell.tsx`, `src/appState.tsx`, `src/MissionHistory.tsx` (new), `src/App.test.tsx`, `src/Accessibility.test.tsx`.
 
-**Verification.** Rendered-application tests on the real adapter: History opens and returns; a restored `active` session, a restored open result and a restored `ready` session each keep precedence and offer no History entry; a refresh while History is open restores the approved state rather than History, because navigation is not persisted; focus lands on the view heading once.
+**Verification.** Rendered-application tests on the real adapter: History opens and returns from both entries; it is reachable straight after a confirmed Reward Card exit without a reload or a settings edit; a restored `active` session, a restored open result and a restored `ready` session each keep precedence, keep their durable facts and offer no History entry; a refresh while History is open restores the approved state rather than History, because navigation is not persisted; the discovery cycle's shown Missions are not carried back across a visit; focus lands on the view heading once.
 
 ### Task 3 — Present each entry, and the title that cannot be shown
 
@@ -132,7 +144,7 @@ Dependency-ordered. Each task is complete only when its verification passes.
 
 ### Task 5 — Current-local-month Monthly Goal
 
-**Outcome.** The current period's progress presented as `X / 20 missions` on the approved surface (D2), derived for the month the clock is in now. A period with no completions reads `0 / 20`; after a rollover the new period reads its own figure while prior completions stay in History. It is visibly distinct from a restored Reward Card, which continues to name the period its own completion fixed. Wording stays neutral and encouraging, the display caps at `20 / 20`, and no second goal-complete prompt is created here.
+**Outcome.** The current period's progress presented as `X / 20 missions` in one section of the History view (D2), shown whether or not History has entries, derived for the month the clock is in now. A period with no completions reads `0 / 20`; after a rollover the new period reads its own figure while prior completions stay in History. It is visibly distinct from a restored Reward Card, which continues to name the period its own completion fixed. Wording stays neutral and encouraging, the display caps at `20 / 20`, and no second goal-complete prompt is created here.
 
 **Source references.** `F004` Monthly Goal target, counting, period, goal completion; Visual and Ergonomic — `F004` Monthly Goal presentation; Data and State Model — Monthly Goal period and count, one goal-complete prompt.
 
