@@ -230,6 +230,29 @@ export function MissionActive({
         <p className="mission-session__state">
           {t('session.active.missionUnavailable')}
         </p>
+        {/* A recovery exit can fail like any other, and saying so here is the
+            only way the family learns that the Mission is still stored. */}
+        {issue?.operation === 'exit' ? (
+          <p
+            className="mission-session__issue"
+            key={`exit-${issue.outcome}-${attempt}`}
+            role="alert"
+          >
+            {t(EXIT_MESSAGE_KEYS[issue.outcome])}
+          </p>
+        ) : null}
+        {/* The approved way out of a Mission that cannot safely continue. This
+            is the recovery path rather than the abandonment a family chooses,
+            so it asks for no confirmation: there is no Mission left to keep
+            going with, and offering that choice would not be true. Leaving this
+            way completes, counts and recognises nothing. */}
+        <button
+          className="button button--secondary mission-session__exit"
+          onClick={() => leave(active.sessionId)}
+          type="button"
+        >
+          {t('session.action.backToSuggestions')}
+        </button>
       </div>
     );
   }

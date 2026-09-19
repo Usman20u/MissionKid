@@ -233,6 +233,23 @@ describe('restoring a current Mission Session', () => {
     expect(screen.queryByRole('button', { name: t('session.action.done') })).toBeNull();
     expect(h.writes).toEqual([]);
     expect(h.stored().completedSessions).toEqual([]);
+
+    // The recovery state is not a dead end: a Mission that cannot safely
+    // continue still has the approved way out, and it is the only action here.
+    const exit = screen.getByRole('button', {
+      name: t('session.action.backToSuggestions'),
+    });
+    expect(screen.getAllByRole('button')).toEqual([exit]);
+
+    // It is the recovery path rather than chosen abandonment, so it asks for no
+    // confirmation: there is no Mission left to keep going with.
+    expect(screen.queryByText(t('session.leave.title'))).toBeNull();
+
+    fireEvent.click(exit);
+    expect(h.stored().currentSession).toBeNull();
+    expect(h.stored().completedSessions).toEqual([]);
+    expect(h.stored().currentResultSessionId).toBeNull();
+    expect(heading().textContent).toBe(t('view.discovery.title'));
   });
 });
 
