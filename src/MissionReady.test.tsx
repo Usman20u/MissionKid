@@ -3,6 +3,11 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { App } from './App';
+import {
+  appStateReducer,
+  isStartOutcomeUnknown,
+  type AppState,
+} from './appState';
 import { MISSION_CATALOG } from './catalogContent';
 import { translateMessage, type SupportedLanguage } from './localization';
 import {
@@ -910,5 +915,202 @@ describe('a start that did not complete', () => {
     expect(screen.queryByRole('alert')).toBeNull();
     expect(h.writes).toHaveLength(1);
     expect(h.stored().currentSession.startedAt).toBe(START_TIME);
+  });
+
+  // An action that could not read storage at all establishes no durable fact,
+  // so it cannot settle the question the start left open. Replacing the start's
+  // notice with the exit's is a change of message and nothing more; before this
+  // was corrected it also turned the page back into a confident "not started"
+  // while durable state was running.
+  it.each(['en', 'de', 'ru'] as const)(
+    'keeps the start unknown after a failed exit establishes nothing, in %s',
+    (language) => {
+      const mission = missionFor('movement-02');
+      const h = harness(storedSnapshot(readySessionFor('movement-02'), language));
+      render(<App adapter={h.adapter} />);
+
+      h.faults.readsAfterWrite = 99;
+      fireEvent.click(
+        screen.getByRole('button', { name: t('session.action.start', language) }),
+      );
+
+      // The start landed, and no read could establish it.
+      expect(h.writes).toHaveLength(1);
+      expect(h.stored().currentSession.state).toBe('active');
+      expect(h.stored().currentSession.startedAt).toBe(START_TIME);
+      expect(heading().textContent).toBe(
+        t('view.sessionStartUnknown.title', language),
+      );
+
+      // The way out, taken while storage still cannot be read at all.
+      fireEvent.click(
+        screen.getByRole('button', {
+          name: t('session.action.backToSuggestions', language),
+        }),
+      );
+
+      // The notice follows the last thing attempted, as it should.
+      expect(screen.getByRole('alert').textContent).toBe(
+        t('session.exit.notLeft', language),
+      );
+
+      // Nothing else about the start changes, because nothing was established.
+      expect(heading().textContent).toBe(
+        t('view.sessionStartUnknown.title', language),
+      );
+      expect(heading().textContent).not.toBe(t('view.sessionReady.title', language));
+      expect(
+        screen.queryByText(t('session.ready.notStarted', language)),
+      ).toBeNull();
+      expect(document.body.textContent).not.toContain(
+        t('session.ready.notStarted', language),
+      );
+      expect(
+        screen.getAllByRole('button').map((button) => button.textContent),
+      ).toEqual([
+        t('session.action.retry', language),
+        t('session.action.backToSuggestions', language),
+      ]);
+
+      // What is true either way is preserved: the Mission, its guidance, its
+      // safety note and the way back.
+      expect(screen.getByRole('heading', { level: 2 }).textContent).toBe(
+        mission.content[language].title,
+      );
+      expect(screen.getByText(mission.content[language].instruction)).toBeTruthy();
+      expect(screen.getByText(mission.content[language].safetyNote!)).toBeTruthy();
+      expect(
+        screen.getByText(t('session.ready.missionBreak.body', language)),
+      ).toBeTruthy();
+
+      // Activating it again meets the same refusal, and abandons nothing.
+      fireEvent.click(
+        screen.getByRole('button', {
+          name: t('session.action.backToSuggestions', language),
+        }),
+      );
+
+      expect(screen.getByRole('alert').textContent).toBe(
+        t('session.exit.notLeft', language),
+      );
+      expect(heading().textContent).toBe(
+        t('view.sessionStartUnknown.title', language),
+      );
+      expect(h.writes).toHaveLength(1);
+      expect(h.stored().currentSession.state).toBe('active');
+      expect(h.stored().currentSession.startedAt).toBe(START_TIME);
+
+      // Durable evidence is what resolves it. The retry adopts the same running
+      // session with the start it already has, and writes nothing.
+      h.faults.readsAfterWrite = 0;
+      fireEvent.click(
+        screen.getByRole('button', { name: t('session.action.retry', language) }),
+      );
+
+      expect(h.writes).toHaveLength(1);
+      expect(h.stored().currentSession.sessionId).toBe('session-movement-02');
+      expect(h.stored().currentSession.startedAt).toBe(START_TIME);
+      expect(heading().textContent).toBe(t('view.sessionActive.title', language));
+      expect(screen.queryByRole('alert')).toBeNull();
+    },
+  );
+
+  it('follows the running Mission when the way out is taken after reads recover', () => {
+    const h = harness(storedSnapshot(readySessionFor('movement-02')));
+    render(<App adapter={h.adapter} />);
+
+    h.faults.readsAfterWrite = 99;
+    fireEvent.click(startControl());
+
+    expect(heading().textContent).toBe(t('view.sessionStartUnknown.title'));
+
+    h.faults.readsAfterWrite = 0;
+    fireEvent.click(
+      screen.getByRole('button', { name: t('session.action.backToSuggestions') }),
+    );
+
+    // Durable state holds the running Mission, so it is followed rather than
+    // cleared, and the uncertainty it resolves goes with it.
+    expect(heading().textContent).toBe(t('view.sessionActive.title'));
+    expect(screen.queryByRole('alert')).toBeNull();
+    expect(h.writes).toHaveLength(1);
+    expect(h.stored().currentSession.state).toBe('active');
+    expect(h.stored().currentSession.startedAt).toBe(START_TIME);
+
+    // Leaving it is now leaving an active Mission, which still asks first.
+    fireEvent.click(screen.getByRole('button', { name: t('session.action.leave') }));
+
+    expect(screen.getByText(t('session.leave.title'))).toBeTruthy();
+    expect(screen.getByText(t('session.leave.consequence'))).toBeTruthy();
+    expect(h.writes).toHaveLength(1);
+    expect(h.stored().currentSession.state).toBe('active');
+  });
+});
+
+// The ready view is the only surface that asks whether a start landed, and a
+// session read back as running has already left it. So what settles the
+// question, and what leaves it open, is asserted on the state that holds it.
+describe('what settles an unknown start outcome', () => {
+  const UNKNOWN_START: AppState = {
+    language: 'en',
+    ageBand: '7–8',
+    localProfileId: PROFILE_ID,
+    status: 'ready',
+    setupView: 'handoff',
+    saveStatus: 'idle',
+    currentSession: READY_SESSION,
+    sessionIssue: { operation: 'start', outcome: 'unconfirmed' },
+    sessionAttempt: 1,
+    unknownStartSessionId: READY_SESSION.sessionId,
+  };
+
+  it('is settled by durable evidence, whichever action carries it', () => {
+    const resolutions = [
+      { type: 'mission-session-started', session: ACTIVE_SESSION },
+      { type: 'mission-session-adopted', session: ACTIVE_SESSION },
+      { type: 'mission-session-left' },
+      {
+        type: 'mission-session-transition-failed',
+        issue: { operation: 'start', outcome: 'failed' },
+      },
+    ] as const satisfies readonly Parameters<typeof appStateReducer>[1][];
+
+    for (const action of resolutions) {
+      const settled = appStateReducer(UNKNOWN_START, action);
+
+      expect(isStartOutcomeUnknown(settled)).toBe(false);
+      expect(settled.unknownStartSessionId).toBeUndefined();
+    }
+  });
+
+  // The field names a session and is read against the session that is actually
+  // current, so a name left over from a Mission that is no longer current
+  // answers nothing about the one that is.
+  it('answers nothing for a session it does not name', () => {
+    expect(
+      isStartOutcomeUnknown({
+        ...UNKNOWN_START,
+        currentSession: { ...READY_SESSION, sessionId: 'session-2' },
+      }),
+    ).toBe(false);
+    expect(
+      isStartOutcomeUnknown({ ...UNKNOWN_START, currentSession: undefined }),
+    ).toBe(false);
+  });
+
+  it('is left open by another operation that established nothing', () => {
+    let state: AppState = UNKNOWN_START;
+
+    for (const operation of ['exit', 'ready', 'done', 'result'] as const) {
+      for (const outcome of ['failed', 'unconfirmed'] as const) {
+        state = appStateReducer(state, {
+          type: 'mission-session-transition-failed',
+          issue: { operation, outcome },
+        });
+
+        expect(isStartOutcomeUnknown(state)).toBe(true);
+        expect(state.sessionIssue).toEqual({ operation, outcome });
+      }
+    }
   });
 });

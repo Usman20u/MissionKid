@@ -70,6 +70,12 @@ type RecoveryContext = Readonly<{
   // operation travels with it because each one fails into a different truth,
   // and wording that described the wrong operation would be a false claim.
   sessionIssue?: MissionSessionIssue;
+  // The session whose start outcome nobody could establish. It is a fact about
+  // one start, not about whichever operation failed most recently, so it is
+  // held separately from `sessionIssue`: a later action that establishes no
+  // durable fact replaces the notice without answering this question. Only a
+  // start's own outcome raises or settles it, and durable evidence clears it.
+  unknownStartSessionId?: string;
   // Which attempt produced it, for the same reason `selectionAttempt` exists:
   // a retry that fails the same way must still be announced.
   sessionAttempt?: number;
@@ -309,11 +315,16 @@ export function selectSessionAttempt(state: AppState): number {
 // the notice that sits between them.
 //
 // An established refusal is not this. There the Mission is known not to have
-// started, and saying so is the truth rather than a claim.
+// started, and saying so is the truth rather than a claim. Neither is another
+// operation's failure: whether a Mission started is not answered by a later
+// action that could establish nothing.
 export function isStartOutcomeUnknown(state: AppState): boolean {
-  const issue = selectSessionIssue(state);
+  const unknownFor = state.unknownStartSessionId;
 
-  return issue?.operation === 'start' && issue.outcome === 'unconfirmed';
+  return (
+    unknownFor !== undefined &&
+    unknownFor === selectCurrentSession(state)?.sessionId
+  );
 }
 
 export function selectSelectionIssue(
@@ -483,6 +494,7 @@ export function appStateReducer(
         // standing would block this one from reaching `ready` at all.
         sessionIssue: undefined,
         sessionAttempt: undefined,
+        unknownStartSessionId: undefined,
         discovery: state.discovery ? { ...state.discovery, shown: [] } : undefined,
       };
     case 'mission-session-ready':
@@ -494,16 +506,31 @@ export function appStateReducer(
         currentSession: action.session,
         sessionIssue: undefined,
         sessionAttempt: undefined,
+        unknownStartSessionId: undefined,
       };
     case 'mission-session-transition-failed':
       // The runtime session is left exactly as it is: an established failure
       // leaves the stored `selected` session standing, and an unconfirmed one
       // is not evidence for rebuilding or removing anything. Recording the
       // issue is also what stops the transition from retrying itself.
+      //
+      // Whether this session started is answered by a start and by nothing
+      // else. An unconfirmed start raises the question, an established refusal
+      // settles it, and any other operation failing — including one that could
+      // not read storage at all — establishes no durable fact about the start,
+      // so it leaves the answer exactly as it stands.
       return {
         ...state,
         sessionIssue: action.issue,
         sessionAttempt: (state.sessionAttempt ?? 0) + 1,
+        ...(action.issue.operation === 'start'
+          ? {
+              unknownStartSessionId:
+                action.issue.outcome === 'unconfirmed'
+                  ? state.currentSession?.sessionId
+                  : undefined,
+            }
+          : {}),
       };
     case 'mission-session-left':
       // Returning to the approved Discovery path with the setup and language
@@ -516,6 +543,7 @@ export function appStateReducer(
         currentSession: undefined,
         sessionIssue: undefined,
         sessionAttempt: undefined,
+        unknownStartSessionId: undefined,
         guidanceAnchor: undefined,
         selectionIssue: undefined,
         selectionAttempt: undefined,
@@ -533,6 +561,7 @@ export function appStateReducer(
         currentSession: action.session,
         sessionIssue: undefined,
         sessionAttempt: undefined,
+        unknownStartSessionId: undefined,
         selectionIssue: undefined,
         selectionAttempt: undefined,
         selectionConflictSession: undefined,
@@ -550,6 +579,7 @@ export function appStateReducer(
         currentSession: undefined,
         sessionIssue: undefined,
         sessionAttempt: undefined,
+        unknownStartSessionId: undefined,
         guidanceAnchor: undefined,
         completedSessions: action.completedSessions,
         currentResultSessionId: action.session.sessionId,
@@ -562,6 +592,7 @@ export function appStateReducer(
         currentResultSessionId: undefined,
         sessionIssue: undefined,
         sessionAttempt: undefined,
+        unknownStartSessionId: undefined,
         discovery: isSetupContextComplete(state)
           ? { category: state.discovery?.category ?? null, shown: [] }
           : state.discovery,
@@ -572,6 +603,7 @@ export function appStateReducer(
         currentResultSessionId: action.sessionId,
         sessionIssue: undefined,
         sessionAttempt: undefined,
+        unknownStartSessionId: undefined,
       };
     case 'mission-timer-anchored':
       return { ...state, guidanceAnchor: action.anchor };
