@@ -250,15 +250,127 @@ describe('restoring a current Mission Session', () => {
     });
     expect(screen.getAllByRole('button')).toEqual([exit]);
 
-    // It is the recovery path rather than chosen abandonment, so it asks for no
-    // confirmation: there is no Mission left to keep going with.
-    expect(screen.queryByText(t('session.leave.title'))).toBeNull();
-
+    // The session is still `active` in durable state, so leaving it takes the
+    // same explicit confirmation as leaving any other running Mission. Asking
+    // for it writes nothing and clears nothing.
     fireEvent.click(exit);
+    const confirmation = screen.getByRole('heading', { name: t('session.leave.title') });
+    // Nothing names the Mission above it here, so it is the level-2 heading
+    // rather than a level-3 one under a heading that does not exist.
+    expect(confirmation.tagName).toBe('H2');
+    expect(screen.getByText(t('session.leave.consequence'))).toBeTruthy();
+    expect(document.activeElement).toBe(confirmation);
+    expect(h.writes).toEqual([]);
+    expect(h.stored().currentSession.sessionId).toBe('session-1');
+
+    // The safe choice is worded for this surface: staying here, not keeping
+    // going, because unavailable Mission content cannot be continued.
+    expect(
+      screen.getByRole('button', { name: t('session.action.stayHere') }),
+    ).toBeTruthy();
+    expect(
+      screen.queryByRole('button', { name: t('session.action.keepGoing') }),
+    ).toBeNull();
+
+    // Escape is the same safe choice, and returns focus to the control that
+    // opened the confirmation.
+    fireEvent.keyDown(confirmation, { key: 'Escape' });
+    expect(document.activeElement).toBe(
+      screen.getByRole('button', { name: t('session.action.backToSuggestions') }),
+    );
+    expect(h.writes).toEqual([]);
+    expect(h.stored().currentSession.sessionId).toBe('session-1');
+
+    // Dismissing leaves the recovery surface exactly as it was, so the family
+    // can ask again. Nothing is substituted for the Mission that is gone.
+    expect(screen.getByText(t('session.active.missionUnavailable'))).toBeTruthy();
+    expect(screen.queryByRole('button', { name: t('session.action.done') })).toBeNull();
+
+    fireEvent.click(
+      screen.getByRole('button', { name: t('session.action.backToSuggestions') }),
+    );
+    fireEvent.click(screen.getByRole('button', { name: t('session.action.stayHere') }));
+    expect(h.writes).toEqual([]);
+    expect(h.stored().currentSession.sessionId).toBe('session-1');
+
+    // Only a confirmed leave ends it, and it ends only this session, with no
+    // completion, result pointer or progress source of any kind.
+    fireEvent.click(
+      screen.getByRole('button', { name: t('session.action.backToSuggestions') }),
+    );
+    fireEvent.click(screen.getByRole('button', { name: t('session.action.leave') }));
     expect(h.stored().currentSession).toBeNull();
     expect(h.stored().completedSessions).toEqual([]);
     expect(h.stored().currentResultSessionId).toBeNull();
     expect(heading().textContent).toBe(t('view.discovery.title'));
+  });
+
+  it('keeps a Mission whose content is gone when its confirmed exit is refused', () => {
+    const raw = snapshot({
+      currentSession: {
+        ...FACTS,
+        state: 'active',
+        missionId: 'movement-99',
+        startedAt: Date.now() - 60_000,
+      },
+    });
+    const h = harness(raw);
+    render(<App adapter={h.adapter} now={() => COMPLETED_AT} />);
+
+    h.faults.write = true;
+    fireEvent.click(
+      screen.getByRole('button', { name: t('session.action.backToSuggestions') }),
+    );
+    fireEvent.click(screen.getByRole('button', { name: t('session.action.leave') }));
+
+    // The refusal is announced rather than swallowed, and the Mission it named
+    // is still exactly where it was.
+    expect(screen.getByRole('alert').textContent).toBe(t('session.exit.notLeft'));
+    expect(h.raw()).toBe(raw);
+    expect(h.stored().currentSession.sessionId).toBe('session-1');
+    expect(h.stored().completedSessions).toEqual([]);
+    expect(h.stored().currentResultSessionId).toBeNull();
+
+    // Nothing was substituted for the missing Mission, and nothing offers to
+    // complete it. Asking again is the retry, and it succeeds once storage does.
+    expect(screen.getByText(t('session.active.missionUnavailable'))).toBeTruthy();
+    expect(screen.queryByRole('button', { name: t('session.action.done') })).toBeNull();
+
+    h.faults.write = false;
+    fireEvent.click(
+      screen.getByRole('button', { name: t('session.action.backToSuggestions') }),
+    );
+    fireEvent.click(screen.getByRole('button', { name: t('session.action.leave') }));
+    expect(h.stored().currentSession).toBeNull();
+    expect(h.stored().completedSessions).toEqual([]);
+  });
+
+  it('refuses that exit, byte for byte, while an unresolved completed record is stored', () => {
+    // D4-B is not relaxed because the Mission cannot be shown: a completed
+    // record that cannot be safely retained still refuses every snapshot
+    // replacement, this recovery exit included.
+    const raw = snapshot({
+      currentSession: {
+        ...FACTS,
+        state: 'active',
+        missionId: 'movement-99',
+        startedAt: Date.now() - 60_000,
+      },
+      completedSessions: [completedRecord(0, { completedAt: 1 })],
+    });
+    const h = harness(raw);
+    render(<App adapter={h.adapter} now={() => COMPLETED_AT} />);
+
+    fireEvent.click(
+      screen.getByRole('button', { name: t('session.action.backToSuggestions') }),
+    );
+    fireEvent.click(screen.getByRole('button', { name: t('session.action.leave') }));
+
+    expect(screen.getByRole('alert').textContent).toBe(t('session.exit.notLeft'));
+    expect(h.writes).toEqual([]);
+    expect(h.raw()).toBe(raw);
+    expect(h.stored().currentSession.sessionId).toBe('session-1');
+    expect(h.stored().completedSessions).toHaveLength(1);
   });
 });
 

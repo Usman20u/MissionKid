@@ -10,6 +10,19 @@ type MissionLeaveConfirmationProps = Readonly<{
   language: SupportedLanguage;
   onKeepGoing: () => void;
   onLeave: () => void;
+  // The safe choice's wording. It defaults to continuing the Mission, which is
+  // what the family is choosing between almost everywhere this appears. A
+  // Mission that cannot be shown is the exception: there staying means staying
+  // on the recovery surface, and promising to keep going would not be true.
+  stayKey?: Extract<
+    MessageKey,
+    'session.action.keepGoing' | 'session.action.stayHere'
+  >;
+  // The level this heading sits at. It follows whatever heading precedes it in
+  // its own context, so the outline never skips a level: a Mission or a
+  // suggestion set names itself at level 2 above this, but a Mission that
+  // cannot be shown names nothing, and then this is the level-2 heading.
+  headingLevel?: 2 | 3;
 }>;
 
 // The one confirmation that leaving an active Mission requires, wherever the
@@ -24,9 +37,12 @@ export function MissionLeaveConfirmation({
   language,
   onKeepGoing,
   onLeave,
+  stayKey = 'session.action.keepGoing',
+  headingLevel = 3,
 }: MissionLeaveConfirmationProps) {
   const t = (key: MessageKey) => translateMessage(language, key);
   const heading = useRef<HTMLHeadingElement>(null);
+  const Heading = headingLevel === 2 ? 'h2' : 'h3';
 
   // The family asked for this, so focus follows them into it once, on the
   // render it appears. Returning focus to the control they opened belongs to
@@ -50,14 +66,14 @@ export function MissionLeaveConfirmation({
         }
       }}
     >
-      <h3
+      <Heading
         className="mission-session__confirm-title"
         id="mission-leave-heading"
         ref={heading}
         tabIndex={-1}
       >
         {t('session.leave.title')}
-      </h3>
+      </Heading>
       <p id="mission-leave-consequence">{t('session.leave.consequence')}</p>
       <div className="mission-session__confirm-actions">
         {/* Staying is the easy choice and comes first. */}
@@ -66,7 +82,7 @@ export function MissionLeaveConfirmation({
           onClick={onKeepGoing}
           type="button"
         >
-          {t('session.action.keepGoing')}
+          {t(stayKey)}
         </button>
         <button
           className="button button--destructive"

@@ -246,18 +246,34 @@ export function MissionActive({
             {t(EXIT_MESSAGE_KEYS[issue.outcome])}
           </p>
         ) : null}
-        {/* The approved way out of a Mission that cannot safely continue. This
-            is the recovery path rather than the abandonment a family chooses,
-            so it asks for no confirmation: there is no Mission left to keep
-            going with, and offering that choice would not be true. Leaving this
-            way completes, counts and recognises nothing. */}
-        <button
-          className="button button--secondary mission-session__exit"
-          onClick={() => leave(active.sessionId)}
-          type="button"
-        >
-          {t('session.action.backToSuggestions')}
-        </button>
+        {/* The approved way out of a Mission that cannot safely continue.
+            The session is still `active` in durable state, so leaving it is
+            leaving an active Mission and takes the same explicit confirmation
+            as any other. Only the safe choice is worded differently: staying
+            here keeps the family on this recovery surface, and promising to
+            keep going would claim that unavailable Mission content can be
+            continued. Leaving this way completes, counts and recognises
+            nothing. */}
+        {confirming ? (
+          <MissionLeaveConfirmation
+            language={state.language}
+            onKeepGoing={() => setConfirmingSessionId(null)}
+            onLeave={() => leave(active.sessionId)}
+            stayKey="session.action.stayHere"
+            // Nothing names the Mission above this here, so this is the
+            // level-2 heading rather than a level-3 one under it.
+            headingLevel={2}
+          />
+        ) : (
+          <button
+            className="button button--secondary mission-session__exit"
+            onClick={() => setConfirmingSessionId(active.sessionId)}
+            ref={exitEntry}
+            type="button"
+          >
+            {t('session.action.backToSuggestions')}
+          </button>
+        )}
       </div>
     );
   }

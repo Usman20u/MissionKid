@@ -367,9 +367,15 @@ describe('F003 what no Mission Session path may offer', () => {
     ['device or app control', /\b(block|lock|disable|screen time|parental control|monitor|track you|enforce)/i],
     ['device or app control (de)', /(sperr|blockier|überwach|bildschirmzeit|kindersicherung|verfolg)/i],
     ['device or app control (ru)', /(заблокир|блокир|экранное время|родительский контроль|слеж)/i],
-    ['pressure to stay on screen', /\b(don.t leave|stay here|keep watching|come back or|hurry|quick+ly!|running out)/i],
-    ['pressure to stay on screen (de)', /(bleib hier|beeil|schnell!|läuft ab)/i],
-    ['pressure to stay on screen (ru)', /(не уходи|оставайся здесь|поторопись|быстрее!)/i],
+    // Pressure is the product urging the child to remain in the app. The safe
+    // choice of a confirmation is not that: "Stay here", offered beside "Leave
+    // mission", changes nothing and asks for nothing, and the criterion it
+    // serves is the one requiring an easy way not to act. So these patterns
+    // name the phrases that are pressure whatever surrounds them, and do not
+    // ban the choice label itself.
+    ['pressure to stay on screen', /\b(don.t leave|don.t go|stay on the screen|stay in the app|keep watching|come back or|hurry|quick+ly!|running out)/i],
+    ['pressure to stay on screen (de)', /(geh nicht weg|bleib am bildschirm|bleib in der app|weiterschauen|beeil|schnell!|läuft ab)/i],
+    ['pressure to stay on screen (ru)', /(не уходи|оставайся у экрана|оставайся в приложении|продолжай смотреть|поторопись|быстрее!)/i],
     ['streak or shame', /\b(streak|lost your|you failed|too slow|don.t break)/i],
     ['streak or shame (de)', /(serie verloren|versagt|zu langsam)/i],
     ['streak or shame (ru)', /(серия|провал|слишком медленно)/i],
@@ -382,12 +388,23 @@ describe('F003 what no Mission Session path may offer', () => {
         const h = harness(stored(session, language));
         const view = render(<App adapter={h.adapter} />);
 
-        // Where the path can open the abandonment confirmation, its wording is
-        // part of the path and is swept with it.
+        // Where the path can open a confirmation, its wording is part of the
+        // path and is swept with it. A running Mission reaches it through
+        // **Leave mission**; one whose content is gone reaches the same
+        // confirmation through its recovery exit, so both are opened.
+        const running = document
+          .querySelector('[data-view]')
+          ?.getAttribute('data-view') === 'session-active';
         const leave = screen.queryByRole('button', {
           name: translateMessage(language, 'session.action.leave'),
         });
+        const recoveryExit = running
+          ? screen.queryByRole('button', {
+              name: translateMessage(language, 'session.action.backToSuggestions'),
+            })
+          : null;
         if (leave) fireEvent.click(leave);
+        else if (recoveryExit) fireEvent.click(recoveryExit);
 
         const text = document.body.textContent ?? '';
         expect(text.length).toBeGreaterThan(0);

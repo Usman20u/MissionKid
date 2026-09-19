@@ -124,6 +124,7 @@ const englishMessages = {
   'session.action.backToSuggestions': 'Back to suggestions',
   'session.action.leave': 'Leave mission',
   'session.action.keepGoing': 'Keep going',
+  'session.action.stayHere': 'Stay here',
   'session.leave.title': 'Leave this mission?',
   'session.leave.consequence': "It won't be counted.",
   'session.exit.notLeft':
@@ -305,6 +306,7 @@ export const INTERFACE_MESSAGES: CompleteInterfaceMessages = {
     'session.action.backToSuggestions': 'Zurück zu den Vorschlägen',
     'session.action.leave': 'Mission verlassen',
     'session.action.keepGoing': 'Weitermachen',
+    'session.action.stayHere': 'Hier bleiben',
     'session.leave.title': 'Diese Mission verlassen?',
     'session.leave.consequence': 'Sie zählt dann nicht.',
     'session.exit.notLeft':
@@ -452,6 +454,7 @@ export const INTERFACE_MESSAGES: CompleteInterfaceMessages = {
     'session.action.backToSuggestions': 'Назад к предложениям',
     'session.action.leave': 'Выйти из миссии',
     'session.action.keepGoing': 'Продолжить',
+    'session.action.stayHere': 'Остаться здесь',
     'session.leave.title': 'Выйти из этой миссии?',
     'session.leave.consequence': 'Она не будет засчитана.',
     'session.exit.notLeft':
