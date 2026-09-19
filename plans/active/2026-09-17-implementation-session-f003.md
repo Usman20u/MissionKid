@@ -1,9 +1,9 @@
 # MissionKid Implementation Plan 03 — Mission Session and Completion (F003) with the Reward Card and Monthly Goal completion message (F004 slice)
 
 **Date:** 2026-09-17
-**Status:** Approved — Tasks 1 to 16 complete under their recorded authorizations; Tasks 17–19 not started
+**Status:** Approved — all 19 tasks complete under their recorded authorizations; ready for review of Plan 03 closure and integration, which is not yet authorized
 
-This plan's scope and decisions are approved. Scope approval is not authorization to execute a task: each implementation task begins only when it is explicitly authorized. Tasks 1 to 16 are complete. The authorization recorded below covered Tasks 13–16 in order. Task 17 onward is not authorized, and neither push nor merge is.
+This plan's scope and decisions are approved. Scope approval is not authorization to execute a task: each implementation task begins only when it is explicitly authorized. All nineteen tasks have been authorized and are complete. Closing this plan — moving it to `plans/completed/` — and pushing, opening a pull request, merging or deleting the branch are separate acts, none of which is authorized and none of which has been done.
 
 The scope below plans `F003` in full, except the acceptance clauses explicitly deferred with the Mission History view, together with one deliberately bounded part of `F004`: the Reward Card and the Monthly Goal derivation and completion message that the card must display. That combined scope is approved as decision D1-A, with the History deferrals preserved exactly as documented. What completed tasks actually changed is recorded in the implementation record at the end of this plan, and nothing else here is a claim about what the repository already does.
 
@@ -2152,6 +2152,57 @@ retrospective authorization, which is why it was corrected in code instead.
 **Defects requiring correction: none.** Everything this audit found was either
 already correct or already corrected earlier in this session.
 
+### Task 18 completion (2026-09-19)
+
+The dated changelog was reconciled with the actual commits and the verified
+behavior. It now records the confirmation correction and its reasoning, the
+wording of the safe choice, the heading-level fix and the narrowed sweep
+patterns; and it carries its own corrections section, which states plainly that
+the storage-fault check reported as an "interrupted completion" was a refused
+write, that the lost-confirmation class was exercised separately afterwards,
+that the prohibited-pattern sweep is a text regression check rather than proof
+of `F003` criterion 21, and that `F004` criterion 6 is only half deferred.
+
+Earlier entries were left as written. The corrections name what was wrong rather
+than editing the record to look as though it had never been claimed. The entry
+states the implemented `F003` and `F004` slice, the History work that remains,
+every deferred acceptance clause, and the limitations — no assistive technology
+at any point, browser evidence from one engine, and no human sign-off. It claims
+no full `F003` acceptance, no MVP completion, and no deployment, push, pull
+request or merge. No parallel status document was added.
+
+### Task 19 completion (2026-09-19)
+
+The plan's gate was run sequentially against the final implementation at
+`dd24da3`, with complete logs retained outside the repository.
+
+| Gate | Result |
+| --- | --- |
+| Clean install from the existing lockfile (`rm -rf node_modules && npm ci`) | pass, 0 vulnerabilities; `package.json` and `package-lock.json` unchanged by the install |
+| Type check | pass |
+| Full test suite | pass — 724 tests across 21 test files |
+| Production build | pass — `index.html` 0.46 kB, CSS 18.74 kB, JS 421.76 kB (121.36 kB gzipped) |
+| Diff checks | `git diff --check` clean on the working tree, on the index, and across the whole plan diff |
+| Repository review | working tree clean; 73 tracked files, all under `src/`, `docs/`, `plans/`, `changelog/` and the existing root files; only `dist/` and `node_modules/` ignored; no stray artifact |
+| Secret and personal-data scan | no key material, no credential assigned a value, no `.env` tracked, no author name, email or attribution trailer anywhere in tracked content |
+
+No check was repeated to obtain a different result, no assertion was weakened and
+no timeout was raised. The diff matches the work audited in Task 17.
+
+**Historical failures, still unresolved.** The three unexplained failures
+recorded in Task 1 and the two timeouts recorded in Task 7 remain separately
+recorded. Neither recurred in any run during this session and no causal evidence
+emerged, so neither is closed.
+
+**What remains, and what is not authorized.** The Mission History view, its
+route and empty state, and any standalone Monthly Goal surface are unimplemented
+and deferred, along with `F004` criteria 4 and 5 and the History-visible clauses
+of `F003` 11 and 12 and `F004` 1, 2, 6 and 8. This plan therefore claims no full
+`F003` acceptance, no MVP completion and no release readiness. Moving this plan
+to `plans/completed/`, pushing, opening a pull request, merging and deleting the
+branch each still require their own explicit authorization, and none was given or
+taken.
+
 ## Approval record
 
 | Item | State |
@@ -2165,7 +2216,8 @@ already correct or already corrected earlier in this session.
 | D4-B — refuse snapshot-replacing writes while an unresolved invalid or conflicting completed record persists | Approved 2026-09-17 |
 | Scope and decisions approved | Yes |
 | Execution allocation clarification — each functional control built by the task implementing its operation | Approved 2026-09-18 |
-| Implementation tasks authorized | Tasks 1 to 5, each authorized 2026-09-18; Tasks 6 and 7, authorized 2026-09-18; Tasks 8, 9 and 10 as one batch, authorized 2026-09-18; Tasks 11 and 12 as one batch, authorized 2026-09-18; Tasks 13, 14, 15 and 16 as one batch, authorized 2026-09-18 and executed 2026-09-19. Every later task requires its own explicit authorization |
-| Tasks complete | Task 1 — `704b4cc`; Task 2 — `9d56eae`; Task 3 — `f6f0c20`; Task 4 — `2dafce2`; Task 5 — `ed52ff8`; Task 6 — `2dba46b`; Task 7 — `122224e`; Tasks 8, 9 and 10 — `25c5f6e`, `283238e`, `d19de3f`; Tasks 11 and 12 — `a06ec32`, `a20663a`; Tasks 13 to 16 — `365d3aa`, `8d72418`, `c8380a4`, `c82e338`, `464e69f` |
-| Tasks not started | Tasks 17, 18 and 19 |
-| Push, pull request, merge | Not authorized |
+| Implementation tasks authorized | Tasks 1 to 5, each authorized 2026-09-18; Tasks 6 and 7, authorized 2026-09-18; Tasks 8, 9 and 10 as one batch, authorized 2026-09-18; Tasks 11 and 12 as one batch, authorized 2026-09-18; Tasks 13, 14, 15 and 16 as one batch, authorized 2026-09-18 and executed 2026-09-19; the confirmation correction and Tasks 17, 18 and 19, authorized 2026-09-19. All nineteen are complete |
+| Tasks complete | Task 1 — `704b4cc`; Task 2 — `9d56eae`; Task 3 — `f6f0c20`; Task 4 — `2dafce2`; Task 5 — `ed52ff8`; Task 6 — `2dba46b`; Task 7 — `122224e`; Tasks 8, 9 and 10 — `25c5f6e`, `283238e`, `d19de3f`; Tasks 11 and 12 — `a06ec32`, `a20663a`; Tasks 13 to 16 — `365d3aa`, `8d72418`, `c8380a4`, `c82e338`, `464e69f`; confirmation correction — `d8b8405`; Tasks 17 and 18 — `dd24da3` |
+| Corrections recorded | The Task 13 no-confirmation recovery exit, superseded by `d8b8405`; the Task 15 storage-fault description; the `F003` criterion 21 evidence; the `F004` criterion 6 allocation |
+| Deferred acceptance clauses | `F004` 4 and 5 entirely; the History-visible clauses of `F003` 11 and 12 and `F004` 1, 2, 6 and 8 |
+| Plan closure, push, pull request, merge, branch deletion | Not authorized; none performed |
