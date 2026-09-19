@@ -201,6 +201,11 @@ describe('restoring a current Mission Session', () => {
     const h = harness(raw);
     render(<App adapter={h.adapter} />);
 
+    // The heading does not contradict the only sentence under it: a Mission
+    // that cannot be shown is not announced as ready.
+    expect(heading().textContent).toBe(t('view.sessionUnavailable.title'));
+    expect(heading().textContent).not.toBe(t('view.sessionReady.title'));
+
     // Nothing offers to start it, and nothing is substituted for it.
     expect(
       screen.queryByRole('button', { name: t('session.action.start') }),
@@ -228,6 +233,10 @@ describe('restoring a current Mission Session', () => {
       }),
     );
     render(<App adapter={h.adapter} now={() => COMPLETED_AT} />);
+
+    // Nor is it announced as running.
+    expect(heading().textContent).toBe(t('view.sessionUnavailable.title'));
+    expect(heading().textContent).not.toBe(t('view.sessionActive.title'));
 
     expect(screen.getByText(t('session.active.missionUnavailable'))).toBeTruthy();
     expect(screen.queryByRole('button', { name: t('session.action.done') })).toBeNull();

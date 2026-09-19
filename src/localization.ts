@@ -110,6 +110,7 @@ const englishMessages = {
   'session.start.unconfirmed':
     "MissionKid couldn't check whether this Mission started. Try again to see.",
   'view.sessionActive.title': 'Your Mission has started',
+  'view.sessionUnavailable.title': 'This Mission cannot be shown',
   'session.active.away':
     'Do the Mission away from the screen, then come back when you are done.',
   'session.active.remaining': 'About {minutes} min left',
@@ -119,6 +120,7 @@ const englishMessages = {
     'The time guide is not available right now. Your Mission is still on.',
   'session.active.missionUnavailable':
     'This Mission cannot be shown right now, so it cannot safely continue.',
+  'session.active.safetyLabel': 'Keep this in mind',
   'session.action.backToSuggestions': 'Back to suggestions',
   'session.action.leave': 'Leave mission',
   'session.action.keepGoing': 'Keep going',
@@ -289,6 +291,7 @@ export const INTERFACE_MESSAGES: CompleteInterfaceMessages = {
     'session.start.unconfirmed':
       'MissionKid konnte nicht prüfen, ob diese Mission gestartet wurde. Versuche es noch einmal, um es zu sehen.',
     'view.sessionActive.title': 'Deine Mission läuft',
+    'view.sessionUnavailable.title': 'Diese Mission kann nicht angezeigt werden',
     'session.active.away':
       'Mach die Mission weg vom Bildschirm und komm zurück, wenn du fertig bist.',
     'session.active.remaining': 'Noch etwa {minutes} Min.',
@@ -298,6 +301,7 @@ export const INTERFACE_MESSAGES: CompleteInterfaceMessages = {
       'Die Zeitangabe ist gerade nicht verfügbar. Deine Mission läuft weiter.',
     'session.active.missionUnavailable':
       'Diese Mission kann gerade nicht angezeigt werden und kann deshalb nicht sicher weitergehen.',
+    'session.active.safetyLabel': 'Denk daran',
     'session.action.backToSuggestions': 'Zurück zu den Vorschlägen',
     'session.action.leave': 'Mission verlassen',
     'session.action.keepGoing': 'Weitermachen',
@@ -434,6 +438,7 @@ export const INTERFACE_MESSAGES: CompleteInterfaceMessages = {
     'session.start.unconfirmed':
       'MissionKid не смог проверить, началась ли эта миссия. Попробуй ещё раз, чтобы увидеть.',
     'view.sessionActive.title': 'Твоя миссия началась',
+    'view.sessionUnavailable.title': 'Эту миссию нельзя показать',
     'session.active.away':
       'Выполни миссию не у экрана и возвращайся, когда закончишь.',
     'session.active.remaining': 'Осталось около {minutes} мин',
@@ -443,6 +448,7 @@ export const INTERFACE_MESSAGES: CompleteInterfaceMessages = {
       'Подсказка о времени сейчас недоступна. Твоя миссия продолжается.',
     'session.active.missionUnavailable':
       'Эту миссию сейчас нельзя показать, поэтому она не может безопасно продолжаться.',
+    'session.active.safetyLabel': 'Помни об этом',
     'session.action.backToSuggestions': 'Назад к предложениям',
     'session.action.leave': 'Выйти из миссии',
     'session.action.keepGoing': 'Продолжить',

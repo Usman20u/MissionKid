@@ -115,7 +115,7 @@ describe('the running Mission presentation', () => {
       ).toBeTruthy();
       expect(screen.getByText(content.adultInvolvementNote!)).toBeTruthy();
       expect(
-        screen.getByText(translateMessage(language, 'discovery.card.safetyLabel')),
+        screen.getByText(translateMessage(language, 'session.active.safetyLabel')),
       ).toBeTruthy();
       expect(screen.getByText(content.safetyNote!)).toBeTruthy();
       expect(guidanceText(container)).toBe(
@@ -157,7 +157,7 @@ describe('the running Mission presentation', () => {
     }
 
     if (safety) {
-      expect(screen.getByText(t('discovery.card.safetyLabel'))).toBeTruthy();
+      expect(screen.getByText(t('session.active.safetyLabel'))).toBeTruthy();
       expect(screen.getByText(content.safetyNote!)).toBeTruthy();
     } else {
       expect(container.querySelector('.mission-session__note--safety')).toBeNull();

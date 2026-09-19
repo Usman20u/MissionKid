@@ -18,7 +18,11 @@ import {
   type MessageKey,
   type SupportedLanguage,
 } from './localization';
-import { readWallClock, type WallClock } from './missionSession';
+import {
+  isSessionPresentable,
+  readWallClock,
+  type WallClock,
+} from './missionSession';
 import { MissionActive } from './MissionActive';
 import { MissionResult } from './MissionResult';
 import { MissionCategorySelection } from './MissionDiscovery';
@@ -190,6 +194,17 @@ export function AppShell({
   const { state, dispatch } = useAppState();
   const view = selectAppView(state);
   const content = VIEW_CONTENT[view];
+  // A Mission that cannot be shown must not be announced as ready or running.
+  // The heading is the first thing read, and either of those would contradict
+  // the only sentence the recovery state puts under it.
+  const session = state.currentSession;
+  const unpresentableSession =
+    (SESSION_VIEWS.includes(view) || view === 'session-active') &&
+    session != null &&
+    !isSessionPresentable(session, state.language);
+  const title = unpresentableSession
+    ? 'view.sessionUnavailable.title'
+    : content.title;
   const headingId = 'current-view-heading';
   const t = (key: MessageKey) => translateMessage(state.language, key);
   const busy = !!state.operation || state.status === 'pending';
@@ -285,7 +300,7 @@ export function AppShell({
             ref={viewHeading}
             tabIndex={-1}
           >
-            {translateMessage(state.language, content.title)}
+            {translateMessage(state.language, title)}
           </h1>
           {busy ? <p role="status">{t('recovery.pending')}</p> : null}
           {/* Presentational: exists only for the native disabled cascade. */}

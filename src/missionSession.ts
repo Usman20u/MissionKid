@@ -266,6 +266,28 @@ export function resolveSessionMission(
     : null;
 }
 
+// Whether this session can be shown as the Mission it names. A Mission the
+// catalog has withdrawn or never reviewed, content missing in the family's
+// language, and a start timestamp that is not a real moment are all recovery
+// cases rather than a Mission to present.
+//
+// One predicate answers it for the heading and for the body, so the page can
+// never announce a Mission as ready or running above a sentence saying it
+// cannot be shown.
+export function isSessionPresentable(
+  session: MissionSession,
+  language: SupportedLanguage,
+): boolean {
+  if (resolveSessionMission(session, language) === null) {
+    return false;
+  }
+
+  return (
+    session.state !== 'active' ||
+    (Number.isInteger(session.startedAt) && session.startedAt >= 0)
+  );
+}
+
 export type MissionStartResult =
   // The durable session is `active`. `started` wrote this start and read it
   // back; `resolved` found the session already running and wrote nothing,

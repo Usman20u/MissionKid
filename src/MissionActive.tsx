@@ -15,6 +15,7 @@ import {
 import { MissionLeaveConfirmation } from './MissionLeaveConfirmation';
 import {
   completeMissionSession,
+  isSessionPresentable,
   leaveMissionSession,
   readWallClock,
   resolveSessionMission,
@@ -224,7 +225,11 @@ export function MissionActive({
   // whose timestamps are impossible, are both recovery cases rather than a
   // Mission to present: nothing about either is guessed at, and neither is
   // shown as an ordinary running Mission.
-  if (mission === null || guidance === null || guidance.basis === 'invalid-session') {
+  if (
+    mission === null ||
+    guidance === null ||
+    !isSessionPresentable(active, state.language)
+  ) {
     return (
       <div className="mission-session">
         <p className="mission-session__state">
@@ -276,7 +281,10 @@ export function MissionActive({
         <p className="mission-session__note mission-session__note--safety">
           <span aria-hidden="true" className="mission-session__note-mark" />
           <span className="mission-session__note-label">
-            {t('discovery.card.safetyLabel')}
+            {/* Not the ready screen's "before you start": the Mission is
+                already running, and guidance labelled as past no longer reads
+                as guidance to follow. */}
+            {t('session.active.safetyLabel')}
           </span>
           {content.safetyNote}
         </p>
