@@ -92,8 +92,15 @@ input {
   font-weight: 650;
 }
 
+/* Every heading the product moves focus to shows the same indicator. The
+   abandonment confirmation and the restored Reward Card are included
+   deliberately: both are focus targets that were falling back to the browser's
+   thin default ring while every other target showed this one, and the
+   confirmation is the most consequential screen in the flow. */
 .app-view__title:focus-visible,
+.mission-result__mission:focus-visible,
 .mission-suggestions__title:focus-visible,
+.mission-session__confirm-title:focus-visible,
 .reset-panel__title:focus-visible {
   outline: 3px solid #b4650c;
   outline-offset: 4px;

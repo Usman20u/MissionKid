@@ -1,4 +1,12 @@
-import { Component, useState, type PropsWithChildren, type ReactNode } from 'react';
+import {
+  Component,
+  useEffect,
+  useRef,
+  useState,
+  type PropsWithChildren,
+  type ReactNode,
+  type RefObject,
+} from 'react';
 
 import {
   selectSessionAttempt,
@@ -64,6 +72,13 @@ type MissionResultProps = Readonly<{
   deriveProgress?: DeriveProgress;
 }>;
 
+type MissionResultCardProps = MissionResultProps &
+  Readonly<{
+    // Where focus lands when a retry brings this card back. Restoration and a
+    // first arrival never use it: the shell already owns focus for those.
+    missionRef?: RefObject<HTMLHeadingElement | null>;
+  }>;
+
 // The Reward Card: short recognition of one completed Mission Session, derived
 // entirely from that session and the static catalog. Nothing about it is stored
 // as a card, a reward or a progress record — showing it again later derives it
@@ -76,7 +91,8 @@ function MissionResultCard({
   adapter = persistenceAdapter,
   session,
   deriveProgress = deriveMonthlyGoal,
-}: MissionResultProps) {
+  missionRef,
+}: MissionResultCardProps) {
   const { dispatch, state } = useAppState();
   const t = (key: MessageKey) => translateMessage(state.language, key);
   const issue = selectSessionIssue(state);
@@ -139,7 +155,9 @@ function MissionResultCard({
   return (
     <div className="mission-result">
       <p className="mission-result__recognition">{t('result.recognition')}</p>
-      <h2 className="mission-result__mission">{title}</h2>
+      <h2 className="mission-result__mission" ref={missionRef} tabIndex={-1}>
+        {title}
+      </h2>
       <p className="mission-result__meta">
         <span className="mission-result__category">
           {t(MISSION_CATEGORY_LABEL_KEYS[session.missionCategoryAtSelection])}
@@ -187,6 +205,9 @@ function MissionResultCard({
 type ResultBoundaryProps = PropsWithChildren<{
   language: SupportedLanguage;
   onRetry: () => void;
+  // Where focus lands when a retry fails the same way and this control is the
+  // one the family still needs.
+  retryRef?: RefObject<HTMLButtonElement | null>;
 }>;
 
 type ResultBoundaryState = { failed: boolean };
@@ -225,6 +246,7 @@ class MissionResultBoundary extends Component<
               this.setState({ failed: false });
               this.props.onRetry();
             }}
+            ref={this.props.retryRef}
             type="button"
           >
             {t('session.action.retry')}
@@ -243,14 +265,37 @@ class MissionResultBoundary extends Component<
 export function MissionResult(props: MissionResultProps) {
   const { state } = useAppState();
   const [attempt, setAttempt] = useState(0);
+  const missionHeading = useRef<HTMLHeadingElement>(null);
+  const retryControl = useRef<HTMLButtonElement>(null);
+  const retried = useRef(false);
+
+  // A retry unmounts the very control the family used, so focus has to be
+  // placed deliberately or it falls to the document and their place is gone.
+  // The restored card takes it on the Mission it names; a display that failed
+  // again keeps it on the retry, beside the notice that was just announced.
+  //
+  // Only a retry moves focus. Restoring the result, changing language and an
+  // ordinary rerender all leave it exactly where it was.
+  useEffect(() => {
+    if (!retried.current) {
+      return;
+    }
+
+    retried.current = false;
+    (missionHeading.current ?? retryControl.current)?.focus();
+  }, [attempt]);
 
   return (
     <MissionResultBoundary
       key={attempt}
       language={state.language}
-      onRetry={() => setAttempt((previous) => previous + 1)}
+      onRetry={() => {
+        retried.current = true;
+        setAttempt((previous) => previous + 1);
+      }}
+      retryRef={retryControl}
     >
-      <MissionResultCard {...props} />
+      <MissionResultCard {...props} missionRef={missionHeading} />
     </MissionResultBoundary>
   );
 }

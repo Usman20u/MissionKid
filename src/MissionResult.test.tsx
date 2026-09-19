@@ -553,6 +553,46 @@ describe('a Reward Card that cannot be displayed', () => {
     completionPeriodId: PERIOD,
   } as const;
 
+  // A retry replaces the control the family just used. Focus has to be placed
+  // deliberately or it falls to the document body and their place in the page is
+  // gone, which is the one thing a keyboard or screen-reader user cannot recover
+  // from on their own.
+  it('keeps focus on a real target through a display retry that fails again', () => {
+    const { h } = failingHarness();
+
+    const retry = screen.getByRole('button', { name: t('session.action.retry') });
+    retry.focus();
+    fireEvent.click(retry);
+
+    // Still unavailable, so the family stays on the control they still need
+    // rather than losing focus to the document.
+    expect(screen.getByRole('alert').textContent).toBe(t('result.unavailable'));
+    const again = screen.getByRole('button', { name: t('session.action.retry') });
+    expect(document.activeElement).toBe(again);
+    expect(document.activeElement).not.toBe(document.body);
+    expect(h.writes).toEqual([]);
+  });
+
+  it('moves focus to the restored card and leaves restoration alone', () => {
+    const { h, recover } = failingHarness();
+
+    // Arriving at a failed display is restoration, not a transition the family
+    // made: nothing here steals focus.
+    expect(document.activeElement).toBe(document.body);
+
+    const retry = screen.getByRole('button', { name: t('session.action.retry') });
+    retry.focus();
+    recover();
+    fireEvent.click(retry);
+
+    // The card is back, so focus names the Mission it recognises.
+    const mission = screen.getByRole('heading', { level: 2 });
+    expect(mission.textContent).toBe(MISSION.content.en.title);
+    expect(document.activeElement).toBe(mission);
+    expect(h.writes).toEqual([]);
+    expect(h.stored().completedSessions).toEqual([RECORD]);
+  });
+
   function failingHarness() {
     const h = harness(
       storedSnapshot({
