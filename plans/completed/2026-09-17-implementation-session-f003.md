@@ -2262,4 +2262,8 @@ no additional file.
 | Tasks complete | Task 1 — `704b4cc`; Task 2 — `9d56eae`; Task 3 — `f6f0c20`; Task 4 — `2dafce2`; Task 5 — `ed52ff8`; Task 6 — `2dba46b`; Task 7 — `122224e`; Tasks 8, 9 and 10 — `25c5f6e`, `283238e`, `d19de3f`; Tasks 11 and 12 — `a06ec32`, `a20663a`; Tasks 13 to 16 — `365d3aa`, `8d72418`, `c8380a4`, `c82e338`, `464e69f`; confirmation correction — `d8b8405`; Tasks 17 and 18 — `dd24da3` |
 | Corrections recorded | The Task 13 no-confirmation recovery exit, superseded by `d8b8405`; the Task 15 storage-fault description; the `F003` criterion 21 evidence; the `F004` criterion 6 allocation |
 | Deferred acceptance clauses | `F004` 4 and 5 entirely; the History-visible clauses of `F003` 11 and 12 and `F004` 1, 2, 6 and 8 |
-| Plan closure, push, pull request, merge, branch deletion | Not authorized; none performed |
+| Plan closure | Authorized and done 2026-09-19; this plan moved to `plans/completed/` in `ca4bf82` |
+| Branch published | Authorized and done 2026-09-19; `feat/implementation-session-f003` pushed to origin without force |
+| Pull request | Authorized and done 2026-09-19; opened against `main` as #4 |
+| Merge, deployment, branch deletion | Not authorized; none performed |
+| Corrections after review (2026-09-19) | Four findings from the independent review of #4 are corrected under [`plans/completed/2026-09-19-pr4-review-corrections.md`](../completed/2026-09-19-pr4-review-corrections.md); this plan's task records stay as written |
