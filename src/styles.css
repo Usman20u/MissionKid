@@ -241,6 +241,11 @@ input {
 }
 
 .button {
+  /* A label that grows — a longer translation, or the reader's own larger text
+     setting — wraps inside the button rather than pushing it past the width it
+     was given. Without this the secondary actions, which have no width of their
+     own, ran off a narrow screen at an enlarged text size. */
+  max-width: 100%;
   min-height: 3.25rem;
   margin-top: 1.5rem;
   padding: 0.8rem 1.2rem;
@@ -1455,6 +1460,16 @@ input {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+}
+
+/* A flex item is at least as wide as its longest unbreakable word, and the
+   document's `break-word` does not lower that intrinsic floor — so one long word
+   (a German compound, a Russian verb) made the card wider than the column it sits
+   in once the reader enlarged their text. `anywhere` does lower it, which lets
+   such a word break inside the card instead of widening it. Ordinary text is
+   unaffected: a break happens only where the alternative is overflow. */
+.mission-result > * {
+  overflow-wrap: anywhere;
 }
 
 .mission-result__recognition {
