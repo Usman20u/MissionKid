@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 
 import {
+  isStartOutcomeUnknown,
   selectCurrentSession,
   selectSessionAttempt,
   selectSessionIssue,
@@ -69,6 +70,10 @@ type ReadyMissionDetailsProps = Readonly<{
   session: ReadyMissionSession;
   mission: MissionRecord;
   language: SupportedLanguage;
+  // Whether the durable outcome of a start is unknown. Everything else here is
+  // true either way — the Mission, its guidance, its safety content — but
+  // saying it has not started is not, so that one line is withheld.
+  startOutcomeUnknown: boolean;
 }>;
 
 // What the family needs before deciding to begin, answered here rather than
@@ -85,6 +90,7 @@ function ReadyMissionDetails({
   session,
   mission,
   language,
+  startOutcomeUnknown,
 }: ReadyMissionDetailsProps) {
   const t = (key: MessageKey) => translateMessage(language, key);
   const content = mission.content[language];
@@ -129,7 +135,12 @@ function ReadyMissionDetails({
         </span>{' '}
         {t('session.ready.missionBreak.body')}
       </p>
-      <p className="mission-session__state">{t('session.ready.notStarted')}</p>
+      {/* Said only when it is known. A start whose write may have landed is
+          exactly the case where this sentence would be a claim rather than a
+          fact, and the notice above already says what is actually known. */}
+      {startOutcomeUnknown ? null : (
+        <p className="mission-session__state">{t('session.ready.notStarted')}</p>
+      )}
     </>
   );
 }
@@ -156,6 +167,10 @@ export function MissionReady({
   const session = selectCurrentSession(state);
   const issue = selectSessionIssue(state);
   const attempt = selectSessionAttempt(state);
+  // One answer governs the heading above, the state statement and the action
+  // wording below, so no part of the page can contradict another about what is
+  // actually known.
+  const startOutcomeUnknown = isStartOutcomeUnknown(state);
   const sessionId = session?.sessionId ?? null;
   const sessionState = session?.state ?? null;
   const mission = session ? resolveSessionMission(session, state.language) : null;
@@ -295,6 +310,7 @@ export function MissionReady({
           language={state.language}
           mission={mission}
           session={session}
+          startOutcomeUnknown={startOutcomeUnknown}
         />
       ) : null}
       {issue ? (
@@ -320,7 +336,12 @@ export function MissionReady({
           onClick={() => start(session.sessionId)}
           type="button"
         >
-          {t('session.action.start')}
+          {/* The same control is the retry, so its wording has to be true in
+              both cases. **Start mission** would claim the Mission is still
+              waiting to begin; where the outcome is unknown this asks to find
+              out instead, and a retry resolves the durable session rather than
+              starting a second time. */}
+          {t(startOutcomeUnknown ? 'session.action.retry' : 'session.action.start')}
         </button>
       ) : null}
       {issue?.operation === 'ready' ? (

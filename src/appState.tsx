@@ -302,6 +302,20 @@ export function selectSessionAttempt(state: AppState): number {
   return state.sessionAttempt ?? 0;
 }
 
+// Whether the durable outcome of a deliberate start is genuinely unknown: the
+// write may have landed and nothing could establish it either way. Everything
+// the page says about starting is governed by this one answer, so the heading,
+// the state statement and the action wording cannot contradict each other or
+// the notice that sits between them.
+//
+// An established refusal is not this. There the Mission is known not to have
+// started, and saying so is the truth rather than a claim.
+export function isStartOutcomeUnknown(state: AppState): boolean {
+  const issue = selectSessionIssue(state);
+
+  return issue?.operation === 'start' && issue.outcome === 'unconfirmed';
+}
+
 export function selectSelectionIssue(
   state: AppState,
 ): MissionSelectionIssue | null {

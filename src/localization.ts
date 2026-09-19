@@ -93,6 +93,7 @@ const englishMessages = {
     'Missions cannot be suggested yet. A parent needs to finish the age step below first. MissionKid never guesses an age group.',
   'view.sessionOpening.title': 'Getting your Mission ready',
   'view.sessionReady.title': 'Your Mission is ready',
+  'view.sessionStartUnknown.title': 'Did your Mission start?',
   'session.ready.notStarted': 'This Mission has not started yet.',
   'session.transition.notCarriedOut':
     "We couldn't get this Mission ready just now. It has not started. Try again.",
@@ -275,6 +276,7 @@ export const INTERFACE_MESSAGES: CompleteInterfaceMessages = {
       'Es können noch keine Missionen vorgeschlagen werden. Ein Erwachsener muss zuerst den Altersschritt unten abschließen. MissionKid errät niemals eine Altersgruppe.',
     'view.sessionOpening.title': 'Deine Mission wird vorbereitet',
     'view.sessionReady.title': 'Deine Mission ist bereit',
+    'view.sessionStartUnknown.title': 'Hat deine Mission begonnen?',
     'session.ready.notStarted': 'Diese Mission hat noch nicht begonnen.',
     'session.transition.notCarriedOut':
       'Diese Mission konnte gerade nicht vorbereitet werden. Sie hat nicht begonnen. Versuche es noch einmal.',
@@ -423,6 +425,7 @@ export const INTERFACE_MESSAGES: CompleteInterfaceMessages = {
       'Пока миссии предложить нельзя. Сначала взрослому нужно завершить шаг с возрастом ниже. MissionKid никогда не угадывает возрастную группу.',
     'view.sessionOpening.title': 'Готовим твою миссию',
     'view.sessionReady.title': 'Твоя миссия готова',
+    'view.sessionStartUnknown.title': 'Твоя миссия началась?',
     'session.ready.notStarted': 'Эта миссия ещё не началась.',
     'session.transition.notCarriedOut':
       'Сейчас не удалось подготовить эту миссию. Она не началась. Попробуй ещё раз.',

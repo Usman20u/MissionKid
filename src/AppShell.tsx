@@ -9,6 +9,7 @@ import { resetSetup } from './setup';
 
 import {
   isSetupContextComplete,
+  isStartOutcomeUnknown,
   useAppState,
   type AppState,
 } from './appState';
@@ -202,9 +203,17 @@ export function AppShell({
     (SESSION_VIEWS.includes(view) || view === 'session-active') &&
     session != null &&
     !isSessionPresentable(session, state.language);
+  // A start whose outcome nobody could establish governs the heading too. The
+  // ordinary ready heading would assert that the Mission is still waiting to
+  // begin, which is the very thing that is unknown — and, where the write did
+  // land, false.
+  const startUnknown =
+    SESSION_VIEWS.includes(view) && isStartOutcomeUnknown(state);
   const title = unpresentableSession
     ? 'view.sessionUnavailable.title'
-    : content.title;
+    : startUnknown
+      ? 'view.sessionStartUnknown.title'
+      : content.title;
   const headingId = 'current-view-heading';
   const t = (key: MessageKey) => translateMessage(state.language, key);
   const busy = !!state.operation || state.status === 'pending';

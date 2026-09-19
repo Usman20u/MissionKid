@@ -301,6 +301,103 @@ describe('a ready transition that did not complete', () => {
     expect(screen.getByRole('button', { name: t('session.action.retry') })).toBeTruthy();
   });
 
+  // The unknown outcome has to govern the whole page, not only the notice. The
+  // start write can land and still be unconfirmable, so anything asserting that
+  // the Mission has not started is a claim — and, in exactly that case, false.
+  it.each(['en', 'de', 'ru'] as const)(
+    'asserts neither a start nor its absence anywhere on the page in %s',
+    (language) => {
+      const h = harness(storedSnapshot(READY_SESSION, language));
+      render(<App adapter={h.adapter} />);
+
+      h.faults.readsAfterWrite = 99;
+      fireEvent.click(
+        screen.getByRole('button', {
+          name: translateMessage(language, 'session.action.start'),
+        }),
+      );
+
+      // The write did land: durable state really is running.
+      expect(h.stored().currentSession.state).toBe('active');
+      const landedStartedAt = h.stored().currentSession.startedAt;
+      expect(Number.isInteger(landedStartedAt)).toBe(true);
+
+      // The notice says only what is known.
+      expect(screen.getByRole('alert').textContent).toBe(
+        translateMessage(language, 'session.start.unconfirmed'),
+      );
+
+      // The heading no longer asserts the Mission is still waiting to begin.
+      expect(heading().textContent).toBe(
+        translateMessage(language, 'view.sessionStartUnknown.title'),
+      );
+      expect(heading().textContent).not.toBe(
+        translateMessage(language, 'view.sessionReady.title'),
+      );
+
+      // Nothing on the page states the durable negative.
+      expect(
+        screen.queryByText(translateMessage(language, 'session.ready.notStarted')),
+      ).toBeNull();
+      expect(document.body.textContent).not.toContain(
+        translateMessage(language, 'session.ready.notStarted'),
+      );
+
+      // Nor does the action claim it is still to be started.
+      expect(
+        screen.queryByRole('button', {
+          name: translateMessage(language, 'session.action.start'),
+        }),
+      ).toBeNull();
+      const retry = screen.getByRole('button', {
+        name: translateMessage(language, 'session.action.retry'),
+      });
+
+      // What is true either way is preserved: the Mission, its guidance and
+      // its way out.
+      expect(screen.getByRole('heading', { level: 2 }).textContent).toBe(
+        MISSION.content[language].title,
+      );
+      expect(screen.getByText(MISSION.content[language].instruction)).toBeTruthy();
+      expect(
+        screen.getByText(translateMessage(language, 'session.ready.missionBreak.body')),
+      ).toBeTruthy();
+      expect(
+        screen.getByRole('button', {
+          name: translateMessage(language, 'session.action.backToSuggestions'),
+        }),
+      ).toBeTruthy();
+
+      // Retrying resolves the same durable session and its original start.
+      h.faults.readsAfterWrite = 0;
+      const writesBeforeRetry = h.writes.length;
+      fireEvent.click(retry);
+
+      expect(h.writes).toHaveLength(writesBeforeRetry);
+      expect(h.stored().currentSession.sessionId).toBe('session-1');
+      expect(h.stored().currentSession.startedAt).toBe(landedStartedAt);
+      expect(heading().textContent).toBe(
+        translateMessage(language, 'view.sessionActive.title'),
+      );
+    },
+  );
+
+  // An established refusal is a different thing: the Mission is known not to
+  // have started, and the page may still say so.
+  it('still says the Mission has not started when the refusal was established', () => {
+    const h = harness(storedSnapshot(READY_SESSION));
+    render(<App adapter={h.adapter} />);
+
+    h.faults.write = true;
+    fireEvent.click(screen.getByRole('button', { name: t('session.action.start') }));
+
+    expect(screen.getByRole('alert').textContent).toBe(t('session.start.notStarted'));
+    expect(h.stored().currentSession.state).toBe('ready');
+    expect(heading().textContent).toBe(t('view.sessionReady.title'));
+    expect(screen.getByText(t('session.ready.notStarted'))).toBeTruthy();
+    expect(screen.getByRole('button', { name: t('session.action.start') })).toBeTruthy();
+  });
+
   it('announces a repeated failure instead of leaving the retry unanswered', () => {
     const h = harness(storedSnapshot(SELECTED_SESSION));
     h.faults.write = true;
