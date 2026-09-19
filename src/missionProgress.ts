@@ -67,6 +67,36 @@ function byCompletionOrder(
   return first.sessionId < second.sessionId ? -1 : 1;
 }
 
+// The private Mission History for one Child Profile: every completed Mission
+// Session it holds, in every period, newest first.
+//
+// It reads the completed sessions a validated snapshot already produced, so the
+// record-level trust rules that coalesced identical duplicates and excluded
+// conflicting copies are the ones that decide what appears here; this adds no
+// second policy and only guards against listing one identifier twice.
+//
+// The order is `byCompletionOrder` read backwards, so the comparator that
+// decides which completion is the twentieth is the same one that decides what
+// is newest. Reversing it rather than writing a second comparator is what keeps
+// the two from ever disagreeing. Nothing is written, nothing is counted, and
+// the collection it is given is never sorted in place.
+export function deriveMissionHistory(
+  completedSessions: readonly CompletedMissionSession[],
+  childProfileId: string,
+): readonly CompletedMissionSession[] {
+  const listed = new Map<string, CompletedMissionSession>();
+
+  for (const session of completedSessions) {
+    if (session.childProfileId === childProfileId && !listed.has(session.sessionId)) {
+      listed.set(session.sessionId, session);
+    }
+  }
+
+  return [...listed.values()].sort(
+    (first, second) => -byCompletionOrder(first, second),
+  );
+}
+
 // Monthly Goal progress, derived and never stored. It reads the completed
 // sessions a validated snapshot already produced, so the record-level trust
 // rules that coalesced identical duplicates and excluded conflicting copies are

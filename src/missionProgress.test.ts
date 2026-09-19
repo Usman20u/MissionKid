@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 
 import {
   MONTHLY_GOAL_TARGET,
+  deriveMissionHistory,
   deriveMonthlyGoal,
 } from './missionProgress';
 import type { CompletedMissionSession } from './persistence';
@@ -175,5 +176,102 @@ describe('deriving Monthly Goal progress', () => {
 
   it('publishes the approved target', () => {
     expect(MONTHLY_GOAL_TARGET).toBe(20);
+  });
+});
+
+describe('the private Mission History', () => {
+  const ids = (history: readonly CompletedMissionSession[]) =>
+    history.map((entry) => entry.sessionId);
+
+  it('lists the completions of this Child Profile newest first', () => {
+    const history = deriveMissionHistory(run(3), PROFILE_ID);
+
+    expect(ids(history)).toEqual(['session-002', 'session-001', 'session-000']);
+  });
+
+  it('breaks an exact tie deterministically, whatever order they arrive in', () => {
+    const tied = [
+      completion({ sessionId: 'session-b', completedAt: BASE }),
+      completion({ sessionId: 'session-a', completedAt: BASE }),
+      completion({ sessionId: 'session-c', completedAt: BASE }),
+    ];
+
+    const forwards = ids(deriveMissionHistory(tied, PROFILE_ID));
+    const backwards = ids(deriveMissionHistory([...tied].reverse(), PROFILE_ID));
+
+    expect(forwards).toEqual(['session-c', 'session-b', 'session-a']);
+    expect(backwards).toEqual(forwards);
+  });
+
+  // The order that decides what is newest is the order that decides which
+  // completion is the twentieth, read backwards. If they ever disagreed, the
+  // goal and the list would be telling the family two different stories.
+  it('is the exact reverse of the order the twentieth completion is chosen by', () => {
+    const records = [...run(5), completion({ sessionId: 'session-tie', completedAt: BASE })];
+    const history = ids(deriveMissionHistory(records, PROFILE_ID));
+    const twentieth = deriveMonthlyGoal(records, PROFILE_ID, PERIOD);
+
+    expect(twentieth.goalCompletingSessionId).toBeNull();
+    expect([...history].reverse()).toEqual([
+      'session-000', 'session-tie', 'session-001',
+      'session-002', 'session-003', 'session-004',
+    ]);
+  });
+
+  it('never sorts the collection it was given', () => {
+    const records = run(3);
+    const order = ids(records);
+
+    deriveMissionHistory(records, PROFILE_ID);
+
+    expect(ids(records)).toEqual(order);
+  });
+
+  it('lists nothing from another Child Profile', () => {
+    const history = deriveMissionHistory(
+      [
+        ...run(2),
+        completion({ sessionId: 'session-other', childProfileId: 'profile-2' }),
+      ],
+      PROFILE_ID,
+    );
+
+    expect(ids(history)).toEqual(['session-001', 'session-000']);
+  });
+
+  it('lists one Mission Session once however often it is stored', () => {
+    const once = completion({ sessionId: 'session-000' });
+    const history = deriveMissionHistory([once, once, once], PROFILE_ID);
+
+    expect(ids(history)).toEqual(['session-000']);
+  });
+
+  // History is the whole record, not this month's. Only the Monthly Goal
+  // narrows to one period.
+  it('keeps completions from earlier periods beside the current one', () => {
+    const records = [
+      completion({ sessionId: 'session-jan', completedAt: BASE - 5_000_000, completionPeriodId: '2024-01' }),
+      completion({ sessionId: 'session-mar', completedAt: BASE, completionPeriodId: '2024-03' }),
+    ];
+
+    expect(ids(deriveMissionHistory(records, PROFILE_ID))).toEqual([
+      'session-mar',
+      'session-jan',
+    ]);
+    expect(deriveMonthlyGoal(records, PROFILE_ID, '2024-03').completedCount).toBe(1);
+    expect(deriveMonthlyGoal(records, PROFILE_ID, '2024-04').completedCount).toBe(0);
+  });
+
+  it('carries the immutable facts of each record through unchanged', () => {
+    const [entry] = deriveMissionHistory(run(1), PROFILE_ID);
+
+    expect(entry).toEqual(completion({ sessionId: 'session-000', completedAt: BASE }));
+  });
+
+  it('is empty for a profile with no completions', () => {
+    expect(deriveMissionHistory([], PROFILE_ID)).toEqual([]);
+    expect(
+      deriveMissionHistory(run(2), 'profile-with-nothing'),
+    ).toEqual([]);
   });
 });
