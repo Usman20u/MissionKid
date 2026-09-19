@@ -27,7 +27,8 @@ export function readMonotonicClock(): number {
 // session itself stays exactly as it is.
 export type GuidanceBasis =
   | 'derived'
-  // Missing, non-finite, zero, negative or fractional seconds. The stored value
+  // Missing, non-finite, zero, negative or fractional seconds, or a value too
+  // large to measure in milliseconds without losing exactness. The stored value
   // is never replaced to make the session look valid.
   | 'malformed-duration'
   // The wall clock now reads earlier than the session's own start.
@@ -53,13 +54,27 @@ function isEpochMilliseconds(value: number): boolean {
   return Number.isInteger(value) && value >= 0;
 }
 
+// Guidance is measured in milliseconds everywhere, so a duration can only guide
+// a countdown while that measurement stays exact. Past this point multiplying by
+// a thousand leaves the safe-integer range and, far enough past it, overflows to
+// infinity — and an infinite remaining time is not a countdown at all.
+//
+// This is the arithmetic's own limit rather than a product rule about how long a
+// Mission may be: it is derived from the representation, and no reviewed Mission
+// comes near it. The snapshot validator accepts any non-negative integer, so a
+// stored value beyond it is a malformed duration like any other.
+const MAX_GUIDANCE_DURATION_SECONDS = Math.floor(
+  Number.MAX_SAFE_INTEGER / MILLISECONDS_PER_SECOND,
+);
+
 // The duration that can guide a countdown, or zero when the stored value cannot.
 function guidanceDurationSeconds(session: ActiveMissionSession): number {
   const duration = session.durationSecondsAtSelection;
 
   return typeof duration === 'number' &&
     Number.isInteger(duration) &&
-    duration > 0
+    duration > 0 &&
+    duration <= MAX_GUIDANCE_DURATION_SECONDS
     ? duration
     : 0;
 }

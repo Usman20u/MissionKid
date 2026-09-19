@@ -21,6 +21,8 @@ import type { ActiveMissionSession, CurrentMissionSession } from './persistence'
 
 const STARTED_AT = 1_700_000_000_000;
 const DURATION_SECONDS = 240;
+// The largest whole second whose millisecond value is still an exact integer.
+const MAX_MEASURABLE_SECONDS = Math.floor(Number.MAX_SAFE_INTEGER / 1000);
 
 function activeSession(
   overrides: Partial<ActiveMissionSession> = {},
@@ -94,6 +96,68 @@ describe('deriving remaining guidance from durable facts', () => {
     expect(withoutDuration.durationSecondsAtSelection).toBe(
       duration === undefined ? undefined : duration,
     );
+  });
+
+  // Guidance is measured in milliseconds, and the snapshot validator accepts any
+  // non-negative integer duration. A stored value large enough to lose exactness
+  // when multiplied by a thousand therefore has to degrade like any other
+  // malformed duration rather than produce an unbounded countdown.
+  it.each([
+    ['a duration that overflows to infinity in milliseconds', 1e308],
+    ['a duration one second past the exactly measurable range', MAX_MEASURABLE_SECONDS + 1],
+    ['the largest integer JavaScript holds', Number.MAX_SAFE_INTEGER],
+  ])('degrades to zero for %s without replacing it', (_label, duration) => {
+    const session = activeSession({ durationSecondsAtSelection: duration });
+
+    expect(deriveGuidance(session, STARTED_AT + 5_000)).toEqual({
+      remainingSeconds: 0,
+      durationSeconds: 0,
+      basis: 'malformed-duration',
+    });
+    // The stored value is untouched: guidance degrades, the Mission is not
+    // rewritten into a valid-looking one.
+    expect(session.durationSecondsAtSelection).toBe(duration);
+  });
+
+  it('still guides a duration at the edge of what milliseconds measure exactly', () => {
+    const session = activeSession({
+      durationSecondsAtSelection: MAX_MEASURABLE_SECONDS,
+    });
+    const guidance = deriveGuidance(session, STARTED_AT + 1_000);
+
+    // No arbitrary product limit was introduced: the boundary is the
+    // representation's, and the value exactly on it still guides.
+    expect(guidance.basis).toBe('derived');
+    expect(guidance.durationSeconds).toBe(MAX_MEASURABLE_SECONDS);
+    expect(guidance.remainingSeconds).toBe(MAX_MEASURABLE_SECONDS - 1);
+    expect(Number.isSafeInteger(guidance.remainingSeconds)).toBe(true);
+  });
+
+  it('never yields a non-finite reading for any accepted stored duration', () => {
+    for (const duration of [
+      1, 60, DURATION_SECONDS, 86_400, 2 ** 31, 2 ** 53 - 1,
+      MAX_MEASURABLE_SECONDS, MAX_MEASURABLE_SECONDS + 1, 1e21, 1e308,
+    ]) {
+      const session = activeSession({ durationSecondsAtSelection: duration });
+
+      for (const wallClock of [STARTED_AT, STARTED_AT + 5_000, STARTED_AT + 1e15]) {
+        const guidance = deriveGuidance(session, wallClock);
+        expect(Number.isFinite(guidance.remainingSeconds)).toBe(true);
+        expect(Number.isFinite(guidance.durationSeconds)).toBe(true);
+        expect(guidance.remainingSeconds).toBeGreaterThanOrEqual(0);
+
+        // Anchoring and ticking from the anchor stay finite too.
+        const anchor = anchorGuidance(
+          session,
+          { wallClockMilliseconds: wallClock, monotonicMilliseconds: 1_000 },
+          null,
+        );
+        expect(Number.isFinite(anchor.remainingMillisecondsAtAnchor)).toBe(true);
+        const ticked = guidanceAt(anchor, 4_000);
+        expect(Number.isFinite(ticked.remainingSeconds)).toBe(true);
+        expect(ticked.remainingSeconds).toBeGreaterThanOrEqual(0);
+      }
+    }
   });
 
   it('reads zero when the wall clock is earlier than the start', () => {

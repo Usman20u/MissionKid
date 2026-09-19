@@ -284,6 +284,33 @@ describe('the running Mission presentation', () => {
     expect(guidanceText(container)).toBe(t('session.active.zero'));
   });
 
+  it('keeps an unmeasurably long stored duration completable and abandonable', () => {
+    const { clocks } = movableClocks(STARTED_AT + 60_000);
+    const session = activeSession('creativity-06', {
+      // Accepted by the snapshot validator, but too large to measure in
+      // milliseconds without losing exactness.
+      durationSecondsAtSelection: 1e308,
+    });
+    const { container } = renderActive(session, clocks);
+
+    // The guidance degrades to the approved neutral wording rather than
+    // counting down from an unbounded number.
+    expect(guidanceText(container)).toBe(t('session.active.zero'));
+    expect(container.textContent).not.toContain('Infinity');
+    expect(container.textContent).not.toContain('NaN');
+
+    // This is still an ordinary running Mission, not a recovery surface: both
+    // approved actions remain, so the family can finish it or leave it.
+    expect(screen.getByRole('heading', { level: 2 }).textContent)
+      .toBe(missionFor('creativity-06').content.en.title);
+    expect(screen.getByRole('button', { name: t('session.action.done') })).toBeTruthy();
+    expect(screen.getByRole('button', { name: t('session.action.leave') })).toBeTruthy();
+    expect(screen.queryByText(t('session.active.missionUnavailable'))).toBeNull();
+
+    // The stored value is not rewritten to make the session look valid.
+    expect(session.durationSecondsAtSelection).toBe(1e308);
+  });
+
   it.each([
     ['a Mission the catalog no longer carries', { missionId: 'movement-99' }],
     ['a Mission no longer approved for its own context', { ageBandAtSelection: '9–10' as const }],
