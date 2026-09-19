@@ -1,11 +1,11 @@
 # MissionKid Implementation Plan 03 — Mission Session and Completion (F003) with the Reward Card and Monthly Goal completion message (F004 slice)
 
 **Date:** 2026-09-17
-**Status:** Approved — Tasks 1 to 12 complete under the approved execution allocation clarification; Tasks 13–19 not started
+**Status:** Approved — Tasks 1 to 16 complete under their recorded authorizations; Tasks 17–19 not started
 
-This plan's scope and decisions are approved. Scope approval is not authorization to execute a task: each implementation task begins only when it is explicitly authorized. Tasks 1 to 12 were each explicitly authorized and are complete; no later task has begun.
+This plan's scope and decisions are approved. Scope approval is not authorization to execute a task: each implementation task begins only when it is explicitly authorized. Tasks 1 to 16 are complete. The authorization recorded below covered Tasks 13–16 in order. Task 17 onward is not authorized, and neither push nor merge is.
 
-The scope below plans `F003` in full, except the acceptance clauses explicitly deferred with the Mission History view, together with one deliberately bounded part of `F004`: the Reward Card and the Monthly Goal derivation and completion message that the card must display. That combined scope is approved as decision D1-A, with the History deferrals preserved exactly as documented. Every task below except Tasks 1 to 12 is pending implementation and verification; what those tasks actually changed is recorded in the implementation record at the end of this plan, and nothing else here is a claim about what the repository already does.
+The scope below plans `F003` in full, except the acceptance clauses explicitly deferred with the Mission History view, together with one deliberately bounded part of `F004`: the Reward Card and the Monthly Goal derivation and completion message that the card must display. That combined scope is approved as decision D1-A, with the History deferrals preserved exactly as documented. What completed tasks actually changed is recorded in the implementation record at the end of this plan, and nothing else here is a claim about what the repository already does.
 
 ## Authorization basis
 
@@ -1621,6 +1621,322 @@ every existing completion record are preserved unchanged. The Mission History
 view and any standalone Monthly Goal surface remain deferred, and this batch
 claims no full `F003` acceptance, no MVP completion and no release readiness.
 
+### Batch preflight (2026-09-19)
+
+The batch began from `69ca94b`, not the `7945c3d` the authorization names: the
+authorization record itself had already been committed on top of it. The working
+tree was not clean either. It held an interrupted draft of this batch — a focus
+indicator for the abandonment confirmation, two new tests and a plan status edit —
+whose **two tests failed**, so the reported 714-test baseline described `HEAD`,
+not the tree.
+
+The draft was preserved rather than discarded or trusted. `HEAD` was confirmed at
+714 passing across 21 files with type checking clean; each draft piece was then
+judged against its owning specification. The focus-indicator rule was a real
+finding and was kept and extended. Both draft tests asserted behavior the product
+did not have: one expected focus on the result heading after every card retry, and
+reached that expectation through a module spy that handed itself back as its own
+recovery implementation, so it could never have passed; the other expected the
+abandonment confirmation in a state whose owning clause requires a direct safe
+return. Both were replaced by assertions of what the specifications actually
+require, and both underlying defects were real and are fixed below.
+
+### Task 13 completion (2026-09-19)
+
+**Defects found and corrected.**
+
+1. *A running Mission whose content is gone was a dead end.* `MissionActive`
+   rendered the explanation and no control at all — measured, not inferred:
+   zero buttons in the rendered document. `F003` refresh-and-recovery requires a
+   calm explanation *and* "retry or a safe return to Mission Category
+   Selection", and the visual specification's recovery table requires "retry
+   recovery or explicitly return without completion". The approved way out is
+   now offered, and a failed recovery exit now announces itself instead of
+   failing silently. Committed as `365d3aa`.
+2. *A Reward Card display retry lost focus to the document.* The retry unmounts
+   the control that triggers it, and nothing placed focus afterwards, so a
+   keyboard or screen-reader user lost their place entirely — on both a retry
+   that failed again and one that succeeded. Focus is now placed deliberately:
+   on the restored card's Mission heading when the card comes back, and on the
+   retry control when the display failed again, beside the notice already
+   announced. Restoration still takes no focus. Committed as `8d72418`.
+3. *Two focus targets had no focus indicator.* The abandonment confirmation
+   heading and, after correction 2, the Reward Card's Mission heading were
+   falling back to the browser's default ring while every other target showed
+   the product's own. Both were added to the shared rule. Committed as `8d72418`.
+4. *Every action could run off a narrow screen at enlarged text.* Measured, not
+   assumed: at `320x568` with a `32px` root, the secondary exit reached `398`
+   CSS px against a `320` px viewport in Russian, `343` in German and `340` in
+   English, and the page scrolled horizontally in seven combinations. Buttons
+   had no width constraint at all. Separately, the Reward Card's flex items kept
+   their longest unbreakable word as an intrinsic minimum — which the document's
+   `break-word` does not lower — so one long word widened the card past its own
+   column. Both are fixed. Committed as `c8380a4`.
+
+**Decision recorded.** The safe return from a Mission that cannot continue asks
+for no confirmation. `F003` criterion 16 requires confirmation when a family
+*chooses* to leave a running Mission; the refresh-and-recovery clause governs a
+session that cannot be recovered and names "a safe return to Mission Category
+Selection" with no confirmation. These govern different situations rather than
+conflicting, and the specific clause was followed: a "Keep going" choice for a
+Mission that cannot continue would not be true, which the anti-manipulation rules
+forbid. The `ready` equivalent already behaves this way.
+
+**Structure, verified over every implemented lifecycle, result, confirmation and
+recovery state.** No heading level is skipped in any state: `h1` view heading →
+`h2` Mission or Reward Card → `h3` confirmation or Monthly Goal. Every control
+carries a real accessible name; the three suggestion actions share a label but
+each is `aria-describedby` its own Mission title. Keyboard order matched the
+visible reading order in every state, with no positive `tabindex` anywhere.
+`document.documentElement.lang` tracked `en`, `de` and `ru`.
+
+**Focus, exercised through the transitions rather than asserted.** Start,
+completion and leaving the result each moved focus to the new view heading;
+restoration into `ready`, into a running Mission, into the Reward Card and into a
+failed card display each took no focus at all; the abandonment confirmation took
+focus to its own heading and Escape returned it to the control that opened it; an
+unconfirmed completion announced through `role="alert"` without moving focus. The
+timer carries no live region and no `aria-live`, so a tick announces nothing, and
+a rerender at zero moves no focus.
+
+**Contrast, computed rather than eyeballed.** All 28 text pairs across the
+implemented `F003` and `F004`-slice surfaces meet WCAG AA against their real
+composited backgrounds (the section is `92%` white over the page ground, which
+resolves to `#fdfefd`). The narrowest margins are the quiet supporting text at
+`5.44:1` against a `4.5` requirement, the disabled primary action at `5.40:1`,
+and the parent context line at `6.47:1`; the rest sit between `6.5:1` and
+`14.1:1`. The focus ring resolves `4.32:1` against the surface it is drawn on;
+its `3px` offset is what keeps it off the primary action's own green, which it
+would not clear. The one sub-`3:1` pair, the card border against the page, is a
+decorative container edge carrying no state or meaning.
+
+**Motion.** Every motion declaration in the stylesheet is neutralized under
+`prefers-reduced-motion: reduce` — two transitions and one `translateY`. There
+are no keyframes, no animation, no loop and no timer motion anywhere.
+
+**Responsive and larger text, measured.** 144 combinations: 8 implemented states
+x 3 languages x 3 viewports (`320x568`, `360x740`, `1280x900`) x 2 text scales
+(`100%` at a `16px` root, `200%` at `32px`), in Chrome for Testing
+`149.0.7827.55`. After the corrections, none scrolls horizontally, none has an
+element overflowing its box, none applies an ellipsis to any heading, paragraph,
+button, label or legend, and no visible target measures under `44x44` CSS px. The
+smallest measured targets are `52` px tall, from a `3.25rem` minimum that scales
+with the reader's text. Instructions, adult-involvement notes, safety guidance and
+consequences stayed fully readable in every combination, including the longer
+twentieth-completion message and the recovery notices; the German and Russian
+`320`px/`200%` cases wrap aggressively but truncate nothing.
+
+**Limitation.** All of this is semantic, computed and measured evidence from a
+real browser engine. **No assistive technology was run** — no screen reader, no
+magnifier, no switch device — so no screen-reader behavior is claimed beyond the
+semantics, roles, names and live-region attributes present in the document.
+
+### Task 14 acceptance mapping (2026-09-19)
+
+Built before any test was added or changed in this batch. Each clause is mapped
+to the assertion that actually holds it, with that assertion's limit stated.
+Clauses that the Mission History view owns are recorded as deferred, not as
+passing.
+
+| `F003` | Clause | Where it is asserted | Limit |
+| --- | --- | --- | --- |
+| 1 | `selected` → `ready`, no timer | `missionSession.test.ts` "advances a stored selected session, adding nothing to it"; `Restoration.test.tsx` "continues a stored selected session to ready without starting it" | — |
+| 2 | Ready screen carries title, instruction, category, duration, safety, away-from-screen | `MissionReady.test.tsx` "shows only what a ready Mission may show at this step", "shows the duration the session recorded, not the catalog default", "shows the Mission Category the session recorded", "invents no safety guidance for a Mission that carries none" | — |
+| 3 | Start is the one primary action; deliberate use begins one countdown | `MissionReady.test.tsx` "offers exactly one dominant action, and no countdown, progression or reward", "starts once and hands over to the running Mission" | — |
+| 4 | Repeated start keeps one session and one countdown | `MissionReady.test.tsx` "keeps one start when the action is activated twice"; `missionSession.test.ts` "resolves the same running session on repeated activation" | — |
+| 5 | Active permits leaving, demands no interaction or proof, offers **Mission done** | `MissionActive.test.tsx` "adds no control, alarm or centrepiece to the running Mission", "writes nothing, and changes nothing about the session, while it runs" | — |
+| 6 | Completion before zero carries no timing penalty | `MissionResult.test.tsx` "needs no extra confirmation, proof or waiting for zero" | — |
+| 7 | Zero holds at zero, stays `active`, never auto-completes | `MissionActive.test.tsx` "rests at zero with neutral wording and the Mission still running" | — |
+| 8 | Refresh in `ready` keeps it ready with no countdown | `Restoration.test.tsx` "restores a ready session unchanged, with no countdown" | — |
+| 9 | Refresh in `active` restores elapsed time, no reset, no second session | `MissionActive.test.tsx` "recovers a Mission that started earlier at its real remaining time", "recalculates from the timestamps when the family comes back to the page" | — |
+| 10 | Duration elapsed while away → zero, still completable or abandonable | `MissionActive.test.tsx` "rests at zero…"; `MissionExit.test.tsx` "leaves a Mission whose guidance has already reached zero"; `MissionResult.test.tsx` "completes identically long after zero" | — |
+| 11 | One completion → `completed`, one Reward Card, one History entry, one Monthly Goal application, display capped at `20 / 20` | `MissionResult.test.tsx` "reaches the approved Reward Card in one confirmed write", "counts each completion once and caps the display at the target"; `missionProgress.test.ts` "caps the display at twenty while preserving later completions" | **History-visible half deferred.** The durable completed record is asserted; that it appears as a History entry is not, and cannot be until the History view exists. |
+| 12 | Repeat or refresh returns the same result and adds no card, History entry or increment | `missionSession.test.ts` "completes the same session once however often it is asked"; `MissionResult.test.tsx` "restores the same result through the pointer, repeating no completion" | **History-visible half deferred**, as for 11. |
+| 13 | Unconfirmed completion claims nothing and retries without duplicating | `missionSession.test.ts` "adopts a landed completion whose confirmation was lost", "claims neither outcome when the interrupted write cannot be read back", "reports the Mission still running when an unconfirmed write did not land" | — |
+| 14 | Card display failure retries to the same card, changing nothing | `MissionResult.test.tsx` "keeps the completion and offers a retry that restores the same result", "recreates no completion operation, timestamp, period, count or pointer", "contains the failure to the card rather than the whole application" | — |
+| 15 | Leaving `ready` returns to suggestions with no completion effect | `MissionExit.test.tsx` "clears the ready session and returns to the approved discovery path", "needs no confirmation of its own" | — |
+| 16 | Leaving `active` requires confirmation, then no completion, progress, card, penalty or shame | `MissionExit.test.tsx` "asks for confirmation that states the consequence before anything is written", "makes staying the easy choice and leaving the explicit one", "clears the session on confirmation and writes no completion" | — |
+| 17 | Hiding, closing or ordinary navigation is not abandonment | `MissionExit.test.tsx` "treats hiding, returning and refreshing as nothing of the kind" | — |
+| 18 | Another Mission requires resuming or confirming abandonment first | `MissionExit.test.tsx` "resolving an existing-session conflict" — "offers no new selection until the conflict is resolved", "still requires confirmation before abandoning the active Mission" | — |
+| 19 | Mission Break claims no device, app or operating-system control | `MissionReady.test.tsx` Mission Break wording check against the blocking, locking, monitoring and parental-control vocabulary in EN and DE | RU is covered by the whole-path sweep added below rather than by this test. |
+| 20 | EN/DE/RU preserve behavior, safety meaning, guidance, consequences and error wording | `localization.test.ts` "resolves every message any implemented view asks for", "carries the same interpolation tokens in every language", "never states a durable negative for an unknown outcome", "claims no recorded completion without evidence", "refers to the child without assuming a gender" | — |
+| 21 | No Mission Session path carries manipulation, on-screen pressure, media, social, payment, prize, device control or surveillance | **Gap closed in this batch** — `Accessibility.test.tsx` "offers nothing a Mission Session path may never offer, in any language" | Asserts the interface strings of the implemented session path. Mission content safety stays with the catalog gate. |
+
+| `F004` | Clause | Where it is asserted | Limit |
+| --- | --- | --- | --- |
+| 1 | One card, one History entry, progress `+1` below `20 / 20` | `MissionResult.test.tsx` "reaches the approved Reward Card in one confirmed write", "counts each completion once and caps the display at the target" | **History-visible half deferred.** |
+| 2 | Resubmission or refresh leaves History and Monthly Goal unchanged | `MissionResult.test.tsx` "restores the same result through the pointer, repeating no completion"; `missionSession.test.ts` "resolves an existing completion without writing or re-reading the clock" | **History-visible half deferred.** |
+| 3 | Card shows recognition, title, category, completion context and progress | `MissionResult.test.tsx` "shows the Mission Category and a localized completion context", "keeps the completion and its count when catalog content is gone" | — |
+| 7 | New period starts `0 / 20` and completes at exactly twenty | `missionProgress.test.ts` "starts a period with no completions at zero of twenty", "reaches the goal at exactly twenty valid completions", "derives a fresh period at zero without disturbing earlier ones" | — |
+| 8 | Later completions stay recorded, display holds `20 / 20`, no repeated prompt | `missionProgress.test.ts` "caps the display at twenty while preserving later completions", "keeps the same twentieth identity as later completions arrive"; `MissionResult.test.tsx` "shows the one goal message for the twentieth result and not the twenty-first" | **History-visible half deferred.** |
+| 9 | One encouraging message, parent-approved, nothing delivered or promised | `localization.test.ts` "keeps the goal invitation optional and subject to a parent agreeing"; `MissionResult.test.tsx` "shows the one goal message for the twentieth result and not the twenty-first" | — |
+| 10 | No gambling, payment, comparison, sharing, child media or manipulation | `MissionResult.test.tsx` "holds no prize, purchase, reveal or pressure behaviour" | — |
+
+**Deferred with the Mission History view.** `F004` criteria 4, 5 and 6, and the
+History-visible halves of `F003` 11 and 12 and `F004` 1, 2 and 8. `F003`
+acceptance is therefore complete *except* those clauses; this batch claims no
+more than that.
+
+**Boundaries re-read rather than re-asserted.** Exactly-once transitions and the
+retry after a landed-but-unconfirmed write, the `D4-B` refusal with unchanged
+stored bytes and its release after a valid re-read, zero guidance with working
+completion and abandonment, card-display retry without a second write, fixed
+completion periods with language-independent counts and a deterministic twentieth
+identity, and truthful failure wording all already carry dedicated assertions;
+they were reviewed and left alone rather than duplicated.
+
+**Localization guards reviewed, not rewritten.** The Task 12 guards were checked
+against this batch's requirement that an unknown outcome and a verified fact stay
+distinct. They hold it: the unknown-outcome guard is scoped to the seven keys
+whose write outcome is genuinely unknown, requires each to say it could not
+check, and deliberately re-reads `discovery.selection.unconfirmed` as the one
+message that may state a durable negative, because the writes it would deny come
+later than the failure it reports. The gender guard is bounded to second-person
+agreement and proves itself against both real offenders and legitimate noun
+agreement. Neither is a blanket word ban, and neither was changed.
+
+### Task 14 completion (2026-09-19)
+
+The mapping above was built first, from the criteria rather than from the test
+names, and every clause traced to an assertion that already existed except one.
+
+**One gap, closed.** `F003` criterion 21 — that no Mission Session path carries
+manipulation, on-screen pressure, a child media request, social behavior,
+payment, a real prize promise, device control or surveillance — had no
+whole-path assertion. Criterion 19's device-control check covered the Mission
+Break in English and German only, and the Reward Card's own check covered the
+result. `Accessibility.test.tsx` now sweeps the interface text of six implemented
+lifecycle states, in all three languages, including the abandonment confirmation
+where the state can open one, against twenty-one patterns. Committed as
+`c82e338`.
+
+**Every test added or changed in this batch was shown to bite.** Each was run
+against a controlled mutation of the implementation and then the implementation
+was restored:
+
+| Test | Mutation | Result |
+| --- | --- | --- |
+| Reward Card retry focus (two tests) | removed the deliberate focus placement | both failed |
+| Reward Card retry focus | focused only the restored card, dropping the retry fallback | the failed-retry test failed |
+| the way out of a Mission that cannot continue | removed the control again | failed |
+| criterion 21 sweep | an English prize-and-pressure phrase on the running Mission | failed, naming the state and language |
+| criterion 21 sweep | a German device-control phrase on the ready screen | failed in two states |
+| criterion 21 sweep | a Russian social-sharing phrase on the Reward Card | failed |
+| heading truthfulness (two tests) | restored the contradicting heading | both failed |
+| the running Mission's safety label | restored the pre-start label | five tests failed |
+
+No mutation-testing framework was added, no timeout was raised, and no assertion
+was weakened. The suite runs 722 tests across 21 files.
+
+**Historical failures.** The three unexplained failures recorded in Task 1 and the
+two timeouts recorded in Task 7 stay separately recorded. Neither recurred across
+any run in this batch, and no causal evidence emerged, so neither is resolved.
+
+### Task 15 completion (2026-09-19)
+
+The production build was served from `dist/` over a root-only static server and
+driven in Chrome for Testing `149.0.7827.55` at `320x568` and `1280x900`, in
+English, German and Russian. Controls were reached by `Tab` and activated by
+`Enter` wherever a family would use a keyboard, and the focus ring was read from
+computed style at the moment of activation rather than assumed.
+
+**108 flow checks, all as required.** 90 seeded flows (15 per language/viewport
+pair) and 18 instrumented ones (3 per pair):
+
+- ready restoration, then a keyboard start that records exactly one `startedAt`;
+- hiding, navigating away and returning, and refreshing at the root, each leaving
+  the running Mission and its stored bytes untouched;
+- reopening on a non-root path, which serves the app and resolves to the same one
+  session rather than a new one;
+- the abandonment confirmation opening, taking focus to its heading, and Escape
+  returning focus to the control that opened it with nothing written;
+- early completion before zero, moving focus to the new heading, leaving one
+  completed record and no current session;
+- Reward Card restoration taking no focus and changing no stored byte, then its
+  exit clearing only the pointer;
+- ready cancellation; restoration after the duration elapsed while away, showing
+  the neutral zero wording and still offering both completion and abandonment;
+  confirmed abandonment from zero writing no completion, record or pointer;
+- the twentieth completion showing the goal message and the twenty-first not,
+  with the display held at `20 / 20`;
+- a Reward Card from a prior period naming its own month;
+- a running Mission taking precedence over choosing another;
+- a Mission whose content is gone offering exactly one control, the approved way
+  out, and no confirmation;
+- corrupted stored state routing to recovery with the raw value left in place;
+- the full selection path — category, exactly three suggestions, a chosen Mission
+  reaching `ready` with no `startedAt` and no completion effect;
+- **a genuine conflict**, produced by writing a different running Mission into
+  durable storage *after* the page had hydrated and before the next operation.
+  Choosing a Mission was then refused with the named-Mission notice, the stored
+  session stayed the other one, no second session was created, and the three
+  suggestions stayed visible with choosing withheld;
+- **an interrupted completion**, produced by replacing `Storage.prototype.setItem`
+  with a throwing implementation from the harness. MissionKid claimed no success,
+  showed no Reward Card, left the stored bytes unchanged and announced the
+  failure; restoring storage and using the same action completed exactly once.
+
+**How conditions were produced.** Lifecycle states were seeded into
+`localStorage` before load. The conflict was produced by changing stored state
+after hydration. The interrupted completion was produced by making the browser's
+own storage throw. None of this is a production fault switch: the shipped build
+carries no such switch, and the instrumentation replaces browser API behavior
+from outside the application.
+
+**Not exercised, and why.** The Reward Card *display* failure has no trigger in
+an unmodified production build. The card's derivation is injected through a prop
+whose only non-default caller is a test, deliberately, so that no production
+switch exists. It is therefore covered by automated evidence only —
+`MissionResult.test.tsx` drives that real boundary for the retry, the unchanged
+records, the contained failure and, added in this batch, the focus placement —
+and no manual pass is claimed for it.
+
+**Limitation.** This is browser automation of the served production build. It is
+**not human sign-off**, and **no assistive technology was run**. No device other
+than Chrome for Testing was used; no real phone, no Safari, no Firefox.
+
+### Task 16 completion (2026-09-19)
+
+The visual specification's ten review questions were applied to every view and
+state this slice implements: the ready Mission with and without adult
+involvement and safety guidance, the ready Mission whose content is gone, the
+running Mission, the running Mission at zero, the running Mission whose content
+is gone, the abandonment confirmation, the unconfirmed completion, the Reward
+Card at `1 / 20` and at `20 / 20`, and the failed card display — reviewed as
+rendered by the production build at `320x568` and `1280x900`.
+
+**Two improvements, both from concrete findings.** Committed as `464e69f`.
+
+1. *The heading contradicted the only sentence under it.* A Mission that could
+   not be shown was still announced as "Your Mission is ready" or "Your Mission
+   has started" above a sentence saying it cannot be shown and cannot safely
+   continue. It is the first thing a heading-first reader hears and the first
+   thing a parent reads, and it implied a working Mission in exactly the state
+   where the specification says presentation must not imply one. One shared
+   predicate, `isSessionPresentable`, now answers the question for the heading
+   and for the body, so the two cannot diverge again.
+2. *The running Mission labelled its safety guidance "Before you start".* The
+   label is correct on the ready screen and was reused unchanged on a Mission
+   already underway, where it reads as guidance that has passed rather than
+   guidance to follow — on the one screen where the child is about to act. The
+   running Mission now has its own label.
+
+**Reviewed and deliberately left unchanged.** The quiet treatment of remaining
+time, which the specification requires to be supporting rather than a
+centrepiece and which must not grow louder near zero. The abandonment
+confirmation's ordering, with the consequence stated plainly, "Keep going" first
+and primary, and "Leave mission" explicit and visually separated. The Reward
+Card's restraint: no reveal, no motion, no rarity, no comparison, and a goal
+invitation conditional on a parent agreeing. The running Mission leading with
+leaving the screen rather than with the Mission or the timer. The secondary
+weight of the recovery exit, which matches its `ready` sibling. None of these
+needed changing, and no cosmetic change was made to reach a count.
+
+**Verification after the changes.** The affected tests were updated to the new
+behavior and shown to fail against its absence; type checking, the full suite and
+the production build were re-run; and the 144 responsive combinations, the 108
+browser flows and the state screenshots were re-run against the rebuilt output.
+
 ## Approval record
 
 | Item | State |
@@ -1634,5 +1950,7 @@ claims no full `F003` acceptance, no MVP completion and no release readiness.
 | D4-B — refuse snapshot-replacing writes while an unresolved invalid or conflicting completed record persists | Approved 2026-09-17 |
 | Scope and decisions approved | Yes |
 | Execution allocation clarification — each functional control built by the task implementing its operation | Approved 2026-09-18 |
-| Implementation task authorized | Tasks 1 to 5, each authorized 2026-09-18; every later task requires its own explicit authorization |
-| Tasks started | Task 1 — complete, committed as `704b4cc`; Task 2 — complete, committed as `9d56eae`; Task 3 — complete, committed as `f6f0c20`; Task 4 — complete, committed as `2dafce2`; Task 5 — complete, committed as `ed52ff8`; Tasks 6–19 not started |
+| Implementation tasks authorized | Tasks 1 to 5, each authorized 2026-09-18; Tasks 6 and 7, authorized 2026-09-18; Tasks 8, 9 and 10 as one batch, authorized 2026-09-18; Tasks 11 and 12 as one batch, authorized 2026-09-18; Tasks 13, 14, 15 and 16 as one batch, authorized 2026-09-18 and executed 2026-09-19. Every later task requires its own explicit authorization |
+| Tasks complete | Task 1 — `704b4cc`; Task 2 — `9d56eae`; Task 3 — `f6f0c20`; Task 4 — `2dafce2`; Task 5 — `ed52ff8`; Task 6 — `2dba46b`; Task 7 — `122224e`; Tasks 8, 9 and 10 — `25c5f6e`, `283238e`, `d19de3f`; Tasks 11 and 12 — `a06ec32`, `a20663a`; Tasks 13 to 16 — `365d3aa`, `8d72418`, `c8380a4`, `c82e338`, `464e69f` |
+| Tasks not started | Tasks 17, 18 and 19 |
+| Push, pull request, merge | Not authorized |
