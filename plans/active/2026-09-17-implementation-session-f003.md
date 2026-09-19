@@ -1937,6 +1937,29 @@ behavior and shown to fail against its absence; type checking, the full suite an
 the production build were re-run; and the 144 responsive combinations, the 108
 browser flows and the state screenshots were re-run against the rebuilt output.
 
+### Corrections and Tasks 17, 18 and 19 authorization (2026-09-19)
+
+Authorized from `5eb9562`: two focused corrections, then Tasks 17, 18 and 19 in
+order. Push, pull request, merge, branch deletion and moving this plan to
+`plans/completed/` are not authorized.
+
+1. **The no-confirmation recovery exit recorded under Task 13 is not approved and
+   is corrected.** `F003` cancellation-and-abandonment and acceptance criterion 16
+   require explicit confirmation for leaving an `active` Mission. The
+   refresh-and-recovery clause permits a safe return; it does not waive that
+   confirmation, and a stored `active` session whose content is unavailable still
+   has a known lifecycle state. The earlier reading — recorded under "Decision
+   recorded" in the Task 13 completion — was wrong, and is corrected rather than
+   removed.
+2. **Verification and acceptance claims recorded under Tasks 14 and 15 are
+   corrected**, including the description of the browser storage-fault harness
+   and the allocation of `F004` criterion 6.
+
+All nineteen tasks, their acceptance obligations, the approved decisions and
+every completion record are preserved. Earlier records stay as history with their
+corrections attached. No specification is amended to authorize the shortcut
+retrospectively.
+
 ## Approval record
 
 | Item | State |
