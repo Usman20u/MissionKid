@@ -199,6 +199,27 @@ function setupContext(state: SetupContext): SetupContext {
   return { language: state.language, ageBand: state.ageBand, localProfileId: state.localProfileId };
 }
 
+// The lifecycle facts a validated snapshot carries, mirrored as they are and
+// only where there is something to mirror. Hydration and a confirmed setup save
+// both read them from here, so a save can never drop what hydration would have
+// restored: the running Mission, the completed record collection and the pointer
+// to an open result all survive a parent editing the Child Profile.
+function durableLifecycleFacts(snapshot: MissionKidSnapshot) {
+  const { completedSessions, currentResultSessionId, currentSession } = snapshot;
+
+  return {
+    // A session already `ready` or `active` is restored in that state rather
+    // than rebuilt, and a `selected` one is what the ready transition advances.
+    ...(currentSession ? { currentSession } : {}),
+    // An empty collection is the absence of completions, not a fact worth
+    // carrying.
+    ...(completedSessions.length > 0 ? { completedSessions } : {}),
+    // A valid pointer restores the same result the family last saw, with no
+    // completion effect repeated.
+    ...(currentResultSessionId ? { currentResultSessionId } : {}),
+  };
+}
+
 export function resolveHydrationResult(
   result: HydrationResult,
 ): ResolvedAppState {
@@ -221,13 +242,7 @@ export function resolveHydrationResult(
         status: 'blocked-recovery',
       };
     case 'hydrated': {
-      const {
-        childProfile,
-        completedSessions,
-        currentResultSessionId,
-        currentSession,
-        settings,
-      } = result.snapshot;
+      const { childProfile, settings } = result.snapshot;
 
       return {
         language: settings.language,
@@ -236,17 +251,7 @@ export function resolveHydrationResult(
         status: 'ready',
         setupView: childProfile?.ageBand ? 'handoff' : 'incomplete',
         saveStatus: 'idle',
-        // Validated durable state, mirrored as it is. A session that is already
-        // `ready` or `active` is restored in that state rather than rebuilt,
-        // and a `selected` one is what the ready transition then advances.
-        ...(currentSession ? { currentSession } : {}),
-        // Mirrored only when there is something to mirror, like the current
-        // session above: an empty collection is the absence of completions, not
-        // a fact worth carrying.
-        ...(completedSessions.length > 0 ? { completedSessions } : {}),
-        // A valid pointer restores the same result the family last saw, with no
-        // completion effect repeated.
-        ...(currentResultSessionId ? { currentResultSessionId } : {}),
+        ...durableLifecycleFacts(result.snapshot),
       };
     }
   }
@@ -629,6 +634,14 @@ export function appStateReducer(
         status: 'ready',
         setupView: 'handoff',
         saveStatus: 'idle',
+        // Derived from the snapshot the write confirmed, not from the runtime
+        // facts this action replaces. `saveSetup` preserves the current
+        // session, the completed records and the result pointer, so rebuilding
+        // runtime without them would make a running Mission or an open Reward
+        // Card vanish from the interface until the next refresh, while durable
+        // state still held it. The session and result view precedence resolves
+        // from these, so the family returns to where they actually were.
+        ...durableLifecycleFacts(action.snapshot),
       };
     }
   }

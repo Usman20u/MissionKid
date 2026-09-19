@@ -621,3 +621,104 @@ describe('D4-B while an unresolved completed record is stored', () => {
     expect(h.writes).toHaveLength(1);
   });
 });
+
+// A parent completing or editing the Child Profile is an `F001` act that leaves
+// every `F003` lifecycle fact in storage. Runtime has to follow durable state
+// across that save, or a running Mission and an open Reward Card disappear from
+// the interface while storage still holds them.
+describe('lifecycle facts across a confirmed setup save', () => {
+  function incomplete(extra: Record<string, unknown>) {
+    return JSON.stringify({
+      ...createEmptySnapshot(),
+      settings: { language: 'en' },
+      // A profile with an identity but no age band: the approved incomplete
+      // setup gate, reachable from a stored snapshot.
+      childProfile: { localProfileId: PROFILE_ID, ageBand: null },
+      currentSession: null,
+      ...extra,
+    });
+  }
+
+  function completeSetup() {
+    fireEvent.click(screen.getByRole('radio', { name: '9–10' }));
+    fireEvent.click(screen.getByRole('button', { name: t('setup.action.complete') }));
+  }
+
+  it('resumes the same running Mission without a refresh', () => {
+    const running = { ...FACTS, state: 'active', startedAt: COMPLETED_AT - 60_000 };
+    const h = harness(incomplete({ currentSession: running }));
+    render(<App adapter={h.adapter} now={() => COMPLETED_AT} />);
+
+    expect(heading().textContent).toBe(t('view.setupIncomplete.title'));
+    completeSetup();
+
+    // The save is confirmed and the running Mission is back immediately, not
+    // after a refresh, and not behind the setup handoff.
+    expect(h.stored().childProfile.ageBand).toBe('9–10');
+    expect(heading().textContent).toBe(t('view.sessionActive.title'));
+    expect(screen.getByRole('button', { name: t('session.action.done') })).toBeTruthy();
+    expect(screen.getByRole('button', { name: t('session.action.leave') })).toBeTruthy();
+
+    // Its frozen selection facts are untouched by the parent's edit: the
+    // session keeps the age band it was chosen under, not the new one.
+    const stored = h.stored().currentSession;
+    expect(stored.sessionId).toBe('session-1');
+    expect(stored.state).toBe('active');
+    expect(stored.startedAt).toBe(COMPLETED_AT - 60_000);
+    expect(stored.selectedAt).toBe(FACTS.selectedAt);
+    expect(stored.ageBandAtSelection).toBe('7–8');
+    expect(stored.missionId).toBe(FACTS.missionId);
+    expect(stored.durationSecondsAtSelection).toBe(FACTS.durationSecondsAtSelection);
+  });
+
+  it('resumes the same Reward Card without a refresh', () => {
+    const done = completedRecord(0);
+    const h = harness(incomplete({
+      currentResultSessionId: done.sessionId,
+      completedSessions: [done],
+    }));
+    render(<App adapter={h.adapter} now={() => COMPLETED_AT} />);
+
+    expect(heading().textContent).toBe(t('view.setupIncomplete.title'));
+    completeSetup();
+
+    expect(heading().textContent).toBe(t('view.sessionResult.title'));
+    expect(screen.getByText(t('result.recognition'))).toBeTruthy();
+    expect(
+      screen.getByText(
+        t('result.goal.progress').replace('{done}', '1').replace('{target}', '20'),
+      ),
+    ).toBeTruthy();
+
+    // The completion, its period and the count it feeds are unchanged.
+    expect(h.stored().currentResultSessionId).toBe(done.sessionId);
+    expect(h.stored().completedSessions).toEqual([done]);
+    expect(h.stored().completedSessions[0].completionPeriodId).toBe(PERIOD);
+    expect(h.stored().completedSessions[0].completedAt).toBe(done.completedAt);
+  });
+
+  it('carries completed records across a save that resumes no session', () => {
+    const done = completedRecord(0);
+    const h = harness(incomplete({ completedSessions: [done] }));
+    render(<App adapter={h.adapter} now={() => COMPLETED_AT} />);
+    completeSetup();
+
+    // Nothing is open, so the approved handoff is correct here — but the
+    // completions behind it are still carried, not dropped.
+    expect(heading().textContent).toBe(t('view.setupCompleteHandoff.title'));
+    expect(h.stored().completedSessions).toEqual([done]);
+  });
+
+  it('still reaches the ordinary handoff from a first-use setup', () => {
+    const h = harness();
+    render(<App adapter={h.adapter} now={() => COMPLETED_AT} />);
+
+    fireEvent.click(screen.getByRole('radio', { name: '4–6' }));
+    fireEvent.click(screen.getByRole('button', { name: t('setup.action.complete') }));
+
+    expect(heading().textContent).toBe(t('view.setupCompleteHandoff.title'));
+    expect(h.stored().currentSession).toBeNull();
+    expect(h.stored().completedSessions).toEqual([]);
+    expect(h.stored().currentResultSessionId).toBeNull();
+  });
+});
