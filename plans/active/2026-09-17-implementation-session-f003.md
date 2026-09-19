@@ -2077,6 +2077,81 @@ every completion record are preserved. Earlier records stay as history with thei
 corrections attached. No specification is amended to authorize the shortcut
 retrospectively.
 
+### Task 17 completion (2026-09-19)
+
+The whole Plan 03 diff was audited against its approved base, `5591639` (the
+commit that approved this plan), through `e22eba3`: 33 files, `+11,814 / -199`,
+of which 14 files are new and all of them are in `src/`.
+
+**Invariants verified.**
+
+| Invariant | How it was verified | Result |
+| --- | --- | --- |
+| `snapshotVersion` unchanged | the literal `CURRENT_SNAPSHOT_VERSION = 1` has no `+`/`-` line anywhere in the plan's diff | holds; no migration exists or is needed |
+| One snapshot, one key | `MISSIONKID_STORAGE_KEY` is the only storage key declared in the whole source | holds |
+| One adapter | `createPersistenceAdapter` is called exactly once in product code; `persistenceAdapter` is the default for every view, and `AppShell` passes its own adapter to all five children | holds; a selection and the transition after it cannot read and write different values |
+| Storage boundary | `localStorage` appears only inside `persistence.ts`, in the default browser adapter | holds |
+| No persisted derived value | the persisted shape is exactly `snapshotVersion`, `settings`, `childProfile`, `currentSession`, `currentResultSessionId`, `completedSessions` — no card, no count, no progress, no period label | holds |
+| Injected clocks and identifiers | every `Date.now`, `performance.now` and `crypto.randomUUID` in product code sits inside a named injectable default (`readWallClock`, `readMonotonicClock`, `createSessionId`, `createLocalProfileId`); `Math.random` appears nowhere | holds |
+| Exactly-once start | `missionSession.test.ts` "resolves the same running session on repeated activation", "starts the same session once when a retry follows a refused write", "never rebuilds ready over a session that is already running" | holds |
+| Exactly-once completion | "completes the same session once however often it is asked", "resolves an existing completion without writing or re-reading the clock"; re-confirmed in the browser by the B2 retry, which produced no second record | holds |
+| Exact read-back confirmation | `persistence.ts` confirms only a read-back that parses valid, is not normalized, and matches the intended snapshot; six `persistence.test.ts` cases cover each way that fails | holds |
+| `D4-B` | enforced inside the adapter before serialization, so a refusal leaves stored bytes untouched; re-verified in this batch against the corrected recovery exit | holds |
+| Non-destructive recovery | "does not replace a stored snapshot it cannot read first", "reports malformed JSON as corrupted without changing the raw value"; re-observed in the browser, where corrupted state routed to recovery with the raw value left in place | holds |
+| Derived timer and progress | `deriveGuidance`/`guidanceAt` derive from stored timestamps only; `deriveMonthlyGoal` derives from completed records only and is consumed solely by the Reward Card | holds |
+| Fixed completion periods | `localCompletionPeriodId` is applied once at completion and never recomputed; `missionPeriod.test.ts` covers both sides of UTC and a year boundary; the browser retry showed the same `completionPeriodId` after a lost confirmation | holds |
+| Immutable facts | "persists no Mission wording, only the reference", "is unchanged by a current age band that no longer matches the selection" | holds |
+| Result recovery | the Reward Card boundary contains its own failure, retries from the same durable facts and writes nothing | holds |
+| Deterministic twentieth completion | `missionProgress.test.ts` "keeps the same twentieth identity as later completions arrive", "breaks an exact tie by identifier, not by input order", "orders identifiers by code unit rather than by locale" | holds |
+| Presentability consistent across consumers | `AppShell`, `MissionReady` and `MissionActive` all resolve through `resolveSessionMission`, and for a non-`active` session `isSessionPresentable` reduces exactly to the check `MissionReady` already makes | holds; the heading and the body cannot disagree |
+
+**`F004` slice and its deferrals.** `AppView` carries no History or standalone
+Monthly Goal view, no such route or empty state exists, and `deriveMonthlyGoal`
+has exactly one consumer, the Reward Card. The deferred work is absent rather
+than half-built.
+
+**Hygiene.** No dependency, lockfile, `tsconfig`, Vite, `index.html` or
+`.gitignore` change in the entire plan. No file is tracked outside `src/`,
+`docs/`, `plans/`, `changelog/` and the existing root files; `dist/` is ignored
+and untracked. No `TODO`, `FIXME`, `HACK`, `debugger`, `.only` or `.skip`
+anywhere; no `any`, `@ts-ignore` or lint suppression in product code. No network,
+telemetry, analytics, cookie, IndexedDB, camera, geolocation or notification API
+is referenced anywhere in the source.
+
+**Secrets and personal data.** None. The scan's three hits are all benign and
+were read individually: `localization.test.ts` uses "token" for interpolation
+placeholders, `SetupFlow.test.tsx` asserts that no password input exists, and
+`MissionDiscovery.test.tsx` lists forbidden words inside a safety assertion. No
+secret value exists to report. No author name, email, prompt text or AI metadata
+appears in tracked content, and no commit in this plan carries an attribution
+trailer. The production bundle was inspected directly: the development-only
+missing-message warning is stripped, no `console` call survives, and no file
+path, host or address is embedded.
+
+**Two things examined and deliberately left alone.** The `console.warn` in
+`localization.ts` is gated on `import.meta.env.DEV`, predates this plan and is
+absent from the built bundle. Six exports have no product consumer outside their
+own module — `MONTHLY_GOAL_TARGET`, `readMonotonicClock`, `deriveGuidance`,
+`guidanceAt`, `anchorGuidance` and `localCompletionPeriodId` — but each is live
+runtime code inside its own module, exported so the contract-level tests this
+plan required could assert it directly rather than only through a view. Neither
+is speculative infrastructure.
+
+**Unrelated changes.** None found. The two smallest edits to pre-existing files
+are both consequences of approved work: `App.tsx` threads the injected wall
+clock, and `setup.test.ts` adjusts read counts because `D4-B` added a pre-write
+read inside the adapter, which the test now explains in place.
+
+**Specifications and `AGENTS.md`.** No gap in ownership was found, and neither
+was changed. The one thing this plan got wrong — leaving an unavailable active
+Mission without confirmation — was an implementation error against requirements
+that already existed and already had an owner, not a missing or conflicting
+specification. Amending either document to accommodate it would have been
+retrospective authorization, which is why it was corrected in code instead.
+
+**Defects requiring correction: none.** Everything this audit found was either
+already correct or already corrected earlier in this session.
+
 ## Approval record
 
 | Item | State |
