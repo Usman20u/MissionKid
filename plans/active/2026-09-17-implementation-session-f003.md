@@ -1652,7 +1652,9 @@ require, and both underlying defects were real and are fixed below.
    Selection", and the visual specification's recovery table requires "retry
    recovery or explicitly return without completion". The approved way out is
    now offered, and a failed recovery exit now announces itself instead of
-   failing silently. Committed as `365d3aa`.
+   failing silently. Committed as `365d3aa`; the exit it introduced asked for no
+   confirmation, which was **not approved and is corrected in `d8b8405`** — see
+   the correction under the decision below.
 2. *A Reward Card display retry lost focus to the document.* The retry unmounts
    the control that triggers it, and nothing placed focus afterwards, so a
    keyboard or screen-reader user lost their place entirely — on both a retry
@@ -1673,14 +1675,28 @@ require, and both underlying defects were real and are fixed below.
    `break-word` does not lower — so one long word widened the card past its own
    column. Both are fixed. Committed as `c8380a4`.
 
-**Decision recorded.** The safe return from a Mission that cannot continue asks
-for no confirmation. `F003` criterion 16 requires confirmation when a family
-*chooses* to leave a running Mission; the refresh-and-recovery clause governs a
-session that cannot be recovered and names "a safe return to Mission Category
-Selection" with no confirmation. These govern different situations rather than
-conflicting, and the specific clause was followed: a "Keep going" choice for a
-Mission that cannot continue would not be true, which the anti-manipulation rules
-forbid. The `ready` equivalent already behaves this way.
+**Decision recorded, and superseded on 2026-09-19 — see the correction below.**
+The safe return from a Mission that cannot continue asks for no confirmation.
+`F003` criterion 16 requires confirmation when a family *chooses* to leave a
+running Mission; the refresh-and-recovery clause governs a session that cannot be
+recovered and names "a safe return to Mission Category Selection" with no
+confirmation. These govern different situations rather than conflicting, and the
+specific clause was followed: a "Keep going" choice for a Mission that cannot
+continue would not be true, which the anti-manipulation rules forbid. The `ready`
+equivalent already behaves this way.
+
+> **Correction (2026-09-19).** That reading was wrong and the behavior it
+> produced was not approved. The refresh-and-recovery clause permits a safe
+> return; it does not waive the confirmation that cancellation-and-abandonment
+> and acceptance criterion 16 require, and a stored session whose content is
+> unavailable is still `active` in durable state, so leaving it is leaving an
+> active Mission. The only part of the original reasoning that survives is the
+> objection to "Keep going", which is answered by wording rather than by
+> removing the confirmation. Corrected in `d8b8405`: the recovery exit now opens
+> the same confirmation, with the same title, the same stated consequence and
+> the same explicit **Leave mission**, and only its safe choice is reworded to
+> **Stay here**. `ready` cancellation is unchanged and still needs no
+> confirmation, as its own clause requires. No specification was amended.
 
 **Structure, verified over every implemented lifecycle, result, confirmation and
 recovery state.** No heading level is skipped in any state: `h1` view heading →
@@ -1760,22 +1776,51 @@ passing.
 | 18 | Another Mission requires resuming or confirming abandonment first | `MissionExit.test.tsx` "resolving an existing-session conflict" — "offers no new selection until the conflict is resolved", "still requires confirmation before abandoning the active Mission" | — |
 | 19 | Mission Break claims no device, app or operating-system control | `MissionReady.test.tsx` Mission Break wording check against the blocking, locking, monitoring and parental-control vocabulary in EN and DE | RU is covered by the whole-path sweep added below rather than by this test. |
 | 20 | EN/DE/RU preserve behavior, safety meaning, guidance, consequences and error wording | `localization.test.ts` "resolves every message any implemented view asks for", "carries the same interpolation tokens in every language", "never states a durable negative for an unknown outcome", "claims no recorded completion without evidence", "refers to the child without assuming a gender" | — |
-| 21 | No Mission Session path carries manipulation, on-screen pressure, media, social, payment, prize, device control or surveillance | **Gap closed in this batch** — `Accessibility.test.tsx` "offers nothing a Mission Session path may never offer, in any language" | Asserts the interface strings of the implemented session path. Mission content safety stays with the catalog gate. |
+| 21 | No Mission Session path carries dangerous instructions, manipulative completion mechanics, on-screen pressure, a child media request, social behavior, payment, a real prize promise, device control or surveillance | Held by several kinds of evidence, one per clause, not by the sweep alone — see the clause table below | See that table; the sweep is a text regression check over interface strings and is not, by itself, proof of any behavioral clause. |
 
 | `F004` | Clause | Where it is asserted | Limit |
 | --- | --- | --- | --- |
 | 1 | One card, one History entry, progress `+1` below `20 / 20` | `MissionResult.test.tsx` "reaches the approved Reward Card in one confirmed write", "counts each completion once and caps the display at the target" | **History-visible half deferred.** |
 | 2 | Resubmission or refresh leaves History and Monthly Goal unchanged | `MissionResult.test.tsx` "restores the same result through the pointer, repeating no completion"; `missionSession.test.ts` "resolves an existing completion without writing or re-reading the clock" | **History-visible half deferred.** |
 | 3 | Card shows recognition, title, category, completion context and progress | `MissionResult.test.tsx` "shows the Mission Category and a localized completion context", "keeps the completion and its count when catalog content is gone" | — |
+| 6 | `ready` and `active` sessions, and cancelled or abandoned flows, never appear in History **or contribute to Monthly Goal progress** | **Monthly Goal half is in scope and asserted.** `persistence.test.ts` "a lifecycle state that is not completed" excludes any record that is not `completed` from `completedSessions`, and "refuses one identifier that is both the current session and a completed one"; `deriveMonthlyGoal` accepts only `CompletedMissionSession[]`, and `missionProgress.test.ts` "counts nothing from another profile or another period"; `MissionDiscovery.test.tsx` "adds no completed record, result pointer or progress source by discovering"; `MissionReady.test.tsx` "starts no countdown, completion or recognition with the Mission"; `MissionExit.test.tsx` "clears the ready session and returns to the approved discovery path" and "clears the session on confirmation and writes no completion", which also asserts no Monthly Goal surface appears; `Restoration.test.tsx` holds `completedSessions` empty across both content-gone exits | **Only the History-visible half is deferred.** The Monthly Goal half was previously and wrongly recorded as wholly deferred; that is corrected here. |
 | 7 | New period starts `0 / 20` and completes at exactly twenty | `missionProgress.test.ts` "starts a period with no completions at zero of twenty", "reaches the goal at exactly twenty valid completions", "derives a fresh period at zero without disturbing earlier ones" | — |
 | 8 | Later completions stay recorded, display holds `20 / 20`, no repeated prompt | `missionProgress.test.ts` "caps the display at twenty while preserving later completions", "keeps the same twentieth identity as later completions arrive"; `MissionResult.test.tsx` "shows the one goal message for the twentieth result and not the twenty-first" | **History-visible half deferred.** |
 | 9 | One encouraging message, parent-approved, nothing delivered or promised | `localization.test.ts` "keeps the goal invitation optional and subject to a parent agreeing"; `MissionResult.test.tsx` "shows the one goal message for the twentieth result and not the twenty-first" | — |
 | 10 | No gambling, payment, comparison, sharing, child media or manipulation | `MissionResult.test.tsx` "holds no prize, purchase, reveal or pressure behaviour" | — |
 
-**Deferred with the Mission History view.** `F004` criteria 4, 5 and 6, and the
-History-visible halves of `F003` 11 and 12 and `F004` 1, 2 and 8. `F003`
-acceptance is therefore complete *except* those clauses; this batch claims no
-more than that.
+**Deferred with the Mission History view.** `F004` criteria 4 and 5 entirely,
+and the History-visible halves of `F003` 11 and 12 and `F004` 1, 2, 6 and 8.
+`F004` criterion 6 is **not** wholly deferred: only its History clause is, and
+its Monthly Goal clause is in scope and asserted above. `F003` acceptance is
+therefore complete *except* those clauses; nothing here claims more than that,
+and no clause is recorded as passing on the strength of a text sweep alone.
+
+**`F003` criterion 21, clause by clause (corrected 2026-09-19).** The criterion
+names nine distinct things, and different evidence holds each. The prohibited-
+pattern sweep is a **text regression check**: it proves that the interface
+strings of six lifecycle states, in three languages, do not *say* a forbidden
+thing. It proves nothing about behavior, and is not recorded as doing so.
+
+| Clause | What actually holds it |
+| --- | --- |
+| No dangerous instructions | The catalog gate, not the session path: `catalog.test.ts` requires the reviewed safety facts a record's content needs and rejects unreviewed or ineligible content; `catalogValidation.test.ts` blocks publication for a structurally invalid record and excludes it at runtime; `missionSuggestions.test.ts` "offers only Missions carrying the reviewed safety facts their content requires" and "offers only Missions the controlled catalog itself published". The session path renders reviewed content and invents none — `MissionReady.test.tsx` "invents no safety guidance for a Mission that carries none", and both content-gone states refuse to present a Mission at all. |
+| No manipulative completion mechanics | `MissionResult.test.tsx` "holds no prize, purchase, reveal or pressure behaviour"; `MissionReady.test.tsx` "offers exactly one dominant action, and no countdown, progression or reward" and "starts no countdown, completion or recognition with the Mission"; `MissionResult.test.tsx` "needs no extra confirmation, proof or waiting for zero". |
+| No pressure to stay on-screen | Behavioral, not lexical: `MissionActive.test.tsx` "adds no control, alarm or centrepiece to the running Mission", "writes nothing, and changes nothing about the session, while it runs", "rests at zero with neutral wording and the Mission still running", and "does not take focus on a tick, at zero, or on an ordinary rerender"; the running Mission leads with the away-from-screen instruction. The sweep adds the lexical half. |
+| No child media request | The sweep, plus `MissionDiscovery.test.tsx` "asks for nothing about the child and offers no social or payment behaviour". No camera, file or media API is referenced anywhere in the source. |
+| No social behavior | As above; there is no network call, share target or identity beyond the local profile identifier. |
+| No payment | As above; no payment, purchase or subscription surface exists. |
+| No real prize promise | `localization.test.ts` "keeps the goal invitation optional and subject to a parent agreeing", which requires the parent-conditional phrasing and forbids guarantee and entitlement wording in all three languages; `MissionResult.test.tsx` "shows the one goal message for the twentieth result and not the twenty-first". |
+| No device control | `MissionReady.test.tsx` checks the Mission Break wording against the blocking, locking, monitoring and parental-control vocabulary in English and German; the sweep extends that vocabulary to Russian and to every other lifecycle state. Behaviorally, nothing in the source touches any device, permission or app-control API. |
+| No surveillance | No telemetry, analytics, reporting or network call exists in the source — confirmed by the Task 17 audit below — and the only stored data is the approved local snapshot. |
+
+**A false positive found and corrected in the sweep.** Its "pressure to stay on
+screen" patterns banned the literal phrase "stay here", which flagged the
+approved safe choice of the corrected recovery confirmation. A confirmation's
+safe choice is the opposite of pressure: it changes nothing and asks for
+nothing. The patterns now name phrases that are pressure whatever surrounds
+them, and were re-proven to fail against real English and Russian on-screen
+pressure after the narrowing.
 
 **Boundaries re-read rather than re-asserted.** Exactly-once transitions and the
 retry after a landed-but-unconfirmed write, the `D4-B` refusal with unchanged
@@ -1824,13 +1869,61 @@ was restored:
 | criterion 21 sweep | a Russian social-sharing phrase on the Reward Card | failed |
 | heading truthfulness (two tests) | restored the contradicting heading | both failed |
 | the running Mission's safety label | restored the pre-start label | five tests failed |
+| the confirmed recovery exit (2026-09-19) | the entry control left directly, bypassing the confirmation | three tests failed |
+| the recovery confirmation's safe choice (2026-09-19) | reverted it to **Keep going** | failed |
+| the narrowed on-screen-pressure patterns (2026-09-19) | real English pressure wording on the running Mission | two tests failed |
+| the narrowed on-screen-pressure patterns (2026-09-19) | real Russian pressure wording on the running Mission | two tests failed |
 
 No mutation-testing framework was added, no timeout was raised, and no assertion
-was weakened. The suite runs 722 tests across 21 files.
+was weakened.
 
 **Historical failures.** The three unexplained failures recorded in Task 1 and the
 two timeouts recorded in Task 7 stay separately recorded. Neither recurred across
 any run in this batch, and no causal evidence emerged, so neither is resolved.
+
+### Confirmation correction (2026-09-19)
+
+Committed as `d8b8405`. Leaving a Mission whose content cannot be shown now takes
+the same explicit confirmation as leaving any other running Mission, through the
+existing confirmation component and the existing identity-checked, confirmed-write
+exit operation. Nothing about the operation changed.
+
+**What the correction kept.** The confirmation's title, its stated consequence,
+the explicit **Leave mission** action, the ordering that puts the safe choice
+first, focus moving into the panel and returning to the control that opened it,
+and Escape as the same safe choice. Ordinary `ready` cancellation still asks for
+no confirmation, as its own clause requires, and the ordinary active
+confirmation still reads **Keep going**.
+
+**What it changed.** Only the safe choice's wording on this one surface:
+**Stay here**, because a Mission whose content is unavailable cannot be
+continued and **Keep going** would claim that it can. A second, smaller defect
+was found and fixed while verifying it: with no Mission title to name, the
+confirmation's `h3` followed the view's `h1` directly and skipped a level, so
+the heading level now follows its context and is `h2` on this surface.
+
+**Verified in the production build**, 24 checks across English, German and
+Russian at `320x568` and `1280x900`:
+
+- asking to leave opens the confirmation, shows the title and the consequence,
+  offers **Stay here** and **Leave mission** and never **Keep going**, moves
+  focus to the panel heading, and leaves the stored bytes byte-for-byte
+  unchanged;
+- Escape and the safe choice both keep the stored session, return focus to the
+  control that opened the confirmation, and leave the recovery surface intact so
+  the family can ask again;
+- only a confirmed leave ends it, clearing that session alone with no completed
+  record, no result pointer and no progress source.
+
+**Verified in the suite.** Storage refusal on this exit announces the refusal and
+leaves the snapshot byte-for-byte unchanged, and the retry succeeds once storage
+does; `D4-B` still refuses this exit byte-for-byte while an unresolved completed
+record is stored, exactly as it refuses every other snapshot replacement.
+Bypassing the confirmation fails three tests, and reverting the safe choice fails
+one. The 18 layout combinations for the changed surface — three languages, three
+viewports, both text scales — show no horizontal scroll, no overflow, no ellipsis
+and no target under `44x44` CSS px. Unrelated browser combinations were not
+re-run.
 
 ### Task 15 completion (2026-09-19)
 
@@ -1871,17 +1964,41 @@ pair) and 18 instrumented ones (3 per pair):
   Choosing a Mission was then refused with the named-Mission notice, the stored
   session stayed the other one, no second session was created, and the three
   suggestions stayed visible with choosing withheld;
-- **an interrupted completion**, produced by replacing `Storage.prototype.setItem`
+- **a refused completion write**, produced by replacing `Storage.prototype.setItem`
   with a throwing implementation from the harness. MissionKid claimed no success,
   showed no Reward Card, left the stored bytes unchanged and announced the
   failure; restoring storage and using the same action completed exactly once.
 
+> **Correction (2026-09-19).** This was originally recorded as an "interrupted
+> completion". It was not. `setItem` threw *before* storing anything, so the
+> write never landed and the refusal was established — the `not-completed`
+> class, whose truthful wording is "We couldn't record this Mission as done just
+> now." A landed write whose confirmation is lost is a different class and was
+> not exercised by that harness. It is exercised separately below.
+
+**The two write-failure classes, told apart (added 2026-09-19).** The adapter's
+write path is pre-read → `setItem` → confirming `getItem`, so each class is
+produced by failing a different step. Twelve checks in English, German and
+Russian against the served production build:
+
+| Case | How it was produced | What MissionKid did |
+| --- | --- | --- |
+| **A — refused write** | `setItem` throws before storing | Stored bytes unchanged, no completed record, the Mission still running, and the established negative stated: "We couldn't record this Mission as done just now. Try again." |
+| **B1 — confirming read-back fails, recovery read succeeds** | `setItem` stores the value; the *next* read of the snapshot key throws; later reads are allowed | The adapter could not confirm, so the service re-read durable state, found the completion had landed, and adopted it. Exactly one completed record, the pointer set, the session cleared, and the Reward Card shown. MissionKid established the outcome itself rather than claiming it. |
+| **B2 — nothing can be established** | `setItem` stores the value; every subsequent read of the key throws until restored | Neither outcome claimed: no Reward Card, the Mission still shown as running, and "MissionKid couldn't check whether this Mission was recorded as done." Durable state did hold the completion. |
+| **B2 retry** | Reads restored; the same action used again | Resolved the same completion. One record still, with the same `sessionId`, the same `completedAt` and the same `completionPeriodId`; no second completion, no new timestamp, no recomputed period. |
+
+This is what the criterion-13 distinction requires in practice, and it is the
+reason the unknown-outcome wording may not state a durable negative: in B1 and
+B2 the write had in fact landed.
+
 **How conditions were produced.** Lifecycle states were seeded into
 `localStorage` before load. The conflict was produced by changing stored state
-after hydration. The interrupted completion was produced by making the browser's
-own storage throw. None of this is a production fault switch: the shipped build
-carries no such switch, and the instrumentation replaces browser API behavior
-from outside the application.
+after hydration. The write-failure classes were produced by replacing
+`Storage.prototype.setItem` and `Storage.prototype.getItem` from the harness, as
+the table above records. None of this is a production fault switch: the shipped
+build carries no such switch, and the instrumentation replaces browser API
+behavior from outside the application.
 
 **Not exercised, and why.** The Reward Card *display* failure has no trigger in
 an unmodified production build. The card's derivation is injected through a prop
