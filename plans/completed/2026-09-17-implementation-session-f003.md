@@ -1,9 +1,11 @@
 # MissionKid Implementation Plan 03 — Mission Session and Completion (F003) with the Reward Card and Monthly Goal completion message (F004 slice)
 
 **Date:** 2026-09-17
-**Status:** Approved — all 19 tasks complete under their recorded authorizations; ready for review of Plan 03 closure and integration, which is not yet authorized
+**Status:** Completed
 
-This plan's scope and decisions are approved. Scope approval is not authorization to execute a task: each implementation task begins only when it is explicitly authorized. All nineteen tasks have been authorized and are complete. Closing this plan — moving it to `plans/completed/` — and pushing, opening a pull request, merging or deleting the branch are separate acts, none of which is authorized and none of which has been done.
+This plan's scope and decisions were approved. Scope approval was not authorization to execute a task: each implementation task began only when it was explicitly authorized. All nineteen tasks were authorized and are complete, and this plan was explicitly authorized to close. It is now historical evidence of what was implemented and verified, not live status.
+
+Merging, deployment, branch deletion and the remaining `F004` work are separate acts. None is authorized, and none has been done.
 
 The scope below plans `F003` in full, except the acceptance clauses explicitly deferred with the Mission History view, together with one deliberately bounded part of `F004`: the Reward Card and the Monthly Goal derivation and completion message that the card must display. That combined scope is approved as decision D1-A, with the History deferrals preserved exactly as documented. What completed tasks actually changed is recorded in the implementation record at the end of this plan, and nothing else here is a claim about what the repository already does.
 
@@ -2202,6 +2204,46 @@ of `F003` 11 and 12 and `F004` 1, 2, 6 and 8. This plan therefore claims no full
 to `plans/completed/`, pushing, opening a pull request, merging and deleting the
 branch each still require their own explicit authorization, and none was given or
 taken.
+
+### Plan closure (2026-09-19)
+
+Closure was explicitly authorized, and this plan moved from `plans/active/` to
+`plans/completed/` at that authorization. From here it is historical evidence
+rather than live status, and `plans/active/` is empty.
+
+**Every task's recorded outcome was re-checked before the move.** All nineteen
+have completion records, the four corrections this plan made to its own earlier
+records are preserved in place with what was wrong stated plainly, and the
+deferred clauses, verification limitations and unexplained historical failures
+are unchanged.
+
+**Links.** All twenty relative links were validated against the destination
+directory before the move and every one resolves: `../../docs/…` and
+`../../src/…` are unaffected because both directories sit two levels deep, and
+`../completed/…` resolves correctly from `plans/completed/` and matches the
+convention the already-completed `F002` plan uses. Nothing needed rewriting.
+
+**Verification evidence was not re-run for the move.** The closure commit
+changes documentation only. The `src/` tree hash is identical to the one the
+final gate ran against (`d18d16b`, unchanged since the last code commit
+`d8b8405`), and `package.json`, `package-lock.json`, `tsconfig.json`,
+`vite.config.ts`, `index.html` and `.gitignore` are untouched, so the recorded
+clean install, type check, 724 tests, production build, diff checks and scans
+still describe this tree.
+
+**One figure in the Task 17 record is now stale, deliberately.** It reports the
+audited diff as `+11,814 / −199`, which was exact when the audit was written. The
+Task 18 and 19 records added afterwards grew the plan document, so the same
+range now measures `+11,972 / −199`. Only this plan file changed; the audited
+source diff is identical. The original figure is left as written rather than
+edited to match, because it records what was measured at the time.
+
+**Two baselines, not one.** The Task 17 audit used `5591639`, the commit that
+approved this plan. The pull request's base is `origin/main` at `0a30925`, which
+is exactly one commit earlier — `5591639` is its child and adds this plan
+document. The published diff is therefore the audited diff plus this plan's own
+approval and closure documentation, and touches the same thirty-three files with
+no additional file.
 
 ## Approval record
 
