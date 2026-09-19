@@ -3,6 +3,11 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { App } from './App';
 import {
+  SUPPORTED_LANGUAGES,
+  translateMessage,
+  type SupportedLanguage,
+} from './localization';
+import {
   MISSIONKID_STORAGE_KEY,
   createEmptySnapshot,
   createPersistenceAdapter,
@@ -289,4 +294,111 @@ describe('F001 localization resilience', () => {
     click(cancel);
     expect(document.activeElement).toBe(screen.getByRole('button', { name: reset }));
   });
+});
+
+// `F003` criterion 21 covers the whole Mission Session path rather than any one
+// view, so it is asserted here, over every implemented lifecycle state in every
+// supported language. Mission wording itself is the catalog gate's to guarantee;
+// what this holds is that the interface the lifecycle puts around it never
+// offers a thing the criterion forbids.
+describe('F003 what no Mission Session path may offer', () => {
+  const PROFILE_ID = 'stable-local-profile';
+  const DONE_AT = new Date(2024, 2, 15, 10, 4).getTime();
+
+  const FACTS = {
+    sessionId: 'session-1',
+    childProfileId: PROFILE_ID,
+    missionId: 'movement-02',
+    missionCategoryAtSelection: 'Movement',
+    ageBandAtSelection: '7–8',
+    durationSecondsAtSelection: 600,
+    selectedAt: DONE_AT - 600_000,
+  } as const;
+
+  function stored(extra: Record<string, unknown>, language: SupportedLanguage) {
+    return JSON.stringify({
+      ...createEmptySnapshot(),
+      settings: { language },
+      childProfile: { localProfileId: PROFILE_ID, ageBand: '7–8' },
+      currentSession: null,
+      ...extra,
+    });
+  }
+
+  const STATES: Readonly<Record<string, Record<string, unknown>>> = {
+    ready: { currentSession: { ...FACTS, state: 'ready' } },
+    'ready, content withdrawn': {
+      currentSession: { ...FACTS, missionId: 'movement-99', state: 'ready' },
+    },
+    active: { currentSession: { ...FACTS, state: 'active', startedAt: DONE_AT - 60_000 } },
+    'active, at zero': {
+      currentSession: { ...FACTS, state: 'active', startedAt: DONE_AT - 3_600_000 },
+    },
+    'active, content withdrawn': {
+      currentSession: {
+        ...FACTS, missionId: 'movement-99', state: 'active', startedAt: DONE_AT - 60_000,
+      },
+    },
+    'the Reward Card': {
+      currentResultSessionId: 'session-1',
+      completedSessions: [{
+        ...FACTS, state: 'completed', startedAt: DONE_AT - 300_000,
+        completedAt: DONE_AT, completionPeriodId: '2024-03',
+      }],
+    },
+  };
+
+  // Each pattern is the forbidden thing in the three languages the product
+  // speaks. They are matched against the interface text the path renders, which
+  // includes the abandonment confirmation where the path can open one.
+  const FORBIDDEN: ReadonlyArray<readonly [string, RegExp]> = [
+    ['payment', /\b(pay|buy|purchase|price|premium|subscri)/i],
+    ['payment (de)', /(bezahl|kaufen|kostenpflichtig|abo\b|preis)/i],
+    ['payment (ru)', /(оплат|купить|подписк|платн|цена)/i],
+    ['a real prize', /\b(prize|win|reward you|you will get|voucher|coupon)/i],
+    ['a real prize (de)', /(gewinn|preis gewinnen|gutschein|du bekommst)/i],
+    ['a real prize (ru)', /(приз|выигр|ваучер|ты получишь)/i],
+    ['social behaviour', /\b(share|friend|follow|like|leaderboard|rank|compare|post\b)/i],
+    ['social behaviour (de)', /(teilen|freund|folgen|rangliste|vergleich)/i],
+    ['social behaviour (ru)', /(поделит|друз|подписат|рейтинг|сравн)/i],
+    ['a child media request', /\b(photo|picture of|video|selfie|upload|camera|record yourself)/i],
+    ['a child media request (de)', /(foto|selfie|hochladen|kamera|video)/i],
+    ['a child media request (ru)', /(фото|селфи|загруз|камер|видео)/i],
+    ['device or app control', /\b(block|lock|disable|screen time|parental control|monitor|track you|enforce)/i],
+    ['device or app control (de)', /(sperr|blockier|überwach|bildschirmzeit|kindersicherung|verfolg)/i],
+    ['device or app control (ru)', /(заблокир|блокир|экранное время|родительский контроль|слеж)/i],
+    ['pressure to stay on screen', /\b(don.t leave|stay here|keep watching|come back or|hurry|quick+ly!|running out)/i],
+    ['pressure to stay on screen (de)', /(bleib hier|beeil|schnell!|läuft ab)/i],
+    ['pressure to stay on screen (ru)', /(не уходи|оставайся здесь|поторопись|быстрее!)/i],
+    ['streak or shame', /\b(streak|lost your|you failed|too slow|don.t break)/i],
+    ['streak or shame (de)', /(serie verloren|versagt|zu langsam)/i],
+    ['streak or shame (ru)', /(серия|провал|слишком медленно)/i],
+  ];
+
+  it.each(Object.entries(STATES))(
+    'offers nothing a Mission Session path may never offer, in any language: %s',
+    (label, session) => {
+      for (const language of SUPPORTED_LANGUAGES) {
+        const h = harness(stored(session, language));
+        const view = render(<App adapter={h.adapter} />);
+
+        // Where the path can open the abandonment confirmation, its wording is
+        // part of the path and is swept with it.
+        const leave = screen.queryByRole('button', {
+          name: translateMessage(language, 'session.action.leave'),
+        });
+        if (leave) fireEvent.click(leave);
+
+        const text = document.body.textContent ?? '';
+        expect(text.length).toBeGreaterThan(0);
+        for (const [what, pattern] of FORBIDDEN) {
+          expect(
+            pattern.test(text),
+            `${label} in ${language} offered ${what}: ${text.slice(0, 200)}`,
+          ).toBe(false);
+        }
+        view.unmount();
+      }
+    },
+  );
 });
