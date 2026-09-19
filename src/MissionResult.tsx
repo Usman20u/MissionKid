@@ -21,6 +21,7 @@ import {
   type SupportedLanguage,
 } from './localization';
 import {
+  completionContext,
   completionPeriodLabel,
   deriveMonthlyGoal,
   type MonthlyGoalProgress,
@@ -36,26 +37,6 @@ const EXIT_MESSAGE_KEYS = {
   failed: 'result.exit.notCleared',
   unconfirmed: 'result.exit.unconfirmed',
 } as const satisfies Readonly<Record<'failed' | 'unconfirmed', MessageKey>>;
-
-// The completion moment in the family's own language. It is presentation only:
-// the stored timestamp and the period identity it already fixed are never
-// touched, so changing language changes what this reads, never what counts.
-function completionContext(
-  completedAt: number,
-  language: SupportedLanguage,
-): string {
-  try {
-    return new Intl.DateTimeFormat(language, {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    }).format(new Date(completedAt));
-  } catch {
-    // A device without the locale data still gets a truthful date rather than
-    // an empty card.
-    return new Date(completedAt).toISOString().slice(0, 10);
-  }
-}
 
 type DeriveProgress = (
   completedSessions: readonly CompletedMissionSession[],

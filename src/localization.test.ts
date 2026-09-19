@@ -24,6 +24,7 @@ const LOCALIZED_VIEWS = [
   'src/MissionActive.tsx',
   'src/MissionLeaveConfirmation.tsx',
   'src/MissionResult.tsx',
+  'src/MissionHistory.tsx',
 ];
 
 // Every source file that resolves an interface message, including the shell and

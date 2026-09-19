@@ -109,6 +109,12 @@ type RecoveryContext = Readonly<{
   // Which completed Mission Session's result is open. A navigation reference,
   // never a second completion record.
   currentResultSessionId?: string;
+  // Whether the family is looking at the private record. It is navigation for
+  // this page lifetime and nothing else: never persisted, never a History
+  // entry, never a counter, and never a reason to end a session or clear a
+  // result — a stored session and an open result both keep their precedence
+  // over it.
+  history?: boolean;
 }>;
 
 export type AppState = RecoveryContext & (
@@ -143,6 +149,10 @@ export type AppStateAction =
   | { type: 'age-band-changed'; ageBand: AgeBand }
   | { type: 'setup-editing-started' }
   | { type: 'discovery-opened' }
+  // The family asked for the private record. Leaving discovery for it ends the
+  // discovery cycle, exactly as leaving it for the parent-guided setup step
+  // does: `F002` ends a cycle when the family leaves discovery.
+  | { type: 'history-opened' }
   | { type: 'discovery-category-selected'; category: MissionCategory }
   | { type: 'discovery-another-set-requested'; missionIds: readonly string[] }
   | { type: 'mission-selection-confirmed'; session: CurrentMissionSession }
@@ -433,13 +443,23 @@ export function appStateReducer(
     case 'setup-editing-started':
       // Leaving discovery for the parent-guided setup step ends the cycle.
       return state.status === 'ready'
-        ? { ...state, setupView: 'editing', discovery: undefined }
+        ? { ...state, setupView: 'editing', history: undefined, discovery: undefined }
         : state;
     case 'discovery-opened':
       return state.status === 'ready' &&
         state.setupView === 'handoff' &&
         isSetupContextComplete(state)
-        ? { ...state, discovery: { category: null, shown: [] } }
+        ? { ...state, history: undefined, discovery: { category: null, shown: [] } }
+        : state;
+    case 'history-opened':
+      // The cycle ends here, so the Missions it had already shown are not
+      // carried back across the visit. Nothing durable is touched: a stored
+      // session, an open result and every completed record are exactly as they
+      // were, and the view precedence below still puts them first.
+      return state.status === 'ready' &&
+        state.setupView === 'handoff' &&
+        isSetupContextComplete(state)
+        ? { ...state, history: true, discovery: undefined }
         : state;
     case 'discovery-category-selected':
       if (!state.discovery) return state;

@@ -138,6 +138,12 @@ const englishMessages = {
     "We couldn't record this Mission as done just now. Try again.",
   'session.done.unconfirmed':
     "MissionKid couldn't check whether this Mission was recorded as done. Try again to see.",
+  'view.history.title': 'Mission history',
+  'history.action.open': 'Mission history',
+  'history.empty.body':
+    'Completed Missions will appear here. Nothing has been completed yet.',
+  'history.unavailable':
+    'This record cannot be shown right now. Your completed Missions are safe. Try again.',
   'view.sessionResult.title': 'Mission complete',
   'result.recognition': 'You did it.',
   'result.completedOn': 'Completed',
@@ -321,6 +327,12 @@ export const INTERFACE_MESSAGES: CompleteInterfaceMessages = {
       'Diese Mission konnte gerade nicht als erledigt gespeichert werden. Versuche es noch einmal.',
     'session.done.unconfirmed':
       'MissionKid konnte nicht prüfen, ob diese Mission als erledigt gespeichert wurde. Versuche es noch einmal, um es zu sehen.',
+    'view.history.title': 'Missionsverlauf',
+    'history.action.open': 'Missionsverlauf',
+    'history.empty.body':
+      'Erledigte Missionen erscheinen hier. Bisher wurde noch keine erledigt.',
+    'history.unavailable':
+      'Diese Übersicht kann gerade nicht angezeigt werden. Deine erledigten Missionen sind sicher gespeichert. Versuche es noch einmal.',
     'view.sessionResult.title': 'Mission geschafft',
     'result.recognition': 'Du hast es geschafft.',
     'result.completedOn': 'Erledigt',
@@ -470,6 +482,12 @@ export const INTERFACE_MESSAGES: CompleteInterfaceMessages = {
       'Сейчас не удалось записать эту миссию как выполненную. Попробуй ещё раз.',
     'session.done.unconfirmed':
       'MissionKid не смог проверить, записана ли эта миссия как выполненная. Попробуй ещё раз, чтобы увидеть.',
+    'view.history.title': 'История миссий',
+    'history.action.open': 'История миссий',
+    'history.empty.body':
+      'Выполненные миссии появятся здесь. Пока не выполнено ни одной.',
+    'history.unavailable':
+      'Этот список сейчас нельзя показать. Твои выполненные миссии сохранены. Попробуй ещё раз.',
     'view.sessionResult.title': 'Миссия выполнена',
     'result.recognition': 'У тебя получилось.',
     'result.completedOn': 'Выполнено',
