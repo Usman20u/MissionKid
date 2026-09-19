@@ -1,7 +1,7 @@
 # MissionKid Implementation Plan 04 — Mission History and the current Monthly Goal
 
 **Date:** 2026-09-19
-**Status:** Approved and authorized — Tasks 1–7 approved as one bounded implementation batch. Execution in progress.
+**Status:** Implemented and verified — Tasks 1–7 complete. Ready for review; not merged, not pushed.
 
 ## Authorization basis
 
@@ -74,29 +74,29 @@ Recorded for review, not asked as questions:
 
 Nothing below is claimed as passing. Each row states what already holds and what this plan must add. Acceptance is claimed only after implementation and verification.
 
-### `F003` clauses deferred with the History view
+### `F003` clauses deferred with the History view — now held
 
-| Clause | Already held | Remaining here |
-| --- | --- | --- |
-| 11 — one completion produces one History entry | The unique completed record and the single Monthly Goal application are asserted (`MissionResult.test.tsx`, `missionProgress.test.ts`) | That the completion appears as exactly one History entry |
-| 12 — repeat or refresh adds no History entry | No second completed record can be appended for one identifier (`missionSession.test.ts`, `MissionResult.test.tsx`) | That History still shows exactly one entry after a repeat and after a refresh |
+| Clause | Where it is asserted |
+| --- | --- |
+| 11 — one completion produces one History entry | `MissionHistory.test.tsx` "is reachable straight after a confirmed Reward Card exit, with no reload or settings edit" (one completion, one entry), "shows one entry per Mission Session and nothing from another profile"; `missionProgress.test.ts` "lists one Mission Session once however often it is stored" |
+| 12 — repeat or refresh adds no History entry | `MissionHistory.test.tsx` "is not persisted, and a refresh returns to the approved state" (the stored collection is unchanged by any visit) with `MissionResult.test.tsx` "restores the same result through the pointer, repeating no completion"; `missionProgress.test.ts` "lists one Mission Session once however often it is stored" |
 
 ### `F004`
 
-| # | Clause | Status entering this plan | Remaining here |
-| --- | --- | --- | --- |
-| 1 | One card, one History entry, progress `+1` below `20 / 20` | Card and progress asserted | The History-visible half |
-| 2 | Resubmission or refresh leaves History and Monthly Goal unchanged | Durable half asserted | The History-visible half |
-| 3 | Card shows recognition, title, category, completion context and progress | Asserted in full | — |
-| 4 | History holds only this profile's completed sessions, minimal information, newest first | **Not started** | All of it |
-| 5 | Empty History shows its empty state and a route to Mission Category Selection | **Not started** | All of it |
-| 6 | `ready`/`active` and cancelled or abandoned flows never appear in History or count | Monthly Goal half asserted | The History-visible half |
-| 7 | New period starts `0 / 20` and completes at exactly twenty | Derivation asserted | That a current period with zero completions is *presented* as `0 / 20`, and that a month rollover presents the new period while History keeps prior completions |
-| 8 | Later completions stay in History, display holds `20 / 20`, no repeated prompt | Cap and single prompt asserted | The History-visible half |
-| 9 | One encouraging parent-approved message, nothing delivered or promised | Asserted in full | — |
-| 10 | No gambling, payment, comparison, sharing, child media or manipulation | Asserted for the card | The same assertion for the History and Monthly Goal surfaces |
+| # | Clause | Where it is asserted |
+| --- | --- | --- |
+| 1 | One card, one History entry, progress `+1` below `20 / 20` | `MissionResult.test.tsx` "reaches the approved Reward Card in one confirmed write", "counts each completion once and caps the display at the target"; `MissionHistory.test.tsx` "is reachable straight after a confirmed Reward Card exit, with no reload or settings edit" |
+| 2 | Resubmission or refresh leaves History and Monthly Goal unchanged | `missionSession.test.ts` "resolves an existing completion without writing or re-reading the clock"; `MissionHistory.test.tsx` "is not persisted, and a refresh returns to the approved state", "counts only this local month while the record keeps every period" |
+| 3 | Card shows recognition, title, category, completion context and progress | `MissionResult.test.tsx` "shows the Mission Category and a localized completion context" |
+| 4 | History holds only this profile's completed sessions, minimal information, newest first | `MissionHistory.test.tsx` "orders every completion newest first, across periods", "breaks an exact tie deterministically", "shows one entry per Mission Session and nothing from another profile", "shows only the approved minimum for an entry" (EN/DE/RU), "shows the Mission Category the completion recorded", "is a plain list, not a feed or a dashboard"; `missionProgress.test.ts` "the private Mission History" |
+| 5 | Empty History shows its empty state and a route to Mission Category Selection | `MissionHistory.test.tsx` "shows the empty record truthfully" (EN/DE/RU), "shows the empty state for a profile whose only completions belong to another" |
+| 6 | `ready`/`active` and cancelled or abandoned flows never appear in History or count | The Monthly Goal half as Plan 03 recorded it, plus `MissionHistory.test.tsx` "leaves a stored session and an open result in charge" and `MissionDiscovery.test.tsx` "adds no completed record, result pointer or progress source by discovering", which now also asserts no History entry and no progress figure appear from discovery |
+| 7 | New period starts `0 / 20` and completes at exactly twenty | `missionProgress.test.ts` "starts a period with no completions at zero of twenty", "reaches the goal at exactly twenty valid completions"; `MissionHistory.test.tsx` "shows zero of twenty for a month with no completions, with the record empty", "reads the current period on entry, so a rollover shows the new month" |
+| 8 | Later completions stay in History, display holds `20 / 20`, no repeated prompt | `missionProgress.test.ts` "caps the display at twenty while preserving later completions"; `MissionHistory.test.tsx` "holds at twenty of twenty while later completions stay in the record" |
+| 9 | One encouraging parent-approved message, nothing delivered or promised | `MissionResult.test.tsx` "shows the one goal message for the twentieth result and not the twenty-first"; `localization.test.ts` "keeps the goal invitation optional and subject to a parent agreeing" |
+| 10 | No gambling, payment, comparison, sharing, child media or manipulation | `MissionResult.test.tsx` "holds no prize, purchase, reveal or pressure behaviour"; `MissionHistory.test.tsx` "is a plain list, not a feed or a dashboard" |
 
-On completion, the truthful claim becomes: `F003` acceptance complete, and `F004` acceptance complete, with the MVP's remaining scope being whatever the Roadmap holds beyond `F001`–`F004`. Until then this plan claims nothing.
+With those clauses now carried by named assertions, the truthful claim is: every `F003` and `F004` acceptance criterion has an automated assertion, and no clause remains deferred to a later plan. That is a statement about the assertions this repository runs, not about human or assistive-technology acceptance, neither of which was performed. It is also not MVP completion: whatever the Roadmap holds beyond `F001`–`F004` is untouched.
 
 ## Tasks
 
@@ -171,6 +171,41 @@ Dependency-ordered. Each task is complete only when its verification passes.
 **Likely files.** `changelog/2026-08-17.md`, this plan, `src/Accessibility.test.tsx`, `src/styles.css`.
 
 **Verification.** The criterion-to-assertion matrix built before the final edits; each added assertion shown to fail against a controlled mutation; a focused production-browser check of the new surfaces and their keyboard behavior in EN / DE / RU, without repeating unrelated matrices; then the sequential gate. No raised timeout and no weakened assertion.
+
+## Implementation record
+
+### Task 1 — the derivation
+
+`deriveMissionHistory` sits beside `deriveMonthlyGoal` in `missionProgress.ts` and reads the completed sessions a validated snapshot already produced: one Child Profile, unique by session identifier, every period. Its order is `byCompletionOrder` negated, so the comparator that decides which completion is the twentieth is the same one that decides what is newest — reversing it rather than writing a second comparator is what keeps the two from ever disagreeing. The collection it is given is never sorted in place.
+
+Nine unit assertions hold it, including that History is the exact reverse of the twentieth-completion order and that the source array is untouched. Three mutations were run: reversing the order back, dropping the profile filter and dropping the first-copy guard. The first two failed the suite. The third did not and is recorded as behaviourally equivalent: the `Map` keyed by session identifier deduplicates whether or not the guard is present, and the adapter already excludes conflicting copies of one identifier, so no validated input can distinguish them.
+
+### Tasks 2–6 — the surface
+
+`MissionHistory.tsx` renders this month's goal and the record beneath it, both derived, with a recovery boundary around the whole surface. `AppView` gains `history`; a runtime-only `history` flag selects it, and it sits below every session state, the open result and a live discovery cycle, so nothing the family is actually in can be displaced and the flag can never strand them. Opening the record ends the discovery cycle, as `F002` requires of leaving discovery; the secondary entry appears on the handoff and beside the settings entry in Discovery, outside the Mission cards, and the primary action on each surface is untouched. The destructive reset entry does not render on the record.
+
+Entries carry the Mission title, the category the session froze at selection and a localized completion context, and nothing else. A Mission the catalog no longer carries keeps its entry, its category, its date and its count behind the approved fallback title. The empty state states plainly that completed Missions will appear there and offers the same route to Mission Category Selection that the record itself offers. Opening, reading and leaving the record write nothing.
+
+Seven mutations were run against this surface and each failed the suite: taking the goal period from a record instead of the clock; narrowing History to the current period; showing a raw identifier instead of the fallback title; re-reading the category from the catalog; letting the discovery cycle survive; putting the record above a stored session; and allowing the reset control onto it. A no-op control mutation left the suite green.
+
+### Task 7 — verification and the ergonomic review
+
+Two targeted improvements came out of the review of the new surfaces, and no redesign: the entries list is named by the view heading rather than announced as an unnamed list, and each entry's localized date carries the local calendar day in a `<time dateTime>`, built from local parts for the same reason the completion period is.
+
+**Production-browser check**, Chrome for Testing `148.0.7778.97` against the served build, in English, German and Russian at `390x780` and `320x568` — 51 checks of the new surfaces only: both entries reached and activated from the keyboard with the painted focus ring read from computed style; focus landing on the view heading; this month named and counted from the clock while earlier months stay in the record; one action on the record; nothing written on any path; the return to Mission Category Selection; the entry sitting beside the settings entry in Discovery; and no horizontal scroll or sub-`44x44` target at `320` px with a `32` px root. Unrelated browser matrices were not repeated.
+
+**Limitations.** No assistive technology was run, so no screen-reader behaviour is claimed beyond the roles, names and structure present in the document. Browser evidence is automation in one engine and is not human sign-off. This repository has no CI. A calendar rollover while the record is left open on screen is picked up on the next entry; no timer was added for it. The three unexplained failures recorded in Plan 03 Task 1 and the two timeouts recorded in its Task 7 remain separately recorded as unexplained.
+
+## New localized strings, for human review
+
+| Key | English | German | Russian |
+| --- | --- | --- | --- |
+| `view.history.title` | Mission history | Missionsverlauf | История миссий |
+| `history.action.open` | Mission history | Missionsverlauf | История миссий |
+| `history.empty.body` | Completed Missions will appear here. Nothing has been completed yet. | Erledigte Missionen erscheinen hier. Bisher wurde noch keine erledigt. | Выполненные миссии появятся здесь. Пока не выполнено ни одной. |
+| `history.unavailable` | This record cannot be shown right now. Your completed Missions are safe. Try again. | Diese Übersicht kann gerade nicht angezeigt werden. Deine erledigten Missionen sind sicher gespeichert. Versuche es noch einmal. | Этот список сейчас нельзя показать. Твои выполненные миссии сохранены. Попробуй ещё раз. |
+
+No other string was added, and `result.missionUnavailable`, `result.completedOn`, `result.goal.heading`, `result.goal.progress`, `discovery.action.open` and `session.action.retry` are reused unchanged.
 
 ## Definition of complete
 

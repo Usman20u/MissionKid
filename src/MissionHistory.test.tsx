@@ -750,6 +750,30 @@ describe('the record as a keyboard and screen-structure surface', () => {
     ).toBe('history-goal-heading');
   });
 
+  it('announces the record by the name the view already carries', () => {
+    renderApp({ completedSessions: [completion({ sessionId: 'session-done' })] });
+    openHistory();
+
+    const list = screen.getByRole('list');
+    expect(list.getAttribute('aria-labelledby')).toBe('current-view-heading');
+    expect(document.getElementById('current-view-heading')!.textContent).toBe(
+      t('view.history.title'),
+    );
+  });
+
+  it('carries the local calendar day behind each localized date', () => {
+    const completedAt = new Date(2024, 2, 18, 22, 30).getTime();
+    renderApp({
+      completedSessions: [completion({ sessionId: 'session-done', completedAt })],
+    });
+    openHistory();
+
+    const stamp = document.querySelector('time.mission-history__entry-completed')!;
+    // The local day, not the UTC one a bare ISO string would name.
+    expect(stamp.getAttribute('dateTime')).toBe('2024-03-18');
+    expect(stamp.textContent).toContain(t('result.completedOn'));
+  });
+
   it('offers every control as a native, keyboard-reachable button', () => {
     renderApp({ completedSessions: [completion({ sessionId: 'session-done' })] });
     openHistory();

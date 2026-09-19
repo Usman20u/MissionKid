@@ -58,6 +58,16 @@ type MissionHistoryViewProps = MissionHistoryProps &
     goalRef?: RefObject<HTMLHeadingElement | null>;
   }>;
 
+// The local calendar day a completion belongs to, as `YYYY-MM-DD`. It is built
+// from local parts for the same reason the completion period is: an ISO string
+// names the UTC day, which is a different day at both ends of the world.
+function localCalendarDay(completedAt: number): string {
+  const moment = new Date(completedAt);
+  const part = (value: number) => String(value).padStart(2, '0');
+
+  return `${String(moment.getFullYear()).padStart(4, '0')}-${part(moment.getMonth() + 1)}-${part(moment.getDate())}`;
+}
+
 // One completed Mission Session, shown with exactly the approved minimum: the
 // Mission's own title, the Mission Category the session recorded when it was
 // chosen, and a localized completion context. No duration, no identifier, no
@@ -86,10 +96,16 @@ function HistoryEntry({
         <span className="mission-history__entry-category">
           {t(MISSION_CATEGORY_LABEL_KEYS[session.missionCategoryAtSelection])}
         </span>
-        <span className="mission-history__entry-completed">
+        {/* The family reads the localized date; assistive technology and the
+            browser also get the unambiguous local calendar day behind it. The
+            stored timestamp is not touched by either. */}
+        <time
+          className="mission-history__entry-completed"
+          dateTime={localCalendarDay(session.completedAt)}
+        >
           {t('result.completedOn')}{' '}
           {completionContext(session.completedAt, language)}
-        </span>
+        </time>
       </span>
     </li>
   );
@@ -153,7 +169,12 @@ function MissionHistoryView({
             surface would be the second prompt the specification forbids. */}
       </section>
       {entries.length > 0 ? (
-        <ul className="mission-history__entries">
+        // The record is announced with the name the view already carries,
+        // rather than as an unnamed list of items.
+        <ul
+          aria-labelledby="current-view-heading"
+          className="mission-history__entries"
+        >
           {entries.map((session) => (
             <HistoryEntry
               key={session.sessionId}
