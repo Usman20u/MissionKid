@@ -649,3 +649,121 @@ describe('a record that cannot be shown', () => {
     expect(h.writes).toHaveLength(0);
   });
 });
+
+describe('what a later change may and may not do to the record', () => {
+  const RECORDS = [
+    completion({ sessionId: 'newer', missionId: 'creativity-06' }),
+    completion({ sessionId: 'older', missionId: 'calm-02', completedAt: NOW - 900_000 }),
+  ];
+
+  // Labels and localized dates follow the interface language; order, membership
+  // and counts do not.
+  it('changes labels and dates with the language, and nothing else', () => {
+    const seen: Record<string, { ids: string[]; text: string[]; progress: string | null }> = {};
+
+    for (const language of ['en', 'de', 'ru'] as const) {
+      const h = harness(storedSnapshot({ completedSessions: RECORDS }, language));
+      const view = render(<App adapter={h.adapter} now={now} />);
+      openHistory(language);
+
+      seen[language] = {
+        ids: h.stored().completedSessions.map((r: { sessionId: string }) => r.sessionId),
+        text: entryTitles() as string[],
+        progress: progressText(),
+      };
+      expect(h.writes).toHaveLength(0);
+      view.unmount();
+    }
+
+    // The same two Missions in the same order, named in each language.
+    expect(seen.en!.text).toEqual([
+      missionFor('creativity-06').content.en.title,
+      missionFor('calm-02').content.en.title,
+    ]);
+    expect(seen.de!.text).toEqual([
+      missionFor('creativity-06').content.de.title,
+      missionFor('calm-02').content.de.title,
+    ]);
+    expect(seen.ru!.text).toEqual([
+      missionFor('creativity-06').content.ru.title,
+      missionFor('calm-02').content.ru.title,
+    ]);
+    // Membership, stored order and the count are identical in all three.
+    expect(seen.de!.ids).toEqual(seen.en!.ids);
+    expect(seen.ru!.ids).toEqual(seen.en!.ids);
+    expect(seen.de!.progress).toBe(
+      t('result.goal.progress', 'de').replace('{done}', '2').replace('{target}', '20'),
+    );
+  });
+
+  // A parent editing the Child Profile's age band does not remove History or
+  // reset the goal: the age band each session was chosen under is frozen on it.
+  it('keeps every completion when the current age band no longer matches', () => {
+    const h = harness(
+      JSON.stringify({
+        ...createEmptySnapshot(),
+        settings: { language: 'en' },
+        childProfile: { localProfileId: PROFILE_ID, ageBand: '4–6' },
+        currentSession: null,
+        completedSessions: RECORDS,
+      }),
+    );
+    render(<App adapter={h.adapter} now={now} />);
+    openHistory();
+
+    expect(entryTitles()).toHaveLength(2);
+    expect(progressText()).toBe(
+      t('result.goal.progress').replace('{done}', '2').replace('{target}', '20'),
+    );
+    expect(
+      h.stored().completedSessions.map((r: { ageBandAtSelection: string }) => r.ageBandAtSelection),
+    ).toEqual(['7–8', '7–8']);
+    expect(h.writes).toHaveLength(0);
+  });
+});
+
+describe('the record as a keyboard and screen-structure surface', () => {
+  it('moves focus to the view heading once on entry, and keeps a clean outline', () => {
+    renderApp({ completedSessions: [completion({ sessionId: 'session-done' })] });
+
+    const entry = screen.getByRole('button', { name: t('history.action.open') });
+    entry.focus();
+    expect(document.activeElement).toBe(entry);
+    fireEvent.keyDown(entry, { key: 'Enter' });
+    fireEvent.click(entry);
+
+    expect(document.activeElement).toBe(heading());
+    expect(heading().textContent).toBe(t('view.history.title'));
+
+    // One level-1 heading, and the goal section at level 2 directly under it:
+    // no level is skipped.
+    expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1);
+    const levels = [...document.querySelectorAll('h1, h2, h3, h4')].map(
+      (node) => node.tagName,
+    );
+    expect(levels).toEqual(['H1', 'H2']);
+    expect(document.querySelector('.mission-history__goal-heading')!.id).toBe(
+      'history-goal-heading',
+    );
+    expect(
+      document.querySelector('.mission-history__goal')!.getAttribute('aria-labelledby'),
+    ).toBe('history-goal-heading');
+  });
+
+  it('offers every control as a native, keyboard-reachable button', () => {
+    renderApp({ completedSessions: [completion({ sessionId: 'session-done' })] });
+    openHistory();
+
+    const controls = [
+      ...document.querySelectorAll<HTMLButtonElement>('.mission-history button'),
+    ];
+    expect(controls).toHaveLength(1);
+    for (const control of controls) {
+      expect(control.tagName).toBe('BUTTON');
+      expect(control.getAttribute('type')).toBe('button');
+      expect(control.hasAttribute('disabled')).toBe(false);
+      control.focus();
+      expect(document.activeElement).toBe(control);
+    }
+  });
+});
