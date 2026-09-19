@@ -624,8 +624,9 @@ describe('category selection and the discovery cycle', () => {
     let reads = 0;
     memory.storage.getItem = (key) => {
       reads += 1;
-      // The write lands; only the read that would confirm it fails.
-      if (failReadBack && reads > 1) throw new Error('read-back failed');
+      // The write lands: the domain's read and the adapter's pre-write read
+      // both succeed, and only the read that would confirm it fails.
+      if (failReadBack && reads > 2) throw new Error('read-back failed');
       return realGet(key);
     };
     const createId = vi.fn(() => 'session-1');
@@ -649,6 +650,54 @@ describe('category selection and the discovery cycle', () => {
     expect(selectCurrentSession(captured.at(-1)!)?.sessionId).toBe('session-1');
     expect(createId).toHaveBeenCalledTimes(1);
     expect(selectSelectionIssue(captured.at(-1)!)).toBeNull();
+  });
+
+  it.each([
+    ['ready', {}],
+    ['active', { startedAt: 1_700_000_060_000 }],
+  ] as const)('answers with a stored %s session in its own state, writing nothing', (state, extra) => {
+    const memory = memoryStorage();
+    const captured: AppState[] = [];
+    const createId = vi.fn(() => 'must-not-be-minted');
+
+    renderDiscovery(memory, captured, createId);
+    fireEvent.click(radioFor('Movement'));
+
+    // The Mission the family is about to choose is already the current session,
+    // in a state F002 could not produce.
+    const missionId = missionIdsOnScreen()[0]!;
+    const mission = MISSION_CATALOG.find((record) => record.missionId === missionId)!;
+    const session = {
+      sessionId: 'session-existing',
+      childProfileId: 'profile-1',
+      missionId,
+      missionCategoryAtSelection: mission.category,
+      ageBandAtSelection: '7–8',
+      durationSecondsAtSelection: mission.durationSeconds,
+      state,
+      selectedAt: 1_700_000_000_000,
+      ...extra,
+    };
+    const stored = JSON.stringify({
+      ...createEmptySnapshot(),
+      childProfile: { localProfileId: 'profile-1', ageBand: '7–8' },
+      currentSession: session,
+    });
+    memory.values.set(MISSIONKID_STORAGE_KEY, stored);
+
+    fireEvent.click(screen.getAllByRole('button', { name: 'Choose this Mission' })[0]!);
+
+    // Runtime carries the lifecycle state storage actually holds: the session is
+    // not republished as a fresh selection, no identifier is minted, and nothing
+    // is written. Task 1 adds no surface for either state.
+    const after = captured.at(-1)!;
+    expect(selectCurrentSession(after)).toEqual(session);
+    expect(selectCurrentSession(after)?.state).toBe(state);
+    expect(selectMissionStartAvailable(after)).toBe(state === 'ready');
+    expect(createId).not.toHaveBeenCalled();
+    expect(memory.values.get(MISSIONKID_STORAGE_KEY)).toBe(stored);
+    expect(selectSelectionIssue(after)).toBeNull();
+    expect(screen.getAllByRole('article')).toHaveLength(3);
   });
 
   it('keeps the visible three when a replacement request cannot be honoured', () => {

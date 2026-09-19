@@ -1,3 +1,5 @@
+import type { AdultInvolvement, MissionCategory } from './catalog';
+
 export const SUPPORTED_LANGUAGES = ['en', 'de', 'ru'] as const;
 
 export type SupportedLanguage = (typeof SUPPORTED_LANGUAGES)[number];
@@ -76,9 +78,9 @@ const englishMessages = {
   'discovery.card.safetyLabel': 'Before you start',
   'discovery.card.choose': 'Choose this Mission',
   'discovery.selection.conflict':
-    'A Mission is already chosen. Choose that same Mission again to carry on with it.',
+    'A Mission is already chosen. Go back to it, or leave it, before choosing another.',
   'discovery.selection.conflictNamed':
-    'The Mission \u201c{mission}\u201d is already chosen. Choose that same Mission again to carry on with it.',
+    'The Mission \u201c{mission}\u201d is already chosen. Go back to it, or leave it, before choosing another.',
   'discovery.selection.unconfirmed':
     'That Mission could not be confirmed just now. Nothing has started. Choose it again, or choose a different one.',
   'discovery.anotherSet': 'Another set',
@@ -89,9 +91,95 @@ const englishMessages = {
     'MissionKid has no complete set of three Missions for this Mission Category right now. Nothing went wrong, and you can pick another Mission Category above.',
   'discovery.gate.body':
     'Missions cannot be suggested yet. A parent needs to finish the age step below first. MissionKid never guesses an age group.',
+  'view.sessionOpening.title': 'Getting your Mission ready',
+  'view.sessionReady.title': 'Your Mission is ready',
+  'view.sessionStartUnknown.title': 'Did your Mission start?',
+  'session.ready.notStarted': 'This Mission has not started yet.',
+  'session.transition.notCarriedOut':
+    "We couldn't get this Mission ready just now. It has not started. Try again.",
+  'session.transition.unconfirmed':
+    "MissionKid couldn't check whether this Mission is ready. It has not started. Try again.",
+  'session.action.retry': 'Try again',
+  'session.ready.missionBreak.lead': 'Time for a Mission.',
+  'session.ready.missionBreak.body':
+    'Start when you are ready, then leave the screen and do the Mission in real life. Come back when you are done.',
+  'session.ready.missionUnavailable':
+    'This Mission cannot be shown right now, so it is not ready to start.',
+  'session.action.start': 'Start mission',
+  'session.start.notStarted':
+    "We couldn't start this Mission just now. It is still ready to start. Try again.",
+  'session.start.unconfirmed':
+    "MissionKid couldn't check whether this Mission started. Try again to see.",
+  'view.sessionActive.title': 'Your Mission has started',
+  'view.sessionUnavailable.title': 'This Mission cannot be shown',
+  'session.active.away':
+    'Do the Mission away from the screen, then come back when you are done.',
+  'session.active.remaining': 'About {minutes} min left',
+  'session.active.lessThanMinute': 'Less than a minute left',
+  'session.active.zero': 'Ready when you are.',
+  'session.active.timingUnavailable':
+    'The time guide is not available right now. Your Mission is still on.',
+  'session.active.missionUnavailable':
+    'This Mission cannot be shown right now, so it cannot safely continue.',
+  'session.active.safetyLabel': 'Keep this in mind',
+  'session.action.backToSuggestions': 'Back to suggestions',
+  'session.action.leave': 'Leave mission',
+  'session.action.keepGoing': 'Keep going',
+  'session.action.stayHere': 'Stay here',
+  'session.leave.title': 'Leave this mission?',
+  'session.leave.consequence': "It won't be counted.",
+  'session.exit.notLeft':
+    "We couldn't leave this Mission just now. Try again.",
+  'session.exit.unconfirmed':
+    "MissionKid couldn't check whether this Mission was left. Try again to see.",
+  'session.conflict.return': 'Back to your Mission',
+  'session.action.done': 'Mission done',
+  'session.done.notRecorded':
+    "We couldn't record this Mission as done just now. Try again.",
+  'session.done.unconfirmed':
+    "MissionKid couldn't check whether this Mission was recorded as done. Try again to see.",
+  'view.sessionResult.title': 'Mission complete',
+  'result.recognition': 'You did it.',
+  'result.completedOn': 'Completed',
+  'result.missionUnavailable': 'This Mission cannot be shown right now',
+  'result.goal.heading': 'Monthly goal',
+  'result.goal.progress': '{done} / {target} missions',
+  'result.goal.complete':
+    'You reached the goal for {period}. If you and your parent agree, you could choose a small real-life reward together.',
+  'result.action.next': 'Find another Mission',
+  'result.unavailable':
+    'This result cannot be shown right now. Your completed Mission is safe. Try again.',
+  'result.exit.notCleared':
+    "We couldn't leave this result just now. Your completed Mission is safe. Try again.",
+  'result.exit.unconfirmed':
+    "MissionKid couldn't check whether you left this result. Your completed Mission is safe. Try again to see.",
 } as const;
 
 export type MessageKey = keyof typeof englishMessages;
+
+// Canonical values are the identity; these keys only resolve the visible label,
+// and a localized label is never used as identity. They live here so every view
+// that names a Mission Category or an adult-involvement requirement names it the
+// same way.
+export const MISSION_CATEGORY_LABEL_KEYS: Readonly<
+  Record<MissionCategory, MessageKey>
+> = {
+  Movement: 'discovery.category.movement',
+  Creativity: 'discovery.category.creativity',
+  'Helping at Home': 'discovery.category.helpingAtHome',
+  Learning: 'discovery.category.learning',
+  Calm: 'discovery.category.calm',
+};
+
+// The two required levels stay distinguishable in words, in every language.
+// "No special adult assistance required" resolves to no label: showing one would
+// read as a promise that ordinary parental judgement can be skipped.
+export const MISSION_ADULT_LABEL_KEYS: Readonly<
+  Partial<Record<AdultInvolvement, MessageKey>>
+> = {
+  'Adult nearby required': 'discovery.adult.nearby',
+  'Adult participation required': 'discovery.adult.participation',
+};
 
 type CompleteInterfaceMessages = Readonly<
   Record<SupportedLanguage, Readonly<Record<MessageKey, string>>>
@@ -173,9 +261,9 @@ export const INTERFACE_MESSAGES: CompleteInterfaceMessages = {
     'discovery.card.safetyLabel': 'Vor dem Start',
     'discovery.card.choose': 'Diese Mission wählen',
     'discovery.selection.conflict':
-      'Es ist schon eine Mission gewählt. Wähle dieselbe Mission noch einmal, um mit ihr weiterzumachen.',
+      'Es ist schon eine Mission gewählt. Geh zu ihr zurück oder verlasse sie, bevor du eine andere wählst.',
     'discovery.selection.conflictNamed':
-      'Die Mission \u201e{mission}\u201c ist schon gewählt. Wähle dieselbe Mission noch einmal, um mit ihr weiterzumachen.',
+      'Die Mission \u201e{mission}\u201c ist schon gewählt. Geh zu ihr zurück oder verlasse sie, bevor du eine andere wählst.',
     'discovery.selection.unconfirmed':
       'Diese Mission konnte gerade nicht bestätigt werden. Es wurde nichts gestartet. Wähle sie noch einmal oder wähle eine andere.',
     'discovery.anotherSet': 'Weitere drei',
@@ -186,6 +274,68 @@ export const INTERFACE_MESSAGES: CompleteInterfaceMessages = {
       'MissionKid hat für diese Missionskategorie gerade keinen vollständigen Satz aus drei Missionen. Es ist nichts schiefgegangen, und du kannst oben eine andere Missionskategorie wählen.',
     'discovery.gate.body':
       'Es können noch keine Missionen vorgeschlagen werden. Ein Erwachsener muss zuerst den Altersschritt unten abschließen. MissionKid errät niemals eine Altersgruppe.',
+    'view.sessionOpening.title': 'Deine Mission wird vorbereitet',
+    'view.sessionReady.title': 'Deine Mission ist bereit',
+    'view.sessionStartUnknown.title': 'Hat deine Mission begonnen?',
+    'session.ready.notStarted': 'Diese Mission hat noch nicht begonnen.',
+    'session.transition.notCarriedOut':
+      'Diese Mission konnte gerade nicht vorbereitet werden. Sie hat nicht begonnen. Versuche es noch einmal.',
+    'session.transition.unconfirmed':
+      'MissionKid konnte nicht prüfen, ob diese Mission bereit ist. Sie hat nicht begonnen. Versuche es noch einmal.',
+    'session.action.retry': 'Noch einmal versuchen',
+    'session.ready.missionBreak.lead': 'Zeit für eine Mission.',
+    'session.ready.missionBreak.body':
+      'Starte, wenn du bereit bist, geh dann weg vom Bildschirm und mach die Mission in echt. Komm zurück, wenn du fertig bist.',
+    'session.ready.missionUnavailable':
+      'Diese Mission kann gerade nicht angezeigt werden und ist deshalb nicht startbereit.',
+    'session.action.start': 'Mission starten',
+    'session.start.notStarted':
+      'Diese Mission konnte gerade nicht gestartet werden. Sie ist weiterhin startbereit. Versuche es noch einmal.',
+    'session.start.unconfirmed':
+      'MissionKid konnte nicht prüfen, ob diese Mission gestartet wurde. Versuche es noch einmal, um es zu sehen.',
+    'view.sessionActive.title': 'Deine Mission läuft',
+    'view.sessionUnavailable.title': 'Diese Mission kann nicht angezeigt werden',
+    'session.active.away':
+      'Mach die Mission weg vom Bildschirm und komm zurück, wenn du fertig bist.',
+    'session.active.remaining': 'Noch etwa {minutes} Min.',
+    'session.active.lessThanMinute': 'Weniger als eine Minute übrig',
+    'session.active.zero': 'Nimm dir so viel Zeit, wie du brauchst.',
+    'session.active.timingUnavailable':
+      'Die Zeitangabe ist gerade nicht verfügbar. Deine Mission läuft weiter.',
+    'session.active.missionUnavailable':
+      'Diese Mission kann gerade nicht angezeigt werden und kann deshalb nicht sicher weitergehen.',
+    'session.active.safetyLabel': 'Denk daran',
+    'session.action.backToSuggestions': 'Zurück zu den Vorschlägen',
+    'session.action.leave': 'Mission verlassen',
+    'session.action.keepGoing': 'Weitermachen',
+    'session.action.stayHere': 'Hier bleiben',
+    'session.leave.title': 'Diese Mission verlassen?',
+    'session.leave.consequence': 'Sie zählt dann nicht.',
+    'session.exit.notLeft':
+      'Diese Mission konnte gerade nicht verlassen werden. Versuche es noch einmal.',
+    'session.exit.unconfirmed':
+      'MissionKid konnte nicht prüfen, ob diese Mission verlassen wurde. Versuche es noch einmal, um es zu sehen.',
+    'session.conflict.return': 'Zurück zu deiner Mission',
+    'session.action.done': 'Mission erledigt',
+    'session.done.notRecorded':
+      'Diese Mission konnte gerade nicht als erledigt gespeichert werden. Versuche es noch einmal.',
+    'session.done.unconfirmed':
+      'MissionKid konnte nicht prüfen, ob diese Mission als erledigt gespeichert wurde. Versuche es noch einmal, um es zu sehen.',
+    'view.sessionResult.title': 'Mission geschafft',
+    'result.recognition': 'Du hast es geschafft.',
+    'result.completedOn': 'Erledigt',
+    'result.missionUnavailable': 'Diese Mission kann gerade nicht angezeigt werden',
+    'result.goal.heading': 'Monatsziel',
+    'result.goal.progress': '{done} / {target} Missionen',
+    'result.goal.complete':
+      'Du hast das Ziel für {period} erreicht. Wenn deine Eltern einverstanden sind, könnt ihr zusammen eine kleine Belohnung im echten Leben aussuchen.',
+    'result.action.next': 'Neue Mission finden',
+    'result.unavailable':
+      'Dieses Ergebnis kann gerade nicht angezeigt werden. Deine erledigte Mission ist sicher gespeichert. Versuche es noch einmal.',
+    'result.exit.notCleared':
+      'Dieses Ergebnis konnte gerade nicht verlassen werden. Deine erledigte Mission ist sicher gespeichert. Versuche es noch einmal.',
+    'result.exit.unconfirmed':
+      'MissionKid konnte nicht prüfen, ob du dieses Ergebnis verlassen hast. Deine erledigte Mission ist sicher gespeichert. Versuche es noch einmal, um es zu sehen.',
   },
   ru: {
     "recovery.pending": "Подождите. Это действие ещё не подтверждено.",
@@ -260,9 +410,9 @@ export const INTERFACE_MESSAGES: CompleteInterfaceMessages = {
     'discovery.card.safetyLabel': 'Перед началом',
     'discovery.card.choose': 'Выбрать эту миссию',
     'discovery.selection.conflict':
-      'Миссия уже выбрана. Выбери ту же миссию ещё раз, чтобы продолжить с ней.',
+      'Миссия уже выбрана. Вернись к ней или выйди из неё, прежде чем выбирать другую.',
     'discovery.selection.conflictNamed':
-      'Миссия «{mission}» уже выбрана. Выбери ту же миссию ещё раз, чтобы продолжить с ней.',
+      'Миссия «{mission}» уже выбрана. Вернись к ней или выйди из неё, прежде чем выбирать другую.',
     'discovery.selection.unconfirmed':
       'Эту миссию сейчас не удалось подтвердить. Ничего не началось. Выбери её ещё раз или выбери другую.',
     'discovery.anotherSet': 'Ещё три',
@@ -273,6 +423,68 @@ export const INTERFACE_MESSAGES: CompleteInterfaceMessages = {
       'Для этой категории сейчас нет полного набора из трёх миссий. Ничего не сломалось — можно выбрать другую категорию выше.',
     'discovery.gate.body':
       'Пока миссии предложить нельзя. Сначала взрослому нужно завершить шаг с возрастом ниже. MissionKid никогда не угадывает возрастную группу.',
+    'view.sessionOpening.title': 'Готовим твою миссию',
+    'view.sessionReady.title': 'Твоя миссия готова',
+    'view.sessionStartUnknown.title': 'Твоя миссия началась?',
+    'session.ready.notStarted': 'Эта миссия ещё не началась.',
+    'session.transition.notCarriedOut':
+      'Сейчас не удалось подготовить эту миссию. Она не началась. Попробуй ещё раз.',
+    'session.transition.unconfirmed':
+      'MissionKid не смог проверить, готова ли эта миссия. Она не началась. Попробуй ещё раз.',
+    'session.action.retry': 'Попробовать ещё раз',
+    'session.ready.missionBreak.lead': 'Время для миссии.',
+    'session.ready.missionBreak.body':
+      'Начни, когда будет удобно, потом отойди от экрана и выполни миссию по-настоящему. Возвращайся, когда закончишь.',
+    'session.ready.missionUnavailable':
+      'Эту миссию сейчас нельзя показать, поэтому она не готова к старту.',
+    'session.action.start': 'Начать миссию',
+    'session.start.notStarted':
+      'Сейчас не удалось начать эту миссию. Она по-прежнему готова к старту. Попробуй ещё раз.',
+    'session.start.unconfirmed':
+      'MissionKid не смог проверить, началась ли эта миссия. Попробуй ещё раз, чтобы увидеть.',
+    'view.sessionActive.title': 'Твоя миссия началась',
+    'view.sessionUnavailable.title': 'Эту миссию нельзя показать',
+    'session.active.away':
+      'Выполни миссию не у экрана и возвращайся, когда закончишь.',
+    'session.active.remaining': 'Осталось около {minutes} мин',
+    'session.active.lessThanMinute': 'Осталось меньше минуты',
+    'session.active.zero': 'Не спеши — заканчивай, когда будет удобно.',
+    'session.active.timingUnavailable':
+      'Подсказка о времени сейчас недоступна. Твоя миссия продолжается.',
+    'session.active.missionUnavailable':
+      'Эту миссию сейчас нельзя показать, поэтому она не может безопасно продолжаться.',
+    'session.active.safetyLabel': 'Помни об этом',
+    'session.action.backToSuggestions': 'Назад к предложениям',
+    'session.action.leave': 'Выйти из миссии',
+    'session.action.keepGoing': 'Продолжить',
+    'session.action.stayHere': 'Остаться здесь',
+    'session.leave.title': 'Выйти из этой миссии?',
+    'session.leave.consequence': 'Она не будет засчитана.',
+    'session.exit.notLeft':
+      'Сейчас не удалось выйти из этой миссии. Попробуй ещё раз.',
+    'session.exit.unconfirmed':
+      'MissionKid не смог проверить, удалось ли выйти из этой миссии. Попробуй ещё раз, чтобы увидеть.',
+    'session.conflict.return': 'Назад к своей миссии',
+    'session.action.done': 'Миссия выполнена',
+    'session.done.notRecorded':
+      'Сейчас не удалось записать эту миссию как выполненную. Попробуй ещё раз.',
+    'session.done.unconfirmed':
+      'MissionKid не смог проверить, записана ли эта миссия как выполненная. Попробуй ещё раз, чтобы увидеть.',
+    'view.sessionResult.title': 'Миссия выполнена',
+    'result.recognition': 'У тебя получилось.',
+    'result.completedOn': 'Выполнено',
+    'result.missionUnavailable': 'Эту миссию сейчас нельзя показать',
+    'result.goal.heading': 'Цель месяца',
+    'result.goal.progress': '{done} / {target} миссий',
+    'result.goal.complete':
+      'Цель за {period} выполнена. Если родители согласны, вы можете вместе выбрать небольшую награду в реальной жизни.',
+    'result.action.next': 'Найти другую миссию',
+    'result.unavailable':
+      'Этот результат сейчас нельзя показать. Твоя выполненная миссия сохранена. Попробуй ещё раз.',
+    'result.exit.notCleared':
+      'Сейчас не удалось выйти из этого результата. Твоя выполненная миссия сохранена. Попробуй ещё раз.',
+    'result.exit.unconfirmed':
+      'MissionKid не смог проверить, удалось ли выйти из этого результата. Твоя выполненная миссия сохранена. Попробуй ещё раз, чтобы увидеть.',
   },
 };
 

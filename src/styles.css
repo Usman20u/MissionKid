@@ -92,8 +92,15 @@ input {
   font-weight: 650;
 }
 
+/* Every heading the product moves focus to shows the same indicator. The
+   abandonment confirmation and the restored Reward Card are included
+   deliberately: both are focus targets that were falling back to the browser's
+   thin default ring while every other target showed this one, and the
+   confirmation is the most consequential screen in the flow. */
 .app-view__title:focus-visible,
+.mission-result__mission:focus-visible,
 .mission-suggestions__title:focus-visible,
+.mission-session__confirm-title:focus-visible,
 .reset-panel__title:focus-visible {
   outline: 3px solid #b4650c;
   outline-offset: 4px;
@@ -234,6 +241,11 @@ input {
 }
 
 .button {
+  /* A label that grows — a longer translation, or the reader's own larger text
+     setting — wraps inside the button rather than pushing it past the width it
+     was given. Without this the secondary actions, which have no width of their
+     own, ran off a narrow screen at an enlarged text size. */
+  max-width: 100%;
   min-height: 3.25rem;
   margin-top: 1.5rem;
   padding: 0.8rem 1.2rem;
@@ -1220,4 +1232,328 @@ input {
     align-items: start;
   }
 
+}
+
+/* --- The one current Mission Session. Task 2 shows only which Mission it is
+   and whether it has started; the ready screen's own content and its start
+   action are a later step, so nothing here is a control the family could
+   mistake for starting the Mission. */
+.mission-session {
+  margin-top: 1.5rem;
+}
+
+.mission-session__mission {
+  max-width: 24ch;
+  margin: 0;
+  color: #16302a;
+  font-size: 1.5rem;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.mission-session__state {
+  max-width: 48ch;
+  margin: 0.6rem 0 0;
+  color: #445752;
+  line-height: 1.6;
+}
+
+/* Quiet context line: present, never competing with the title. The same pair
+   the Mission card shows, resolved here from the session's own immutable facts
+   so a later setup edit or catalog release cannot rewrite them. */
+.mission-session__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.75rem;
+  margin: 0.5rem 0 0;
+  color: #5a6d67;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.mission-session__duration {
+  font-weight: 650;
+}
+
+.mission-session__instruction {
+  max-width: 48ch;
+  margin: 0.75rem 0 0;
+  color: #23423a;
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+
+/* Required adult and safety content: its own material layer, always visible,
+   never behind disclosure, and close enough to the Mission action to read as
+   part of it. */
+.mission-session__note {
+  position: relative;
+  max-width: 48ch;
+  margin: 0.85rem 0 0;
+  padding: 0.75rem 0.9rem 0.75rem 1.15rem;
+  border-radius: 0.6rem;
+  color: #23423a;
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+.mission-session__note-mark {
+  position: absolute;
+  top: 0.75rem;
+  bottom: 0.75rem;
+  left: 0.45rem;
+  width: 3px;
+  border-radius: 2px;
+}
+
+.mission-session__note-label {
+  display: block;
+  font-weight: 750;
+  letter-spacing: 0.01em;
+}
+
+.mission-session__note--adult {
+  background: #eef4f1;
+}
+
+.mission-session__note--adult .mission-session__note-mark {
+  background: #3f6f5f;
+}
+
+.mission-session__note--safety {
+  background: #fbf3e6;
+}
+
+.mission-session__note--safety .mission-session__note-mark {
+  background: #a8752f;
+}
+
+/* Mission Break: the brief step towards the real-life Mission. It is calm
+   supporting text, not a banner and not a second decision. */
+.mission-session__break {
+  max-width: 48ch;
+  margin: 1.1rem 0 0;
+  color: #23423a;
+  line-height: 1.6;
+}
+
+.mission-session__break-lead {
+  font-weight: 800;
+}
+
+/* What the family should be doing: the step away from the screen leads the
+   running Mission, before the reminder of what the Mission is. */
+.mission-session__away {
+  max-width: 48ch;
+  margin: 0;
+  color: #23423a;
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.6;
+}
+
+.mission-session__away + .mission-session__mission {
+  margin-top: 0.9rem;
+}
+
+/* Supporting information, never the centrepiece: quiet, still, and the same
+   calm surface as the rest of the Mission. It has no urgency colour, no motion,
+   no alarm and no overtime, and it does not grow louder as it approaches zero. */
+.mission-session__guidance {
+  max-width: 48ch;
+  margin: 1.1rem 0 0;
+  color: #5a6d67;
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+.mission-session__guidance + .mission-session__guidance {
+  margin-top: 0.3rem;
+}
+
+/* The one dominant action of the ready Mission. It sits last, after everything
+   the family needs in order to decide, and nothing else on the view competes
+   with it. */
+.mission-session__start {
+  margin-top: 1.35rem;
+}
+
+/* A transition that did not complete. It uses the same calm surface as the
+   discovery notice: nothing was lost and nothing was the child's doing. */
+.mission-session__issue {
+  max-width: 48ch;
+  margin: 1.15rem 0 0;
+  padding: 0.8rem 1rem;
+  border-left: 3px solid #b4650c;
+  border-radius: 0.5rem;
+  background: #fdf5ec;
+  color: #23423a;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+/* The approved leave-without-completion path. It stays discoverable and stays
+   secondary: it sits after the Mission and its guidance, carries no emphasis of
+   its own, and never competes with the dominant action of its view. */
+.mission-session__exit {
+  margin-top: 1.25rem;
+  align-self: flex-start;
+}
+
+/* The confirmation leaving an active Mission requires. It uses the same calm,
+   restrained surface as the other confirmation in the product: the consequence
+   is stated plainly, staying comes first and reads as the easy choice, and
+   leaving is explicit and visually separated. Nothing here hurries the family. */
+.mission-session__confirm {
+  margin-top: 1.25rem;
+  padding: 1.1rem 1.2rem;
+  border: 1px solid #d8e1da;
+  border-radius: 1.25rem;
+  background: rgb(255 255 255 / 92%);
+}
+
+.mission-session__confirm-title {
+  margin: 0 0 0.35rem;
+  font-size: 1.05rem;
+  font-weight: 800;
+}
+
+.mission-session__confirm p {
+  max-width: 48ch;
+  margin: 0;
+  color: #4c625c;
+  line-height: 1.55;
+}
+
+.mission-session__confirm-actions,
+.mission-suggestions__conflict-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.mission-suggestions__conflict-actions {
+  margin-bottom: 1.25rem;
+}
+
+/* The suggestion set's choices as one group, so an unresolved existing session
+   can withhold choosing through the native disabled cascade without changing
+   the layout or hiding any Mission the family is reading. */
+.mission-suggestions__choices {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+/* The one dominant action of the running Mission: what the family came back to
+   do. It sits before the way out, which stays secondary beside it. */
+.mission-session__done {
+  margin-top: 1.25rem;
+  align-self: flex-start;
+}
+
+/* F004 Reward Card.
+   Short, calm recognition of one completed Mission. It is quiet by design: no
+   reveal, no motion, no rarity, nothing to wait for and nothing to open. */
+.mission-result {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* A flex item is at least as wide as its longest unbreakable word, and the
+   document's `break-word` does not lower that intrinsic floor — so one long word
+   (a German compound, a Russian verb) made the card wider than the column it sits
+   in once the reader enlarged their text. `anywhere` does lower it, which lets
+   such a word break inside the card instead of widening it. Ordinary text is
+   unaffected: a break happens only where the alternative is overflow. */
+.mission-result > * {
+  overflow-wrap: anywhere;
+}
+
+.mission-result__recognition {
+  max-width: 48ch;
+  /* Clear of the view heading above it, which takes focus on entry and shows a
+     focus ring there. */
+  margin: 0.75rem 0 0;
+  color: #23423a;
+  font-size: 1.15rem;
+  font-weight: 800;
+  line-height: 1.5;
+}
+
+.mission-result__mission {
+  margin: 0.6rem 0 0;
+  font-size: 1.35rem;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.mission-result__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1rem;
+  margin: 0.5rem 0 0;
+  color: #4c625c;
+  font-size: 0.95rem;
+}
+
+.mission-result__category {
+  font-weight: 700;
+}
+
+/* Progress is information, not a score: the same calm surface as the rest, with
+   no bar to fill, no streak and no comparison. */
+.mission-result__goal {
+  width: 100%;
+  margin-top: 1.4rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid #d8e1da;
+  border-radius: 1.25rem;
+  background: rgb(255 255 255 / 92%);
+}
+
+.mission-result__goal-heading {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 800;
+}
+
+.mission-result__goal-progress {
+  margin: 0.3rem 0 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.mission-result__goal-complete {
+  max-width: 48ch;
+  margin: 0.7rem 0 0;
+  color: #4c625c;
+  line-height: 1.55;
+}
+
+.mission-result__issue {
+  max-width: 48ch;
+  margin: 1rem 0 0;
+  color: #8b2828;
+  line-height: 1.55;
+}
+
+.mission-result__state {
+  max-width: 48ch;
+  margin: 0;
+  line-height: 1.6;
+}
+
+.mission-result .button {
+  margin-top: 1.5rem;
+}
+
+/* Which month the progress belongs to, named from the completion's own stored
+   period so a card restored later never calls an earlier month "this month". */
+.mission-result__goal-period {
+  margin: 0.15rem 0 0;
+  color: #4c625c;
+  font-size: 0.95rem;
 }

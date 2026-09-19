@@ -1,27 +1,18 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { MISSION_CATALOG } from './catalogContent';
 import type { MissionCategory, MissionRecord } from './catalog';
-import { translateMessage, type MessageKey, type SupportedLanguage } from './localization';
+import {
+  MISSION_ADULT_LABEL_KEYS,
+  MISSION_CATEGORY_LABEL_KEYS,
+  translateMessage,
+  type MessageKey,
+  type SupportedLanguage,
+} from './localization';
+import { MissionLeaveConfirmation } from './MissionLeaveConfirmation';
 import { MissionScene, MissionSceneDefs } from './MissionScene';
 import type { MissionSelectionIssue } from './appState';
 import { deriveSuggestionSet, type SuggestionContext } from './missionSuggestions';
-
-const CATEGORY_LABEL_KEYS: Readonly<Record<MissionCategory, MessageKey>> = {
-  Movement: 'discovery.category.movement',
-  Creativity: 'discovery.category.creativity',
-  'Helping at Home': 'discovery.category.helpingAtHome',
-  Learning: 'discovery.category.learning',
-  Calm: 'discovery.category.calm',
-};
-
-// The two required levels stay distinguishable in words, in every language.
-// "No special adult assistance required" shows nothing: it is not a promise that
-// ordinary parental judgement can be skipped.
-const ADULT_LABEL_KEYS: Readonly<Partial<Record<string, MessageKey>>> = {
-  'Adult nearby required': 'discovery.adult.nearby',
-  'Adult participation required': 'discovery.adult.participation',
-};
 
 type CardProps = Readonly<{
   mission: MissionRecord;
@@ -34,7 +25,7 @@ type CardProps = Readonly<{
 function MissionCard({ mission, language, onChoose }: CardProps) {
   const t = (key: MessageKey) => translateMessage(language, key);
   const content = mission.content[language];
-  const adultLabelKey = ADULT_LABEL_KEYS[mission.adultInvolvement];
+  const adultLabelKey = MISSION_ADULT_LABEL_KEYS[mission.adultInvolvement];
   const minutes = Math.round(mission.durationSeconds / 60);
   const titleId = `mission-title-${mission.missionId}`;
 
@@ -50,7 +41,7 @@ function MissionCard({ mission, language, onChoose }: CardProps) {
       <div className="mission-card__content">
         <p className="mission-card__meta">
           <span className="mission-card__category">
-            {t(CATEGORY_LABEL_KEYS[mission.category])}
+            {t(MISSION_CATEGORY_LABEL_KEYS[mission.category])}
           </span>
           <span className="mission-card__duration">
             {t('discovery.card.about')} {minutes} {t('discovery.card.minutes')}
@@ -108,7 +99,7 @@ function SuggestionAnnouncement({
   language: SupportedLanguage;
   stateKey: MessageKey;
 }>) {
-  const label = translateMessage(language, CATEGORY_LABEL_KEYS[category]);
+  const label = translateMessage(language, MISSION_CATEGORY_LABEL_KEYS[category]);
 
   return (
     <p aria-atomic="true" aria-live="polite" className="a11y-only" role="status">
@@ -136,6 +127,15 @@ type MissionSuggestionSetProps = Readonly<{
   // stored Mission no longer resolves to reviewed content, in which case the
   // message stays truthful by naming nothing.
   chosenMissionTitle?: string | null;
+  // The lifecycle state of the session a conflict is about, which decides which
+  // exit resolving it uses: an unstarted selection simply ends, while a running
+  // Mission is left only through the confirmation abandonment requires. Absent
+  // outside a conflict, and for a `selected` session, which no approved exit on
+  // this surface covers.
+  conflictSessionState?: 'ready' | 'active' | 'selected' | null;
+  onReturnToSession?: () => void;
+  onLeaveSession?: () => void;
+  language?: SupportedLanguage;
 }>;
 
 export function MissionSuggestionSet({
@@ -147,7 +147,29 @@ export function MissionSuggestionSet({
   selectionIssue = null,
   selectionAttempt = 0,
   chosenMissionTitle = null,
+  conflictSessionState = null,
+  onReturnToSession,
+  onLeaveSession,
+  language,
 }: MissionSuggestionSetProps) {
+  const [confirmingLeave, setConfirmingLeave] = useState(false);
+  const leaveEntry = useRef<HTMLButtonElement>(null);
+  const wasConfirming = useRef(false);
+
+  // A confirmation that outlived the conflict it belonged to can never show:
+  // the panel is derived from the conflict that is current, not from a flag
+  // left behind by one that is not.
+  const resolvable =
+    selectionIssue === 'conflict' &&
+    (conflictSessionState === 'ready' || conflictSessionState === 'active');
+  const confirming = confirmingLeave && conflictSessionState === 'active' && resolvable;
+
+  useEffect(() => {
+    if (confirming === wasConfirming.current) return;
+    wasConfirming.current = confirming;
+    if (!confirming) leaveEntry.current?.focus();
+  }, [confirming]);
+
   const t = (key: MessageKey) => translateMessage(context.language, key);
   const result = deriveSuggestionSet(catalog, context, shown);
   const headingId = 'mission-suggestions-heading';
@@ -234,32 +256,86 @@ export function MissionSuggestionSet({
             : t('discovery.selection.unconfirmed')}
         </p>
       ) : null}
-      <div className="mission-suggestions__set">
-        {result.missions.map((mission) => (
-          <MissionCard
-            key={mission.missionId}
-            language={context.language}
-            mission={mission}
-            onChoose={onChoose}
+      {/* A conflict blocks a second Mission Session until the family resolves
+          it, so the resolution is offered here with the notice rather than left
+          to be guessed at. Returning follows the stored Mission; leaving is the
+          approved non-completion exit for the state that Mission is really in,
+          and a running one is left only through its confirmation. */}
+      {resolvable ? (
+        confirming ? (
+          <MissionLeaveConfirmation
+            language={language ?? context.language}
+            onKeepGoing={() => setConfirmingLeave(false)}
+            onLeave={() => {
+              setConfirmingLeave(false);
+              onLeaveSession?.();
+            }}
           />
-        ))}
-      </div>
-      {/* Secondary to choosing one of the three above, and offered only while a
-          further complete unseen group exists. Running out is a bounded catalog,
-          so it is stated plainly and the current three stay choosable. */}
-      {onAnotherSet ? (
-        result.anotherSetAvailable ? (
-          <button
-            className="button button--secondary mission-suggestions__another"
-            onClick={() => onAnotherSet(result.missions.map((mission) => mission.missionId))}
-            type="button"
-          >
-            {t('discovery.anotherSet')}
-          </button>
         ) : (
-          <p className="mission-suggestions__bounded">{t('discovery.anotherSet.bounded')}</p>
+          <div className="mission-suggestions__conflict-actions">
+            <button
+              className="button button--primary"
+              onClick={onReturnToSession}
+              type="button"
+            >
+              {t('session.conflict.return')}
+            </button>
+            <button
+              className="button button--secondary"
+              onClick={() => {
+                if (conflictSessionState === 'active') {
+                  setConfirmingLeave(true);
+                  return;
+                }
+                onLeaveSession?.();
+              }}
+              ref={leaveEntry}
+              type="button"
+            >
+              {conflictSessionState === 'active'
+                ? t('session.action.leave')
+                : t('session.action.backToSuggestions')}
+            </button>
+          </div>
         )
       ) : null}
+      {/* Presentational: exists only for the native disabled cascade. While an
+          existing session has to be resolved first, no new Mission may appear
+          available to choose. The three Missions stay fully readable — only
+          choosing is withheld, and resolving the conflict restores it. */}
+      <fieldset
+        className="mission-suggestions__choices"
+        disabled={resolvable}
+        role="presentation"
+      >
+        <div className="mission-suggestions__set">
+          {result.missions.map((mission) => (
+            <MissionCard
+              key={mission.missionId}
+              language={context.language}
+              mission={mission}
+              onChoose={onChoose}
+            />
+          ))}
+        </div>
+        {/* Secondary to choosing one of the three above, and offered only while
+            a further complete unseen group exists. Running out is a bounded
+            catalog, so it is stated plainly and the current three stay
+            choosable. */}
+        {onAnotherSet ? (
+          result.anotherSetAvailable ? (
+            <button
+              className="button button--secondary mission-suggestions__another"
+              onClick={() => onAnotherSet(result.missions.map((mission) => mission.missionId))}
+              type="button"
+            >
+              {t('discovery.anotherSet')}
+            </button>
+          ) : (
+            <p className="mission-suggestions__bounded">{t('discovery.anotherSet.bounded')}</p>
+          )
+        ) : null}
+      </fieldset>
     </section>
   );
 }

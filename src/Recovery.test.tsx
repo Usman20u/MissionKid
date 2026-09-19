@@ -269,6 +269,42 @@ describe('Task 6 targeted authority regressions', () => {
     expect((screen.getByRole('button', { name: 'Use choices temporarily' }) as HTMLButtonElement).disabled).toBe(true);
   });
 
+  it('reports a write refused by an unresolved completed record through parent-facing recovery', () => {
+    // One completion that reads cleanly, and one that cannot be safely retained.
+    const facts = {
+      childProfileId: 'existing-profile', missionId: 'movement-02',
+      missionCategoryAtSelection: 'Movement', ageBandAtSelection: '7–8' as const,
+      durationSecondsAtSelection: 240, startedAt: 1_700_000_060_000,
+      selectedAt: 1_700_000_000_000, state: 'completed' as const,
+    };
+    const raw = JSON.stringify({
+      ...completed(),
+      completedSessions: [
+        { ...facts, sessionId: 'session-done', completedAt: 1_700_000_300_000, completionPeriodId: '2023-11' },
+        { ...facts, sessionId: 'session-broken', completedAt: 1, completionPeriodId: '2023-11' },
+      ],
+    });
+    const h = harness(raw);
+    render(<App adapter={h.adapter} />);
+    click('Change setup');
+    fireEvent.click(screen.getByRole('radio', { name: 'Русский' }));
+    // The chosen language applies to the interface at once; only the durable
+    // save is refused, and the interface returns to the stored language.
+    click(translateMessage('ru', 'setup.action.saveChanges'));
+
+    // No success is claimed, the stored snapshot is untouched, nothing is
+    // trimmed away for the family, and the existing retry path is offered.
+    expect(screen.getByRole('alert').textContent)
+      .toBe(translateMessage('en', 'setup.save.unconfirmed'));
+    expect(screen.getByRole('button', { name: translateMessage('en', 'recovery.retry') })).toBeTruthy();
+    expect(screen.queryByText(translateMessage('ru', 'setup.complete.body'))).toBeNull();
+    expect(h.values.get(MISSIONKID_STORAGE_KEY)).toBe(raw);
+    expect(h.calls.some((call) => call.startsWith('write:'))).toBe(false);
+    expect(h.calls.some((call) => call.startsWith('remove:'))).toBe(false);
+    // Reset stays the parent's own decision, never the only way out.
+    expect(screen.getByRole('button', { name: translateMessage('en', 'recovery.resetTitle') })).toBeTruthy();
+  });
+
   it('keeps newer pre-write German / 7–8 evidence over cached English / 4–6 when write and recovery fail', () => {
     const old = { ...completed(), childProfile: { localProfileId: 'existing-profile', ageBand: '4–6' as const } };
     const latest = completed('de');
@@ -288,7 +324,10 @@ describe('Task 6 targeted authority regressions', () => {
     });
     h.calls.length = 0;
     click(translateMessage('ru', 'setup.action.saveChanges'));
-    expect(h.calls).toEqual([`read:${MISSIONKID_STORAGE_KEY}`, `write:${MISSIONKID_STORAGE_KEY}`, `read:${MISSIONKID_STORAGE_KEY}`]);
+    // Two reads before the write: the domain's read of durable state, then the
+    // adapter's own read of what is stored, which is where D4-B is decided.
+    expect(h.calls).toEqual([`read:${MISSIONKID_STORAGE_KEY}`, `read:${MISSIONKID_STORAGE_KEY}`,
+      `write:${MISSIONKID_STORAGE_KEY}`, `read:${MISSIONKID_STORAGE_KEY}`]);
     expect(state()).toMatchObject({ status: 'degraded', language: 'de', ageBand: '7–8',
       localProfileId: 'existing-profile', lastDurable: {
         language: 'de', ageBand: '7–8', localProfileId: 'existing-profile' } });

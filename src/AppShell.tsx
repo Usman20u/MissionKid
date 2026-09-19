@@ -9,6 +9,7 @@ import { resetSetup } from './setup';
 
 import {
   isSetupContextComplete,
+  isStartOutcomeUnknown,
   useAppState,
   type AppState,
 } from './appState';
@@ -18,7 +19,15 @@ import {
   type MessageKey,
   type SupportedLanguage,
 } from './localization';
+import {
+  isSessionPresentable,
+  readWallClock,
+  type WallClock,
+} from './missionSession';
+import { MissionActive } from './MissionActive';
+import { MissionResult } from './MissionResult';
 import { MissionCategorySelection } from './MissionDiscovery';
+import { MissionReady } from './MissionReady';
 import {
   createLocalProfileId,
   SetupFlow,
@@ -37,7 +46,29 @@ export type AppView =
   | 'temporary-mode'
   | 'recovery'
   | 'setup-complete-handoff'
-  | 'discovery-categories';
+  | 'discovery-categories'
+  // The one current Mission Session: reaching `ready`, there, and running.
+  | 'session-opening'
+  | 'session-ready'
+  | 'session-active'
+  | 'session-result';
+
+// The child-facing areas. The parent's recovery and reset controls do not
+// belong on them: a destructive action beside a Mission is not the child's to
+// take, and it must not compete with the Mission itself.
+const CHILD_FACING_VIEWS: readonly AppView[] = [
+  'discovery-categories',
+  'session-opening',
+  'session-ready',
+  'session-active',
+  'session-result',
+];
+
+// Reaching `ready` and being `ready` are one context for the family: the
+// transition resolves in place, so focus moves into this area once rather than
+// again for a change the family did not make. Starting is a different context,
+// and the family asked for it, so it moves focus of its own.
+const SESSION_VIEWS: readonly AppView[] = ['session-opening', 'session-ready'];
 
 type ViewContent = Readonly<{
   context: MessageKey;
@@ -78,6 +109,22 @@ const VIEW_CONTENT: Record<AppView, ViewContent> = {
     context: 'app.brand',
     title: 'view.discovery.title',
   },
+  'session-opening': {
+    context: 'app.brand',
+    title: 'view.sessionOpening.title',
+  },
+  'session-ready': {
+    context: 'app.brand',
+    title: 'view.sessionReady.title',
+  },
+  'session-result': {
+    context: 'app.brand',
+    title: 'view.sessionResult.title',
+  },
+  'session-active': {
+    context: 'app.brand',
+    title: 'view.sessionActive.title',
+  },
 };
 
 export function selectAppView(state: AppState): AppView {
@@ -96,13 +143,39 @@ export function selectAppView(state: AppState): AppView {
           return 'setup-incomplete';
         case 'editing':
           return 'setup-editing';
-        case 'handoff':
+        case 'handoff': {
           // Discovery is reachable only from a valid completed F001 setup; an
           // incomplete context falls back to the gate instead of inferring one.
           if (!isSetupContextComplete(state)) {
             return 'setup-incomplete';
           }
+
+          // A current Mission Session takes precedence over discovery: the
+          // family is in the flow that session belongs to, not choosing another
+          // Mission.
+          const session = state.currentSession;
+
+          if (session?.state === 'active') {
+            return 'session-active';
+          }
+
+          // A completed result takes precedence over discovery for the same
+          // reason a current session does: the family is in the flow that
+          // result belongs to.
+          if (state.currentResultSessionId) {
+            return 'session-result';
+          }
+
+          if (session?.state === 'ready') {
+            return 'session-ready';
+          }
+
+          if (session?.state === 'selected') {
+            return 'session-opening';
+          }
+
           return state.discovery ? 'discovery-categories' : 'setup-complete-handoff';
+        }
       }
     }
   }
@@ -111,22 +184,53 @@ export function selectAppView(state: AppState): AppView {
 type AppShellProps = Readonly<{
   adapter?: PersistenceAdapter;
   createProfileId?: LocalProfileIdFactory;
+  now?: WallClock;
 }>;
 
 export function AppShell({
   adapter = persistenceAdapter,
   createProfileId = createLocalProfileId,
+  now = readWallClock,
 }: AppShellProps = {}) {
   const { state, dispatch } = useAppState();
   const view = selectAppView(state);
   const content = VIEW_CONTENT[view];
+  // A Mission that cannot be shown must not be announced as ready or running.
+  // The heading is the first thing read, and either of those would contradict
+  // the only sentence the recovery state puts under it.
+  const session = state.currentSession;
+  const unpresentableSession =
+    (SESSION_VIEWS.includes(view) || view === 'session-active') &&
+    session != null &&
+    !isSessionPresentable(session, state.language);
+  // A start whose outcome nobody could establish governs the heading too. The
+  // ordinary ready heading would assert that the Mission is still waiting to
+  // begin, which is the very thing that is unknown — and, where the write did
+  // land, false.
+  const startUnknown =
+    SESSION_VIEWS.includes(view) && isStartOutcomeUnknown(state);
+  const title = unpresentableSession
+    ? 'view.sessionUnavailable.title'
+    : startUnknown
+      ? 'view.sessionStartUnknown.title'
+      : content.title;
   const headingId = 'current-view-heading';
   const t = (key: MessageKey) => translateMessage(state.language, key);
   const busy = !!state.operation || state.status === 'pending';
+  // The completion the open result points at, resolved from the validated
+  // records rather than from any stored card.
+  const resultSession =
+    state.completedSessions?.find(
+      (record) => record.sessionId === state.currentResultSessionId,
+    ) ?? null;
 
   // One signal per materially different parent context. Language changes and
   // in-place feedback deliberately keep the same signal so focus is not stolen.
-  const contextSignal = state.resetConfirm ? 'reset-confirmation' : view;
+  const contextSignal = state.resetConfirm
+    ? 'reset-confirmation'
+    : SESSION_VIEWS.includes(view)
+      ? 'mission-session'
+      : view;
   const viewHeading = useRef<HTMLHeadingElement>(null);
   const resetHeading = useRef<HTMLHeadingElement>(null);
   const resetEntry = useRef<HTMLButtonElement>(null);
@@ -205,7 +309,7 @@ export function AppShell({
             ref={viewHeading}
             tabIndex={-1}
           >
-            {translateMessage(state.language, content.title)}
+            {translateMessage(state.language, title)}
           </h1>
           {busy ? <p role="status">{t('recovery.pending')}</p> : null}
           {/* Presentational: exists only for the native disabled cascade. */}
@@ -220,8 +324,23 @@ export function AppShell({
             <p className="discovery-gate">{t('discovery.gate.body')}</p>
           ) : null}
           {!state.resetConfirm && (state.status === 'ready' || state.status === 'degraded') ? (
-            view === 'discovery-categories' ? (
-              <MissionCategorySelection />
+            view === 'session-result' ? (
+              resultSession ? (
+                <MissionResult adapter={adapter} session={resultSession} />
+              ) : (
+                // The pointer names no readable completion. The completed
+                // records are untouched; only this result cannot be shown.
+                <p className="mission-result__state">{t('result.unavailable')}</p>
+              )
+            ) : view === 'session-active' ? (
+              <MissionActive adapter={adapter} now={now} />
+            ) : SESSION_VIEWS.includes(view) ? (
+              <MissionReady adapter={adapter} />
+            ) : view === 'discovery-categories' ? (
+              // The same adapter the shell was given: one storage boundary for
+              // the whole flow, so a selection and the transition that follows
+              // it cannot read and write different values.
+              <MissionCategorySelection adapter={adapter} />
             ) : (
               <SetupFlow
                 adapter={adapter}
@@ -238,7 +357,7 @@ export function AppShell({
               {t('discovery.action.open')}
             </button>
           ) : null}
-          {state.status !== 'pending' && view !== 'discovery-categories' ? (
+          {state.status !== 'pending' && !CHILD_FACING_VIEWS.includes(view) ? (
             <div className="recovery-actions">
               {state.resetConfirm ? (
                 <section className="reset-panel" aria-labelledby="reset-heading" aria-describedby="reset-consequence">

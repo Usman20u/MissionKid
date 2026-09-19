@@ -683,7 +683,10 @@ describe('a complete suggestion set', () => {
     }
     expect(
       container.querySelectorAll(
-        'button, a, input, select, textarea, [tabindex]:not([tabindex="-1"]), [role]:not([role="status"])',
+        // `presentation` is excluded for the same reason `status` is: it is by
+        // definition not a control. It is carried by the grouping element that
+        // exists only for the native disabled cascade.
+        'button, a, input, select, textarea, [tabindex]:not([tabindex="-1"]), [role]:not([role="status"]):not([role="presentation"])',
       ),
     ).toHaveLength(0);
     // The only tabindex is the heading's programmatic focus target, which the
@@ -692,10 +695,11 @@ describe('a complete suggestion set', () => {
       el.tagName,
       el.getAttribute('tabindex'),
     ])).toEqual([['H2', '-1']]);
-    // The one permitted role is the polite live region announcing the state,
-    // which is not a control and offers nothing to activate.
+    // The only roles are the polite live region announcing the state and the
+    // grouping element that exists for the native disabled cascade. Neither is
+    // a control, and neither offers anything to activate.
     expect([...container.querySelectorAll('[role]')].map((el) => el.getAttribute('role')))
-      .toEqual(['status']);
+      .toEqual(['status', 'presentation']);
     for (const card of cards()) {
       expect(card.tagName).toBe('ARTICLE');
     }

@@ -8,16 +8,20 @@ import {
 } from 'react';
 
 import type { MissionCategory } from './catalog';
+import type { GuidanceAnchor } from './missionTimer';
 import { SUGGESTION_SET_SIZE } from './missionSuggestions';
 import {
   DEFAULT_LANGUAGE,
   type SupportedLanguage,
 } from './localization';
 import type {
+  ActiveMissionSession,
   AgeBand,
+  CompletedMissionSession,
+  CurrentMissionSession,
   HydrationResult,
   MissionKidSnapshot,
-  SelectedMissionSession,
+  ReadyMissionSession,
 } from './persistence';
 
 type SetupContext = Readonly<{
@@ -54,9 +58,32 @@ type RecoveryContext = Readonly<{
   resetUnconfirmed?: boolean;
   temporaryComplete?: boolean;
   discovery?: DiscoveryContext;
-  // The confirmed durable selection, mirrored into runtime only after the write
-  // was read back exactly. It is never set optimistically.
-  currentSession?: SelectedMissionSession;
+  // The durable current session, mirrored into runtime only after a write was
+  // read back exactly or an existing session was read back from storage. It is
+  // never set optimistically, and it keeps whichever lifecycle state the
+  // session actually holds rather than a state the interface assumed.
+  currentSession?: CurrentMissionSession;
+  // Which lifecycle transition did not complete, and what is known about it.
+  // `failed` means durable state was read and still shows the state before the
+  // transition. `unconfirmed` means the write may have landed and a fresh read
+  // could not establish what is stored, so neither outcome is claimed. The
+  // operation travels with it because each one fails into a different truth,
+  // and wording that described the wrong operation would be a false claim.
+  sessionIssue?: MissionSessionIssue;
+  // The session whose start outcome nobody could establish. It is a fact about
+  // one start, not about whichever operation failed most recently, so it is
+  // held separately from `sessionIssue`: a later action that establishes no
+  // durable fact replaces the notice without answering this question. Only a
+  // start's own outcome raises or settles it, and durable evidence clears it.
+  unknownStartSessionId?: string;
+  // Which attempt produced it, for the same reason `selectionAttempt` exists:
+  // a retry that fails the same way must still be announced.
+  sessionAttempt?: number;
+  // What the live timer ticks from for the running Mission. It is derived from
+  // durable timestamps, belongs to one session and to this page lifetime alone,
+  // and is never written to storage: remaining time is recalculated, never
+  // counted down into a record.
+  guidanceAnchor?: GuidanceAnchor;
   // Why the last deliberate choice did not become a new Mission Session.
   // `conflict` is a product state: one is already chosen. `unconfirmed` is a
   // transition failure: nothing started, and the choice can be made again.
@@ -68,7 +95,20 @@ type RecoveryContext = Readonly<{
   // The Mission a conflict is about. A stored session is not published into
   // runtime by hydration, so without this the conflict could not name the
   // Mission the family is being told to choose again.
-  selectionConflictMissionId?: string;
+  // The Mission Session a conflict is about, exactly as durable state holds it.
+  // The whole session is kept rather than its Mission identifier alone, because
+  // resolving the conflict means returning to that session or leaving it, and
+  // both need the identity and the lifecycle state the exit must be made
+  // against.
+  selectionConflictSession?: CurrentMissionSession;
+  // The validated completed Mission Sessions, mirrored from durable state so the
+  // Reward Card can derive Monthly Goal progress from the same records the
+  // snapshot holds. Nothing is counted or cached here: this is the durable
+  // collection as hydration produced it, and every figure is derived from it.
+  completedSessions?: readonly CompletedMissionSession[];
+  // Which completed Mission Session's result is open. A navigation reference,
+  // never a second completion record.
+  currentResultSessionId?: string;
 }>;
 
 export type AppState = RecoveryContext & (
@@ -80,6 +120,15 @@ export type AppState = RecoveryContext & (
 export type ResolvedAppState = Exclude<AppState, { status: 'pending' }>;
 
 export type MissionSelectionIssue = 'conflict' | 'unconfirmed';
+
+export type MissionSessionOperation = 'ready' | 'start' | 'exit' | 'done' | 'result';
+
+export type MissionSessionOutcome = 'failed' | 'unconfirmed';
+
+export type MissionSessionIssue = Readonly<{
+  operation: MissionSessionOperation;
+  outcome: MissionSessionOutcome;
+}>;
 
 export type AppStateAction =
   | { type: 'operation-started'; operation: 'save' | 'retry' | 'reset' }
@@ -96,12 +145,44 @@ export type AppStateAction =
   | { type: 'discovery-opened' }
   | { type: 'discovery-category-selected'; category: MissionCategory }
   | { type: 'discovery-another-set-requested'; missionIds: readonly string[] }
-  | { type: 'mission-selection-confirmed'; session: SelectedMissionSession }
+  | { type: 'mission-selection-confirmed'; session: CurrentMissionSession }
+  // The durable session read back as `ready`, whether this attempt advanced it
+  // or found it already stored that way.
+  | { type: 'mission-session-ready'; session: ReadyMissionSession }
+  // The durable session read back as `active`, whether this attempt started it
+  // or found it already running.
+  | { type: 'mission-session-started'; session: ActiveMissionSession }
+  | { type: 'mission-session-transition-failed'; issue: MissionSessionIssue }
+  // The current Mission Session was left without completion and durable state
+  // says so. Nothing about it is kept: the runtime session, its timer anchor and
+  // any standing issue all belong to a Mission that is no longer current.
+  | { type: 'mission-session-left' }
+  // Durable state holds a Mission Session this runtime was not following — the
+  // one a conflict is about, or one found in place of the session an exit named.
+  // It is adopted exactly as stored rather than rebuilt from what was assumed.
+  | { type: 'mission-session-adopted'; session: CurrentMissionSession }
+  // One completion, read back from durable state. It carries the whole result:
+  // the completed collection the snapshot now holds and the pointer naming this
+  // one, so nothing downstream has to recount or re-read anything.
+  | {
+      type: 'mission-session-completed';
+      session: CompletedMissionSession;
+      completedSessions: readonly CompletedMissionSession[];
+    }
+  // The result pointer was cleared through its own confirmed write. The
+  // completed sessions are untouched.
+  | { type: 'mission-result-left' }
+  // The pointer names another result than the one being left. It is followed
+  // rather than cleared.
+  | { type: 'mission-result-superseded'; sessionId: string }
+  // Guidance was re-read from the session's own timestamps: on first sight of a
+  // running Mission, and whenever the family comes back to the page.
+  | { type: 'mission-timer-anchored'; anchor: GuidanceAnchor }
   | {
       type: 'mission-selection-failed';
       issue: MissionSelectionIssue;
-      // Present only for a conflict, which is always about one stored Mission.
-      conflictMissionId?: string;
+      // Present only for a conflict, which is always about one stored session.
+      conflictSession?: CurrentMissionSession;
     }
   | {
       type: 'setup-save-unconfirmed';
@@ -122,6 +203,27 @@ export const FRESH_APP_STATE: ResolvedAppState = {
 
 function setupContext(state: SetupContext): SetupContext {
   return { language: state.language, ageBand: state.ageBand, localProfileId: state.localProfileId };
+}
+
+// The lifecycle facts a validated snapshot carries, mirrored as they are and
+// only where there is something to mirror. Hydration and a confirmed setup save
+// both read them from here, so a save can never drop what hydration would have
+// restored: the running Mission, the completed record collection and the pointer
+// to an open result all survive a parent editing the Child Profile.
+function durableLifecycleFacts(snapshot: MissionKidSnapshot) {
+  const { completedSessions, currentResultSessionId, currentSession } = snapshot;
+
+  return {
+    // A session already `ready` or `active` is restored in that state rather
+    // than rebuilt, and a `selected` one is what the ready transition advances.
+    ...(currentSession ? { currentSession } : {}),
+    // An empty collection is the absence of completions, not a fact worth
+    // carrying.
+    ...(completedSessions.length > 0 ? { completedSessions } : {}),
+    // A valid pointer restores the same result the family last saw, with no
+    // completion effect repeated.
+    ...(currentResultSessionId ? { currentResultSessionId } : {}),
+  };
 }
 
 export function resolveHydrationResult(
@@ -155,6 +257,7 @@ export function resolveHydrationResult(
         status: 'ready',
         setupView: childProfile?.ageBand ? 'handoff' : 'incomplete',
         saveStatus: 'idle',
+        ...durableLifecycleFacts(result.snapshot),
       };
     }
   }
@@ -179,17 +282,49 @@ export type DiscoveryCycle = Readonly<{
   category: MissionCategory;
 }>;
 
-// A confirmed selection exists and the start experience it leads to is
-// available. F003 owns that experience; this is only the typed fact that it can
-// begin, so nothing in this task renders a screen for it.
+// A current session exists whose start is still ahead of it: `selected` has not
+// reached the start screen and `ready` is on it. An `active` session has already
+// been started, so the start experience is not what it leads back to. This is
+// the typed fact alone; the screens each state leads to are later F003 work.
 export function selectMissionStartAvailable(state: AppState): boolean {
-  return state.currentSession !== undefined;
+  const session = selectCurrentSession(state);
+
+  return session?.state === 'selected' || session?.state === 'ready';
 }
 
 export function selectCurrentSession(
   state: AppState,
-): SelectedMissionSession | null {
+): CurrentMissionSession | null {
   return state.currentSession ?? null;
+}
+
+export function selectSessionIssue(
+  state: AppState,
+): MissionSessionIssue | null {
+  return state.sessionIssue ?? null;
+}
+
+export function selectSessionAttempt(state: AppState): number {
+  return state.sessionAttempt ?? 0;
+}
+
+// Whether the durable outcome of a deliberate start is genuinely unknown: the
+// write may have landed and nothing could establish it either way. Everything
+// the page says about starting is governed by this one answer, so the heading,
+// the state statement and the action wording cannot contradict each other or
+// the notice that sits between them.
+//
+// An established refusal is not this. There the Mission is known not to have
+// started, and saying so is the truth rather than a claim. Neither is another
+// operation's failure: whether a Mission started is not answered by a later
+// action that could establish nothing.
+export function isStartOutcomeUnknown(state: AppState): boolean {
+  const unknownFor = state.unknownStartSessionId;
+
+  return (
+    unknownFor !== undefined &&
+    unknownFor === selectCurrentSession(state)?.sessionId
+  );
 }
 
 export function selectSelectionIssue(
@@ -202,8 +337,10 @@ export function selectSelectionAttempt(state: AppState): number {
   return state.selectionAttempt ?? 0;
 }
 
-export function selectConflictMissionId(state: AppState): string | null {
-  return state.selectionConflictMissionId ?? null;
+export function selectConflictSession(
+  state: AppState,
+): CurrentMissionSession | null {
+  return state.selectionConflictSession ?? null;
 }
 
 // The Missions this cycle has already shown. Empty outside a cycle, so a fresh
@@ -315,7 +452,7 @@ export function appStateReducer(
             ...state,
             selectionIssue: undefined,
             selectionAttempt: undefined,
-            selectionConflictMissionId: undefined,
+            selectionConflictSession: undefined,
             discovery: { category: action.category, shown: [] },
           };
     case 'discovery-another-set-requested': {
@@ -339,7 +476,7 @@ export function appStateReducer(
         ...state,
         selectionIssue: undefined,
         selectionAttempt: undefined,
-        selectionConflictMissionId: undefined,
+        selectionConflictSession: undefined,
         discovery: { ...discovery, shown: [...discovery.shown, ...action.missionIds] },
       };
     }
@@ -352,9 +489,124 @@ export function appStateReducer(
         currentSession: action.session,
         selectionIssue: undefined,
         selectionAttempt: undefined,
-        selectionConflictMissionId: undefined,
+        selectionConflictSession: undefined,
+        // Any transition issue belonged to an earlier session, and leaving it
+        // standing would block this one from reaching `ready` at all.
+        sessionIssue: undefined,
+        sessionAttempt: undefined,
+        unknownStartSessionId: undefined,
         discovery: state.discovery ? { ...state.discovery, shown: [] } : undefined,
       };
+    case 'mission-session-ready':
+    case 'mission-session-started':
+      // Publishing what storage confirmed. Any earlier transition issue
+      // described a state that no longer exists, so it goes with it.
+      return {
+        ...state,
+        currentSession: action.session,
+        sessionIssue: undefined,
+        sessionAttempt: undefined,
+        unknownStartSessionId: undefined,
+      };
+    case 'mission-session-transition-failed':
+      // The runtime session is left exactly as it is: an established failure
+      // leaves the stored `selected` session standing, and an unconfirmed one
+      // is not evidence for rebuilding or removing anything. Recording the
+      // issue is also what stops the transition from retrying itself.
+      //
+      // Whether this session started is answered by a start and by nothing
+      // else. An unconfirmed start raises the question, an established refusal
+      // settles it, and any other operation failing — including one that could
+      // not read storage at all — establishes no durable fact about the start,
+      // so it leaves the answer exactly as it stands.
+      return {
+        ...state,
+        sessionIssue: action.issue,
+        sessionAttempt: (state.sessionAttempt ?? 0) + 1,
+        ...(action.issue.operation === 'start'
+          ? {
+              unknownStartSessionId:
+                action.issue.outcome === 'unconfirmed'
+                  ? state.currentSession?.sessionId
+                  : undefined,
+            }
+          : {}),
+      };
+    case 'mission-session-left':
+      // Returning to the approved Discovery path with the setup and language
+      // context that are already current. The Mission Category the parent
+      // picked is kept because it is their standing choice; the cycle's shown
+      // identifiers are not, so an ended cycle is never resurrected. None of
+      // this is persisted: it is navigation state for this page lifetime.
+      return {
+        ...state,
+        currentSession: undefined,
+        sessionIssue: undefined,
+        sessionAttempt: undefined,
+        unknownStartSessionId: undefined,
+        guidanceAnchor: undefined,
+        selectionIssue: undefined,
+        selectionAttempt: undefined,
+        selectionConflictSession: undefined,
+        discovery: isSetupContextComplete(state)
+          ? { category: state.discovery?.category ?? null, shown: [] }
+          : state.discovery,
+      };
+    case 'mission-session-adopted':
+      // Following durable state rather than the assumption that brought us
+      // here. Any conflict or transition issue described the moment before this
+      // session was read, so none of it survives the reading.
+      return {
+        ...state,
+        currentSession: action.session,
+        sessionIssue: undefined,
+        sessionAttempt: undefined,
+        unknownStartSessionId: undefined,
+        selectionIssue: undefined,
+        selectionAttempt: undefined,
+        selectionConflictSession: undefined,
+        guidanceAnchor:
+          state.guidanceAnchor?.sessionId === action.session.sessionId
+            ? state.guidanceAnchor
+            : undefined,
+      };
+    case 'mission-session-completed':
+      // The Mission is finished. Its running session, timer anchor and any
+      // standing issue all belong to a state that no longer exists, and the
+      // result pointer now names the completion the family should see.
+      return {
+        ...state,
+        currentSession: undefined,
+        sessionIssue: undefined,
+        sessionAttempt: undefined,
+        unknownStartSessionId: undefined,
+        guidanceAnchor: undefined,
+        completedSessions: action.completedSessions,
+        currentResultSessionId: action.session.sessionId,
+      };
+    case 'mission-result-left':
+      // Only the pointer goes. The completed sessions stay exactly as they are,
+      // so the same Mission keeps counting towards the Monthly Goal.
+      return {
+        ...state,
+        currentResultSessionId: undefined,
+        sessionIssue: undefined,
+        sessionAttempt: undefined,
+        unknownStartSessionId: undefined,
+        discovery: isSetupContextComplete(state)
+          ? { category: state.discovery?.category ?? null, shown: [] }
+          : state.discovery,
+      };
+    case 'mission-result-superseded':
+      return {
+        ...state,
+        currentResultSessionId: action.sessionId,
+        sessionIssue: undefined,
+        sessionAttempt: undefined,
+        unknownStartSessionId: undefined,
+      };
+    case 'mission-timer-anchored':
+      return { ...state, guidanceAnchor: action.anchor };
     case 'mission-selection-failed':
       // Nothing about the cycle changes: the same three Missions stay on screen
       // and stay choosable, which is what makes choosing again the retry. Only
@@ -364,7 +616,7 @@ export function appStateReducer(
         ...state,
         selectionIssue: action.issue,
         selectionAttempt: (state.selectionAttempt ?? 0) + 1,
-        selectionConflictMissionId: action.conflictMissionId,
+        selectionConflictSession: action.conflictSession,
       };
     case 'setup-save-unconfirmed': {
       // Recovery is newer evidence than the pre-write read; neither confirms the attempted save.
@@ -428,6 +680,14 @@ export function appStateReducer(
         status: 'ready',
         setupView: 'handoff',
         saveStatus: 'idle',
+        // Derived from the snapshot the write confirmed, not from the runtime
+        // facts this action replaces. `saveSetup` preserves the current
+        // session, the completed records and the result pointer, so rebuilding
+        // runtime without them would make a running Mission or an open Reward
+        // Card vanish from the interface until the next refresh, while durable
+        // state still held it. The session and result view precedence resolves
+        // from these, so the family returns to where they actually were.
+        ...durableLifecycleFacts(action.snapshot),
       };
     }
   }

@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 
 import {
-  selectConflictMissionId,
+  selectConflictSession,
   selectDiscoveryCycle,
   selectSelectionAttempt,
   selectSelectionIssue,
@@ -11,6 +11,7 @@ import {
 import { MISSION_CATALOG } from './catalogContent';
 import {
   createSessionId,
+  leaveMissionSession,
   readWallClock,
   selectMission,
   type SessionIdFactory,
@@ -21,18 +22,12 @@ import {
   type PersistenceAdapter,
 } from './persistence';
 import { MISSION_CATEGORIES, type MissionCategory } from './catalog';
-import { translateMessage, type MessageKey } from './localization';
+import {
+  MISSION_CATEGORY_LABEL_KEYS,
+  translateMessage,
+  type MessageKey,
+} from './localization';
 import { MissionSuggestionSet } from './MissionSuggestionSet';
-
-// Canonical categories are the identity; these keys only resolve the visible
-// label. A localized label is never used as identity.
-const CATEGORY_LABEL_KEYS: Readonly<Record<MissionCategory, MessageKey>> = {
-  Movement: 'discovery.category.movement',
-  Creativity: 'discovery.category.creativity',
-  'Helping at Home': 'discovery.category.helpingAtHome',
-  Learning: 'discovery.category.learning',
-  Calm: 'discovery.category.calm',
-};
 
 // A structural cue for each category so meaning never rests on colour alone.
 // The visible label stays authoritative; these are decorative.
@@ -115,11 +110,53 @@ export function MissionCategorySelection({
   // that Mission the state's dominant information. Its wording comes from the
   // catalog in the current language, never from the stored session, and stays
   // absent if the Mission no longer resolves to reviewed content.
-  const conflictMissionId = selectConflictMissionId(state);
-  const chosenMissionTitle = conflictMissionId
-    ? MISSION_CATALOG.find((record) => record.missionId === conflictMissionId)
-        ?.content[state.language].title ?? null
+  const conflictSession = selectConflictSession(state);
+  const chosenMissionTitle = conflictSession
+    ? MISSION_CATALOG.find(
+        (record) => record.missionId === conflictSession.missionId,
+      )?.content[state.language].title ?? null
     : null;
+
+  // Resolving a conflict is the same pair of operations the session views
+  // offer, reached from the place the family hit it. Returning follows durable
+  // state into the Mission that is actually stored; leaving is the same keyed,
+  // freshly-read exit, made against the state that session is really in.
+  function returnToSession() {
+    if (conflictSession) {
+      dispatch({ type: 'mission-session-adopted', session: conflictSession });
+    }
+  }
+
+  function leaveConflictSession() {
+    if (!conflictSession || conflictSession.state === 'selected') {
+      return;
+    }
+
+    const result = leaveMissionSession(
+      adapter,
+      conflictSession.sessionId,
+      conflictSession.state,
+    );
+
+    switch (result.status) {
+      case 'left':
+      case 'resolved':
+        dispatch({ type: 'mission-session-left' });
+        return;
+      // Durable state holds something else than the conflict described. It is
+      // preserved and followed rather than cleared.
+      case 'superseded':
+        dispatch({ type: 'mission-session-adopted', session: result.session });
+        return;
+      case 'not-left':
+      case 'unavailable':
+        dispatch({ type: 'mission-selection-failed', issue: 'unconfirmed' });
+        return;
+      case 'unconfirmed':
+        dispatch({ type: 'mission-selection-failed', issue: 'unconfirmed' });
+        return;
+    }
+  }
 
   return (
     <div className="mission-discovery">
@@ -154,7 +191,7 @@ export function MissionCategorySelection({
               <span className="mission-world__frame" aria-hidden="true" />
               <CategoryGlyph category={category} />
               <span className="mission-world__label">
-                {t(CATEGORY_LABEL_KEYS[category])}
+                {t(MISSION_CATEGORY_LABEL_KEYS[category])}
               </span>
               <span className="mission-world__state" aria-hidden="true">
                 {selected === category ? (
@@ -188,9 +225,14 @@ export function MissionCategorySelection({
               now,
             );
 
-            // Runtime only learns of a selection the storage confirmed. Every
-            // other outcome leaves the three Missions exactly as they are and
-            // is explained rather than swallowed.
+            // Runtime only learns of a session the storage confirmed, and it
+            // learns the lifecycle state that session is actually in: `created`
+            // is a new Mission Session in `selected`, while `resolved` is the
+            // one that already exists, answering in `selected`, `ready` or
+            // `active`. Neither is republished as a state it is not in; the
+            // surface each state leads to is later F003 work. Every other
+            // outcome leaves the three Missions exactly as they are and is
+            // explained rather than swallowed.
             if (result.status === 'created' || result.status === 'resolved') {
               dispatch({ type: 'mission-selection-confirmed', session: result.session });
               return;
@@ -201,11 +243,15 @@ export function MissionCategorySelection({
             dispatch({
               type: 'mission-selection-failed',
               issue: result.status === 'conflict' ? 'conflict' : 'unconfirmed',
-              conflictMissionId:
-                result.status === 'conflict' ? result.session.missionId : undefined,
+              conflictSession:
+                result.status === 'conflict' ? result.session : undefined,
             });
           }}
           chosenMissionTitle={chosenMissionTitle}
+          conflictSessionState={conflictSession?.state ?? null}
+          language={state.language}
+          onLeaveSession={leaveConflictSession}
+          onReturnToSession={returnToSession}
           selectionAttempt={selectSelectionAttempt(state)}
           selectionIssue={selectSelectionIssue(state)}
           shown={selectShownMissionIds(state)}
