@@ -1,7 +1,7 @@
 # MissionKid Implementation Plan 04 — Mission History and the current Monthly Goal
 
 **Date:** 2026-09-19
-**Status:** Implemented and verified — Tasks 1–7 complete. Ready for review; not merged, not pushed.
+**Status:** Implemented and verified — ready for review. Tasks 1–8 complete. The plan stays active until review concludes; nothing is merged or deployed.
 
 ## Authorization basis
 
@@ -9,7 +9,9 @@ The durable specification-completion evidence is [`plans/completed/2026-08-17-mi
 
 It continues [`plans/completed/2026-09-17-implementation-session-f003.md`](../completed/2026-09-17-implementation-session-f003.md) — Plan 03, `F003` with the approved bounded `F004` slice — together with [`plans/completed/2026-09-19-pr4-review-corrections.md`](../completed/2026-09-19-pr4-review-corrections.md) and [`plans/completed/2026-09-19-unknown-start-followup.md`](../completed/2026-09-19-unknown-start-followup.md). All three are historical evidence and are not reopened. Plan 03 recorded exactly which clauses it deferred with the Mission History view; this plan takes up those and nothing else.
 
-The instruction that approved this plan authorizes implementation of Tasks 1–7 as one bounded batch, with the decisions and boundaries recorded below. Ordinary implementation choices inside that scope need no further approval; work stops only for a real authority conflict or for required behaviour outside this scope. Push, pull request, merge and deployment are **not** authorized in this batch.
+The instruction that approved this plan authorizes implementation of Tasks 1–7 as one bounded batch, with the decisions and boundaries recorded below. Ordinary implementation choices inside that scope need no further approval; work stops only for a real authority conflict or for required behaviour outside this scope. Push, pull request, merge and deployment were **not** authorized in that batch.
+
+A later instruction authorized a second bounded batch on this same plan: Task 8 below — keeping the current period current while the record stays open — together with the mutation-accounting correction, the verification both require, their commits, a normal push of this branch and one pull request against `main`. Merge, deployment, force-push, branch deletion and repository-setting changes remain unauthorized. The sentence above about push and pull request describes the first batch and is superseded only for those two.
 
 ## Remaining scope
 
@@ -56,7 +58,7 @@ No duplicate History or counter store, no persisted navigation state, no persist
 - The source collection is never mutated, and the existing ascending twentieth-completion order is never changed to obtain newest-first History.
 - Record-level trust rules are reused; no competing validation policy is introduced.
 - `F002`'s discovery-cycle reset rule is preserved when the family leaves Discovery: a cycle ends when a Mission is chosen, when age band, language or Mission Category changes, **or when the family leaves discovery** — opening History is leaving discovery.
-- The current period is re-read on entry to History, so a calendar rollover between visits is reflected.
+- The current period is re-read on entry to History, so a calendar rollover between visits is reflected — and, since Task 8, while History stays open.
 - No persisted History, counter, navigation or prompt-seen flag; no router, dependency, dashboard or extra feature.
 
 ## Choices made under delegated authority
@@ -68,7 +70,7 @@ Recorded for review, not asked as questions:
 - History's one action is the existing route to Mission Category Selection, which is also the empty state's approved route, so no new action is invented.
 - The goal-complete message is **not** repeated on History. It belongs to the twentieth completion's Reward Card, and a second surface stating it would read as the repeated prompt `F004` criterion 8 forbids. History shows the plain capped figure.
 - The destructive parent reset entry does not render on History, which is reachable from the child-facing discovery doorway.
-- The current period is read from the injected clock during render, so entering History again after a rollover shows the new period. A rollover that happens while History is left open on screen is picked up on the next entry; no timer is added for it.
+- The current period is read from the injected clock during render, so entering History again after a rollover shows the new period. **The second half of this choice was wrong and is corrected by Task 8.** It held that a rollover while History is left open on screen would be picked up only on the next entry, with no timer for it. `F004` says the monthly goal period changes when the next local calendar month begins, not when the family next opens the record, and the Technical Architecture's *What survives* table says the same of a new local calendar month. Treating re-entry as the trigger made the record state the wrong month for as long as it stayed open. The first half stands unchanged: the period is still read from the clock and never from a stored record.
 
 ## Acceptance mapping
 
@@ -91,7 +93,7 @@ Nothing below is claimed as passing. Each row states what already holds and what
 | 4 | History holds only this profile's completed sessions, minimal information, newest first | `MissionHistory.test.tsx` "orders every completion newest first, across periods", "breaks an exact tie deterministically", "shows one entry per Mission Session and nothing from another profile", "shows only the approved minimum for an entry" (EN/DE/RU), "shows the Mission Category the completion recorded", "is a plain list, not a feed or a dashboard"; `missionProgress.test.ts` "the private Mission History" |
 | 5 | Empty History shows its empty state and a route to Mission Category Selection | `MissionHistory.test.tsx` "shows the empty record truthfully" (EN/DE/RU), "shows the empty state for a profile whose only completions belong to another" |
 | 6 | `ready`/`active` and cancelled or abandoned flows never appear in History or count | The Monthly Goal half as Plan 03 recorded it, plus `MissionHistory.test.tsx` "leaves a stored session and an open result in charge" and `MissionDiscovery.test.tsx` "adds no completed record, result pointer or progress source by discovering", which now also asserts no History entry and no progress figure appear from discovery |
-| 7 | New period starts `0 / 20` and completes at exactly twenty | `missionProgress.test.ts` "starts a period with no completions at zero of twenty", "reaches the goal at exactly twenty valid completions"; `MissionHistory.test.tsx` "shows zero of twenty for a month with no completions, with the record empty", "reads the current period on entry, so a rollover shows the new month" |
+| 7 | New period starts `0 / 20` and completes at exactly twenty | `missionProgress.test.ts` "starts a period with no completions at zero of twenty", "reaches the goal at exactly twenty valid completions"; `MissionHistory.test.tsx` "shows zero of twenty for a month with no completions, with the record empty", "reads the current period on entry, so a rollover shows the new month", and — for a period that begins while the record is open — "names the new month in place, without the family leaving and returning", "catches up on the month after the page was hidden or suspended", "reads zero of twenty for the new month and fabricates nothing when the record is empty", "waits out a month longer than one timer can hold" |
 | 8 | Later completions stay in History, display holds `20 / 20`, no repeated prompt | `missionProgress.test.ts` "caps the display at twenty while preserving later completions"; `MissionHistory.test.tsx` "holds at twenty of twenty while later completions stay in the record" |
 | 9 | One encouraging parent-approved message, nothing delivered or promised | `MissionResult.test.tsx` "shows the one goal message for the twentieth result and not the twenty-first"; `localization.test.ts` "keeps the goal invitation optional and subject to a parent agreeing" |
 | 10 | No gambling, payment, comparison, sharing, child media or manipulation | `MissionResult.test.tsx` "holds no prize, purchase, reveal or pressure behaviour"; `MissionHistory.test.tsx` "is a plain list, not a feed or a dashboard" |
@@ -172,6 +174,16 @@ Dependency-ordered. Each task is complete only when its verification passes.
 
 **Verification.** The criterion-to-assertion matrix built before the final edits; each added assertion shown to fail against a controlled mutation; a focused production-browser check of the new surfaces and their keyboard behavior in EN / DE / RU, without repeating unrelated matrices; then the sequential gate. No raised timeout and no weakened assertion.
 
+### Task 8 — Keep the current month current while the record stays open
+
+**Outcome.** The record's period label and Monthly Goal figure follow the family's local calendar month while the view is open, and after the page has been hidden or suspended, without the family leaving History and coming back. Every stored completion and its immutable `completionPeriodId` are untouched, History still spans every period, counting and the twentieth-completion rule are unchanged, a restored Reward Card still names its own fixed period, and the refresh writes nothing.
+
+**Source references.** `F004` — Monthly period ("changes conceptually when the next local calendar month begins") and acceptance criterion 7; Technical Architecture — *What survives*, both the new-local-calendar-month row and the page-hidden row that already recalculates on visibility or focus return; Visual and Ergonomic — `F004` Monthly Goal presentation, which forbids a countdown or deadline state.
+
+**Likely files.** `src/MissionHistory.tsx`, `src/MissionHistory.test.tsx`.
+
+**Verification.** Rendered tests with an injected clock and controlled timers: a boundary reached while the view is open; a return after hidden time with no timer having run; a new month with no completions, including an empty record; a month longer than one browser timer can hold; and the timer and both listeners released when the record closes. Each asserts the rendered label and figure, the retained record and unchanged storage. Then a focused production-browser check of the refresh against the served build.
+
 ## Implementation record
 
 ### Task 1 — the derivation
@@ -194,7 +206,64 @@ Two targeted improvements came out of the review of the new surfaces, and no red
 
 **Production-browser check**, Chrome for Testing `148.0.7778.97` against the served build, in English, German and Russian at `390x780` and `320x568` — 51 checks of the new surfaces only: both entries reached and activated from the keyboard with the painted focus ring read from computed style; focus landing on the view heading; this month named and counted from the clock while earlier months stay in the record; one action on the record; nothing written on any path; the return to Mission Category Selection; the entry sitting beside the settings entry in Discovery; and no horizontal scroll or sub-`44x44` target at `320` px with a `32` px root. Unrelated browser matrices were not repeated.
 
-**Limitations.** No assistive technology was run, so no screen-reader behaviour is claimed beyond the roles, names and structure present in the document. Browser evidence is automation in one engine and is not human sign-off. This repository has no CI. A calendar rollover while the record is left open on screen is picked up on the next entry; no timer was added for it. The three unexplained failures recorded in Plan 03 Task 1 and the two timeouts recorded in its Task 7 remain separately recorded as unexplained.
+**Limitations, as recorded at the end of the first batch.** No assistive technology was run, so no screen-reader behaviour is claimed beyond the roles, names and structure present in the document. Browser evidence is automation in one engine and is not human sign-off. This repository has no CI. A calendar rollover while the record is left open on screen is picked up on the next entry; no timer was added for it. The three unexplained failures recorded in Plan 03 Task 1 and the two timeouts recorded in its Task 7 remain separately recorded as unexplained.
+
+The rollover sentence in that list is **no longer true of this tree**: Task 8 below added the refresh it said was absent. It is kept as written because it described the tree the 51 browser checks above ran against.
+
+### Task 8 — the month turning under an open record
+
+The reported behaviour was reproduced first: with the record open and the injected clock carried across a month boundary, the label and the figure stayed on the old month, and five new assertions failed against the implementation as it stood.
+
+`useCurrentLocalPeriod` in `MissionHistory.tsx` now holds the live period. It still reads the period from the injected clock and never from a stored record; it only decides when to read it again. One `setTimeout` is scheduled for the first moment of the next local calendar month, built from local calendar parts so daylight saving cannot move where the month begins, and `visibilitychange` and `focus` listeners re-read the clock when the family comes back to a page that was hidden or suspended, because a frozen tab's callback cannot be relied on to have run. A wait longer than the largest delay a browser timer can hold is taken in hops and re-measured at each one, so a record opened on the first moment of a 31-day month cannot overflow into a busy loop. Rescheduling clears the pending callback first, so returns do not accumulate timers, and the effect's cleanup releases the timer and both listeners.
+
+Nothing about the derivation changed. Where the month has not actually turned the value is unchanged and React re-renders nothing, so the record still never ticks and nothing on it counts down. No storage is read or written on any of these paths, no stored `completionPeriodId` is recomputed, History still spans every period, and a restored Reward Card still names the period its own completion fixed.
+
+Six new assertions hold it: the boundary reached in place with the view never left, including a check that nothing moves in the eight quarter-seconds before it; the catch-up after hidden time, with no second timer left running beside the new one; the new month reading `0 / 20` and fabricating nothing while the record is empty; the long month that no single timer can hold; the timer and both listeners released on unmount; and the timer given back when the family returns to Mission Category Selection.
+
+### Corrected mutation accounting
+
+The earlier record of this plan miscounted its own mutation runs, and the changelog repeated the error. It said "Ten mutations of the implementation were each observed to fail the suite" and then listed ten items, the tenth of which was "a no-op control that correctly left the suite green" — a control that passes is not a killed mutation, and it cannot be one of ten that each failed. The plan's own Task 1 and Tasks 2–6 sections were internally correct but were never added up.
+
+Every mutation named in the earlier record was re-run against the current tree to put the corrected numbers on evidence rather than on arithmetic. No machine-readable log of the original runs was kept, so the original runs themselves cannot be re-inspected; what is recorded below is this re-run, which reproduced each earlier result.
+
+| # | Mutation | Suite | Class |
+| --- | --- | --- | --- |
+| 1 | Task 1 — the History order reversed back to ascending | 11 tests failed | behaviour-changing, caught |
+| 2 | Task 1 — the Child Profile filter dropped from `deriveMissionHistory` | 2 tests failed | behaviour-changing, caught |
+| 3 | Task 1 — the first-copy guard dropped from `deriveMissionHistory` | green | equivalent, not caught |
+| 4 | Tasks 2–6 — the goal period taken from a stored record instead of the clock | 5 tests failed | behaviour-changing, caught |
+| 5 | Tasks 2–6 — History narrowed to the current period | 6 tests failed | behaviour-changing, caught |
+| 6 | Tasks 2–6 — a raw Mission identifier shown instead of the fallback title | 3 tests failed | behaviour-changing, caught |
+| 7 | Tasks 2–6 — the entry's category re-read from the catalog | 1 test failed | behaviour-changing, caught |
+| 8 | Tasks 2–6 — the discovery cycle allowed to survive opening the record | 6 tests failed | behaviour-changing, caught |
+| 9 | Tasks 2–6 — the record put above a stored session in view precedence | 1 test failed | behaviour-changing, caught |
+| 10 | Tasks 2–6 — the destructive reset control allowed onto the record | 1 test failed | behaviour-changing, caught |
+| 11 | Tasks 2–6 — control — a comment added, no behaviour changed | green | control, unchanged behaviour |
+| 12 | Task 8 — the month-boundary timer removed | 5 tests failed | behaviour-changing, caught |
+| 13 | Task 8 — the visibility and focus listeners removed | 2 tests failed | behaviour-changing, caught |
+| 14 | Task 8 — the timer-length clamp removed | 1 test failed | behaviour-changing, caught |
+| 15 | Task 8 — the effect cleanup removed | 3 tests failed | behaviour-changing, caught |
+| 16 | Task 8 — the pending callback no longer cleared before rescheduling | 1 test failed | behaviour-changing, caught |
+| 17 | Task 8 — the hidden-page guard dropped from the return handler | green | equivalent, not caught |
+| 18 | Task 8 — control — a comment added, no behaviour changed | green | control, unchanged behaviour |
+
+**18 mutations were run in total: 14 behaviour-changing mutations, every one of them caught by the suite; 2 behaviourally equivalent mutations, correctly not caught; and 2 unchanged-behaviour controls, which left the suite green as controls are meant to.** The killed count is therefore 14, not the ten the earlier record claimed and not the 18 runs it took to establish them. Of these, 11 cover the first batch and 7 cover Task 8.
+
+**On the two equivalents.** Dropping the first-copy guard in `deriveMissionHistory` leaves the `Map` keyed by session identifier deduplicating exactly as before, and the adapter already excludes conflicting copies of one identifier, so no validated input can distinguish the two. Dropping the hidden-page guard in the refresh listener only lets the clock be re-read as the page goes away, which reschedules the same callback and shows nobody anything. Neither is a gap in the assertions, and no test was written to make either fail.
+
+**On the two controls.** Both were unchanged-behaviour edits — an added comment — run to show that the suite is not failing for unrelated reasons. Each left the suite green, which is what a control passing means and is not a killed mutation.
+
+### Task 8 — verification
+
+Type checking, **799 tests across 22 test files** (793 before this follow-up), the production build and `git diff --check` all pass, run sequentially.
+
+**Production-browser check**, Chrome for Testing `148.0.7778.97` against the served build, in English, German and Russian at `390x780` — 33 checks of the period refresh alone. In each language: the record opened naming the current month at `2 / 20`; it held still across eight quarter-second samples while the boundary approached, so nothing ticks; it then turned to the next month at `0 / 20` in place, with the view never left, both completions still listed and zero writes attempted; and separately, a record opened in this month, hidden by switching to another tab, woken a month later on the family's clock and brought back to the front, named the new month at `0 / 20` with both completions kept and zero writes. The application's clock was moved by replacing `Date.now` from outside the application; no production switch was added, and the tab was genuinely hidden and shown rather than sent a synthetic event.
+
+An earlier run of the same script in headless mode failed the sleep-and-return half, and the reason is worth recording: headless kept reporting `document.visibilityState` as `hidden` even in the foreground, so the refresh correctly declined to run. That is the hidden-page guard behaving as intended, not a defect, and it is why the check is recorded as a headed run.
+
+**Ergonomic review.** Task 8 adds no view, no control, no string and no motion; the only visible change is that an already-visible label and figure state the right month. The review of the record's presentation therefore stands as recorded for Task 7, and no further improvement was made — well inside the `1–3` bound rather than a redesign.
+
+**Limitations, as they stand now.** No assistive technology was run at any point, so no screen-reader behaviour is claimed beyond the roles, names and structure present in the document. Browser evidence is automation in one engine and is not human sign-off. This repository has no CI, so none of the checks above is a CI result. The refresh depends on the page being allowed to run a timer or to receive `visibilitychange` or `focus`; a browser that delivers none of them — a tab discarded and restored without either event, for instance — shows the month it last read until one arrives or the record is reopened. The record's display-failure path still has no trigger in an unmodified production build, by design, so it is covered by automated evidence only. The three unexplained failures recorded in Plan 03 Task 1 and the two timeouts recorded in its Task 7 remain separately recorded as unexplained.
 
 ## New localized strings, for human review
 
@@ -205,8 +274,10 @@ Two targeted improvements came out of the review of the new surfaces, and no red
 | `history.empty.body` | Completed Missions will appear here. Nothing has been completed yet. | Erledigte Missionen erscheinen hier. Bisher wurde noch keine erledigt. | Выполненные миссии появятся здесь. Пока не выполнено ни одной. |
 | `history.unavailable` | This record cannot be shown right now. Your completed Missions are safe. Try again. | Diese Übersicht kann gerade nicht angezeigt werden. Deine erledigten Missionen sind sicher gespeichert. Versuche es noch einmal. | Этот список сейчас нельзя показать. Твои выполненные миссии сохранены. Попробуй ещё раз. |
 
-No other string was added, and `result.missionUnavailable`, `result.completedOn`, `result.goal.heading`, `result.goal.progress`, `discovery.action.open` and `session.action.retry` are reused unchanged.
+No other string was added, and `result.missionUnavailable`, `result.completedOn`, `result.goal.heading`, `result.goal.progress`, `discovery.action.open` and `session.action.retry` are reused unchanged. Task 8 added no string of any kind: the refresh changes which month an existing label names, not the words it uses.
 
 ## Definition of complete
 
-Scope items 1–8 implemented and verified, every mapped clause carried by a named assertion, the ergonomic review done with at most three targeted improvements, the changelog updated, and this plan's record written before it moves to `plans/completed/`. Approval for a branch, push, pull request or merge is a separate decision and is not granted by this plan.
+Scope items 1–8 implemented and verified, every mapped clause carried by a named assertion, the ergonomic review done with at most three targeted improvements, the changelog updated, and this plan's record written before it moves to `plans/completed/`.
+
+That point has been reached for the work itself, and the plan is recorded as *Implemented and verified — ready for review*. It stays under `plans/active/` rather than moving to `plans/completed/`, because independent review has not happened yet and a status of complete would not be truthful until it has. Publishing the branch for review — a normal push and one pull request against `main` — is authorized separately and recorded under *Authorization basis* above. Merge, deployment, force-push, branch deletion and repository-setting changes remain a separate decision this plan does not grant.
