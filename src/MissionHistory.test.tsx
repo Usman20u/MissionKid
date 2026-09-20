@@ -1,5 +1,5 @@
-import { fireEvent, render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { act, fireEvent, render, screen } from '@testing-library/react';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { App } from './App';
 import { selectAppView } from './AppShell';
@@ -789,5 +789,238 @@ describe('the record as a keyboard and screen-structure surface', () => {
       control.focus();
       expect(document.activeElement).toBe(control);
     }
+  });
+});
+
+describe('the month turning under an open record', () => {
+  // The first moment of the month after the one the other cases sit in, read
+  // from the local calendar rather than from a fixed number of milliseconds, so
+  // a daylight-saving change cannot move it.
+  const APRIL = new Date(2024, 3, 1, 0, 0).getTime();
+  // The largest delay a browser timer can hold before it overflows and fires at
+  // once. The implementation may never schedule beyond it.
+  const LONGEST_TIMEOUT = 2_147_483_647;
+
+  beforeEach(() => {
+    // Only the timers. Faking the whole clock would replace the one this view
+    // already takes by injection, and `performance`, which React's scheduler
+    // reads.
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+    // Restore the prototype getter any visibility case shadowed.
+    delete (document as unknown as { visibilityState?: unknown }).visibilityState;
+  });
+
+  function showVisibility(value: 'visible' | 'hidden') {
+    Object.defineProperty(document, 'visibilityState', {
+      configurable: true,
+      get: () => value,
+    });
+    fireEvent(document, new Event('visibilitychange'));
+  }
+
+  function periodLabel() {
+    return document.querySelector('.mission-history__goal-period')?.textContent ?? null;
+  }
+
+  function openAt(clock: () => number, extra: Record<string, unknown> = {}) {
+    const h = harness(storedSnapshot(extra));
+    render(<App adapter={h.adapter} now={clock} />);
+    openHistory();
+    return h;
+  }
+
+  const MARCH_PAIR = [
+    completion({ sessionId: 'march-1' }),
+    completion({ sessionId: 'march-2', missionId: 'calm-02', completedAt: NOW - 300_000 }),
+  ];
+
+  it('names the new month in place, without the family leaving and returning', () => {
+    let clock = NOW;
+    const h = openAt(() => clock, { completedSessions: MARCH_PAIR });
+
+    expect(periodLabel()).toBe(completionPeriodLabel(CURRENT_PERIOD, 'en'));
+    expect(progressText()).toBe(
+      t('result.goal.progress').replace('{done}', '2').replace('{target}', '20'),
+    );
+
+    // A moment before the turn nothing has moved: the record does not tick.
+    act(() => {
+      clock = APRIL - 1;
+      vi.advanceTimersByTime(APRIL - NOW - 1);
+    });
+    expect(periodLabel()).toBe(completionPeriodLabel(CURRENT_PERIOD, 'en'));
+
+    act(() => {
+      clock = APRIL;
+      vi.advanceTimersByTime(1);
+    });
+
+    // Still the same view the family never left.
+    expect(heading().textContent).toBe(t('view.history.title'));
+    expect(periodLabel()).toBe(completionPeriodLabel('2024-04', 'en'));
+    expect(progressText()).toBe(
+      t('result.goal.progress').replace('{done}', '0').replace('{target}', '20'),
+    );
+    // March stays in the record, with the period each completion fixed.
+    expect(entryTitles()).toHaveLength(2);
+    expect(
+      h.stored().completedSessions.map(
+        (record: { completionPeriodId: string }) => record.completionPeriodId,
+      ),
+    ).toEqual(['2024-03', '2024-03']);
+    expect(h.writes).toHaveLength(0);
+  });
+
+  it('catches up on the month after the page was hidden or suspended', () => {
+    let clock = NOW;
+    const h = openAt(() => clock, { completedSessions: MARCH_PAIR });
+
+    expect(periodLabel()).toBe(completionPeriodLabel(CURRENT_PERIOD, 'en'));
+
+    // Hidden, then woken in the next month with no timer having run: a
+    // suspended tab's scheduled callback cannot be relied on to have fired.
+    showVisibility('hidden');
+    clock = new Date(2024, 3, 3, 8, 0).getTime();
+    const waiting = vi.getTimerCount();
+    showVisibility('visible');
+
+    expect(periodLabel()).toBe(completionPeriodLabel('2024-04', 'en'));
+    // The return re-measured the wait; it did not leave the old one running
+    // beside the new one.
+    expect(vi.getTimerCount()).toBe(waiting);
+    expect(progressText()).toBe(
+      t('result.goal.progress').replace('{done}', '0').replace('{target}', '20'),
+    );
+    expect(entryTitles()).toHaveLength(2);
+    expect(h.writes).toHaveLength(0);
+  });
+
+  it('reads zero of twenty for the new month and fabricates nothing when the record is empty', () => {
+    let clock = NOW;
+    const h = openAt(() => clock);
+
+    const zero = t('result.goal.progress').replace('{done}', '0').replace('{target}', '20');
+    expect(progressText()).toBe(zero);
+    expect(screen.getByText(t('history.empty.body'))).toBeTruthy();
+
+    act(() => {
+      clock = APRIL;
+      vi.advanceTimersByTime(APRIL - NOW);
+    });
+
+    expect(periodLabel()).toBe(completionPeriodLabel('2024-04', 'en'));
+    expect(progressText()).toBe(zero);
+    // No sample entry appears to fill the new month.
+    expect(screen.getByText(t('history.empty.body'))).toBeTruthy();
+    expect(screen.queryByRole('list')).toBeNull();
+    expect(entryTitles()).toEqual([]);
+    expect(h.writes).toHaveLength(0);
+  });
+
+  it('waits out a month longer than one timer can hold', () => {
+    const MARCH_START = new Date(2024, 2, 1, 0, 0).getTime();
+    const span = APRIL - MARCH_START;
+    // March is longer than the largest delay a browser timer can hold, so
+    // opening the record on its first moment is the case that overflows.
+    expect(span).toBeGreaterThan(LONGEST_TIMEOUT);
+
+    const scheduled = vi.spyOn(globalThis, 'setTimeout');
+    const longest = () =>
+      Math.max(...scheduled.mock.calls.map((call) => Number(call[1] ?? 0)));
+
+    let clock = MARCH_START;
+    openAt(() => clock, { completedSessions: MARCH_PAIR });
+
+    expect(scheduled).toHaveBeenCalled();
+    expect(longest()).toBeLessThanOrEqual(LONGEST_TIMEOUT);
+
+    act(() => {
+      clock = MARCH_START + LONGEST_TIMEOUT;
+      vi.advanceTimersByTime(LONGEST_TIMEOUT);
+    });
+    // A hop that is not the boundary changes nothing the family can see.
+    expect(periodLabel()).toBe(completionPeriodLabel(CURRENT_PERIOD, 'en'));
+    expect(longest()).toBeLessThanOrEqual(LONGEST_TIMEOUT);
+
+    act(() => {
+      clock = APRIL;
+      vi.advanceTimersByTime(span - LONGEST_TIMEOUT);
+    });
+    expect(periodLabel()).toBe(completionPeriodLabel('2024-04', 'en'));
+  });
+
+  it('leaves no timer and no listener behind when the record closes', () => {
+    const added = vi.spyOn(document, 'addEventListener');
+    const removed = vi.spyOn(document, 'removeEventListener');
+    const windowAdded = vi.spyOn(window, 'addEventListener');
+    const windowRemoved = vi.spyOn(window, 'removeEventListener');
+    const handlers = (spy: { mock: { calls: unknown[][] } }, type: string) =>
+      spy.mock.calls.filter((call) => call[0] === type).map((call) => call[1]);
+
+    let clock = NOW;
+    const h = harness(storedSnapshot({ completedSessions: MARCH_PAIR }));
+    const state = {
+      language: 'en',
+      ageBand: '7–8',
+      localProfileId: PROFILE_ID,
+      status: 'ready',
+      setupView: 'handoff',
+      saveStatus: 'idle',
+      completedSessions: JSON.parse(h.values.get(MISSIONKID_STORAGE_KEY)!)
+        .completedSessions,
+      history: true,
+    } as unknown as AppState;
+
+    const view = render(
+      <AppStateProvider initialState={state}>
+        <MissionHistory now={() => clock} />
+      </AppStateProvider>,
+    );
+
+    expect(vi.getTimerCount()).toBe(1);
+    expect(handlers(added, 'visibilitychange')).toHaveLength(1);
+    expect(handlers(windowAdded, 'focus')).toHaveLength(1);
+
+    view.unmount();
+
+    expect(vi.getTimerCount()).toBe(0);
+    expect(handlers(removed, 'visibilitychange')).toEqual(
+      handlers(added, 'visibilitychange'),
+    );
+    expect(handlers(windowRemoved, 'focus')).toEqual(
+      handlers(windowAdded, 'focus'),
+    );
+
+    // A return that the closed record is no longer there to answer.
+    clock = APRIL;
+    showVisibility('visible');
+    act(() => void vi.advanceTimersByTime(APRIL - NOW));
+    expect(document.querySelector('.mission-history')).toBeNull();
+    expect(h.writes).toHaveLength(0);
+  });
+
+  // The same on the route the family actually takes: the record gives its timer
+  // back when they return to Mission Category Selection.
+  it('gives the timer back when the family returns to Mission Category Selection', () => {
+    let clock = NOW;
+    const h = harness(storedSnapshot({ completedSessions: MARCH_PAIR }));
+    render(<App adapter={h.adapter} now={() => clock} />);
+
+    fireEvent.click(screen.getByRole('button', { name: t('discovery.action.open') }));
+    // Whatever Mission Category Selection holds on its own is the baseline;
+    // the record is what this measures.
+    const idle = vi.getTimerCount();
+
+    openHistory();
+    expect(vi.getTimerCount()).toBe(idle + 1);
+
+    fireEvent.click(screen.getByRole('button', { name: t('discovery.action.open') }));
+    expect(heading().textContent).toBe(t('view.discovery.title'));
+    expect(vi.getTimerCount()).toBe(idle);
+    expect(h.writes).toHaveLength(0);
   });
 });

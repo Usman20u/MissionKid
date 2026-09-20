@@ -68,6 +68,90 @@ function localCalendarDay(completedAt: number): string {
   return `${String(moment.getFullYear()).padStart(4, '0')}-${part(moment.getMonth() + 1)}-${part(moment.getDate())}`;
 }
 
+// The largest delay a browser timer can hold. Beyond it the value overflows its
+// signed 32-bit field and the callback runs at once, which would turn a wait for
+// a distant month boundary into a busy loop, so a longer wait is taken in hops
+// of this size and re-read against the clock at each one. A local calendar month
+// is longer than this, so the record opened on the first moment of a long month
+// is exactly the case that needs it.
+const LONGEST_TIMEOUT_MILLISECONDS = 2_147_483_647;
+
+// The first moment of the next local calendar month. It is built from local
+// calendar parts for the same reason the period identity is: the month is the
+// family's own, and an hour added or removed by daylight saving must not move
+// where it begins.
+function startOfNextLocalMonth(moment: number): number {
+  const from = new Date(moment);
+
+  return new Date(from.getFullYear(), from.getMonth() + 1, 1).getTime();
+}
+
+// The local month the family is in, kept current while the record stays open.
+//
+// The period is still read from the clock and never from a stored record; this
+// only decides when to read it again. Once at the moment the next local month
+// begins, so a family sitting on the record at midnight sees the new month
+// without leaving and returning — and once whenever they come back to a page
+// that was hidden or suspended, because a frozen tab's scheduled callback
+// cannot be relied on to have fired while it slept.
+//
+// Both paths re-read the same injected clock and write nothing. Where the month
+// has not actually turned the value is unchanged and nothing re-renders, so the
+// record never ticks and nothing on it counts down.
+function useCurrentLocalPeriod(now: WallClock): string {
+  const [periodId, setPeriodId] = useState(() => localCompletionPeriodId(now()));
+  // Read the clock at the moment something fires rather than when the effect was
+  // set up, so a later return reads what is current instead of what this closure
+  // happened to capture.
+  const readClock = useRef(now);
+  readClock.current = now;
+
+  useEffect(() => {
+    let scheduled: ReturnType<typeof setTimeout> | undefined;
+
+    function schedule(from: number) {
+      // One pending callback at a time: a return that re-reads the clock also
+      // re-measures the wait, and the earlier one is no longer the right moment.
+      clearTimeout(scheduled);
+
+      const wait = Math.max(startOfNextLocalMonth(from) - from, 0);
+
+      scheduled = setTimeout(
+        refresh,
+        Math.min(wait, LONGEST_TIMEOUT_MILLISECONDS),
+      );
+    }
+
+    function refresh() {
+      const moment = readClock.current();
+
+      setPeriodId(localCompletionPeriodId(moment));
+      schedule(moment);
+    }
+
+    // Both events can arrive for one return, and either can arrive repeatedly.
+    // Each only re-reads the clock, so no number of them changes anything but
+    // the moment the next check is due.
+    function onReturn() {
+      if (document.visibilityState !== 'hidden') {
+        refresh();
+      }
+    }
+
+    schedule(readClock.current());
+    document.addEventListener('visibilitychange', onReturn);
+    window.addEventListener('focus', onReturn);
+
+    return () => {
+      clearTimeout(scheduled);
+      document.removeEventListener('visibilitychange', onReturn);
+      window.removeEventListener('focus', onReturn);
+    };
+  }, []);
+
+  return periodId;
+}
+
 // One completed Mission Session, shown with exactly the approved minimum: the
 // Mission's own title, the Mission Category the session recorded when it was
 // chosen, and a localized completion context. No duration, no identifier, no
@@ -132,10 +216,11 @@ function MissionHistoryView({
   // Every completion, in every period. Only the Monthly Goal below narrows to
   // one month.
   const entries = deriveHistory(completedSessions, childProfileId);
-  // The month the family is in now, read from the clock on entry rather than
-  // from any completion's fixed period. A Reward Card restored later still
-  // names the period its own completion belongs to; this names today's.
-  const currentPeriodId = localCompletionPeriodId(now());
+  // The month the family is in now, read from the clock rather than from any
+  // completion's fixed period, and kept current while the record stays open. A
+  // Reward Card restored later still names the period its own completion
+  // belongs to; this names today's.
+  const currentPeriodId = useCurrentLocalPeriod(now);
   const progress = deriveProgress(
     completedSessions,
     childProfileId,
