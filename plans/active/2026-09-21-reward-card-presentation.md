@@ -53,7 +53,19 @@ CSS first. One minimal presentational class is allowed, and is needed: `MissionR
 
 ## Verification
 
-**Before and after, from identical seeded fixtures**, against the served production build in Chrome for Testing `148.0.7778.97`: English, German and Russian, at `390x780`, at `1280x900`, and at `320` px with a `32px` root, across an ordinary completion, the actual twentieth completion, a later completion, a long Mission title and the unavailable-title fallback — 39 screenshots before and 39 after. Every fixture is a restored result, loaded from a seeded snapshot through the real hydration path. No horizontal scroll appeared in any combination, before or after.
+**Before and after, from identical seeded fixtures**, against two served production builds — one from `main`, one from this branch — in Chrome for Testing `148.0.7778.97`. Every fixture is a restored result, loaded from a seeded snapshot through the real hydration path, and each pair uses the same fixture on both builds.
+
+The matrix is three languages × three viewport/text configurations × five card states, which is 45 combinations. **42 of the 45 were captured on each build**, not all of them; the record first stated a count of 39 without saying what it omitted, and this corrects that. What was captured:
+
+| Configuration | ordinary | twentieth | later completion | long title | unavailable title |
+| --- | --- | --- | --- | --- | --- |
+| `390x780`, `16px` root | EN DE RU | EN DE RU | EN DE RU | EN DE RU | EN DE RU |
+| `1280x900`, `16px` root | EN DE RU | EN DE RU | EN DE RU | EN DE RU | EN DE RU |
+| `320` px, `32px` root | EN DE RU | EN DE RU | **not captured** | EN DE RU | EN DE RU |
+
+The three omitted cells are the later completion at `320` px with enlarged text. That state differs from the ordinary card only in the digits of the goal figure and in the absence of the optional message, and both the goal block's new hairline and its wrapping at that width are already exercised there by the ordinary and twentieth fixtures, so no additional case was run for it. The original pass had also omitted the unavailable-title fallback at that configuration; that one **was** a real gap — the fallback puts a sentence-length string in the `h2` position, in the narrowest column this change touches — so it was captured on both builds rather than argued away. It is clean: the title column measures `174px` before and `172px` after, the rendered title is *shorter* after in all three languages (`378→364`, `432→416`, `324→312` px), nothing overflows the card, and the page is shorter than before.
+
+No horizontal scroll appeared in any captured combination, before or after.
 
 **Measured on the built page.** The card reports the tint, a `1px` border, an `18.4px` radius and a shadow where it previously reported a transparent background, no border, no radius and no shadow. The goal block reports no background where it previously reported one. On desktop the card is `512px` wide rather than the `1054px` band it filled before.
 
@@ -61,11 +73,31 @@ CSS first. One minimal presentational class is allowed, and is needed: `MissionR
 
 **The display-failure state was rendered, not assumed.** It has no trigger in an unmodified production build, so a throwaway instrumented build was made from a temporary source edit, screenshotted, and the edit reverted; it is not in any commit. The fallback keeps the plain `mission-result` class, shows no tint, no card and no recognition line, states that the result cannot be shown while the completion is safe, and gives the retry button an unclipped focus ring.
 
+**Contrast, measured on the rendered page** rather than argued from unchanged colour values, since the background beneath the text did change. Foreground colours and effective backgrounds were read from computed style with every ancestor layer composited, at `390x780` on the twentieth-completion fixture, which is the only state that carries every element at once.
+
+| Text | Colour on background | Ratio | Size / weight | Needs | Result |
+| --- | --- | --- | --- | --- | --- |
+| Recognition | `#174c40` on `#edf7f1` | `8.94:1` | `23.2px` / 800, large | `3:1` | AA and AAA |
+| Mission title | `#20302d` on `#edf7f1` | `12.6:1` | `20.8px` / 800, large | `3:1` | AA and AAA |
+| Category | `#4c625c` on `#edf7f1` | `5.98:1` | `15.2px` / 700 | `4.5:1` | AA |
+| Completion context | `#4c625c` on `#edf7f1` | `5.98:1` | `15.2px` / 400 | `4.5:1` | AA |
+| Monthly goal heading | `#20302d` on `#edf7f1` | `12.6:1` | `15.2px` / 800 | `4.5:1` | AA and AAA |
+| Goal period | `#4c625c` on `#edf7f1` | `5.98:1` | `15.2px` / 400 | `4.5:1` | AA |
+| Goal figure | `#20302d` on `#edf7f1` | `12.6:1` | `17.6px` / 700 | `4.5:1` | AA and AAA |
+| Twentieth-completion message | `#4c625c` on `#edf7f1` | `5.98:1` | `16px` / 400 | `4.5:1` | AA |
+| Action label | `#ffffff` on `#195d4c` | `7.74:1` | `16px` / 750 | `4.5:1` | AA and AAA |
+
+Every text element passes AA. Each ratio is slightly lower than on the old white background — the tint is marginally darker — and the largest drop is `0.56` on the metadata, from `6.5:1` to `5.98:1`. The recognition line is the one element whose colour changed, from `#23423a` to `#174c40`, and it also crossed into the large-text threshold: `10.91:1` against `4.5:1` required before, `8.94:1` against `3:1` required now.
+
+**Functional non-text indicators**, which need `3:1`, kept separate from decoration: the focus ring `#b4650c` measures `3.99:1` against the card surface it is drawn on, and the action's fill `#195d4c` measures `7.07:1` against that surface. The ring is drawn at a `3px` offset, so the colour it actually abuts on both sides is the card surface; its ratio against the button's own fill is `1.77:1`, which is identical on the pre-change build and is a property of the existing ring geometry, not of this change.
+
+**Decorative edges**, which carry no WCAG minimum: the card border is `1.22:1` against the card surface and `1.33:1` against the view panel behind it, the goal hairline is `1.22:1` against the surface, and the surface itself is `1.09:1` against the panel. The card's edge is therefore carried by border, tint and shadow together rather than by any one of them; that is a legibility-neutral choice and exactly the kind of judgement the pending human review should make.
+
 **Project checks, run sequentially:** type checking clean, **800 tests across 22 test files** passing, the production build clean, `git diff --check` clean. No test was added to assert a CSS declaration and no mutation campaign was run: behaviour is unchanged, and the existing suite is what covers it.
 
 **No specification or `AGENTS.md` change.** The Visual & Ergonomic specification already requires exactly what this card now presents, and its explicit non-goals leave palette and typography values to implementation. Nothing here is a new rule, so nothing was written down to restate an existing one.
 
-**Limitations.** This is automation in one engine against one build; it is not human sign-off, and human visual acceptance is explicitly still pending. No assistive technology was run, so no screen-reader behaviour is claimed beyond the semantics recorded above. No real phone, Safari or Firefox. This repository has no CI, so none of these checks is a CI result. Contrast of the new tint and text colours was not measured with a contrast tool; the text colours are unchanged except the recognition line, which moved to the brand green already used for headings on white.
+**Limitations.** This is automation in one engine against one build; it is not human sign-off, and human visual acceptance is explicitly still pending. No assistive technology was run, so no screen-reader behaviour is claimed beyond the semantics recorded above. No real phone, Safari or Firefox. This repository has no CI, so none of these checks is a CI result. Contrast is now measured and recorded above, so that earlier limitation no longer applies; what remains unmeasured there is any judgement about whether the decorative card edge is strong enough, which is a matter for the pending human review.
 
 ## Definition of complete
 
