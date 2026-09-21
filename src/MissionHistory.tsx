@@ -103,9 +103,9 @@ function startOfNextLocalMonth(moment: number): number {
 // The first render has to seed the state from its own reading, and the clock can
 // have crossed a month boundary by the time effects run, so the effect refreshes
 // from a single fresh reading rather than only scheduling from it: otherwise the
-// month on screen and the month the wait was measured from can disagree, leaving
-// the record on the month that has just ended until the month after the current
-// one begins.
+// month on screen and the month the wait was measured from disagree, and the
+// record keeps naming the month that has just ended until some later reading
+// corrects it — the first capped hop below, or a return to the page.
 function useCurrentLocalPeriod(now: WallClock): string {
   const [periodId, setPeriodId] = useState(() => localCompletionPeriodId(now()));
   // Read the clock at the moment something fires rather than when the effect was
