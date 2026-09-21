@@ -1472,6 +1472,72 @@ input {
   overflow-wrap: anywhere;
 }
 
+/* The successful Reward Card is the one surface in the flow that says a real
+   Mission was finished, and the review that follows implementation found it was
+   not readable as an object at all: it had no background, border, radius or
+   depth, so the only framed thing on the screen was the Monthly Goal block
+   inside it. It now sits on its own calm surface, tinted rather than white so it
+   reads as a distinct card against the near-white view panel instead of a second
+   white box nested in the first.
+
+   The modifier is what carries it. `MissionResultBoundary` renders its
+   display-failure fallback with the plain `mission-result` class, and a failed
+   display must not look like recognition, so only the card that shows a real
+   completion is given this treatment.
+
+   No `overflow` is clipped here: the Mission title is a focus target whose ring
+   is drawn 4px outside it, and hiding overflow would cut that ring off. */
+.mission-result--recognition {
+  /* Wide enough for the longest reviewed title, bounded so the card stays a card
+     on a desktop width rather than stretching into a band. */
+  max-width: 32rem;
+  /* Clears the view heading's focus ring, which the recognition line used to
+     clear on its own. */
+  margin-top: 0.75rem;
+  /* Padding is capped against the viewport as well as the root, so enlarging
+     text to 200% cannot squeeze the content column at 320px. */
+  padding: min(1.35rem, 5vw) min(1.25rem, 4.5vw);
+  border: 1px solid #d8e1da;
+  border-radius: 1.15rem;
+  background: #edf7f1;
+  box-shadow: 0 0.5rem 1.25rem rgb(32 48 45 / 6%);
+}
+
+/* Where the text column is genuinely tight — a 320px phone, or any narrow
+   screen whose reader has enlarged text — the card reclaims exactly as much of
+   the view panel's own padding as its padding adds back, so the tint widens the
+   card instead of narrowing the words inside it. Everywhere else the column is
+   wide enough to give the padding up. */
+@media (max-width: 22rem) {
+  .mission-result--recognition {
+    margin-inline: calc(-1 * min(1.25rem, 4.5vw));
+  }
+}
+
+/* Recognition leads the card. The Mission title stays large, bold and directly
+   beneath it, so what was completed is still unmistakable. */
+.mission-result--recognition .mission-result__recognition {
+  margin-top: 0;
+  color: #174c40;
+  font-size: 1.45rem;
+}
+
+.mission-result--recognition .mission-result__mission {
+  font-size: 1.3rem;
+}
+
+/* Progress stays supporting information. Inside the card it needs no second
+   frame of its own; a hairline is enough to separate it from the recognition
+   above, and dropping the panel keeps one less box on the screen. */
+.mission-result--recognition .mission-result__goal {
+  margin-top: 1.1rem;
+  padding: 0.9rem 0 0;
+  border: 0;
+  border-top: 1px solid #d8e1da;
+  border-radius: 0;
+  background: none;
+}
+
 .mission-result__recognition {
   max-width: 48ch;
   /* Clear of the view heading above it, which takes focus on entry and shows a

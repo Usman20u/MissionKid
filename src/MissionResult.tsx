@@ -134,7 +134,10 @@ function MissionResultCard({
   }
 
   return (
-    <div className="mission-result">
+    // The modifier is presentation only, and only for a card that shows a real
+    // completion: the boundary's display-failure fallback keeps the plain class
+    // so a failed display cannot be mistaken for recognition.
+    <div className="mission-result mission-result--recognition">
       <p className="mission-result__recognition">{t('result.recognition')}</p>
       <h2 className="mission-result__mission" ref={missionRef} tabIndex={-1}>
         {title}
