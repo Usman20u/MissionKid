@@ -838,6 +838,55 @@ describe('the month turning under an open record', () => {
     completion({ sessionId: 'march-2', missionId: 'calm-02', completedAt: NOW - 300_000 }),
   ];
 
+  // The view reads the clock twice as it arrives: once for the period it puts on
+  // screen, and once for the moment it measures the next refresh from. A boundary
+  // crossed between those two readings must not leave them in different months.
+  it('names the month that began between its two readings on entry', () => {
+    const LAST_MOMENT_OF_MARCH = new Date(2024, 2, 31, 23, 59, 59, 999).getTime();
+    const MAY = new Date(2024, 4, 1, 0, 0).getTime();
+
+    let clock = LAST_MOMENT_OF_MARCH;
+    // Armed immediately before the record opens: the first reading it takes is
+    // the last moment of March, and the month has turned by every reading after.
+    let crossing = false;
+    const readClock = () => {
+      if (!crossing) return clock;
+      crossing = false;
+      clock = APRIL;
+      return LAST_MOMENT_OF_MARCH;
+    };
+
+    const h = harness(storedSnapshot({ completedSessions: MARCH_PAIR }));
+    render(<App adapter={h.adapter} now={readClock} />);
+    crossing = true;
+    openHistory();
+
+    // April, and April's count, from the same reading the refresh is measured
+    // from — not March left on screen while the clock has moved on.
+    expect(periodLabel()).toBe(completionPeriodLabel('2024-04', 'en'));
+    expect(progressText()).toBe(
+      t('result.goal.progress').replace('{done}', '0').replace('{target}', '20'),
+    );
+    // March keeps its completions, their stored periods and their place here.
+    expect(entryTitles()).toHaveLength(2);
+    expect(
+      h.stored().completedSessions.map(
+        (record: { completionPeriodId: string }) => record.completionPeriodId,
+      ),
+    ).toEqual(['2024-03', '2024-03']);
+    expect(h.writes).toHaveLength(0);
+
+    // The refresh then follows April's own boundary: the record reaches May
+    // from the month it is showing, rather than skipping a month it never named.
+    act(() => {
+      clock = MAY;
+      vi.advanceTimersByTime(MAY - APRIL);
+    });
+    expect(periodLabel()).toBe(completionPeriodLabel('2024-05', 'en'));
+    expect(entryTitles()).toHaveLength(2);
+    expect(h.writes).toHaveLength(0);
+  });
+
   it('names the new month in place, without the family leaving and returning', () => {
     let clock = NOW;
     const h = openAt(() => clock, { completedSessions: MARCH_PAIR });

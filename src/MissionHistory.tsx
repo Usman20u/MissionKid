@@ -98,6 +98,14 @@ function startOfNextLocalMonth(moment: number): number {
 // Both paths re-read the same injected clock and write nothing. Where the month
 // has not actually turned the value is unchanged and nothing re-renders, so the
 // record never ticks and nothing on it counts down.
+//
+// Every reading that is shown is also the one the next check is measured from.
+// The first render has to seed the state from its own reading, and the clock can
+// have crossed a month boundary by the time effects run, so the effect refreshes
+// from a single fresh reading rather than only scheduling from it: otherwise the
+// month on screen and the month the wait was measured from can disagree, leaving
+// the record on the month that has just ended until the month after the current
+// one begins.
 function useCurrentLocalPeriod(now: WallClock): string {
   const [periodId, setPeriodId] = useState(() => localCompletionPeriodId(now()));
   // Read the clock at the moment something fires rather than when the effect was
@@ -138,7 +146,10 @@ function useCurrentLocalPeriod(now: WallClock): string {
       }
     }
 
-    schedule(readClock.current());
+    // One reading for both the period shown and the wait measured from it.
+    // Where the month has not turned since the first render this sets the state
+    // it already holds, which React drops without re-rendering.
+    refresh();
     document.addEventListener('visibilitychange', onReturn);
     window.addEventListener('focus', onReturn);
 
