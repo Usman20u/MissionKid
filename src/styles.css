@@ -1557,3 +1557,109 @@ input {
   color: #4c625c;
   font-size: 0.95rem;
 }
+
+/* The private record: a calm list, not a feed and not a dashboard. Entries are
+   scannable rows with no avatar, no reaction, no rank and no chart. */
+.mission-history {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+}
+
+/* As on the Reward Card, one long compound word must break inside the surface
+   rather than widen the column it sits in at enlarged text. */
+.mission-history > * {
+  overflow-wrap: anywhere;
+}
+
+.mission-history__goal {
+  width: 100%;
+  margin-top: 0.75rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid #d8e1da;
+  border-radius: 1.25rem;
+  background: rgb(255 255 255 / 92%);
+}
+
+.mission-history__goal-heading {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 800;
+}
+
+.mission-history__goal-period,
+.mission-history__goal-progress {
+  margin: 0.3rem 0 0;
+}
+
+.mission-history__goal-period {
+  color: #4c625c;
+  font-size: 0.95rem;
+}
+
+.mission-history__goal-progress {
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.mission-history__entries {
+  width: 100%;
+  margin: 1.1rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.mission-history__entry {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0.75rem 0;
+  border-top: 1px solid #e4ebe6;
+}
+
+.mission-history__entry:first-child {
+  border-top: 0;
+}
+
+.mission-history__entry-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.mission-history__entry-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem 1rem;
+  color: #4c625c;
+  font-size: 0.95rem;
+}
+
+.mission-history__entry-category {
+  font-weight: 700;
+}
+
+.mission-history__empty,
+.mission-history__state {
+  max-width: 48ch;
+  margin: 1.1rem 0 0;
+  line-height: 1.55;
+}
+
+.mission-history__state {
+  color: #8b2828;
+}
+
+.mission-history .button {
+  margin-top: 1.4rem;
+}
+
+/* The two secondary ways out of discovery, wrapping rather than shrinking below
+   the minimum target size on a narrow screen. */
+.mission-discovery__exits {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 1.5rem;
+}

@@ -32,6 +32,26 @@ export function completionPeriodLabel(
   }
 }
 
+// The completion moment in the family's own language. It is presentation only:
+// the stored timestamp and the period identity it already fixed are never
+// touched, so changing language changes what this reads, never what counts.
+export function completionContext(
+  completedAt: number,
+  language: SupportedLanguage,
+): string {
+  try {
+    return new Intl.DateTimeFormat(language, {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    }).format(new Date(completedAt));
+  } catch {
+    // A device without the locale data still gets a truthful date rather than
+    // an empty card.
+    return new Date(completedAt).toISOString().slice(0, 10);
+  }
+}
+
 // The fixed MVP target for one Child Profile in one monthly goal period.
 export const MONTHLY_GOAL_TARGET = 20;
 
@@ -65,6 +85,36 @@ function byCompletionOrder(
   if (first.sessionId === second.sessionId) return 0;
 
   return first.sessionId < second.sessionId ? -1 : 1;
+}
+
+// The private Mission History for one Child Profile: every completed Mission
+// Session it holds, in every period, newest first.
+//
+// It reads the completed sessions a validated snapshot already produced, so the
+// record-level trust rules that coalesced identical duplicates and excluded
+// conflicting copies are the ones that decide what appears here; this adds no
+// second policy and only guards against listing one identifier twice.
+//
+// The order is `byCompletionOrder` read backwards, so the comparator that
+// decides which completion is the twentieth is the same one that decides what
+// is newest. Reversing it rather than writing a second comparator is what keeps
+// the two from ever disagreeing. Nothing is written, nothing is counted, and
+// the collection it is given is never sorted in place.
+export function deriveMissionHistory(
+  completedSessions: readonly CompletedMissionSession[],
+  childProfileId: string,
+): readonly CompletedMissionSession[] {
+  const listed = new Map<string, CompletedMissionSession>();
+
+  for (const session of completedSessions) {
+    if (session.childProfileId === childProfileId && !listed.has(session.sessionId)) {
+      listed.set(session.sessionId, session);
+    }
+  }
+
+  return [...listed.values()].sort(
+    (first, second) => -byCompletionOrder(first, second),
+  );
 }
 
 // Monthly Goal progress, derived and never stored. It reads the completed

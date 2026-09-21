@@ -27,6 +27,7 @@ import {
 import { MissionActive } from './MissionActive';
 import { MissionResult } from './MissionResult';
 import { MissionCategorySelection } from './MissionDiscovery';
+import { MissionHistory } from './MissionHistory';
 import { MissionReady } from './MissionReady';
 import {
   createLocalProfileId,
@@ -51,17 +52,22 @@ export type AppView =
   | 'session-opening'
   | 'session-ready'
   | 'session-active'
-  | 'session-result';
+  | 'session-result'
+  // The private record of completed Mission Sessions, with this month's goal.
+  | 'history';
 
-// The child-facing areas. The parent's recovery and reset controls do not
-// belong on them: a destructive action beside a Mission is not the child's to
-// take, and it must not compete with the Mission itself.
+// The views the parent's recovery and reset controls do not belong on: a
+// destructive action beside a Mission is not the child's to take, and it must
+// not compete with the Mission itself. The private record is here for the same
+// reason — it is reached from the child-facing discovery doorway, and a control
+// that erases every completed Mission does not belong beside the list of them.
 const CHILD_FACING_VIEWS: readonly AppView[] = [
   'discovery-categories',
   'session-opening',
   'session-ready',
   'session-active',
   'session-result',
+  'history',
 ];
 
 // Reaching `ready` and being `ready` are one context for the family: the
@@ -125,6 +131,10 @@ const VIEW_CONTENT: Record<AppView, ViewContent> = {
     context: 'app.brand',
     title: 'view.sessionActive.title',
   },
+  history: {
+    context: 'app.brand',
+    title: 'view.history.title',
+  },
 };
 
 export function selectAppView(state: AppState): AppView {
@@ -174,7 +184,15 @@ export function selectAppView(state: AppState): AppView {
             return 'session-opening';
           }
 
-          return state.discovery ? 'discovery-categories' : 'setup-complete-handoff';
+          // The private record sits below every one of those: opening it ends
+          // no session and clears no result, so anything the family is actually
+          // in still wins. A live discovery cycle outranks it too, so returning
+          // to Mission Category Selection always leaves the record behind.
+          if (state.discovery) {
+            return 'discovery-categories';
+          }
+
+          return state.history ? 'history' : 'setup-complete-handoff';
         }
       }
     }
@@ -336,6 +354,8 @@ export function AppShell({
               <MissionActive adapter={adapter} now={now} />
             ) : SESSION_VIEWS.includes(view) ? (
               <MissionReady adapter={adapter} />
+            ) : view === 'history' ? (
+              <MissionHistory now={now} />
             ) : view === 'discovery-categories' ? (
               // The same adapter the shell was given: one storage boundary for
               // the whole flow, so a selection and the transition that follows
@@ -349,13 +369,25 @@ export function AppShell({
             )
           ) : null}
           {view === 'setup-complete-handoff' && !state.resetConfirm ? (
-            <button
-              className="button button--primary"
-              onClick={() => dispatch({ type: 'discovery-opened' })}
-              type="button"
-            >
-              {t('discovery.action.open')}
-            </button>
+            <>
+              <button
+                className="button button--primary"
+                onClick={() => dispatch({ type: 'discovery-opened' })}
+                type="button"
+              >
+                {t('discovery.action.open')}
+              </button>
+              {/* Secondary, and deliberately below the one primary action: the
+                  record is there to be reviewed, not to compete with finding a
+                  Mission. */}
+              <button
+                className="button button--secondary"
+                onClick={() => dispatch({ type: 'history-opened' })}
+                type="button"
+              >
+                {t('history.action.open')}
+              </button>
+            </>
           ) : null}
           {state.status !== 'pending' && !CHILD_FACING_VIEWS.includes(view) ? (
             <div className="recovery-actions">

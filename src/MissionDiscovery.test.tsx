@@ -793,9 +793,16 @@ describe('category selection and the discovery cycle', () => {
       'settings',
       'snapshotVersion',
     ]);
+    // Discovery may offer the secondary route to the private record, but it
+    // presents no recognition, no History entry and no progress figure of its
+    // own — those all require a completed session, and none exists.
     expect(
-      screen.queryByText(/Reward|Mission History|Monthly Goal|Mission done|Start mission/i),
+      screen.queryByText(/Reward|Monthly Goal|Mission done|Start mission/i),
     ).toBeNull();
+    expect(screen.queryByText(/\d+ \/ \d+ missions/)).toBeNull();
+    expect(screen.queryByText('You did it.')).toBeNull();
+    expect(document.querySelector('.mission-history__entries')).toBeNull();
+    expect(document.querySelector('.mission-history__goal')).toBeNull();
   });
 
   it('asks for nothing about the child and offers no social or payment behaviour', () => {

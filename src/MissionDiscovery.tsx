@@ -258,13 +258,25 @@ export function MissionCategorySelection({
         />
       ) : null}
 
-      <button
-        className="button button--secondary"
-        onClick={() => dispatch({ type: 'setup-editing-started' })}
-        type="button"
-      >
-        {t('setup.action.edit')}
-      </button>
+      {/* The two secondary ways out of discovery, kept together at the end and
+          outside the Mission cards so neither competes with choosing a Mission.
+          Leaving for either ends the discovery cycle, as `F002` requires. */}
+      <div className="mission-discovery__exits">
+        <button
+          className="button button--secondary"
+          onClick={() => dispatch({ type: 'history-opened' })}
+          type="button"
+        >
+          {t('history.action.open')}
+        </button>
+        <button
+          className="button button--secondary"
+          onClick={() => dispatch({ type: 'setup-editing-started' })}
+          type="button"
+        >
+          {t('setup.action.edit')}
+        </button>
+      </div>
     </div>
   );
 }
