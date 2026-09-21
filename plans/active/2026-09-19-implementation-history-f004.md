@@ -184,6 +184,8 @@ Dependency-ordered. Each task is complete only when its verification passes.
 
 **Verification.** Rendered tests with an injected clock and controlled timers: a boundary reached while the view is open; a return after hidden time with no timer having run; a new month with no completions, including an empty record; a month longer than one browser timer can hold; and the timer and both listeners released when the record closes. Each asserts the rendered label and figure, the retained record and unchanged storage. Then a focused production-browser check of the refresh against the served build.
 
+**Follow-up authorization, 2026-09-21.** A later instruction reopened this task for one focused correction and nothing else. Inside `useCurrentLocalPeriod` the displayed period and the first scheduled refresh are read from the clock separately — the state initializer makes one reading, and the effect that schedules the next refresh makes another. A local month boundary crossed between those two readings leaves the record naming the month that has just ended while the next refresh is measured from the month that has just begun. The authorization covers reproducing that failure through the rendered application, fixing it, verifying it, updating this plan and the changelog, focused commits, a normal push to the existing branch, and updating the description of pull request #5. Merge, deployment, force-push, branch deletion, a second pull request and repository-setting changes remain unauthorized, and this plan stays active pending review.
+
 ## Implementation record
 
 ### Task 1 — the derivation
