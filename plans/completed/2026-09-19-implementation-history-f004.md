@@ -1,7 +1,11 @@
 # MissionKid Implementation Plan 04 — Mission History and the current Monthly Goal
 
 **Date:** 2026-09-19
-**Status:** Implemented and verified — ready for review, with one review correction applied inside Task 8. Tasks 1–8 complete. The plan stays active until review concludes; nothing is merged or deployed.
+**Status:** Completed
+
+Scope items 1–8 are implemented and verified as recorded here. Independent review has concluded: it accepted the functional initialization-race correction inside Task 8 and returned two factual corrections to this record, both applied above with what they replaced stated. This plan is now historical evidence of what was implemented and verified, not live status.
+
+Merging, deployment, branch deletion and everything beyond the approved `F001`–`F004` scope are separate acts. None is authorized, and none has been done. This is not a claim of human or assistive-technology acceptance, of any CI result, of deployment readiness, or of MissionKid MVP completion.
 
 ## Authorization basis
 
@@ -310,4 +314,17 @@ No other string was added, and `result.missionUnavailable`, `result.completedOn`
 
 Scope items 1–8 implemented and verified, every mapped clause carried by a named assertion, the ergonomic review done with at most three targeted improvements, the changelog updated, and this plan's record written before it moves to `plans/completed/`.
 
-That point has been reached for the work itself, and the plan is recorded as *Implemented and verified — ready for review*. It stays under `plans/active/` rather than moving to `plans/completed/`, because independent review has not happened yet and a status of complete would not be truthful until it has. The branch is pushed to `origin` and [pull request #5](https://github.com/Usman20u/MissionKid/pull/5) is open against `main`, under the authorization recorded under *Authorization basis* above. Review has since returned one correction inside Task 8 — the month that turns between the view's two clock readings on entry — which is recorded above and pushed to the same branch and the same pull request. The plan stays active for the review it is still under. Merge, deployment, force-push, branch deletion and repository-setting changes remain a separate decision this plan does not grant.
+That point has been reached. The branch is pushed to `origin` and [pull request #5](https://github.com/Usman20u/MissionKid/pull/5) is open against `main`, under the authorization recorded under *Authorization basis* above. Review returned one functional correction inside Task 8 — the month that turns between the view's two clock readings on entry — which is recorded above and pushed to the same branch and the same pull request. Merge, deployment, force-push, branch deletion and repository-setting changes remain a separate decision this plan does not grant.
+
+## Closure (2026-09-21)
+
+Independent review of this plan and of pull request #5 has concluded, and closure was explicitly authorized. The review accepted the functional initialization-race correction and returned two factual corrections to the record, neither of which changes any shipped behaviour:
+
+1. **Mutation 20 was misclassified.** It was recorded as behaviourally equivalent; it is not. Two adjacent clock readings can straddle midnight, so splitting the refresh into two readings can take the period from March while the wait is measured from April. Its green run is therefore evidence of a behaviour-changing mutation the suite does not cover, and the totals are corrected to 15 caught, 1 surviving, 2 equivalent and 2 controls. The experimental results themselves are unchanged; only their classification was wrong.
+2. **The defect's duration was overstated.** The claim that the wrong month stood for a whole month, and that April was never displayed, described the forced clock of the recorded run rather than ordinary use. The first capped hop re-reads the clock after about `24.855` days, and a `focus` or `visibilitychange` return re-reads it sooner. The browser observations are kept with that scope, and the source comment in `MissionHistory.tsx` that repeated the claim is corrected with the record.
+
+With both applied, every obligation above is satisfied, so this plan is complete and moves to `plans/completed/`, leaving `plans/active/` empty. It becomes historical evidence rather than live status.
+
+The verification recorded above stands as recorded against the head it was run on, `99fe8d2`: type checking, 800 tests across 22 test files, the production build and `git diff --check`. The closure changes touched documentation, one source comment and this file's location only, so the suite was not re-run for them and no new verification is claimed. Every limitation recorded above still stands — no assistive technology at any point, browser evidence from automation in one engine and not human sign-off, no CI in this repository, the uncovered mutation named above, and the three unexplained failures recorded in Plan 03 Task 1 and the two timeouts recorded in its Task 7.
+
+Merging, deployment, force-pushing, branch deletion, further pull requests and repository-setting changes remain unauthorized and undone. Pull request #5 stays open for the merge decision, which this closure does not make and does not claim readiness for.
