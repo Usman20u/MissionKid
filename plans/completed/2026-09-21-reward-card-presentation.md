@@ -1,13 +1,13 @@
 # MissionKid Follow-up — make the Reward Card recognizable
 
 **Date:** 2026-09-21
-**Status:** Implemented and verified — human visual acceptance pending. The plan stays active until that review concludes; nothing is pushed, merged or deployed.
+**Status:** Completed — implemented, verified, and visually accepted by the human reviewer. Nothing was pushed, merged or deployed.
 
 ## Authorization basis
 
-The durable specification-completion evidence is [`plans/completed/2026-08-17-missionkid-mvp-foundation-plan.md`](../completed/2026-08-17-missionkid-mvp-foundation-plan.md), whose gate records User Story / Traceability Validation `PASSED — 10/10`, Full Specification Audit `PASSED — 10/10`, specification blockers `NONE`, and the explicit `SPEC COMPLETE` declaration.
+The durable specification-completion evidence is [`plans/completed/2026-08-17-missionkid-mvp-foundation-plan.md`](./2026-08-17-missionkid-mvp-foundation-plan.md), whose gate records User Story / Traceability Validation `PASSED — 10/10`, Full Specification Audit `PASSED — 10/10`, specification blockers `NONE`, and the explicit `SPEC COMPLETE` declaration.
 
-It follows [`plans/completed/2026-09-19-implementation-history-f004.md`](../completed/2026-09-19-implementation-history-f004.md) — Plan 04, merged into `main` as `70da510` — and the earlier completed plans. All of them are historical evidence and none is reopened; their records and limitations stand as written.
+It follows [`plans/completed/2026-09-19-implementation-history-f004.md`](./2026-09-19-implementation-history-f004.md) — Plan 04, merged into `main` as `70da510` — and the earlier completed plans. All of them are historical evidence and none is reopened; their records and limitations stand as written.
 
 The instruction that approved this plan authorizes one bounded presentation improvement to the successful Reward Card, its verification, its record here and in the changelog, and focused commits on one branch taken from `70da510`. Push, pull request, merge and deployment are **not** authorized.
 
@@ -102,3 +102,23 @@ Every text element passes AA. Each ratio is slightly lower than on the old white
 ## Definition of complete
 
 Scope items 1 to 3 implemented, the verification above run and recorded truthfully here and in the changelog, and the diff limited to presentation. Human visual acceptance stays pending: this plan does not claim it, and it does not claim MVP completion or deployment readiness.
+
+## Human visual acceptance
+
+**Accepted — 2026-09-22.** The human reviewer accepted the Reward Card's presentation after reviewing photographs of the built card in English, German and Russian. This is the reviewer's own visual judgement, recorded here as the acceptance this plan was waiting for.
+
+What it is and is not:
+
+- It is acceptance of **this bounded presentation change** — that the successful completion surface now reads as a Reward Card, in all three MVP languages.
+- It is **not** acceptance of the MissionKid product, the MVP, or any other view, and it makes no deployment-readiness claim.
+- It is **separate from the automated checks recorded above**, which remain exactly as recorded and are neither strengthened nor superseded by it. No new automated evidence was produced for the acceptance, and no limitation recorded above is retired by it: no assistive technology was run, the browser evidence is still one engine against one build, there is still no real phone, Safari or Firefox, and this repository still has no CI.
+
+## Closure
+
+**Closed — 2026-09-22.** The definition of complete is satisfied: scope items 1 to 3 are implemented, the verification is run and recorded here and in the changelog, the diff is limited to presentation, and the human visual acceptance the plan was held open for is now recorded above.
+
+The branch head at closure is `d1352e2`. The branch diff against `main` is `MissionResult.tsx` (one presentational modifier), `styles.css` (one block of rules for that modifier), this plan and the changelog — no behaviour, string, control, asset, dependency or specification file among them.
+
+The checks were re-run at this head before closing: type checking clean, the production build clean and byte-identical to the committed `dist/`, and **800 tests across 22 test files passing**. One earlier run in the same session reported a single failure in `MissionSuggestionSet.test.tsx` — *presents exactly three distinct Missions in every approved context* — which passed both in isolation and on a clean full re-run. It is recorded as another instance of the suite flakiness this repository already carries as a known limitation, not as a new defect: no source, test or fixture differs between the failing and passing runs.
+
+This plan moves to `plans/completed/` as historical evidence. Its record, its selective **42 of 45** screenshot coverage, the three omitted cells and the reason each was omitted or captured, the measured contrast table, and every recorded limitation stand as written and are not reopened. Nothing was pushed, merged, deployed, force-pushed or deleted, and no branch was removed.
