@@ -52,7 +52,7 @@ MissionKid MVP is a single-route static SPA served only from `/`. The parent int
 - If no recoverable current flow exists, the shell selects the safe setup or Mission Category view from validated state.
 - Deep-link routes, URL-based page state, and direct navigation to child-flow views are outside MVP.
 - No router dependency is required solely for MVP navigation.
-- The first-use parent introduction is one such view. It is selected from the existing first-use setup state, and it requires no route, URL, history entry, router dependency, snapshot field, or persisted acknowledgement. A hydrated snapshot that resolves to a valid setup context, a current Mission Session, or a current completed result never selects it, so a returning family is not interrupted by it.
+- The first-use parent introduction is one such view. It is selected from the existing first-use setup state, and it requires no route, URL, history entry, router dependency, snapshot field, or persisted acknowledgement. It performs no storage write: the persistence adapter is not called while it is displayed, so no state-changing operation, read-back, or failure path arises from it. A hydrated snapshot that resolves to a valid setup context, a current Mission Session, or a current completed result never selects it, so a returning family is not interrupted by it and existing durable-state precedence is unchanged.
 
 The application must neither generate nor advertise non-root product URLs. A request for a non-root path is a hosting-level not-found response, not an application recovery path and not an MVP deep link.
 

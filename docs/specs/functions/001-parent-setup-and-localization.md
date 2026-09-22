@@ -44,14 +44,18 @@ The introduction explains, in the resolved UI language:
 - what the family will do, as a short account of the flow from Mission Category selection to marking a Mission done; and
 - that setup is brief, needs no account, and asks for no identifying child data.
 
-It offers exactly one forward action, which continues to the setup choices. The introduction is not a step the family can fail, records no choice about the child, and creates no Mission Session, Reward Card, Mission History entry, or Monthly Goal increment.
+It offers exactly one forward action, which continues to the setup choices. That action opens parent setup; it does not start, select, or prepare a Mission.
+
+The introduction is not a step the family can fail and records no choice about the child. **Reaching, reading, or leaving the introduction performs no durable write of any kind.** It creates no Mission Session, Reward Card, Mission History entry, or Monthly Goal increment; it stores no language, age context, Child Profile, or acknowledgement that it was seen; and it leaves any existing stored context exactly as it found it.
 
 ### The example Mission
 
 The introduction may show one Mission from the controlled predefined mission catalog as an illustration of what a Mission looks like. That example:
 
 - is presented as an example and is not selectable;
-- is not a mission suggestion, starts no discovery, and does not replace or pre-empt Mission Category selection;
+- is informational only: viewing it selects no Mission, creates no Mission Session, and starts no discovery;
+- is not a mission suggestion and does not replace or pre-empt Mission Category selection;
+- must not be preselected, promoted, pinned, reordered, or given any preference in later discovery. After setup, it is an ordinary catalog Mission with no memory of having been the example, and the deterministic eligibility and ordering rules in [F002](002-mission-discovery-and-selection.md) apply to it unchanged;
 - must already be approved for every supported age band, so showing it infers no age context and decides no eligibility question; and
 - uses its reviewed localized content unchanged, including any required adult-involvement wording and safety guidance, which remains visible exactly as it would be before a selection.
 
@@ -63,13 +67,37 @@ If no Mission is approved for every supported age band, or its content is incomp
 
 The introduction resolves the UI language exactly as the rest of setup does: English by default, with German and Russian equally available. The supported language choice is offered on the introduction itself, so a parent who does not read English is not required to pass through an English screen before reaching it. The same choice remains available in the setup step, and choosing a language on the introduction is the same `F001` language choice with no other effect.
 
+Before setup is confirmed, that choice behaves as follows:
+
+- it applies immediately to the interface, including the example Mission's reviewed localized content;
+- it is **not** written anywhere, because nothing on the introduction is written;
+- it carries forward into the setup step within the same visit, where it appears as the current selection rather than being asked for again; and
+- it becomes durable only through the confirmed setup save, together with the age band. If the parent leaves before confirming setup, nothing was stored, and the next first use resolves to English again, which is the default rather than a lost setting.
+
+This adds no second language mechanism. The confirmed setup save remains the only thing that makes a language durable, and English remains the default and the only fallback.
+
 ### When the introduction is shown
 
-- The introduction is shown on first use, when no valid local product context is available.
-- A family with a valid completed setup does not see it and continues to whatever their own state implies: a current Mission Session, a current completed result, or Mission Category selection.
-- A family whose stored context is valid but carries no valid age band reaches the age-context step described under *Incomplete setup*, not the introduction.
-- Where the Technical Specifications direct the family to a recovery or temporary-mode surface — unreadable stored data, an unsupported stored version, or storage that cannot be used — that surface applies instead of the introduction. Recovery is not an introduction.
-- A parent who has continued to the setup choices is not returned to the introduction by MissionKid. Nothing has been recorded yet, so a later first-use visit in the same context legitimately begins at the introduction again.
+The introduction is eligible in exactly one case and in no other. Existing durable-state precedence is unchanged: nothing below reorders it, and the introduction never outranks anything the family is actually in.
+
+| Resolved context on arrival | What the family reaches | Introduction |
+| --- | --- | --- |
+| **Absent storage** — no stored context at all, including a later visit whose context has become unavailable | The introduction | **Shown** |
+| **Valid setup, nothing in progress** | Mission Category Selection or the setup handoff, as today | Not shown |
+| **Incomplete setup** — stored context valid but no valid age band | The age-context step under *Incomplete setup* | Not shown |
+| **Current Mission Session `selected`** | That Mission's start experience | Not shown |
+| **Current Mission Session `ready`** | That Mission's start experience | Not shown |
+| **Current Mission Session `active`** | The running Mission | Not shown |
+| **Current completed-result pointer** | That Reward Card | Not shown |
+| **Recovery** — unreadable stored data or an unsupported stored version | The approved recovery surface, with its reset choice | Not shown |
+| **Temporary mode** — storage unavailable or blocked | The approved temporary-mode surface, with its warning | Not shown |
+
+Two of these are deliberate and are recorded as such:
+
+- **Recovery is not an introduction.** A parent being told their stored data cannot be read must be given that fact and the approved recovery choice, not an introduction to the product.
+- **Temporary mode is not an introduction.** When storage is unavailable, a first visit and a returning one cannot be distinguished, and the warning that nothing will be durable is the information the parent needs first. A genuinely new visitor with blocked storage therefore reaches temporary mode without an introduction.
+
+A parent who has continued to the setup choices is not returned to the introduction by MissionKid. Nothing has been recorded yet, so a later first-use visit in the same context legitimately begins at the introduction again; that is the absent-storage row, not a repeat.
 
 ## First-use setup
 
@@ -151,7 +179,9 @@ Error handling must use calm, clear language, preserve valid choices where possi
 13. Given a first use with no valid local product context, when MissionKid opens, then the parent introduction is shown in the resolved UI language and offers exactly one forward action into the setup choices.
 14. Given a valid completed setup in the same available local product context, when the family returns, then the introduction is not shown and the family continues to its current Mission Session, its current completed result, or Mission Category selection.
 15. Given the introduction shows an example Mission, then that example is not selectable, is already approved for every supported age band, presents its reviewed localized content unchanged including any required adult-involvement wording and safety guidance, and creates no Mission Session, discovery result, Reward Card, Mission History entry, or Monthly Goal effect.
-16. Given the introduction, when the parent selects a supported language there, then the interface uses that language, the setup step shows the same choice, and English remains the default and the only fallback.
+16. Given the introduction, when the parent selects a supported language there, then the interface and the example Mission's content use that language, the setup step carries the same choice forward within the visit, nothing is written until setup is confirmed, and English remains the default and the only fallback.
+17. Given any arrival context, the introduction is shown when and only when no valid local product context is available; a valid setup, an incomplete setup, a `selected`, `ready`, or `active` Mission Session, a current completed-result pointer, a recovery context, and an unavailable-storage context each reach their own approved surface instead, with existing durable-state precedence unchanged.
+18. Given the introduction, when it is reached, read, or left, then no durable write of any kind occurs, no stored context is modified, and the example Mission is neither selected nor given any preference in later discovery.
 
 ## MVP boundaries
 
