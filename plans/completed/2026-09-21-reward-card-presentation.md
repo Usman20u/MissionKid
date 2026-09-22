@@ -122,3 +122,23 @@ The branch head at closure is `d1352e2`. The branch diff against `main` is `Miss
 The checks were re-run at this head before closing: type checking clean, the production build clean and byte-identical to the committed `dist/`, and **800 tests across 22 test files passing**. One earlier run in the same session reported a single failure in `MissionSuggestionSet.test.tsx` — *presents exactly three distinct Missions in every approved context* — which passed both in isolation and on a clean full re-run. It is recorded as another instance of the suite flakiness this repository already carries as a known limitation, not as a new defect: no source, test or fixture differs between the failing and passing runs.
 
 This plan moves to `plans/completed/` as historical evidence. Its record, its selective **42 of 45** screenshot coverage, the three omitted cells and the reason each was omitted or captured, the measured contrast table, and every recorded limitation stand as written and are not reopened. Nothing was pushed, merged, deployed, force-pushed or deleted, and no branch was removed.
+
+## Evidence corrections — 2026-09-22
+
+Two statements in the *Closure* section above are wrong. They are named here rather than edited away, following this repository's convention for correcting a recorded claim. Neither affects anything that was implemented: no source, test, dependency, configuration or specification changed for these corrections, and the human visual acceptance stands.
+
+**1. `dist/` is not committed, so nothing was compared against a commit.** The *Closure* section says the production build was "clean and byte-identical to the committed `dist/`". `dist/` is listed in [`.gitignore`](../../.gitignore) and `git ls-files -- dist` returns nothing: it is ignored build output and is not part of any commit on any branch. It was never tracked, so this is not an unexpected tracking state to report — but the claim as written asserts a comparison that could not have been made.
+
+What was actually observed at head `d1352e2`: `npm run build` completed with no error and emitted `index.html` plus the content-hashed assets `index-B3AlsbsC.js` and `index-CFvXtskV.css`, which are the same filenames the untracked local `dist/` already held. `git status` reported a clean working tree afterwards, but that says nothing about `dist/` at all, because an ignored path is invisible to it. No byte comparison was performed.
+
+What has since been verified, on the unchanged application source: `dist/` was deleted entirely and rebuilt from empty, and the SHA-256 of all three emitted files is identical to the previous output. The build is therefore reproducible from this source. That is a statement about the build, not about a commit.
+
+**2. The transient test failure is a separate, unexplained observation.** The *Closure* section attributes the single failure of `MissionSuggestionSet.test.tsx` — *presents exactly three distinct Missions in every approved context* — to "the suite flakiness this repository already carries as a known limitation". That attribution is not supported. Passing on re-run establishes that the failure did not reproduce; it does not establish a cause, and it does not establish that the cause is the same as the three unexplained failures recorded in Plan 03 Task 1 or the two timeouts recorded in its Task 7. Those were different tests in different files.
+
+What is actually known about this observation, and nothing more:
+
+- It occurred once, in the first full-suite run of the 2026-09-22 session, at head `d1352e2`.
+- The full output was truncated by the shell pipeline that captured it, so the assertion message and failure reason were not preserved. The run's own summary reported `1 failed | 799 passed (800)`.
+- The same file then passed in isolation, `50 passed (50)`, and the full suite then passed `800 passed (800)`, with no source, test, fixture or dependency difference between the runs.
+- No cause was identified, and none is claimed. It is recorded here as **one unexplained transient failure, cause unknown**, separate from the earlier unexplained failures and not merged into them.
+- It was not reproduced, so it is not shown to be a defect either. What it does show is that this suite has produced at least one unexplained non-reproducing failure at this head, which is a limitation of the verification recorded above.
