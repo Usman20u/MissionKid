@@ -125,19 +125,21 @@ Existing durable-state precedence is unchanged. The introduction never outranks 
 
 | Resolved context on arrival | Destination | Introduction | Same as today? |
 | --- | --- | --- | --- |
-| Absent storage — no stored context at all | The introduction | **Shown** | New view in place of the bare setup form |
+| **No stored context** — storage works and holds nothing | The introduction | **Shown** | New view in place of the bare setup form |
 | Valid setup, nothing in progress | Mission Category Selection or the setup handoff | Not shown | Unchanged |
 | Incomplete setup — valid context, no valid age band | The age-context gate | Not shown | Unchanged |
 | Current Mission Session `selected` | That Mission's start experience | Not shown | Unchanged |
 | Current Mission Session `ready` | That Mission's start experience | Not shown | Unchanged |
 | Current Mission Session `active` | The running Mission | Not shown | Unchanged |
 | Current completed-result pointer | That Reward Card | Not shown | Unchanged |
-| Recovery — unreadable data or unsupported version | The recovery surface and its reset choice | Not shown | Unchanged |
-| Temporary mode — storage unavailable or blocked | The temporary-mode surface and its warning | Not shown | Unchanged |
+| **Unreadable stored context** — invalid data or unsupported version | The recovery surface and its reset choice | Not shown | Unchanged |
+| **Unusable storage** — the mechanism cannot be read or written | The temporary-mode surface and its warning | Not shown | Unchanged |
 
-Two are deliberate. **Recovery is not an introduction:** a parent told their data cannot be read needs that fact and the approved choice first. **Temporary mode is not an introduction:** with storage unavailable a first visit and a returning one cannot be told apart, and the warning that nothing will be durable is what the parent needs first, so a genuinely new visitor with blocked storage reaches temporary mode without an introduction.
+`F001` names these three conditions separately and no longer uses the word *unavailable* for more than one of them, because "no stored context", "unreadable stored context" and "unusable storage" reach three different surfaces and only the first is a first use. The existing *Setup context unavailable on a later visit* error state now points at the first row explicitly.
 
-A parent who has already moved to the setup choices is not sent back to the introduction. Nothing has been recorded, so a later visit in the same context is the absent-storage row again, not a repeat.
+Two rows are deliberate. **Recovery is not an introduction:** a parent told their data cannot be read needs that fact and the approved choice first. **Temporary mode is not an introduction:** with storage unusable a first visit and a returning one cannot be told apart at all, and the warning that nothing will be durable is what the parent needs first, so a genuinely new visitor with blocked storage reaches temporary mode without an introduction.
+
+A parent who has already moved to the setup choices is not sent back to the introduction. Nothing has been recorded, so a later visit in the same context is the no-stored-context row again, not a repeat.
 
 ### Language selection before setup is confirmed
 
