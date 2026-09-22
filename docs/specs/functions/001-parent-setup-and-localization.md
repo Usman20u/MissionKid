@@ -33,6 +33,44 @@ MissionKid must not request or require:
 
 Accounts, authentication, named or public child profiles, and multiple-profile management are outside this MVP setup.
 
+## First-use introduction
+
+Before the setup choices, a first-time visitor reaches one brief parent introduction. Its purpose is to let a parent understand what MissionKid is for and decide whether it suits their family, before being asked for anything.
+
+The introduction explains, in the resolved UI language:
+
+- what MissionKid is for — turning the end of screen time into a short real-life activity;
+- what a Mission looks like, through exactly one non-selectable example;
+- what the family will do, as a short account of the flow from Mission Category selection to marking a Mission done; and
+- that setup is brief, needs no account, and asks for no identifying child data.
+
+It offers exactly one forward action, which continues to the setup choices. The introduction is not a step the family can fail, records no choice about the child, and creates no Mission Session, Reward Card, Mission History entry, or Monthly Goal increment.
+
+### The example Mission
+
+The introduction may show one Mission from the controlled predefined mission catalog as an illustration of what a Mission looks like. That example:
+
+- is presented as an example and is not selectable;
+- is not a mission suggestion, starts no discovery, and does not replace or pre-empt Mission Category selection;
+- must already be approved for every supported age band, so showing it infers no age context and decides no eligibility question; and
+- uses its reviewed localized content unchanged, including any required adult-involvement wording and safety guidance, which remains visible exactly as it would be before a selection.
+
+MissionKid must not invent example content, rewrite or shorten reviewed content for the introduction, or show an example whose age approval is narrower than the supported bands. A Mission's age approval must never be broadened so that it can serve as the example; the introduction selects only from Missions the catalog already approves for every band, under the rules owned by [Mission Catalog and Safety](../mission-catalog-and-safety.md).
+
+If no Mission is approved for every supported age band, or its content is incomplete in the resolved language, the introduction shows no example rather than relaxing this rule. The rest of the introduction remains valid and its forward action still continues to setup.
+
+### Language on the introduction
+
+The introduction resolves the UI language exactly as the rest of setup does: English by default, with German and Russian equally available. The supported language choice is offered on the introduction itself, so a parent who does not read English is not required to pass through an English screen before reaching it. The same choice remains available in the setup step, and choosing a language on the introduction is the same `F001` language choice with no other effect.
+
+### When the introduction is shown
+
+- The introduction is shown on first use, when no valid local product context is available.
+- A family with a valid completed setup does not see it and continues to whatever their own state implies: a current Mission Session, a current completed result, or Mission Category selection.
+- A family whose stored context is valid but carries no valid age band reaches the age-context step described under *Incomplete setup*, not the introduction.
+- Where the Technical Specifications direct the family to a recovery or temporary-mode surface — unreadable stored data, an unsupported stored version, or storage that cannot be used — that surface applies instead of the introduction. Recovery is not an introduction.
+- A parent who has continued to the setup choices is not returned to the introduction by MissionKid. Nothing has been recorded yet, so a later first-use visit in the same context legitimately begins at the introduction again.
+
 ## First-use setup
 
 1. On first use, MissionKid uses English unless the parent selects German or Russian.
@@ -110,6 +148,10 @@ Error handling must use calm, clear language, preserve valid choices where possi
 10. Given a selected language and age band, every suggested Mission is explicitly approved for that band and has complete reviewed content in that language with equivalent safety meaning.
 11. Setup can be completed without entering a child's name, birth date, address, school, email, contact details, credentials, photo, video, or other sensitive or identifying data.
 12. Completing or editing setup does not itself create a Mission Session, Reward Card, Mission History entry, or Monthly Goal increment.
+13. Given a first use with no valid local product context, when MissionKid opens, then the parent introduction is shown in the resolved UI language and offers exactly one forward action into the setup choices.
+14. Given a valid completed setup in the same available local product context, when the family returns, then the introduction is not shown and the family continues to its current Mission Session, its current completed result, or Mission Category selection.
+15. Given the introduction shows an example Mission, then that example is not selectable, is already approved for every supported age band, presents its reviewed localized content unchanged including any required adult-involvement wording and safety guidance, and creates no Mission Session, discovery result, Reward Card, Mission History entry, or Monthly Goal effect.
+16. Given the introduction, when the parent selects a supported language there, then the interface uses that language, the setup step shows the same choice, and English remains the default and the only fallback.
 
 ## MVP boundaries
 

@@ -60,6 +60,16 @@ As a parent,
 I want to see progress toward 20 completed missions and receive one encouraging prompt when the Monthly Goal is complete,
 So that I remain the person who chooses and approves the optional real-life reward.
 
+### P8 — Understand MissionKid before setting it up
+
+Maps to [F001 — Parent Setup and Localization](specs/functions/001-parent-setup-and-localization.md).
+
+As a parent arriving for the first time,
+I want one short introduction that says what MissionKid is for, shows me one example of a Mission, and tells me what the family will do,
+So that I can decide whether to set it up before I am asked for anything, and so that returning later takes me straight back to where my family was.
+
+This story precedes `P1` and `P2` in the flow; it is numbered last because the existing story identifiers are stable references in completed plans.
+
 ## Child
 
 ### C1 — Choose a simple mission

@@ -123,6 +123,7 @@ The inventory below describes presentation responsibilities only. It does not cr
 
 | Approved view or state | Dominant information | Primary action or interaction | Secondary information or actions | Safety or adult context | Must not compete visually |
 | --- | --- | --- | --- | --- | --- |
+| Parent introduction (`F001`) | What MissionKid is for, one example of a Mission, and the short flow the family will follow | Continue to the approved setup step | Supported language choice; that setup is brief, account-free, and asks for no identifying child data | Parent decides suitability; the example is an example, not a suggestion | A second forward action, a choosable Mission, discovery, marketing claims, testimonials, ratings, or account creation |
 | Initial setup (`F001`) | Supported language and one required age band | Complete the approved setup and continue | English default, brief explanation of age context | Parent responsibility and privacy-minimal setup | Accounts, identity fields, tutorial slides, permissions, personalization |
 | Approved language/age context changes (`F001`) | Current value and effect of the proposed change | Confirm the approved change | Consequences for future discovery; unchanged existing sessions/progress | Parent judgment remains authoritative | New profile management or unrelated settings |
 | Mission Category Selection (`F002`) | The five canonical Mission Categories as one peer choice group | Select one category | Current approved context where useful | No category implies greater safety, value, or achievement | Rankings, trends, premium treatment, one favored category |
@@ -145,6 +146,21 @@ The inventory below describes presentation responsibilities only. It does not cr
 The `selected` state does not require a new destination screen, and Mission Break is not a separate activity or lifecycle state. The lifecycle remains exactly `selected → ready → active → completed`.
 
 ## F001 — Setup and localization presentation
+
+### Parent introduction presentation
+
+The introduction is the first thing a parent sees, and its job is comprehension, not persuasion.
+
+- It is a shared family surface: child-readable structure with parent-readable context. Its explanatory and consequence text stays parent-restrained, while the one example Mission may carry the warmth of child-facing Mission presentation.
+- One forward action into setup is visually dominant. The supported language choice is available but clearly secondary to it, and nothing else on the view competes with either.
+- The supported language choice is placed where a parent who cannot read the current language will find it without having to read the view first.
+- The example Mission is unmistakably an example. It carries no choose action, no selection affordance, and no state, and it must not be mistaken for one of the three equally weighted suggestions `F002` presents later.
+- Any required adult-involvement wording and safety guidance on the example stays visible as text at the prominence it would have on a Mission card. Neither is shortened, softened, delayed, or hidden because this view is an introduction.
+- The account of the flow is short enough to read before deciding. It must not become an onboarding carousel, a tutorial sequence, a feature tour, or a surface the family has to page through.
+- The view must not claim outcomes, quote families, show ratings, counts, badges, or adoption figures, or use urgency, scarcity, or persuasion patterns. MissionKid introduces itself by showing what it does.
+- On a narrow screen the single-column reading order is what MissionKid is for, the example, the short flow, then the one action.
+
+### Setup presentation
 
 Initial setup must feel short and parent-guided.
 
@@ -404,6 +420,8 @@ Mission Discovery may present each Mission through a controlled scene: one small
 
 This authorizes one bounded scene system for child-facing Mission presentation. It does not authorize an open illustration library, and it changes no `F001`–`F004` behavior, Mission eligibility rule, or Mission content requirement.
 
+The `F001` parent introduction may present its one non-selectable example Mission through this same scene system, under every limit in this section. That is the only authorized use outside Mission Discovery. It authorizes no scene on any other parent-oriented, utility, confirmation, or recovery surface, and no scene anywhere else in the flow.
+
 ### Scene authority limits
 
 - Approved localized text remains authoritative for the exact Mission instruction.
@@ -419,7 +437,7 @@ Child-facing Mission scenes should feel premium, warm, and child-safe: semi-real
 
 Excluded: generic flat iconography, generic abstract banners, a stock-illustration look, cheap cartoon styling, casino or neon gaming energy, visual noise, photorealistic or uncanny depictions of children, and realism heavy enough to reduce warmth.
 
-Parent-oriented utility, confirmation, and recovery surfaces remain calmer and more restrained and do not adopt child-facing scene richness.
+Parent-oriented utility, confirmation, and recovery surfaces remain calmer and more restrained and do not adopt child-facing scene richness. The parent introduction is not one of those surfaces: its single example scene is authorized above, while its explanatory and consequence text stays restrained.
 
 ### Three-layer color and material model
 
@@ -604,6 +622,7 @@ If presentation would require new behavior, a new state, a new data fact, a chan
 21. Child-facing Mission scenes, where used, remain one bounded controlled system in which approved text stays authoritative, required adult-involvement and safety guidance stay visible as text, no critical meaning depends on the scene, and no scene depicts or makes attractive an action the Mission does not instruct.
 22. Scene category atmosphere, object-local color, and single hero-object emphasis describe the Mission action only and never convey rank, recommendation, popularity, or relative value among the three equally weighted suggestions.
 23. Mission scenes preserve the accessibility baseline, reduced-motion behavior, localization resilience, and mobile performance requirements without mandating a specific rendering technology, a runtime three-dimensional engine, or runtime AI-generated imagery.
+24. The parent introduction explains what MissionKid is for, shows at most one non-selectable example Mission with its required adult-involvement wording and safety guidance intact, offers the supported language choice and exactly one dominant forward action into setup, and uses no marketing, testimonial, rating, urgency, persuasion, or onboarding-carousel pattern.
 
 ## Explicit non-goals
 
@@ -617,7 +636,7 @@ This specification does not define or authorize:
 - detailed design tokens;
 - a component-library choice;
 - pixel-perfect mockups or wireframes;
-- a marketing website;
+- a marketing website, a promotional or acquisition site, or marketing content; the brief in-product parent introduction in the inventory above is part of the root-only application, explains what MissionKid does before setup, and is not such a site;
 - native-application design;
 - social, chat, sharing, leaderboard, or public-profile UI;
 - payment, purchase, subscription, prize, or reward-marketplace UI;

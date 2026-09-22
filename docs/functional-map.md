@@ -6,23 +6,24 @@ This document defines the approved MissionKid MVP v1 capability structure for fa
 
 ## End-to-end flow
 
-1. Select a UI language.
-2. Complete the parent-guided setup and select an age band for a child aged 4–10.
-3. The parent or child completes Mission Category Selection.
-4. Review three short, age-appropriate real-life mission suggestions.
-5. Choose one Mission and continue to its `ready` start experience.
-6. Deliberately start the Mission and its guidance timer.
-7. Complete the activity away from the screen and mark the Mission as done.
-8. View a Reward Card.
-9. Save the completion in Mission History and apply it once to Monthly Goal progress, capped visually at `20 / 20`.
-10. At 20 completed missions in the month, show one suggestion for an optional, parent-approved real-life reward.
+1. Meet MissionKid through a brief first-use parent introduction with one action into setup.
+2. Select a UI language.
+3. Complete the parent-guided setup and select an age band for a child aged 4–10.
+4. The parent or child completes Mission Category Selection.
+5. Review three short, age-appropriate real-life mission suggestions.
+6. Choose one Mission and continue to its `ready` start experience.
+7. Deliberately start the Mission and its guidance timer.
+8. Complete the activity away from the screen and mark the Mission as done.
+9. View a Reward Card.
+10. Save the completion in Mission History and apply it once to Monthly Goal progress, capped visually at `20 / 20`.
+11. At 20 completed missions in the month, show one suggestion for an optional, parent-approved real-life reward.
 
 ## MVP function map
 
 | Function | MVP behavior | Inputs | Result | MVP limits |
 | --- | --- | --- | --- | --- |
 | Language selection | Let the family use English, German, or Russian. English is the default. | Selected supported language | The planned interface and mission content use the selected language. | No other UI languages are in MVP v1. MissionKid remains globally positioned rather than country-specific. |
-| Parent setup | Establish the minimal parent-guided context needed to begin. | Parent confirmation and setup choices | The family can continue to age band selection. | No account, authentication, payment, child account, or sensitive child data is required. |
+| Parent setup | Introduce MissionKid to a first-time parent, then establish the minimal parent-guided context needed to begin. | A first visit, then parent confirmation and setup choices | The parent understands what MissionKid does and can continue to age band selection. | No account, authentication, payment, child account, or sensitive child data is required. |
 | Age band selection | Let the parent select 4–6, 7–8, or 9–10 for a child in the MVP target. | One supported age band | The selected band becomes an input to mission suggestions. | Bands are inclusive. Use an age band, not a birth date. |
 | Mission Category Selection | Let the parent or child choose from the five MVP Mission Categories: Movement, Creativity, Helping at Home, Learning, and Calm. | One selected Mission Category | The selected Mission Category becomes an input to mission suggestions. | No social, competitive, or public behavior. |
 | Mission suggestions | Present exactly three short, real-life missions suitable for the selected age band and Mission Category. | Age band, Mission Category, and UI language | Three mission choices | MVP suggestions come from a controlled predefined catalog; there is no AI mission generation. Missions should move attention away from the screen. |
