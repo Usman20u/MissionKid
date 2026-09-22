@@ -48,6 +48,8 @@ It offers exactly one forward action, which continues to the setup choices. That
 
 The introduction is not a step the family can fail and records no choice about the child. **Reaching, reading, or leaving the introduction performs no durable write of any kind.** It creates no Mission Session, Reward Card, Mission History entry, or Monthly Goal increment; it stores no language, age context, Child Profile, or acknowledgement that it was seen; and it leaves any existing stored context exactly as it found it.
 
+This constrains writing, not reading. Deciding whether the introduction is eligible at all requires reading and validating the stored context exactly as every other arrival does. That read is the existing hydration path, it is unchanged, and it is precisely what preserves the returning-session, current-result, recovery and temporary-mode precedence set out below. A specification that forbade it would make the eligibility rules unenforceable.
+
 ### The example Mission
 
 The introduction may show one Mission from the controlled predefined mission catalog as an illustration of what a Mission looks like. That example:
@@ -187,7 +189,7 @@ Error handling must use calm, clear language, preserve valid choices where possi
 15. Given the introduction shows an example Mission, then that example is not selectable, is already approved for every supported age band, presents its reviewed localized content unchanged including any required adult-involvement wording and safety guidance, and creates no Mission Session, discovery result, Reward Card, Mission History entry, or Monthly Goal effect.
 16. Given the introduction, when the parent selects a supported language there, then the interface and the example Mission's content use that language, the setup step carries the same choice forward within the visit, nothing is written until setup is confirmed, and English remains the default and the only fallback.
 17. Given any arrival context, the introduction is shown when and only when storage works and holds no MissionKid context; a valid setup, an incomplete setup, a `selected`, `ready`, or `active` Mission Session, a current completed-result pointer, an unreadable stored context, and an unusable storage mechanism each reach their own approved surface instead, with existing durable-state precedence unchanged.
-18. Given the introduction, when it is reached, read, or left, then no durable write of any kind occurs, no stored context is modified, and the example Mission is neither selected nor given any preference in later discovery.
+18. Given the introduction, when it is reached, read, or left, then no durable write of any kind occurs and no stored context is modified, while the ordinary hydration read and validation that decide eligibility run unchanged; and the example Mission is neither selected nor given any preference in later discovery.
 
 ## MVP boundaries
 

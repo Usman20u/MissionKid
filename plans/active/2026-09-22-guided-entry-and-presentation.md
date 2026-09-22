@@ -109,7 +109,7 @@ Scope: the seven amended documents and every clause that could conflict with the
 | No age context is inferred before setup | Passed. `helping-11` is approved for all three bands, so showing it decides no eligibility question. |
 | Safety and adult-involvement prominence is preserved | Passed. `helping-11`'s safety note and adult-involvement wording are shown verbatim at Mission-card prominence; both specifications forbid shortening, softening, delaying or hiding them. |
 | Mission Catalog and Safety is not weakened | Passed. No content, eligibility rule or age approval changes, and broadening an approval to produce an example is forbidden. |
-| Nothing is written before setup is confirmed | Passed. `F001` states that reaching, reading or leaving the introduction performs no durable write; the architecture states the persistence adapter is not called. The confirmed setup save remains the only thing that makes a language durable. |
+| Nothing is written before setup is confirmed, and reads still work | Passed. `F001` states that reaching, reading or leaving the introduction performs no durable write, and that this constrains writing rather than reading; the architecture states that no state-changing operation originates from the view while the ordinary hydration read and validation run unchanged and are what decide eligibility. The confirmed setup save remains the only thing that makes a language durable. |
 | Root-only architecture is preserved | Passed. No route, URL, history entry, router dependency or persisted field. |
 | Durable-state precedence is unchanged | Passed. The `F001` eligibility table reaches the same destination current behavior reaches in all eight non-introduction cases. |
 | Lifecycle, confirmed-write contract, exactly-once accounting, timer rules, recovery, History and Monthly Goal | Passed. No amendment reaches `F003`, `F004`, the data and state model, or the persistence contract. |
@@ -151,13 +151,30 @@ A parent who has already moved to the setup choices is not sent back to the intr
 
 ### What viewing the introduction writes
 
-**Nothing.** No snapshot write, no read-back, no storage key, no language, no age context, no Child Profile, no acknowledgement that it was seen, and no modification of any existing stored context. The persistence adapter is not called while the introduction is displayed, so none of the confirmed-write contract's failure, retry or unconfirmed paths can arise from it.
+**No durable write of any kind.** No snapshot write, no storage key, no language, no age context, no Child Profile, no acknowledgement that it was seen, and no modification of any existing stored context. No state-changing operation originates from the view, so none of the confirmed-write contract's serialization, replacement, read-back, retry or unconfirmed paths can arise from it.
+
+**Reading is unchanged and is required.** The ordinary hydration read and its validation are what decide whether the introduction is eligible at all, and they run for it exactly as for every other arrival. That read is what preserves returning-session, current-result, recovery and temporary-mode precedence; forbidding it would make the eligibility table unenforceable. A hydration failure resolves to the recovery or temporary-mode surface *before* this view could be selected, so it is not a failure path out of the introduction.
 
 ## Screen-by-screen review
 
 Measured on the served production build in Chrome for Testing `148.0.7778.97`, from seeded snapshots through the real hydration path, in English, German and Russian.
 
-**Two framing rules apply throughout.** Below-the-fold placement is **not** on its own a defect, and nothing here treats it as one; where it is cited, the finding is an asymmetry between languages or a measured quantity of non-content height, not the fold. And every proposed change preserves readable text at its current size, all required guidance, and normal vertical scrolling — especially at increased text sizes, where longer pages and more scrolling are the correct behavior and are not something to engineer away.
+### How these changes are judged
+
+Two things are **not** goals and are not used as success criteria anywhere below:
+
+- **Below-the-fold placement is not on its own a defect.** No change here exists to move a control above the fold.
+- **Reducing the difference between control positions across languages is not an independent goal.** German and Russian are longer than English; a page that is taller in those languages is behaving correctly. Equalising positions by adding whitespace to the shorter language, shrinking text, clipping content, or reordering safety content is explicitly forbidden, and any of those would be a defect introduced rather than removed.
+
+A proposed change is judged instead on all of:
+
+1. **Unnecessary non-content height is removed** — height that carries no text, no control and no required separation.
+2. **Action hierarchy stays clear** — one dominant primary action, secondary and safe-exit actions still available and still subordinate.
+3. **Content stays readable and complete** — current text sizes, every required field, no truncation, no ellipsis, no disclosure of safety or adult-involvement guidance, no reordering of it.
+4. **Keyboard access is intact** — same focus order, visible focus on every interactive element, nothing made unreachable.
+5. **No overlap and no horizontal overflow** at any measured configuration.
+
+Language-dependent page heights and ordinary vertical scrolling remain acceptable outcomes, at default and at increased text sizes alike. The measurements below therefore report non-content height, which is the thing under this plan's control, alongside content height, which is not.
 
 ### 1. Parent introduction — new
 
@@ -182,19 +199,19 @@ Measured on the served production build in Chrome for Testing `148.0.7778.97`, f
 
 - **Must be understood:** which Mission, what to do, how long, what an adult must do, what is safe, that it has not started.
 - **Primary action:** **Start mission**, dominant.
-- **Observed problem, measured, and stated precisely.** At `390x780` the action's top sits at `718` px in English, `745` px in German and `795` px in Russian; pages measure `911` / `938` / `988` px. The finding is **not** that the action is below the fold — the specification requires no such thing, and at larger text sizes scrolling to it is entirely correct. The finding is that the same screen behaves differently by language: English reaches the commit action without scrolling and German and Russian do not, on the one screen where a child commits to leaving the device. That asymmetry is what *localization resilience* exists to prevent.
-- **Preserved requirements:** the safety and adult-involvement block keeps its position in the reading order and its prominence; text keeps its current size; normal vertical scrolling at increased text sizes is untouched; heading order and focus behavior unchanged; no scene is added — restraint here is deliberate, the scene system is authorized for Discovery and the introduction only, and Plan 03's finding on this screen is not reopened.
-- **Targeted change:** reduce non-content vertical space above the action so the three languages behave alike. Success is measured as the spread between languages narrowing, not as any language clearing the fold.
-- **Targeted verification:** the measurement repeated in all three languages at `390x780` and `320`px/`32px`, reporting the action's absolute top and the spread between languages before and after; safety and adult-involvement text asserted present, untruncated and unmoved in reading order; the existing `F003` suite unchanged.
+- **Observed problem, measured.** At `390x780` the view is **about half empty of content**. Pages measure `911` / `938` / `988` px (EN/DE/RU) against content heights of `448` / `474` / `501` px, leaving non-content height of `463` / `464` / `487` px — **`49.3` % to `50.9` % of the page**. The non-content share is essentially constant across languages, while content height varies by `12` % between English and Russian. That is the correct shape of the problem: the language-dependent part is content and is legitimate, and the roughly half of the page that carries nothing is the same in every language and is what is worth examining. Twelve text or control elements occupy the rest. Measured at the same time: no overlap, no horizontal overflow, three focusable elements.
+- **Preserved requirements:** the safety and adult-involvement block keeps its position in the reading order and its prominence; text keeps its current size; every required field stays complete and untruncated; heading order, focus order and visible focus unchanged; ordinary vertical scrolling at default and increased text sizes is untouched; no scene is added — restraint here is deliberate, the scene system is authorized for Discovery and the introduction only, and Plan 03's finding on this screen is not reopened.
+- **Targeted change:** remove non-content height that is not earning its place — spacing and chrome that separate nothing a reader needs separated. Nothing is added to any language to make it resemble another.
+- **Targeted verification:** the same measurement repeated in all three languages at `390x780` and `320`px/`32px`, reporting page height, content height and non-content height before and after, so the change is shown to have removed empty height rather than content. Assertions that safety and adult-involvement text is present, untruncated and unmoved in reading order; that the primary action remains the single dominant one; that focus order and visible focus are unchanged; and that no overlap or horizontal overflow appears at any configuration. The existing `F003` suite unchanged. Remaining language-dependent height differences are recorded as the expected outcome, not as a shortfall.
 
 ### 4. Active Mission
 
 - **Must be understood:** the Mission is running, the child should be away from the screen, roughly how long, the safety guidance still applies.
 - **Primary action:** **Mission done** when the family returns.
-- **Observed problem, measured, and smaller.** Pages measure `838` / `864` / `938` px; the action sits at `645` px (EN), `671` px (DE) and `745` px (RU). The same language asymmetry, in one language only.
-- **Preserved requirements:** the view stays intentionally low-interaction; the timer's live-region behavior, the leave-without-completing path and its confirmation are untouched.
-- **Targeted change:** the same non-content space recovery as the ready view, applied consistently. Nothing else.
-- **Targeted verification:** the same measurement in all three languages; timer live-region behavior, the leave path and its confirmation asserted unchanged.
+- **Observed problem, measured, and smaller.** Pages measure `838` / `864` / `938` px against content heights of `463` / `490` / `541` px, leaving `375` / `374` / `397` px of non-content height — **`42.4` % to `44.7` %**. Again the non-content share is near-constant across languages and the variation is content. No overlap, no horizontal overflow, three focusable elements.
+- **Preserved requirements:** the view stays intentionally low-interaction; the timer's live-region behavior, the leave-without-completing path and its confirmation are untouched; safety and adult-involvement guidance keeps its position and prominence; text keeps its size.
+- **Targeted change:** the same removal of non-earning non-content height as the ready view, applied consistently. Nothing else, and nothing added to any language.
+- **Targeted verification:** the same page/content/non-content measurement in all three languages; timer live-region behavior, the leave path and its confirmation asserted unchanged; action hierarchy, focus order, overlap and horizontal overflow checked as above.
 
 ### 5. Reward Card — unchanged
 
@@ -208,10 +225,10 @@ Measured at `390x780` with five completed entries: the whole view including the 
 
 - **Must be understood:** current values, what changing each affects, and that existing Missions, History and Monthly Goal are not rewritten.
 - **Primary action:** save the change.
-- **Observed problem, measured.** The view runs `1547` / `1648` / `1648` px — `1.98` to `2.11` viewport heights at `390x780` — with the save action at `1333` px (EN) and `1434` px (DE, RU). Here the finding is the quantity of non-content height in all three languages, not the fold: a parent toggling one radio traverses roughly a full extra screen of chrome to commit it.
-- **Preserved requirements:** both effect explanations and both parent notes stay fully visible; they are the consequence text this view exists to carry, and none of it is condensed or hidden.
-- **Targeted change:** reduce non-content vertical space so the same content commits with less traversal.
-- **Targeted verification:** the measurement repeated in all three languages, reporting page height and the action's absolute top before and after; the language-effect and age-effect sentences asserted present; `F001` criteria `6` and `7` unchanged, including that an age-band change leaves a `ready` or `active` session and every completed record untouched.
+- **Observed problem, measured.** The view runs `1547` / `1648` / `1648` px against content heights of `822` / `923` / `923` px, leaving **`725` px of non-content height in all three languages** — `44.0` % to `46.9` % of the page, and identical to the pixel across languages. The finding is that quantity, not the fold: a parent toggling one radio traverses roughly `725` px of chrome that carries nothing. Seventeen text or control elements and nine focusable elements; no overlap, no horizontal overflow.
+- **Preserved requirements:** both effect explanations and both parent notes stay fully visible at their current size — they are the consequence text this view exists to carry, and none of it is condensed, hidden, reordered or moved behind disclosure; focus order across the nine focusable elements is unchanged.
+- **Targeted change:** remove non-content height that separates nothing a reader needs separated.
+- **Targeted verification:** the same page/content/non-content measurement in all three languages before and after; the language-effect and age-effect sentences asserted present and complete; action hierarchy, focus order, overlap and horizontal overflow checked; `F001` criteria `6` and `7` unchanged, including that an age-band change leaves a `ready` or `active` session and every completed record untouched.
 
 ## Implementation tasks
 
@@ -223,7 +240,7 @@ Measured at `390x780` with five completed entries: the whole view including the 
 
 **Trace.** `F001` *First-use introduction*, criteria `13`–`18`; `P8`; Visual & Ergonomic *Parent introduction presentation*, inventory row, criterion `24`; Technical Architecture *Root-only navigation*.
 
-**Verification.** Tests through the rendered application and the real persistence adapter for each criterion and each eligibility row, including that the example cannot be chosen, creates nothing, and receives no preference in the first discovery set afterwards. An adapter spy asserting zero writes while the introduction is displayed. A fixture asserting `helping-11` is approved for all three age bands and carries complete content in all three languages. Type checking, the full suite and the production build run sequentially, then the scoped diff and `git diff --check`.
+**Verification.** Tests through the rendered application and the real persistence adapter for each criterion and each eligibility row, including that the example cannot be chosen, creates nothing, and receives no preference in the first discovery set afterwards. An adapter spy asserting zero **writes** while the introduction is displayed, while the ordinary hydration read is expected to have occurred and is asserted to have happened — the eligibility rules depend on it. A fixture asserting `helping-11` is approved for all three age bands and carries complete content in all three languages. Type checking, the full suite and the production build run sequentially, then the scoped diff and `git diff --check`.
 
 ### Task 2 — Introduction copy in English, German and Russian
 
@@ -241,21 +258,21 @@ Measured at `390x780` with five completed entries: the whole view including the 
 
 **Verification.** The before-and-after measurement on two served builds, EN/DE/RU at `390x780` and `320`px/`32px`, reporting card heights and set span, with the result stated as a measured number. Assertions that every required field is present and untruncated on all three cards in all three languages. The existing `F002` suite unchanged. Scene rendering checked against the reduced-motion and performance rules. The record must state plainly what the change did and did not achieve, including that two Missions remain non-co-visible on a phone.
 
-### Task 4 — Language parity on the ready and active views
+### Task 4 — Remove unnecessary non-content height on the ready and active views
 
-**Outcome.** The spread between English, German and Russian in reaching **Start mission** and **Mission done** narrows measurably at `390x780`. Safety and adult-involvement guidance keeps its position and prominence, text keeps its size, and scrolling at increased text sizes is unchanged. The lifecycle, deliberate start, exactly-once completion, timer derivation, leave paths and confirmations are untouched.
+**Outcome.** Measured non-content height falls on both views in all three languages, from a baseline of `463`–`487` px on ready and `374`–`397` px on active at `390x780`. Content height is unchanged: every required field stays complete, untruncated and at its current text size, and safety and adult-involvement guidance keeps its position in the reading order and its prominence. **No whitespace is added to any language to make it resemble another, no text is shrunk, nothing is clipped, and no safety content is reordered.** Remaining language-dependent height differences are the expected outcome. The lifecycle, deliberate start, exactly-once completion, timer derivation, leave paths and confirmations are untouched.
 
 **Trace.** `F003`; Visual & Ergonomic *F003 — Ready Mission presentation*, *Mission Break transition and active presentation*, *Action hierarchy*, *Localization resilience*, criteria `8` and `9`.
 
-**Verification.** The measurement in all three languages at both configurations, reporting each action's absolute top and the cross-language spread before and after. The existing `F003` suite unchanged, including exactly-once start and completion. Timer live-region behavior and focus order re-checked.
+**Verification.** The page/content/non-content measurement in all three languages at `390x780` and `320`px/`32px`, before and after, showing that what was removed was empty height. Assertions that: content height did not fall; every required field is present and untruncated; safety and adult-involvement text is unmoved in reading order; one dominant primary action remains with secondary and exit actions subordinate and available; focus order and visible focus are unchanged; touch targets stay at or above `52` px; and no overlap or horizontal overflow appears. The existing `F003` suite unchanged, including exactly-once start and completion. Timer live-region behavior re-checked.
 
-### Task 5 — Settings: less traversal to the save action
+### Task 5 — Remove unnecessary non-content height on the settings view
 
-**Outcome.** The later language and age-context change commits with measurably less traversal in all three languages, with both effect explanations and both parent notes fully visible.
+**Outcome.** Measured non-content height falls from its `725` px baseline in all three languages, with content height unchanged: both effect explanations and both parent notes stay fully visible at their current size, none of it condensed, hidden, reordered or moved behind disclosure. The same prohibitions as Task 4 apply — no added whitespace, no smaller text, no clipping, no reordered safety or consequence content.
 
 **Trace.** `F001` *Changing setup later*, criteria `6` and `7`; Visual & Ergonomic *F001 — Setup and localization presentation*, *Action hierarchy*.
 
-**Verification.** The measurement in all three languages, reporting page height and the action's absolute top before and after. Tests asserting a `ready` or `active` session, every completed record and Monthly Goal progress are unchanged by an age-band change.
+**Verification.** The page/content/non-content measurement in all three languages before and after. Assertions that content height did not fall; that the language-effect and age-effect sentences and both parent notes are present and complete; that the save action remains the single dominant one; that focus order across the nine focusable elements and visible focus are unchanged; and that no overlap or horizontal overflow appears. Tests asserting a `ready` or `active` session, every completed record and Monthly Goal progress are unchanged by an age-band change.
 
 ### Task 6 — Consistency and full verification
 
@@ -263,7 +280,7 @@ Measured at `390x780` with five completed entries: the whole view including the 
 
 **Trace.** Visual & Ergonomic *Visual consistency without a design system*, *Accessibility baseline*, *Anti-manipulation visual rules*, *Ergonomic review method*.
 
-**Verification.** Type checking, the full suite and the production build run sequentially; the whole branch diff inspected against `main`; `git diff --check`. Across EN/DE/RU at `390x780`, `1280x900` and `320`px/`32px`: no horizontal scroll, visible focus on every interactive element, touch targets at or above the current `52` px minimum, larger text handled without clipping and with normal vertical scrolling, reduced motion respected, heading and reading order intact on every changed view. Contrast measured on the rendered page for every changed text element, as the Reward Card follow-up did.
+**Verification.** Type checking, the full suite and the production build run sequentially; the whole branch diff inspected against `main`; `git diff --check`. Across EN/DE/RU at `390x780`, `1280x900` and `320`px/`32px`, against the five judging criteria used throughout this plan: unnecessary non-content height removed with content height intact; one dominant primary action per view with secondary and exit actions subordinate; complete readable content with no truncation, clipping or disclosed safety guidance; keyboard access with unchanged focus order, visible focus on every interactive element and touch targets at or above `52` px; and no overlap or horizontal overflow. Reduced motion respected and heading and reading order intact on every changed view. Language-dependent page heights and ordinary vertical scrolling, at default and increased text sizes, are recorded as acceptable outcomes rather than as findings. Contrast measured on the rendered page for every changed text element, as the Reward Card follow-up did.
 
 ## Boundaries
 
