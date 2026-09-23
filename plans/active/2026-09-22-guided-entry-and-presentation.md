@@ -296,6 +296,59 @@ Measured at `390x780` with five completed entries: the whole view including the 
 
 **Verification.** The existing localization completeness tests extended to the new keys; rendering in all three languages at `390x780`, `1280x900` and `320`px/`32px` with no clipping, no truncation and no horizontal scroll; `document.documentElement.lang` asserted to follow the selected language here as it already does elsewhere; an assertion that selecting a language on the introduction writes nothing and carries into the setup step.
 
+### Tasks 1 and 2 — outcome, at `02bbe68`
+
+Implemented together as one batch. The introduction arrived with all three languages; no commit on this branch holds an English-only version of it.
+
+**What was built.** A new transient setup stage, `introduction`, ahead of the existing `first-use` setup form. It carries the supported language choice, the statement of what MissionKid is for, the `helping-11` example, the three-step account of the flow, the short parent note about setup, and one dominant forward action. The example is rendered by the very `MissionCard` component Discovery uses, with its choose action absent, so the reviewed content, the adult-involvement rule and the safety note cannot drift from what a Mission card presents. No route, router, URL, history entry, snapshot field, persisted acknowledgement, dependency or storage mechanism was added, and no back control.
+
+**Adult involvement, as the existing rule has it.** `helping-11` is `No special adult assistance required` and carries no localized adult-involvement note, so a Mission card shows no adult-involvement line for it — and neither does the example. The internal catalog level is never rendered and no claim that supervision is unnecessary was invented to fill the space. Asserted in both directions.
+
+**Recovery controls are not on this view.** Nothing is stored when the introduction is shown, so a reset would have nothing to act on, and a destructive control must not compete with the single forward action. The setup form it leads into keeps the control unchanged. This is an implementation choice under the presentation rules, recorded rather than left implicit.
+
+**Two arrivals, confirmed against the implementation.** A confirmed reset and a storage retry that finds working, empty storage both resolve to the no-stored-context row and therefore to the introduction. Both follow from the row itself; neither is a new rule. The existing tests that asserted a bare form at those points now assert the introduction and then continue through it.
+
+**Strings.** Nine keys in English, German and Russian. Four are the approved introduction copy: the heading, the supporting text, the primary action and the example label. Five are additional and are listed in the changelog for human review: a flow heading, three flow steps, and one sentence that setup is short. Three existing approved strings are reused verbatim rather than restated — the interface-language legend, the privacy sentence and the parent-responsibility sentence. All of it is proposed product copy; **no professional translation review is claimed.**
+
+#### Verification actually run
+
+- **Type checking, the full suite and the production build, sequentially.** `tsc --noEmit` clean; **838 tests across 23 test files passing**; the build emitted `index.html` and the content-hashed assets with no error. `git diff --check` clean, and the diff is limited to this scope.
+- **37 new tests** in `src/ParentIntroduction.test.tsx`, through the rendered application and the real persistence adapter: every eligibility row reaching its stated destination; the four coexisting incomplete-age cases reaching the age-context gate with the stored session, completed records and pointer untouched and no write; zero adapter **writes** while the introduction is displayed with the hydration read asserted to have occurred; the example approved for all three bands with complete content in all three languages, under the same eligibility rule Discovery applies; its reviewed content, category, duration and safety note rendered verbatim in each language; no choose control, no second Mission, no discovery heading; the first discovery set afterwards identical to the set a run that never saw the introduction derives; the no-example fallback for a narrowed approval, for incomplete reviewed content and for an absent Mission, with the rest of the view still valid; the language choice applying to the interface and to the example, carrying into setup, writing nothing, and resolving to English again on a later visit; `document.documentElement.lang` following the choice; heading order, reading order and the absence of any identifying input.
+- **Existing tests that changed are behavior updates, not weakened assertions.** Cases about the setup form now take the introduction's forward action first. One focus case was restated on its own point: reaching the form from the introduction legitimately moves focus to its heading once, so the in-place save failure is now asserted to leave focus on the control the parent pressed, which is the thing that case exists to check.
+
+#### Measured on the served production build
+
+Chrome for Testing `148.0.7778.97`, from a real first-use arrival through the hydration path, in English, German and Russian, at `390x780`, `1280x900` and `320` px with a `32px` root. Nine configurations, all captured.
+
+| Configuration | Page height (EN / DE / RU) | Non-content height | Horizontal overflow | Overlap | Truncation |
+| --- | --- | --- | --- | --- | --- |
+| `390x780` | `1731` / `1829` / `1861` px | `769` / `768` / `769` px | none | none | none |
+| `1280x900` | `1532` / `1557` / `1603` px | `766` px in all three | none | none | none |
+| `320` px, `32px` root | `8337` / `8101` / `8730` px | `1324` px in all three | none | none | none |
+
+Non-content height is near-constant across languages while content height varies, which is the expected shape: the language-dependent part is content.
+
+- **Keyboard.** Two tab stops in DOM order — the language radio group, then the forward action. The action shows the `3px #b4650c` ring; the focused language choice shows the same ring on its label at a `2px` offset. Nothing is unreachable and no positive tab index exists.
+- **Touch targets.** Every interactive element at or above `52` px in every configuration: `52` px at the default root, `131` px at the `32px` root.
+- **Contrast, measured on the rendered page** with every ancestor layer composited, across 22 text and control elements per configuration. Lowest ratio `5.72:1` against a `4.5:1` requirement for body text and `3:1` for large text. No element failed in any of the nine.
+
+#### Two presentation defects found by this verification
+
+The first was introduced by this work and is fixed in it. The second was **not**, and is not touched here.
+
+1. **The example card clipped reviewed text at a `32px` root — fixed.** A Mission card is a grid, and a grid column's automatic minimum is its min-content width, so the card's own content was sized to the longest unbreakable word in the reviewed instruction and then clipped by the card's `overflow: hidden`. Inside the panel's padding as well, the safety note was left a text column two pixels wide. Both are fixed for the example: the card's column names its minimum, and below the width where Discovery already gives its own Mission cards the panel's full measure the example takes the same measure. Re-measured: nothing clips at either configuration, and the safety note reads in whole words.
+2. **Discovery clips reviewed safety guidance at `320` px with a `32px` root — pre-existing, reported, not fixed here.** Measured on this same build on the unchanged Discovery view: the card's content box is `322.5` px inside a `252` px card, so roughly `70` px is cut from the right of every line and the safety note loses its last characters on most lines. This is present at `6d2ddda` and is not caused by this work. **It is a content-truncation defect against the visual specification's rule that safety guidance must not be truncated**, and it belongs to Task 3, which owns the Discovery cards. It is recorded here so that task inherits it rather than rediscovering it.
+
+Two further pre-existing observations at `320` px with a `32px` root, both on the unchanged setup form and both for Task 5: the page scrolls horizontally by `14` px from the age and language choices, and the view title wraps across four lines. Neither is introduced or changed here.
+
+#### Recorded limitations
+
+- This is automation in one engine against one build. It is **not** human visual acceptance, which is what this batch now stops for.
+- No assistive technology was run, so no screen-reader behavior is claimed beyond the semantics asserted in the tests.
+- No real phone, no Safari, no Firefox. This repository has no CI, so none of these checks is a CI result.
+- The introduction copy is proposed product copy. **No professional translation review is claimed**, and whether the German and Russian strings need review by a speaker before release remains the open release decision recorded below.
+- At `320` px with a `32px` root the language names break across lines inside their own boxes. That is the same remedy the choice-group legend already uses at that size, and it was chosen over the alternatives, which were horizontal page scrolling or text escaping its box.
+
 ### Task 3 — Discovery: mobile comparison and reading density
 
 **Outcome.** Every card keeps its localized title, localized short instruction, Mission Category, expected duration and any required adult-involvement and safety wording, complete and untruncated, with safety visible and not behind disclosure. Non-content card height at narrow widths falls and the set span falls with it, by a measured amount. The three Missions stay equal peers. No catalog text changes. No horizontal scroll, carousel, swipe or feed behavior is introduced, and vertical scrolling at increased text sizes is unchanged.
@@ -343,5 +396,7 @@ Kept in the acceptance criteria throughout: English, German and Russian; accessi
 3. **Instruction length**, recorded under Decision 3 as a separate content consideration for Mission Catalog and Safety. Not scheduled, not assumed, and not addressed by anything in this plan.
 
 ## Definition of complete
+
+Tasks 1 and 2 are implemented, verified and recorded above; this plan stays active because Tasks 3 to 6 are neither authorized nor done.
 
 This plan is complete when its authorized scope is implemented, each task's verification has actually been run and recorded truthfully here and in the changelog, and the diff is limited to that scope. It claims no MissionKid MVP completion, no deployment readiness, no CI result, no assistive-technology acceptance and no professional translation review. Human acceptance of anything built under it would be recorded separately, as the Reward Card follow-up's was.
