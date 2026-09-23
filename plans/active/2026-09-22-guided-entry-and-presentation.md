@@ -552,6 +552,42 @@ Scope: the scene system and the clauses adjacent to the authorized change. This 
 - **Only three Missions were improved**, as authorized. The other 51 keep the current grammar, so other Mission Category sets look less rich until they are done. Within this set all three are improved equally, so no card is made to look recommended.
 - **Copy and navigation are unchanged.** The reference's Russian headings, its subheading and its header icons are not implemented, because wording and navigation were not authorized. The section heading still reads *Three Missions* and the category chooser above the set is untouched.
 
+### Reviewed Mission stills — inspection and integration, at `b3a6400`
+
+Three stills were proposed for the three Missions of the authorized visual pass, generated before deployment and supplied as files. Integrating bundled static files introduces no runtime image generation, no service, no external request and no product feature, so this stays inside the existing authorization. **Each was inspected against its own reviewed instruction, its safety note and the Visual & Ergonomic Specification before integration, and no catalog content was changed to accommodate any image.**
+
+| Mission | Proposed still | Verdict |
+| --- | --- | --- |
+| `creativity-02` *Tallest Tower* | Kraft boxes and lilac plastic cups stacked on a plain surface | **Integrated** |
+| `creativity-10` *The Kind Monster* | A fluffy purple crayon monster with a big smile, beside two wax crayons | **Integrated** |
+| `creativity-05` *Sock Friend* | A yellow knitted hand covering, raised, forming an open mouth | **Not integrated — concrete conflict** |
+
+**`creativity-02`.** The instruction names "light, unbreakable things like plastic cups, blocks or small boxes"; the still shows two of those three materials and a tower standing on its own. No child, no text, no interior décor. *One ambiguity is recorded rather than smoothed over:* the safety note says "Build on the floor", and the still's surface is a plain pale plane meeting a plain wall with no table edge, leg or furniture visible. It reads as a floor against a wall and cannot be read as clearly contradicting the note, but it does not positively establish a floor either. That is a judgement for the content reviewer, and it is flagged rather than decided here.
+
+**`creativity-10`.** The strongest match of the three. The instruction offers "maybe fluffy, maybe with a big smile" and the still has both; the safety note requires "a sheet of paper and a pencil or crayons" and the still shows exactly paper and wax crayons. No text inside the image, no child, nothing frightening.
+
+**`creativity-05` — the conflict, stated concretely.** The instruction is "Put a **clean sock** on your hand and turn it into a sock friend." The still shows a **knitted mitten**: the thumb is a separately knitted compartment with its own ribbing and a finished tip, and the cuff is a ribbed mitten cuff worn over a sleeve. A sock has no thumb compartment. The Visual & Ergonomic Specification requires that a scene "must not depict, imply, or make attractive an action the Mission does not instruct", and a mitten is a different object from the one the Mission instructs. **The catalog was not altered to fit the image**, which the authorization explicitly forbids, so `creativity-05` keeps the authored scene and the still is left for the reviewer to replace or reclassify.
+
+**How they are integrated.** Presentation only, keyed by the stable Mission identifier: no catalog field, no persisted value, no snapshot data, and a Mission with no entry renders its authored scene exactly as before. The sources are `1536x1024`, which is `3:2`, and the card window is already `3:2`, so **nothing is cropped** — the tower keeps its base and its top, and the drawing keeps its crayons. Each is emitted by the existing build as a fingerprinted local asset at `49 kB` and `113 kB`; nothing is fetched from another origin.
+
+**Verified on the production build**, English, German and Russian at `390x780`, `1280x900` and `320` CSS px with a `32px` root:
+
+| Check | Result |
+| --- | --- |
+| Both stills present and decoded | yes in all nine, natural size `1000x666` |
+| Decorative to assistive technology | `alt=""` and `aria-hidden` on every one; **no element exposes the `img` role anywhere** |
+| Space reserved before the file arrives | intrinsic `width` and `height` on every image, plus the window's own `aspect-ratio` |
+| Rendered box | `317.2x211.5` desktop, `354x236` mobile, `252x168` enlarged — `3:2` throughout |
+| External requests | none; no failed request in any configuration |
+| Clipping, overflow, contrast, targets | `0` clipped, no horizontal overflow, minimum contrast `7.17:1`, targets `52` px and `138.4` px enlarged |
+| Text independent of imagery | every reviewed title, instruction, category, duration and safety note present as text, asserted in tests |
+
+**Regression checks added:** that the map covers exactly the two authorized Missions and that both are reviewed and discovery-eligible; that a still is decoration while every reviewed field stays present as text and a Mission without one keeps its authored scene; and that the set still comes from `catalogOrder` `10`, `30`, `50` rather than from which Mission has a picture.
+
+**Gates**, with full output captured to files before being summarized: `tsc --noEmit` clean, **843 tests across 23 test files**, clean production build, `git diff --check` clean. A second full run was also clean at `843`. No failure occurred in this pass, so no failure output was retained.
+
+**Remaining differences from the supplied reference.** Two of three cards now carry photographic stills and the third carries an authored SVG scene, so **the set is visibly mixed in this pass** — that is the honest cost of not forcing an unsuitable image in. Copy and navigation remain unchanged, the other 51 scenes are untouched, and the reference's styled interiors, rug, plants and knitted throw are deliberately absent: the integrated stills sit on plain surfaces, which keeps them clear of the clauses on housing, resources and household type.
+
 ## Boundaries
 
 Preserved exactly: the `selected → ready → active → completed` lifecycle, the confirmed-write contract, exactly-once completion accounting, timer derivation from persisted timestamps, every recovery and temporary-mode path, Mission History, and Monthly Goal behavior including period identity and the single goal-complete prompt. The accepted Reward Card presentation and the Mission History presentation are not changed.
