@@ -105,6 +105,8 @@ Two of these are deliberate and are recorded as such:
 - **Recovery is not an introduction.** A parent being told their stored data cannot be read must be given that fact and the approved recovery choice, not an introduction to the product.
 - **Temporary mode is not an introduction.** When storage is unusable, a first visit and a returning one cannot be distinguished at all, and the warning that nothing will be durable is the information the parent needs first. A genuinely new visitor with blocked storage therefore reaches temporary mode without an introduction.
 
+The table describes arrival cases; it is not a precedence algorithm. Each row names a context MissionKid resolves on arrival and the surface that context already reaches, and nothing in it reorders anything. Where two of these conditions coexist, the existing precedence stated elsewhere in this specification decides, unchanged: in particular an incomplete age context reaches the age-context step under *Incomplete setup* even when a current Mission Session or a current completed-result pointer also exists, and that stored session, those completed records and that pointer are left untouched.
+
 A parent who has continued to the setup choices is not returned to the introduction by MissionKid. Nothing has been recorded yet, so a later visit in the same context legitimately begins at the introduction again; that is the no-stored-context row, not a repeat.
 
 ## First-use setup

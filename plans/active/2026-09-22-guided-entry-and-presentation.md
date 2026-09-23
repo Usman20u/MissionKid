@@ -1,7 +1,7 @@
 # MissionKid Plan 05 — guided entry and the presentation pass
 
 **Date:** 2026-09-22
-**Status:** Specification amendments prepared and revalidated; the reviewer's product decisions are recorded below. **Implementation authorization is still pending** — no product code is written under this plan until it is recorded here. Nothing is pushed, merged or deployed.
+**Status:** Specification amendments prepared and revalidated; the reviewer's product decisions are recorded below. **Tasks 1 and 2 are authorized and were executed together as one integrated batch.** Tasks 3–6 remain unauthorized and are not started. Nothing is pushed, merged or deployed.
 
 **Branch:** `feat/guided-entry-and-presentation`, taken from `14a5b16` on the unpublished `feat/reward-card-presentation`, which is preserved unchanged at that commit. No history was rewritten.
 
@@ -11,9 +11,25 @@ The durable specification-completion evidence is [`plans/completed/2026-08-17-mi
 
 It follows the completed implementation plans `F001`–`F004` and [`plans/completed/2026-09-21-reward-card-presentation.md`](../completed/2026-09-21-reward-card-presentation.md), closed on 2026-09-22 with the human reviewer's visual acceptance recorded, and its later evidence corrections. All of those are historical evidence; none is reopened.
 
-This plan carries a **material specification change**. Under `AGENTS.md`, a material change to an approved specification pauses affected implementation until the applicable specification stages, User Story / traceability validation and Full Specification Audit are revalidated and renewed authorization is explicitly recorded here. Stages one and two are done and recorded below. **Renewed implementation authorization is not recorded and has not been given.**
+This plan carries a **material specification change**. Under `AGENTS.md`, a material change to an approved specification pauses affected implementation until the applicable specification stages, User Story / traceability validation and Full Specification Audit are revalidated and renewed authorization is explicitly recorded here. Stages one and two are done and recorded below. **Renewed implementation authorization is recorded below, and it covers Tasks 1 and 2 only.**
 
-The instruction that opened this plan approves the visual direction, the preparation of its specification amendments, and the bounded review recorded here. The instruction that updated it approves the four product decisions under *Approved decisions* and supplies the introduction copy as a reviewable proposal. Neither approves implementing any of it.
+The instruction that opened this plan approves the visual direction, the preparation of its specification amendments, and the bounded review recorded here. The instruction that updated it approves the four product decisions under *Approved decisions* and supplies the introduction copy as a reviewable proposal. Neither of those approves implementing any of it. The instruction recorded under *Renewed implementation authorization* does, for Tasks 1 and 2.
+
+### Renewed implementation authorization
+
+Recorded on 2026-09-23, after the human review of this plan and of the specification amendments it carries.
+
+- **Authorized:** Tasks 1 and 2, executed together as one integrated batch.
+- **Not authorized:** Tasks 3, 4, 5 and 6. Each remains pending its own authorization, and none of them is started.
+- **Still excluded:** pushing, a pull request, merging, deployment and branch deletion.
+
+Three bounded corrections were authorized with it and are applied throughout this plan. They needed no further approval round, and none of them uncovered an unresolved product contradiction.
+
+**Correction 1 — one integrated batch.** Task numbering is kept, but Tasks 1 and 2 are executed together rather than in sequence. The introduction arrives with real English, German and Russian localization. No English-only intermediate product and no placeholder control is built, so no commit on this branch holds an introduction without its three languages.
+
+**Correction 2 — the eligibility table describes arrival cases.** The nine rows name the context MissionKid resolves on arrival. They are not a new precedence algorithm and they replace nothing the application already decides. Where two of those conditions coexist, **existing precedence decides and is preserved exactly**. In particular an incomplete age context reaches the age-context step even when durable state also holds a current Mission Session or a current completed-result pointer — which is what `F002`'s incomplete-setup rule and `F001`'s *Incomplete setup* section already require, and what the application already does. Task 1's verification carries regression coverage for both of those coexisting cases. The same clarification is recorded in `F001` beside the table, because a table read as an algorithm is the way this rule would be broken later.
+
+**Correction 3 — the later presentation tasks no longer judge success by content height.** "Content height unchanged" and "content height did not fall" are withdrawn as criteria. **Legitimate reflow may reduce measured text height**: text that occupies fewer lines because it has more width, or a tighter line box that does not reduce the type size, is a correct outcome rather than a loss, so a fall in text height is not on its own evidence that content was removed. What replaces it is stated under *How these changes are judged* and applied in Tasks 4 and 5: preservation of **complete wording, readable typography, required guidance and semantic order**, with the measurement method defined there, and with useful separation and touch-target space distinguished from excessive spacing.
 
 ### Inherited commits on this branch
 
@@ -45,7 +61,7 @@ The first five are finished and accepted; this plan reopens none of them and cha
 | Reviewed and discovery-eligible | `reviewed: true`, `discoveryEligible: true`, content version `mvp-catalog-2026-09-r2` |
 | Complete reviewed content in all three languages | Title, instruction and safety note present in `en`, `de`, `ru` |
 | Carries a safety note | `safetyNoteRequired: true`; the note is present in all three languages and is shown verbatim |
-| Adult involvement | `No special adult assistance required` — shown with its approved wording, never as a guarantee that no supervision is needed |
+| Adult involvement | `No special adult assistance required`, which carries no localized adult-involvement note. The example therefore presents the adult-involvement line exactly as a Mission card presents it for this Mission — that is, not at all. The internal catalog level is never rendered, and no claim that supervision is unnecessary is invented to fill the space |
 | Duration | `240` seconds, presented as the same approximate duration a Mission card shows |
 
 Nothing about the entry is edited, adapted, shortened or re-reviewed. The introduction renders the same reviewed fields a Mission card renders, from the same catalog module.
@@ -123,6 +139,8 @@ Scope: the seven amended documents and every clause that could conflict with the
 
 Existing durable-state precedence is unchanged. The introduction never outranks anything the family is actually in; it is eligible in exactly one case. This mirrors the normative table in `F001`.
 
+**The table describes arrival cases, not a precedence algorithm.** Each row names a context MissionKid resolves on arrival and the surface that context already reaches. Nothing in it reorders anything, and where two of these conditions coexist the existing precedence decides, unchanged.
+
 | Resolved context on arrival | Destination | Introduction | Same as today? |
 | --- | --- | --- | --- |
 | **No stored context** — storage works and holds nothing | The introduction | **Shown** | New view in place of the bare setup form |
@@ -140,6 +158,24 @@ Existing durable-state precedence is unchanged. The introduction never outranks 
 Two rows are deliberate. **Recovery is not an introduction:** a parent told their data cannot be read needs that fact and the approved choice first. **Temporary mode is not an introduction:** with storage unusable a first visit and a returning one cannot be told apart at all, and the warning that nothing will be durable is what the parent needs first, so a genuinely new visitor with blocked storage reaches temporary mode without an introduction.
 
 A parent who has already moved to the setup choices is not sent back to the introduction. Nothing has been recorded, so a later visit in the same context is the no-stored-context row again, not a repeat.
+
+#### Coexisting conditions keep the precedence they have today
+
+The rows above are read one at a time, but durable state can satisfy more than one description at once. Existing precedence settles every such case and is preserved exactly:
+
+| Coexisting condition | Where it goes | Why |
+| --- | --- | --- |
+| Incomplete age context **and** a current Mission Session in `selected`, `ready` or `active` | The age-context gate | `F001` *Incomplete setup* and `F002` both require that discovery cannot begin and that the family is returned to the missing age step. The stored session is untouched and is not cancelled. |
+| Incomplete age context **and** a current completed-result pointer | The age-context gate | The same rule. The completed records and the pointer are untouched. |
+
+Neither case is ever the introduction: a stored context exists, so this is not the no-stored-context row at all. Both are covered by regression tests under Task 1.
+
+#### Two arrivals that resolve to the no-stored-context row
+
+Both follow from the row itself rather than from any new rule, and both were confirmed against the implementation:
+
+- **After a confirmed reset.** The reset removed the stored context, so storage works and holds nothing. That is the first row — "on a first visit or after a previously stored context ceased to exist" — and the parent reaches the introduction rather than a bare form.
+- **After a storage retry that finds working, empty storage.** The retry re-resolves the arrival context from storage, and the context it resolves is the same one. A parent who reached temporary mode never saw the introduction, because temporary mode is not an introduction; once storage works and holds nothing, the first row applies to them as it does to any other first use.
 
 ### Language selection before setup is confirmed
 
@@ -168,13 +204,23 @@ Two things are **not** goals and are not used as success criteria anywhere below
 
 A proposed change is judged instead on all of:
 
-1. **Unnecessary non-content height is removed** — height that carries no text, no control and no required separation.
+1. **Excessive spacing is removed, and useful space is not.** What may go is height that separates nothing a reader needs separated — padding, margin and chrome beyond what the content asks for. What stays is **useful separation** — the space that groups a heading with what it introduces, or keeps a safety note visually distinct from the instruction above it — and **touch-target space**, the height an interactive element needs to reach its `52` px minimum. Neither of those is unnecessary height, and removing either is a defect rather than a result.
 2. **Action hierarchy stays clear** — one dominant primary action, secondary and safe-exit actions still available and still subordinate.
-3. **Content stays readable and complete** — current text sizes, every required field, no truncation, no ellipsis, no disclosure of safety or adult-involvement guidance, no reordering of it.
+3. **Content is preserved — and preservation is not measured in pixels.** The test is four things, each checked directly: **complete wording**, every required string present and rendered in full with no truncation, ellipsis or disclosure; **readable typography**, computed font size and line height unchanged or better, and the text measure still comfortable; **required guidance**, every safety and adult-involvement block present as visible text at its existing prominence; and **semantic order**, heading order, reading order and the position of safety and adult-involvement content unchanged. **Legitimate reflow may reduce measured content height** — text that occupies fewer lines because it has more width, or a tighter line box that does not reduce the type size, is a correct outcome. A fall in content height is therefore not evidence that anything was lost, and content height is not a pass/fail criterion anywhere in this plan.
 4. **Keyboard access is intact** — same focus order, visible focus on every interactive element, nothing made unreachable.
 5. **No overlap and no horizontal overflow** at any measured configuration.
 
-Language-dependent page heights and ordinary vertical scrolling remain acceptable outcomes, at default and at increased text sizes alike. The measurements below therefore report non-content height, which is the thing under this plan's control, alongside content height, which is not.
+Language-dependent page heights and ordinary vertical scrolling remain acceptable outcomes, at default and at increased text sizes alike.
+
+### How the measurement is taken
+
+On the served production build in Chrome for Testing, at each configuration and in each language:
+
+- **Page height** is `document.documentElement.scrollHeight`.
+- **Content height** is the vertical extent actually covered by elements that carry visible text or are interactive controls, computed as the union of their bounding boxes rather than the sum of their heights, so nested and adjacent elements are never counted twice.
+- **Non-content height** is page height minus content height.
+
+Those three numbers describe the shape of a view; they do not decide whether a change is acceptable. The verdict comes from the direct checks in criterion `3` — rendered strings compared with the required content, computed `font-size` and `line-height` per changed text element, document order of headings and of the safety and adult-involvement blocks — together with the computed height of every interactive element for the `52` px minimum, and the overlap and horizontal-overflow checks in criterion `5`.
 
 ### 1. Parent introduction — new
 
@@ -232,7 +278,7 @@ Measured at `390x780` with five completed entries: the whole view including the 
 
 ## Implementation tasks
 
-**None of these is authorized.** They are ordered so the new view lands before the passes that must stay consistent with it.
+**Tasks 1 and 2 are authorized and were executed together; Tasks 3–6 are not authorized and are not started.** They are ordered so the new view lands before the passes that must stay consistent with it.
 
 ### Task 1 — The parent introduction view
 
@@ -240,7 +286,7 @@ Measured at `390x780` with five completed entries: the whole view including the 
 
 **Trace.** `F001` *First-use introduction*, criteria `13`–`18`; `P8`; Visual & Ergonomic *Parent introduction presentation*, inventory row, criterion `24`; Technical Architecture *Root-only navigation*.
 
-**Verification.** Tests through the rendered application and the real persistence adapter for each criterion and each eligibility row, including that the example cannot be chosen, creates nothing, and receives no preference in the first discovery set afterwards. An adapter spy asserting zero **writes** while the introduction is displayed, while the ordinary hydration read is expected to have occurred and is asserted to have happened — the eligibility rules depend on it. A fixture asserting `helping-11` is approved for all three age bands and carries complete content in all three languages. Type checking, the full suite and the production build run sequentially, then the scoped diff and `git diff --check`.
+**Verification.** Tests through the rendered application and the real persistence adapter for each criterion and each eligibility row, including that the example cannot be chosen, creates nothing, and receives no preference in the first discovery set afterwards. Regression coverage for the coexisting cases above — an incomplete age context together with a current Mission Session, and together with a completed-result pointer — asserting each reaches the age-context gate and not the introduction, following the existing approved behavior rather than introducing a new one. An adapter spy asserting zero **writes** while the introduction is displayed, while the ordinary hydration read is expected to have occurred and is asserted to have happened — the eligibility rules depend on it. A fixture asserting `helping-11` is approved for all three age bands and carries complete content in all three languages. Type checking, the full suite and the production build run sequentially, then the scoped diff and `git diff --check`.
 
 ### Task 2 — Introduction copy in English, German and Russian
 
@@ -260,19 +306,19 @@ Measured at `390x780` with five completed entries: the whole view including the 
 
 ### Task 4 — Remove unnecessary non-content height on the ready and active views
 
-**Outcome.** Measured non-content height falls on both views in all three languages, from a baseline of `463`–`487` px on ready and `374`–`397` px on active at `390x780`. Content height is unchanged: every required field stays complete, untruncated and at its current text size, and safety and adult-involvement guidance keeps its position in the reading order and its prominence. **No whitespace is added to any language to make it resemble another, no text is shrunk, nothing is clipped, and no safety content is reordered.** Remaining language-dependent height differences are the expected outcome. The lifecycle, deliberate start, exactly-once completion, timer derivation, leave paths and confirmations are untouched.
+**Outcome.** Measured non-content height falls on both views in all three languages, from a baseline of `463`–`487` px on ready and `374`–`397` px on active at `390x780`, by removing excessive spacing while useful separation and touch-target space stay. Content is preserved on all four terms: complete wording, readable typography, required guidance, semantic order. A content height that falls through legitimate reflow is an acceptable outcome and is reported as such rather than treated as a shortfall. **No whitespace is added to any language to make it resemble another, no text is shrunk, nothing is clipped, and no safety content is reordered.** Remaining language-dependent height differences are the expected outcome. The lifecycle, deliberate start, exactly-once completion, timer derivation, leave paths and confirmations are untouched.
 
 **Trace.** `F003`; Visual & Ergonomic *F003 — Ready Mission presentation*, *Mission Break transition and active presentation*, *Action hierarchy*, *Localization resilience*, criteria `8` and `9`.
 
-**Verification.** The page/content/non-content measurement in all three languages at `390x780` and `320`px/`32px`, before and after, showing that what was removed was empty height. Assertions that: content height did not fall; every required field is present and untruncated; safety and adult-involvement text is unmoved in reading order; one dominant primary action remains with secondary and exit actions subordinate and available; focus order and visible focus are unchanged; touch targets stay at or above `52` px; and no overlap or horizontal overflow appears. The existing `F003` suite unchanged, including exactly-once start and completion. Timer live-region behavior re-checked.
+**Verification.** The page/content/non-content measurement in all three languages at `390x780` and `320`px/`32px`, before and after, taken by the method above and reported as context. The verdict comes from the direct checks: every required string present and rendered in full; computed `font-size` and `line-height` unchanged or better on every changed text element; safety and adult-involvement text present, outside any disclosure and unmoved in document order; heading order unchanged; one dominant primary action with secondary and exit actions subordinate and available; focus order and visible focus unchanged; every interactive element at or above `52` px; and no overlap or horizontal overflow. Where content height falls, the record states which reflow produced it. The existing `F003` suite unchanged, including exactly-once start and completion. Timer live-region behavior re-checked.
 
 ### Task 5 — Remove unnecessary non-content height on the settings view
 
-**Outcome.** Measured non-content height falls from its `725` px baseline in all three languages, with content height unchanged: both effect explanations and both parent notes stay fully visible at their current size, none of it condensed, hidden, reordered or moved behind disclosure. The same prohibitions as Task 4 apply — no added whitespace, no smaller text, no clipping, no reordered safety or consequence content.
+**Outcome.** Measured non-content height falls from its `725` px baseline in all three languages, by removing excessive spacing while useful separation and touch-target space stay. Content is preserved on the same four terms: both effect explanations and both parent notes keep their complete wording, their current type size and line height, their visibility outside any disclosure, and their place in the reading order. A content height that falls through legitimate reflow is acceptable and is reported with the reflow that produced it. The same prohibitions as Task 4 apply — no added whitespace, no smaller text, no clipping, no reordered safety or consequence content.
 
 **Trace.** `F001` *Changing setup later*, criteria `6` and `7`; Visual & Ergonomic *F001 — Setup and localization presentation*, *Action hierarchy*.
 
-**Verification.** The page/content/non-content measurement in all three languages before and after. Assertions that content height did not fall; that the language-effect and age-effect sentences and both parent notes are present and complete; that the save action remains the single dominant one; that focus order across the nine focusable elements and visible focus are unchanged; and that no overlap or horizontal overflow appears. Tests asserting a `ready` or `active` session, every completed record and Monthly Goal progress are unchanged by an age-band change.
+**Verification.** The page/content/non-content measurement in all three languages before and after, by the method above and reported as context. The verdict comes from the direct checks: the language-effect and age-effect sentences and both parent notes present and rendered in full; computed `font-size` and `line-height` unchanged or better; document order unchanged; the save action still the single dominant one; focus order across the nine focusable elements and visible focus unchanged; every interactive element at or above `52` px; and no overlap or horizontal overflow. Tests asserting a `ready` or `active` session, every completed record and Monthly Goal progress are unchanged by an age-band change.
 
 ### Task 6 — Consistency and full verification
 
@@ -280,7 +326,7 @@ Measured at `390x780` with five completed entries: the whole view including the 
 
 **Trace.** Visual & Ergonomic *Visual consistency without a design system*, *Accessibility baseline*, *Anti-manipulation visual rules*, *Ergonomic review method*.
 
-**Verification.** Type checking, the full suite and the production build run sequentially; the whole branch diff inspected against `main`; `git diff --check`. Across EN/DE/RU at `390x780`, `1280x900` and `320`px/`32px`, against the five judging criteria used throughout this plan: unnecessary non-content height removed with content height intact; one dominant primary action per view with secondary and exit actions subordinate; complete readable content with no truncation, clipping or disclosed safety guidance; keyboard access with unchanged focus order, visible focus on every interactive element and touch targets at or above `52` px; and no overlap or horizontal overflow. Reduced motion respected and heading and reading order intact on every changed view. Language-dependent page heights and ordinary vertical scrolling, at default and increased text sizes, are recorded as acceptable outcomes rather than as findings. Contrast measured on the rendered page for every changed text element, as the Reward Card follow-up did.
+**Verification.** Type checking, the full suite and the production build run sequentially; the whole branch diff inspected against `main`; `git diff --check`. Across EN/DE/RU at `390x780`, `1280x900` and `320`px/`32px`, against the five judging criteria used throughout this plan: excessive spacing removed with useful separation and touch-target space intact; one dominant primary action per view with secondary and exit actions subordinate; complete readable content with no truncation, clipping or disclosed safety guidance; keyboard access with unchanged focus order, visible focus on every interactive element and touch targets at or above `52` px; and no overlap or horizontal overflow. Reduced motion respected and heading and reading order intact on every changed view. Language-dependent page heights and ordinary vertical scrolling, at default and increased text sizes, are recorded as acceptable outcomes rather than as findings. Contrast measured on the rendered page for every changed text element, as the Reward Card follow-up did.
 
 ## Boundaries
 
@@ -292,7 +338,7 @@ Kept in the acceptance criteria throughout: English, German and Russian; accessi
 
 ## Remaining decisions requiring approval
 
-1. **Renewed implementation authorization.** Nothing in *Implementation tasks* may begin until it is recorded here. This is the gate.
+1. **Renewed implementation authorization for Tasks 3–6.** It is recorded for Tasks 1 and 2 above and for nothing else. Nothing in Tasks 3, 4, 5 or 6 may begin until its own authorization is recorded here. This is the gate.
 2. **Translation review of the proposed copy.** The strings above are proposed product copy. Whether they need review by a German and a Russian speaker before release is a release decision, not one this plan makes.
 3. **Instruction length**, recorded under Decision 3 as a separate content consideration for Mission Catalog and Safety. Not scheduled, not assumed, and not addressed by anything in this plan.
 
