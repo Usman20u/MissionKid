@@ -1,7 +1,7 @@
 # MissionKid Plan 05 — guided entry and the presentation pass
 
 **Date:** 2026-09-22
-**Status:** Specification amendments prepared and revalidated; the reviewer's product decisions are recorded below. **Tasks 1 and 2 are authorized and were executed together as one integrated batch**, and await human visual acceptance, which is not recorded. **Two bounded parts of Task 3 — the reproduced Discovery clipping defect and the narrow-screen spacing correction — are authorized and done, together with two bounded introduction improvements, and a bounded Discovery visual direction is authorized; the rest of Task 3 is not.** Tasks 4–6 remain unauthorized and are not started. Nothing is pushed, merged or deployed.
+**Status:** Specification amendments prepared and revalidated; the reviewer's product decisions are recorded below. **Tasks 1 and 2 are authorized and were executed together as one integrated batch**, and await human visual acceptance, which is not recorded. **Two bounded parts of Task 3 — the reproduced Discovery clipping defect and the narrow-screen spacing correction — are authorized and done, together with two bounded introduction improvements and the bounded Discovery visual direction; the rest of Task 3 is not.** Tasks 4–6 remain unauthorized and are not started. Nothing is pushed, merged or deployed.
 
 **Branch:** `feat/guided-entry-and-presentation`, taken from `14a5b16` on the unpublished `feat/reward-card-presentation`, which is preserved unchanged at that commit. No history was rewritten.
 
@@ -518,6 +518,39 @@ Scope: the scene system and the clauses adjacent to the authorized change. This 
 | External assets | None. No image is hotlinked; the scenes are bundled with the application. |
 
 **Blockers: none. Unresolved contradictions: none.**
+
+### Discovery visual direction — outcome, at `9de0401`
+
+**The surface.** The page behind Mission Discovery goes warm with the panel, so the cards sit on one continuous cream ground rather than on a cool page carrying a warm panel. It is scoped to this view with `:has([data-view='discovery-categories'])`; no other surface changes. The ground stays one soft wash, with no pattern and no edge competing with a card.
+
+**The cards.** The Mission image window goes from `20 / 11` to `3 / 2`, and the frame shows a taller crop of the same `200x110` stage, so the image gains presence without redrawing any of the other 51 compositions. A card now reads in three layers: the instruction at a `42ch` measure, the safety guidance in its own panel, and the choose action below a hairline at the foot of the card. On desktop the three cards share a height and their actions sit on one line; on mobile and at enlarged text they stay a readable vertical sequence. `Another set` becomes a subordinate outlined pill.
+
+**The scenes.** `creativity-02`, `creativity-05` and `creativity-10` get richer compositions built from the existing grammar rather than beside it — environment, subject, directional light, contact shadow — each object in its own material: kraft board and paper cups, a knitted sock, wax crayon. They are authored SVG bundled with the application. Nothing is fetched, nothing is generated at runtime, and no image carries text.
+
+**The card's content column became a flex column** so the action can sit at the foot of a card taller than its own text. The clipping invariant test was restated to cover both layout mechanisms and to pin the set of layout layers, distinguishing the two that carry the text column from `.mission-card__meta`, which sizes to the column rather than the column to it. It was proven to fail when the flex layer's minimum is removed.
+
+**Verified on the production build**, English, German and Russian at `390x780`, `1280x900` and `320` CSS px with a `32px` root, reached through the ordinary flow rather than seeded:
+
+| Check | Result |
+| --- | --- |
+| Clipping against every ancestor | `0` in all nine |
+| Page horizontal overflow | none in all nine |
+| Contrast, composited | minimum `7.17:1`, zero failures; higher than the `5.72:1` before this pass |
+| Touch targets | `52` px, and `138.4` px at enlarged text |
+| Three cards, equal width | yes in all nine; equal height and one action line on desktop |
+| Scenes decorative | every scene `aria-hidden`, **zero text inside any image** |
+| Assets | no `<img>`, no external URL, no failed request in any configuration |
+| Reference set reached without pinning | yes — `creativity-02`, `creativity-05`, `creativity-10` |
+
+**Gates.** `tsc --noEmit` clean, **840 tests across 23 test files**, clean production build, `git diff --check` clean.
+
+**One unexplained test failure is recorded rather than explained away.** The first gate run reported `1 failed | 839 passed`. The command that produced it truncated the failing test's name, so the name was not retained, and that is a gap in this verification. Four consecutive full runs afterwards were clean at `840 passed`. **Cause unknown, not reproduced, not attributed**, and passing on re-run does not identify one.
+
+### What does not match the reference, stated plainly
+
+- **The imagery is illustration, not photography.** The reference uses photographic images. This implementation cannot produce photographic assets: none was generated, none is fetched, and the specification forbids runtime-generated imagery regardless. What is there is hand-authored SVG upgraded within the existing scene grammar. It is a real step toward the reference's warmth and depth and it is **not** its photographic look. **No visual fidelity to the reference's imagery is claimed.** Closing that gap requires photographic or rendered assets to be supplied and content-reviewed, and two clauses will apply to them: imagery must avoid signalling housing, resources or family structure, and must stay globally recognizable rather than tied to one household type. The reference's styled interior, rug, plants and knitted throw are exactly what those clauses address, so that review is a real one and not a formality.
+- **Only three Missions were improved**, as authorized. The other 51 keep the current grammar, so other Mission Category sets look less rich until they are done. Within this set all three are improved equally, so no card is made to look recommended.
+- **Copy and navigation are unchanged.** The reference's Russian headings, its subheading and its header icons are not implemented, because wording and navigation were not authorized. The section heading still reads *Three Missions* and the category chooser above the set is untouched.
 
 ## Boundaries
 
