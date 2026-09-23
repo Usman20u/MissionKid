@@ -790,20 +790,36 @@ describe('Mission card layout invariants', () => {
     expect(cardRule!.body).toMatch(/display:\s*grid/);
   });
 
-  it('names a zero column minimum on every grid layer inside the Mission card', () => {
-    const gridLayers = rules.filter(
-      (rule) => /^\.mission-card(__[\w-]+)?$/.test(rule.selector) && /display:\s*grid/.test(rule.body),
+  it('names a minimum on every layout layer inside the Mission card', () => {
+    const layers = rules.filter(
+      (rule) =>
+        /^\.mission-card(__[\w-]+)?$/.test(rule.selector) &&
+        /display:\s*(grid|flex)/.test(rule.body),
     );
 
-    // The card itself and its content column. A new grid layer added here
-    // without the minimum would clip reviewed text again at a large root size.
-    expect(gridLayers.map((rule) => rule.selector).sort()).toEqual([
+    // The full set is pinned, so a layout layer added inside the card cannot
+    // appear without this test being read again and the question answered.
+    expect(layers.map((rule) => rule.selector).sort()).toEqual([
       '.mission-card',
       '.mission-card__content',
+      '.mission-card__meta',
     ]);
 
-    for (const layer of gridLayers) {
-      expect(layer.body).toMatch(/grid-template-columns:\s*minmax\(\s*0\s*,/);
+    // Of those, these two are the chain that carries the text column from the
+    // card down to the instruction and the notes, and each must name a
+    // minimum. `.mission-card__meta` is a wrapping row of two short labels
+    // inside that column rather than part of it, so it sizes to the column
+    // instead of the column sizing to it.
+    const columnChain = ['.mission-card', '.mission-card__content'];
+
+    for (const layer of layers.filter((rule) => columnChain.includes(rule.selector))) {
+      // A grid column's automatic minimum is min-content, so it must be named.
+      // A flex container's automatic minimum is the same, so it must be able
+      // to shrink below the width of its longest word.
+      const guard = /display:\s*grid/.test(layer.body)
+        ? /grid-template-columns:\s*minmax\(\s*0\s*,/
+        : /min-width:\s*0/;
+      expect(layer.body).toMatch(guard);
     }
   });
 });

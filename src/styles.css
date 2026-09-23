@@ -774,14 +774,17 @@ input {
    the Mission's real action, with atmosphere behind, a plane in the middle and a
    subject in front. All copy sits on a calm surface below, so depth never
    competes with comprehension. The cards are articles, not controls. */
+/* A warm, quiet ground. It carries the Missions and stays out of the way of
+   the text on them: one soft wash, no pattern, no edge that competes with a
+   card. */
 .mission-suggestions,
 .mission-unavailable {
   margin-top: 2rem;
   padding: 1.5rem 1.15rem 1.35rem;
-  border: 1px solid #dce6e1;
+  border: 1px solid #ece2cf;
   border-radius: 1.35rem;
   background:
-    radial-gradient(120% 90% at 50% 0%, #fbfdfc 0, #f3f7f4 100%);
+    radial-gradient(120% 90% at 50% 0%, #fdfaf3 0, #f7f1e4 100%);
 }
 
 .mission-suggestions__title,
@@ -792,6 +795,20 @@ input {
   font-weight: 750;
   letter-spacing: 0.02em;
   text-transform: uppercase;
+}
+
+/* The page behind Mission Discovery goes warm with it, so the cards sit on one
+   continuous ground rather than on a cool page with a warm panel on it. Scoped
+   to this view: no other surface changes in this pass. */
+.app-shell:has([data-view='discovery-categories']) {
+  background:
+    radial-gradient(circle at 50% 0%, #f1e8d6 0, transparent 34rem),
+    #f7f2e6;
+}
+
+.app-shell:has([data-view='discovery-categories']) .app-shell__main > section {
+  border-color: #ece2cf;
+  background: rgb(255 253 248 / 94%);
 }
 
 .mission-suggestions__set {
@@ -824,14 +841,36 @@ input {
    judge the Mission, and stays inside the card so it reads as this Mission's
    action rather than the page's. */
 .mission-card__choose {
-  margin-top: 0.35rem;
-  justify-self: start;
+  position: relative;
+  width: 100%;
+  /* Pushed to the bottom of the card, so the action sits on one line across
+     the set however long an individual instruction runs. */
+  margin-top: auto;
+  padding-top: 0.75rem;
+}
+
+/* The hairline that puts the action on its own layer of the card, below the
+   instruction and the guidance rather than among them. */
+.mission-card__choose::before {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  border-top: 1px solid #ece2cf;
+  content: '';
 }
 
 /* Secondary to choosing one of the three above: it sits after them, at the
    width of the text rather than the set, and never competes with a Mission. */
 .mission-suggestions__another {
-  margin-top: 1.35rem;
+  margin-top: 1.6rem;
+  padding-inline: 2rem;
+  border-color: #cdbfa4;
+  border-radius: 999px;
+  background: none;
+  color: #3c5a4a;
+  font-weight: 700;
+  justify-self: center;
 }
 
 /* Running out of full sets is a fact about the catalog, not a failure, so it
@@ -858,12 +897,12 @@ input {
 .mission-card {
   display: grid;
   overflow: hidden;
-  border: 1px solid hsl(var(--world-hue) 22% 84%);
-  border-radius: 1.15rem;
-  background: #fff;
+  border: 1px solid #e8dfcd;
+  border-radius: 1.35rem;
+  background: #fffdf8;
   box-shadow:
-    0 0.15rem 0.4rem rgb(32 48 45 / 5%),
-    0 1rem 2.25rem rgb(32 48 45 / 10%);
+    0 0.15rem 0.4rem rgb(74 58 33 / 6%),
+    0 1rem 2.25rem rgb(74 58 33 / 9%);
   grid-template-rows: auto 1fr;
   /* A grid column's automatic minimum is its min-content width, so without a
      named minimum the card's single column was sized to the longest unbreakable
@@ -881,8 +920,10 @@ input {
 .mission-card__window {
   position: relative;
   overflow: hidden;
-  /* Matches the scene viewBox so nothing is cropped at any width. */
-  aspect-ratio: 20 / 11;
+  /* Matches the scene's visible frame so nothing is letterboxed or cropped at
+     any width. Taller than the drawing stage on purpose: the Mission image is
+     the card's entry point and earns the height. */
+  aspect-ratio: 3 / 2;
   border-bottom: 0;
   background:
     radial-gradient(
@@ -900,8 +941,8 @@ input {
   background: linear-gradient(
     180deg,
     transparent 0 88%,
-    hsl(var(--world-hue) 30% 94% / 45%) 96%,
-    #fff 100%
+    hsl(var(--world-hue) 30% 94% / 35%) 96%,
+    #fffdf8 100%
   );
   box-shadow:
     inset 0 0.9rem 1.7rem hsl(var(--world-hue) 40% 30% / 17%),
@@ -1156,6 +1197,29 @@ input {
   color: #5c4636;
 }
 
+/* The reference Missions' own materials: kraft board and paper cups, a knitted
+   sock, wax crayon. Each is the object's real colour, lit by the category
+   atmosphere around it rather than recoloured into it. */
+.s-el--plantPot {
+  color: #6f7f52;
+}
+
+.s-el--cupTower {
+  color: #b98d57;
+}
+
+.s-el--sockPuppet {
+  color: #c8922f;
+}
+
+.s-el--monsterSketch {
+  color: #7b5ea8;
+}
+
+.s-el--crayonPair {
+  color: #7d5fb2;
+}
+
 /* Handled objects. */
 .s-el--cup {
   color: #5b8ba0;
@@ -1264,13 +1328,13 @@ input {
 
 .mission-card__content {
   position: relative;
-  display: grid;
-  /* The same named minimum the card itself needs, for the same reason: this is
-     a grid too, so without it the text column was sized to its longest
-     unbreakable word and the instruction and the notes escaped the card that
-     clips them. Both layers have to name it; fixing only the card left the
-     notes overflowing by the same amount. */
-  grid-template-columns: minmax(0, 1fr);
+  /* A column, so the choose action can be pushed to the bottom of a card that
+     is taller than its own text. Its children are block-level and stretch to
+     the column, so none of them is sized to its longest word — the failure the
+     card's own named grid minimum fixes one layer up. */
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
   margin-top: -0.6rem;
   /* `rem` padding keeps its proportion to the text at ordinary sizes and
      overwhelms the column at large ones: at a 32px root these two sides took
@@ -1279,13 +1343,7 @@ input {
      eating the reading width at large ones. */
   padding: 0.5rem min(1.15rem, 6%) 1.2rem;
   gap: 0.55rem;
-  align-content: start;
-  background: linear-gradient(
-    180deg,
-    #fff 0,
-    #fff 55%,
-    hsl(var(--world-hue) 40% 97%) 100%
-  );
+  background: linear-gradient(180deg, #fffdf8 0, #fffdf8 58%, #fbf6ea 100%);
 }
 
 /* Quiet context line: present, never competing with the title. */
@@ -1311,18 +1369,21 @@ input {
 /* Primary. */
 .mission-card__title {
   margin: 0;
-  font-size: 1.35rem;
+  color: #1c3a2f;
+  font-size: 1.45rem;
   font-weight: 780;
   line-height: 1.18;
   letter-spacing: -0.025em;
 }
 
-/* Secondary: readable, deliberately lighter than the title. */
+/* Secondary: readable, deliberately lighter than the title, at a comfortable
+   measure rather than the full card width on a wide screen. */
 .mission-card__instruction {
+  max-width: 42ch;
   margin: 0;
-  color: #46605a;
-  font-size: 0.965rem;
-  line-height: 1.6;
+  color: #435c4f;
+  font-size: 0.985rem;
+  line-height: 1.62;
 }
 
 /* Required adult and safety content: its own material layer, always visible,
@@ -1364,8 +1425,8 @@ input {
 }
 
 .mission-card__note--adult {
-  background: #eef4f0;
-  color: #24443c;
+  background: #eef4ee;
+  color: #22423a;
 }
 
 .mission-card__note--adult .mission-card__note-mark {
@@ -1373,8 +1434,8 @@ input {
 }
 
 .mission-card__note--safety {
-  background: #faf3e9;
-  color: #55401f;
+  background: #f8efdf;
+  color: #4f3a1b;
 }
 
 .mission-card__note--safety .mission-card__note-mark {
@@ -1397,7 +1458,10 @@ input {
   .mission-suggestions__set {
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 1.35rem;
-    align-items: start;
+    /* Equal weight means equal presence: the three cards share a height and
+       their choose actions sit on one line, so no card looks like the short
+       easy one or the long demanding one. */
+    align-items: stretch;
   }
 
 }
