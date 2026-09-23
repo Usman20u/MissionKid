@@ -36,7 +36,8 @@ const englishMessages = {
   'introduction.flow.heading': 'What the family does',
   'introduction.flow.step1':
     'Choose a Mission Category together, then pick one of three Missions.',
-  'introduction.flow.step2': 'Leave the screen and do the Mission in real life.',
+  'introduction.flow.step2':
+    'When you are ready, start the Mission, then leave the screen and do it in real life.',
   'introduction.flow.step3': 'Come back and mark the Mission as done.',
   'introduction.setup.brief':
     'Setup is short: choose a language and an age group.',
@@ -236,7 +237,7 @@ export const INTERFACE_MESSAGES: CompleteInterfaceMessages = {
     'introduction.flow.step1':
       'Wählt gemeinsam eine Missionskategorie und danach eine von drei Missionen.',
     'introduction.flow.step2':
-      'Verlasst den Bildschirm und macht die Mission im echten Leben.',
+      'Wenn ihr bereit seid, startet die Mission, verlasst dann den Bildschirm und macht sie im echten Leben.',
     'introduction.flow.step3':
       'Kommt zurück und tragt die Mission als erledigt ein.',
     'introduction.setup.brief':
@@ -406,7 +407,7 @@ export const INTERFACE_MESSAGES: CompleteInterfaceMessages = {
     'introduction.flow.step1':
       'Выберите вместе категорию миссии, а затем одну из трёх миссий.',
     'introduction.flow.step2':
-      'Отойдите от экрана и выполните миссию в реальной жизни.',
+      'Когда будете готовы, начните миссию, затем отойдите от экрана и выполните её в реальной жизни.',
     'introduction.flow.step3':
       'Вернитесь и отметьте миссию как выполненную.',
     'introduction.setup.brief':

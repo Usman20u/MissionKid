@@ -158,9 +158,29 @@ input {
   text-transform: uppercase;
 }
 
-.introduction__example,
-.introduction__flow {
+/* Two columns where there is room for both, one where there is not. The
+   threshold is the content's own measure rather than a device width: both
+   bases are in `rem`, so a reader who enlarges text runs out of room for two
+   columns and gets one, at any viewport width. Nothing is reordered — the flex
+   line wraps, so the example still precedes the flow and the one action. */
+.introduction__columns {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 2rem 2.5rem;
   margin-top: 2rem;
+}
+
+/* The example keeps a Mission card's measure and does not stretch to fill a
+   wide column; the guidance beside it takes the room that is left. */
+.introduction__example {
+  min-width: 0;
+  flex: 0 1 24rem;
+}
+
+.introduction__guidance {
+  min-width: 0;
+  flex: 1 1 26rem;
 }
 
 /* On a wide layout, held to roughly the width one of Discovery's three columns
@@ -296,24 +316,37 @@ input {
 .choice-grid--inline {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.6rem;
+  gap: min(0.6rem, 5%);
 }
 
+/* Stacked one per row at narrow widths, where the padding, the gap and the
+   radio would otherwise take more of the row than the language name and force
+   it to break across lines. Each ceiling is measured against the row, so the
+   control is unchanged at ordinary sizes; the label itself keeps its size and
+   remains the touch target. */
 .choice--inline {
   min-width: 0;
-  padding: 0.7rem 0.9rem;
+  padding: 0.7rem min(0.9rem, 5%);
   flex: 0 1 auto;
-  gap: 0.55rem;
+  gap: min(0.55rem, 3%);
   font-size: 0.95rem;
 }
 
-/* The same measuring problem the choice-group legend has, and the same remedy.
-   At a large root size a language name is wider than the column it sits in;
-   `break-word` does not reduce the intrinsic width the layout is measured
-   against, so without this the name either pushed the page into horizontal
-   scrolling or ran outside its own box. It wraps instead, complete. */
+/* The glyph stops growing where the row runs out of room for the name beside
+   it. It is a state indicator, not text, and the label around it stays the
+   touch target at its full height. `1.2rem` at the default root size is where
+   it already sits, so nothing changes until the reader enlarges text. */
+.choice--inline input {
+  width: min(1.2rem, 19.2px);
+  height: min(1.2rem, 19.2px);
+}
+
+/* The name is one word and is kept on one line: the padding, the gap and the
+   glyph above give it the room it needs, so nothing has to be broken. The
+   label may shrink to the row, and `min-content` keeps that shrinking from
+   cutting into the word itself. */
 .choice--inline span {
-  overflow-wrap: anywhere;
+  min-width: min-content;
 }
 
 .parent-note {
@@ -1239,7 +1272,12 @@ input {
      notes overflowing by the same amount. */
   grid-template-columns: minmax(0, 1fr);
   margin-top: -0.6rem;
-  padding: 0.5rem 1.15rem 1.2rem;
+  /* `rem` padding keeps its proportion to the text at ordinary sizes and
+     overwhelms the column at large ones: at a 32px root these two sides took
+     73.6px of a 252px card. The percentage is a ceiling measured against the
+     card, so it changes nothing at ordinary sizes and stops the padding
+     eating the reading width at large ones. */
+  padding: 0.5rem min(1.15rem, 6%) 1.2rem;
   gap: 0.55rem;
   align-content: start;
   background: linear-gradient(
@@ -1289,10 +1327,19 @@ input {
 
 /* Required adult and safety content: its own material layer, always visible,
    never behind disclosure, and calm rather than alarming. */
+/* The left padding exists only to clear the mark, so both are derived from one
+   inset and cannot drift apart. The same percentage ceiling applies: at a 32px
+   root this note's horizontal padding took 96px of a 178px column and left the
+   reviewed safety text four words of room. */
 .mission-card__note {
+  --note-inset: min(0.9rem, 8%);
+  --note-mark: 0.62rem;
+  --note-gap: min(0.63rem, 5%);
+
   position: relative;
   margin: 0.35rem 0 0;
-  padding: 0.7rem 0.85rem 0.75rem 2.15rem;
+  padding: 0.7rem min(0.85rem, 6%) 0.75rem
+    calc(var(--note-inset) + var(--note-mark) + var(--note-gap));
   border-radius: 0.7rem;
   font-size: 0.9rem;
   line-height: 1.5;
@@ -1301,9 +1348,9 @@ input {
 .mission-card__note-mark {
   position: absolute;
   top: 0.95rem;
-  left: 0.9rem;
-  width: 0.62rem;
-  height: 0.62rem;
+  left: var(--note-inset);
+  width: var(--note-mark);
+  height: var(--note-mark);
   border-radius: 50%;
 }
 

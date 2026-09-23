@@ -105,50 +105,62 @@ export function ParentIntroduction({ catalog = MISSION_CATALOG }: ParentIntroduc
 
       <p className="introduction__lead">{t('introduction.lead')}</p>
 
-      {/* One example, unmistakably an example: its own heading says so, and the
-          card carries no choose action and no selection affordance, so it
-          cannot be taken for one of the three equally weighted suggestions
-          F002 presents later. Its reviewed content, including the safety note,
-          is rendered by the same card discovery renders. */}
-      {example ? (
-        <section
-          aria-labelledby={exampleHeadingId}
-          className="introduction__example"
-        >
-          <h2 className="introduction__heading" id={exampleHeadingId}>
-            {t('introduction.example.label')}
-          </h2>
-          <MissionSceneDefs />
-          <MissionCard language={language} mission={example} />
-        </section>
-      ) : null}
+      {/* Two columns where there is room for both, one where there is not. The
+          wrapper exists for that placement alone: the reading order inside it
+          is the order the specification requires on a narrow screen — the
+          example, the short flow, then the one action — and it is the same
+          order in both layouts, because nothing here is reordered visually. */}
+      <div className="introduction__columns">
+        {/* One example, unmistakably an example: its own heading says so, and
+            the card carries no choose action and no selection affordance, so it
+            cannot be taken for one of the three equally weighted suggestions
+            F002 presents later. Its reviewed content, including the safety
+            note, is rendered by the same card discovery renders. */}
+        {example ? (
+          <section
+            aria-labelledby={exampleHeadingId}
+            className="introduction__example"
+          >
+            <h2 className="introduction__heading" id={exampleHeadingId}>
+              {t('introduction.example.label')}
+            </h2>
+            <MissionSceneDefs />
+            <MissionCard language={language} mission={example} />
+          </section>
+        ) : null}
 
-      <section aria-labelledby={flowHeadingId} className="introduction__flow">
-        <h2 className="introduction__heading" id={flowHeadingId}>
-          {t('introduction.flow.heading')}
-        </h2>
-        <ol className="introduction__steps">
-          {FLOW_STEP_KEYS.map((key) => (
-            <li key={key}>{t(key)}</li>
-          ))}
-        </ol>
-      </section>
+        <div className="introduction__guidance">
+          <section aria-labelledby={flowHeadingId} className="introduction__flow">
+            <h2 className="introduction__heading" id={flowHeadingId}>
+              {t('introduction.flow.heading')}
+            </h2>
+            <ol className="introduction__steps">
+              {FLOW_STEP_KEYS.map((key) => (
+                <li key={key}>{t(key)}</li>
+              ))}
+            </ol>
+          </section>
 
-      {/* What the one action leads to, in the setup step's own approved
-          wording rather than a second version of it. */}
-      <aside className="parent-note">
-        <p>{t('introduction.setup.brief')}</p>
-        <p>{t('setup.privacy')}</p>
-        <p>{t('setup.parentResponsibility')}</p>
-      </aside>
+          {/* What the one action leads to, in the setup step's own approved
+              wording rather than a second version of it. */}
+          <aside className="parent-note">
+            <p>{t('introduction.setup.brief')}</p>
+            <p>{t('setup.privacy')}</p>
+            <p>{t('setup.parentResponsibility')}</p>
+          </aside>
 
-      <button
-        className="button button--primary"
-        onClick={() => dispatch({ type: 'introduction-continued' })}
-        type="button"
-      >
-        {t('introduction.action.setup')}
-      </button>
+          {/* The one forward action, rendered once. It moves between layouts
+              with the column it belongs to; it is never duplicated, pinned or
+              floated over anything. */}
+          <button
+            className="button button--primary"
+            onClick={() => dispatch({ type: 'introduction-continued' })}
+            type="button"
+          >
+            {t('introduction.action.setup')}
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
