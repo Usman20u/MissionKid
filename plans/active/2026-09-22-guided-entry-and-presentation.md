@@ -1,7 +1,7 @@
 # MissionKid Plan 05 — guided entry and the presentation pass
 
 **Date:** 2026-09-22
-**Status:** Specification amendments prepared and revalidated; the reviewer's product decisions are recorded below. **Tasks 1 and 2 are authorized and were executed together as one integrated batch.** Tasks 3–6 remain unauthorized and are not started. Nothing is pushed, merged or deployed.
+**Status:** Specification amendments prepared and revalidated; the reviewer's product decisions are recorded below. **Tasks 1 and 2 are authorized and were executed together as one integrated batch**, and await human visual acceptance, which is not recorded. **One bounded part of Task 3 — the reproduced Discovery clipping defect — is authorized and done; the rest of Task 3 is not.** Tasks 4–6 remain unauthorized and are not started. Nothing is pushed, merged or deployed.
 
 **Branch:** `feat/guided-entry-and-presentation`, taken from `14a5b16` on the unpublished `feat/reward-card-presentation`, which is preserved unchanged at that commit. No history was rewritten.
 
@@ -22,6 +22,13 @@ Recorded on 2026-09-23, after the human review of this plan and of the specifica
 - **Authorized:** Tasks 1 and 2, executed together as one integrated batch.
 - **Not authorized:** Tasks 3, 4, 5 and 6. Each remains pending its own authorization, and none of them is started.
 - **Still excluded:** pushing, a pull request, merging, deployment and branch deletion.
+
+A second, narrower authorization was recorded on 2026-09-23, after the Tasks 1–2 materials were reviewed:
+
+- **Authorized:** the reproduced Discovery clipping correction only — the layout defect that clips reviewed Mission instructions or safety guidance at `320` CSS px with a `32px` root. It is a bounded part of Task 3 and **not** its completion.
+- **Explicitly excluded from it:** the broader scene-height and spacing work in Task 3; shortening text, hiding it behind disclosure, shrinking typography, or replacing the clipping with horizontal overflow; and any change to the introduction, Reward Card, History, ready, active or settings presentation.
+- **Not authorized:** the rest of Task 3, and Tasks 4, 5 and 6.
+- Human visual acceptance of Tasks 1 and 2 remains outstanding and is not recorded by anyone but the reviewer.
 
 Three bounded corrections were authorized with it and are applied throughout this plan. They needed no further approval round, and none of them uncovered an unresolved product contradiction.
 
@@ -313,6 +320,7 @@ Implemented together as one batch. The introduction arrived with all three langu
 #### Verification actually run
 
 - **Type checking, the full suite and the production build, sequentially.** `tsc --noEmit` clean; **838 tests across 23 test files passing**; the build emitted `index.html` and the content-hashed assets with no error. `git diff --check` clean, and the diff is limited to this scope.
+- **Test accounting, reconciled.** The suite went from `800` at `6d2ddda` to `838`, an increase of `38`, while the record above says 37 new tests. Both figures are correct and neither test was changed to fit the other. Per-file counts from a JSON report of the baseline suite, run in a detached worktree at `6d2ddda`, against the same report on this branch: `ParentIntroduction.test.tsx` `0 → 37`, and `App.test.tsx` `15 → 16`. The extra one is not a separate test file but one more row in the existing `it.each` table of shell-view scenarios in `App.test.tsx` — the row that asserts the `introduction` view is selected and titled. No other file's count moved.
 - **37 new tests** in `src/ParentIntroduction.test.tsx`, through the rendered application and the real persistence adapter: every eligibility row reaching its stated destination; the four coexisting incomplete-age cases reaching the age-context gate with the stored session, completed records and pointer untouched and no write; zero adapter **writes** while the introduction is displayed with the hydration read asserted to have occurred; the example approved for all three bands with complete content in all three languages, under the same eligibility rule Discovery applies; its reviewed content, category, duration and safety note rendered verbatim in each language; no choose control, no second Mission, no discovery heading; the first discovery set afterwards identical to the set a run that never saw the introduction derives; the no-example fallback for a narrowed approval, for incomplete reviewed content and for an absent Mission, with the rest of the view still valid; the language choice applying to the interface and to the example, carrying into setup, writing nothing, and resolving to English again on a later visit; `document.documentElement.lang` following the choice; heading order, reading order and the absence of any identifying input.
 - **Existing tests that changed are behavior updates, not weakened assertions.** Cases about the setup form now take the introduction's forward action first. One focus case was restated on its own point: reaching the form from the introduction legitimately moves focus to its heading once, so the in-place save failure is now asserted to leave focus on the control the parent pressed, which is the thing that case exists to check.
 
@@ -337,6 +345,8 @@ Non-content height is near-constant across languages while content height varies
 The first was introduced by this work and is fixed in it. The second was **not**, and is not touched here.
 
 1. **The example card clipped reviewed text at a `32px` root — fixed.** A Mission card is a grid, and a grid column's automatic minimum is its min-content width, so the card's own content was sized to the longest unbreakable word in the reviewed instruction and then clipped by the card's `overflow: hidden`. Inside the panel's padding as well, the safety note was left a text column two pixels wide. Both are fixed for the example: the card's column names its minimum, and below the width where Discovery already gives its own Mission cards the panel's full measure the example takes the same measure. Re-measured: nothing clips at either configuration, and the safety note reads in whole words.
+
+   > **Correction, 2026-09-23.** The last sentence above is withdrawn as written. That re-measurement was taken **in English only**, and the claim does not hold for the other two languages. Measured afterwards on the same build, the example card at `320` CSS px with a `32px` root still clipped **5 elements in German** — Mission Category, title, reviewed instruction, safety label and safety note, the worst losing `163.4` px from the right — and **5 in Russian**, the worst losing `58.9` px. English was clean, which is why the single-language check passed. The cause was the second grid layer: `.mission-card` had its column minimum named, but `.mission-card__content` inside it did not, so the text column was still sized to its own longest word and escaped the card that clips it. The bounded Task 3 correction below names the minimum on both layers and resolves the introduction as well: **0 clipped elements in all three languages**, re-measured on the built page.
 2. **Discovery clips reviewed safety guidance at `320` px with a `32px` root — pre-existing, reported, not fixed here.** Measured on this same build on the unchanged Discovery view: the card's content box is `322.5` px inside a `252` px card, so roughly `70` px is cut from the right of every line and the safety note loses its last characters on most lines. This is present at `6d2ddda` and is not caused by this work. **It is a content-truncation defect against the visual specification's rule that safety guidance must not be truncated**, and it belongs to Task 3, which owns the Discovery cards. It is recorded here so that task inherits it rather than rediscovering it.
 
 Two further pre-existing observations at `320` px with a `32px` root, both on the unchanged setup form and both for Task 5: the page scrolls horizontally by `14` px from the age and language choices, and the view title wraps across four lines. Neither is introduced or changed here.
@@ -356,6 +366,44 @@ Two further pre-existing observations at `320` px with a `32px` root, both on th
 **Trace.** `F002` *Mission card content*, criteria `1`, `4`, `7`; Visual & Ergonomic *F002 — Exactly-three Mission suggestions*, *Mobile-first and responsive presentation*, scene accessibility and performance rules, criteria `7` and `21`–`23`.
 
 **Verification.** The before-and-after measurement on two served builds, EN/DE/RU at `390x780` and `320`px/`32px`, reporting card heights and set span, with the result stated as a measured number. Assertions that every required field is present and untruncated on all three cards in all three languages. The existing `F002` suite unchanged. Scene rendering checked against the reduced-motion and performance rules. The record must state plainly what the change did and did not achieve, including that two Missions remain non-co-visible on a phone.
+
+#### Task 3, bounded part — the reproduced clipping defect, done
+
+**This is one authorized part of Task 3 and not its completion.** Everything else in Task 3 above — the scene-window height, the card chrome, the vertical rhythm and the measured reduction in set span — is untouched and still unauthorized.
+
+**The defect, reproduced against the pre-change build.** The pre-change `dist` was kept and served for this, so the reproduction is against the build that shipped Tasks 1 and 2, not against a description of it. At `320` CSS px with a `32px` root, on the *Helping at Home* set for age `7–8`:
+
+| Language | Clipped elements | Content box vs card | Worst right-hand loss |
+| --- | --- | --- | --- |
+| English | `13` | `322.5` px inside a `252` px card | `33.7` px on a safety note |
+| German | `19` | `367.5` px inside `252` px | `78.7` px on an adult-involvement note |
+| Russian | `20` | `336.1` px inside `252` px | `63` px on a safety note |
+
+The clipped elements were the Mission Category, the Mission title, the **reviewed instruction**, the **adult-involvement note and its label**, the **safety note and its label**, and the choose control — on all three cards. **`document.scrollWidth` reported zero horizontal overflow in every one of these cases**, which is why the page-level check used in earlier passes could not see it: the clipping happens inside the card, against `overflow: hidden`, not against the viewport.
+
+**Cause.** A grid column's automatic minimum is its min-content width. Neither `.mission-card` nor `.mission-card__content` named a minimum, so each was sized to its own longest unbreakable word and then cut off by the card's `overflow: hidden`. Both layers had to be corrected: naming the minimum on the card alone moved the content box to `252` px but left the notes overflowing by exactly the same amount, which the second measurement caught.
+
+**The change.** Two declarations. `grid-template-columns: minmax(0, 1fr)` on `.mission-card` and on `.mission-card__content`. The equivalent scoped declaration added for the introduction's example under Task 1 is removed, because the rule on `.mission-card` now covers every Mission card. Nothing else changed: no text, no font size, no line height, no padding, no margin, no scene, no control, no markup.
+
+**Verified on the served build**, EN/DE/RU at the failing configuration and at `390x780` and `1280x900`, measuring each text element's bounds against **every ancestor that can clip it** rather than against page `scrollWidth`:
+
+| Configuration | Clipped elements, before → after | Everything else |
+| --- | --- | --- |
+| `320` px / `32px` root, EN | `13 → 0` | — |
+| `320` px / `32px` root, DE | `19 → 0` | — |
+| `320` px / `32px` root, RU | `20 → 0` | — |
+| `390x780`, all three | `0 → 0` | Content width, note width, card height and set span **identical to the pixel** |
+| `1280x900`, all three | `0 → 0` | **Identical to the pixel** |
+
+Also asserted unchanged across all nine: instruction `font-size` and `line-height` identical everywhere; scene element counts identical on every card; three cards of equal width in every set; three choose controls and eleven focusable elements; and no page horizontal overflow anywhere. The choose control was measured separately and sits `36.8` px inside the card, does not overflow its own box, keeps its `32px` label and wraps it, identically on all three cards.
+
+**The introduction was corrected by the same change**, which is how the English-only verification recorded above was caught. Its example card went from `0 / 5 / 5` clipped elements in EN/DE/RU to `0 / 0 / 0`. The introduction at `390x780` and `1280x900` is identical in every measured respect, so the Tasks 1–2 captures at those two configurations still describe what ships; the `320` px / `32px` Russian capture genuinely changed and was retaken.
+
+**What this cost, stated plainly.** At the failing configuration the cards are taller, because text that was previously cut off is now shown. The set span goes from `8141` to `10881` px in English, `7954` to `12546` px in German and `8253` to `13772` px in Russian. That is complete content replacing truncated content, and ordinary vertical scrolling at an increased text size is an accepted outcome; it is not a reduction in height and it is not the height work Task 3 still owns.
+
+**Residual, recorded and not fixed here.** At a `32px` root the note's horizontal padding is `rem`-based and takes `96` px, leaving an `82` px text column, so long words — German compounds especially — break across lines. That is a spacing matter belonging to the rest of Task 3 and is outside this authorization.
+
+**Regression check.** `src/MissionSuggestionSet.test.tsx` gains two tests. jsdom has no layout engine, so the failure cannot be asserted by rendering; these are stylesheet invariants that encode the **cause** rather than the symptom — that the card clips, and that every grid layer inside the Mission card names a zero column minimum, with the set of such layers pinned so a new one cannot be added without it. The check was proven to bite rather than trusted: removing the minimum from `.mission-card__content` fails it, and the declaration was restored afterwards. The rendered proof remains the browser measurement above.
 
 ### Task 4 — Remove unnecessary non-content height on the ready and active views
 
@@ -397,6 +445,6 @@ Kept in the acceptance criteria throughout: English, German and Russian; accessi
 
 ## Definition of complete
 
-Tasks 1 and 2 are implemented, verified and recorded above; this plan stays active because Tasks 3 to 6 are neither authorized nor done.
+Tasks 1 and 2 are implemented, verified and recorded above and await human visual acceptance. One bounded part of Task 3 — the reproduced clipping defect — is done and recorded above. This plan stays active because the rest of Task 3 and Tasks 4 to 6 are neither authorized nor done.
 
 This plan is complete when its authorized scope is implemented, each task's verification has actually been run and recorded truthfully here and in the changelog, and the diff is limited to that scope. It claims no MissionKid MVP completion, no deployment readiness, no CI result, no assistive-technology acceptance and no professional translation review. Human acceptance of anything built under it would be recorded separately, as the Reward Card follow-up's was.

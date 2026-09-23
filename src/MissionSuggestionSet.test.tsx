@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
@@ -757,5 +759,51 @@ describe('the insufficient-content state', () => {
     const heading = screen.getByRole('heading', { level: 2 }).textContent!;
     expect(heading.length).toBeGreaterThan(0);
     expect(screen.queryAllByRole('article')).toHaveLength(0);
+  });
+});
+// A grid column's automatic minimum is its min-content width. A rule that makes
+// an element a grid and also clips its overflow will therefore cut its own
+// content off whenever a word is wider than the element, and nothing about the
+// page reports it: `document.scrollWidth` stays at zero overflow, because the
+// clipping happens inside the card.
+//
+// That is what removed reviewed instruction, adult-involvement and safety text
+// from Discovery cards at 320 CSS px with a 32px root — 13 clipped elements in
+// English, 19 in German and 20 in Russian, measured on the served build.
+//
+// jsdom has no layout engine, so this cannot be asserted by rendering: it is a
+// stylesheet invariant that encodes the cause rather than the symptom. The
+// rendered proof is the browser measurement recorded in the plan. Both grid
+// layers of the card need the minimum; naming it on the card alone left the
+// notes overflowing by exactly as much as before.
+describe('Mission card layout invariants', () => {
+  const stylesheet = readFileSync('src/styles.css', 'utf8');
+  const rules = [...stylesheet.matchAll(/([^{}]+)\{([^{}]*)\}/g)].map((match) => ({
+    selector: match[1]!.trim().split('\n').at(-1)!.trim(),
+    body: match[2]!,
+  }));
+  const cardRule = rules.find((rule) => rule.selector === '.mission-card');
+
+  it('clips the card, which is why its grid layers must name a column minimum', () => {
+    expect(cardRule).toBeDefined();
+    expect(cardRule!.body).toMatch(/overflow:\s*hidden/);
+    expect(cardRule!.body).toMatch(/display:\s*grid/);
+  });
+
+  it('names a zero column minimum on every grid layer inside the Mission card', () => {
+    const gridLayers = rules.filter(
+      (rule) => /^\.mission-card(__[\w-]+)?$/.test(rule.selector) && /display:\s*grid/.test(rule.body),
+    );
+
+    // The card itself and its content column. A new grid layer added here
+    // without the minimum would clip reviewed text again at a large root size.
+    expect(gridLayers.map((rule) => rule.selector).sort()).toEqual([
+      '.mission-card',
+      '.mission-card__content',
+    ]);
+
+    for (const layer of gridLayers) {
+      expect(layer.body).toMatch(/grid-template-columns:\s*minmax\(\s*0\s*,/);
+    }
   });
 });
