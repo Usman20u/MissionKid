@@ -421,6 +421,35 @@ Also asserted unchanged across all nine: instruction `font-size` and `line-heigh
 
 **Regression check.** `src/MissionSuggestionSet.test.tsx` gains two tests. jsdom has no layout engine, so the failure cannot be asserted by rendering; these are stylesheet invariants that encode the **cause** rather than the symptom — that the card clips, and that every grid layer inside the Mission card names a zero column minimum, with the set of such layers pinned so a new one cannot be added without it. The check was proven to bite rather than trusted: removing the minimum from `.mission-card__content` fails it, and the declaration was restored afterwards. The rendered proof remains the browser measurement above.
 
+#### Three bounded ergonomic improvements — outcome, at `ea77864`
+
+Implemented together. Measured on two served builds — `015dc3c` before, `ea77864` after — in English, German and Russian at `390x780`, `1280x900` and `320` CSS px with a `32px` root. Bounds were taken against every ancestor that can clip, not against page `scrollWidth`.
+
+**1. Introduction desktop composition (Task 1).** The example Mission sits beside a column carrying the flow explanation, the setup, privacy and responsibility context and the single setup action. A wrapper was added for placement alone: document order is unchanged — lead, example, flow, parent note, action — so the reading order the specification requires on a narrow screen is the order in both layouts. The threshold is the content's own measure, both column bases being in `rem`, so a reader who enlarges text gets one column at any viewport width; the `320` px / `32px` captures confirm one column. Exactly one primary action is rendered, once, in all nine configurations, with no duplication, sticky positioning or overlay. Desktop page height falls from `1532` / `1557` / `1603` px to `1115` / `1140` / `1186` px.
+
+**2. Narrow-screen spacing (Task 3 spacing portion, and Task 1 for the shared card).** Horizontal padding on `.mission-card__content`, on `.mission-card__note` and on the language controls now carries a ceiling measured against the column it sits in. The note's left padding is derived from the same inset as the mark it clears, so the two cannot drift apart, and at an ordinary root size the derived value is exactly the `2.15rem` it replaces. Measured reading width at `320` px / `32px`, identical in all three languages:
+
+| | Before | After |
+| --- | --- | --- |
+| Discovery Mission instruction | `178` px | `222` px |
+| Discovery safety note | `82` px | `160` px |
+| Introduction example safety note | `82` px | `160` px |
+| Language names | `2`–`3` lines each | `1` line each |
+
+At `390x780` and `1280x900` **every reading width is identical to before** — instruction `317` / `280` px, note `269` / `232` px — because each ceiling sits above the `rem` value at ordinary sizes and never applies. Useful separation is kept: the note retains its tint panel, its rounded edge, its mark and its gap from the instruction above.
+
+Two dead ends are recorded rather than hidden. A percentage width on the language radio resolved against the item's own box and gave the three radios three different sizes, `12.8` / `14.5` / `15.1` px; it was replaced with a ceiling that does not depend on flex sizing, and all three now measure `19.2` px. The `overflow-wrap: anywhere` guard added under Task 1 was keeping the names broken across lines once the padding no longer forced it; it was replaced with a `min-content` floor, and the names now occupy one line each.
+
+**3. `introduction.flow.step2` (Task 2).** Updated in all three languages to say that the family starts the Mission deliberately before leaving the screen, using each language's existing Start action wording — `Start mission`, `Mission starten`, `Начать миссию`. It explains behavior `F003` already owns and adds no step, control or operation.
+
+**Guards, across all nine configurations:** no clipping against any ancestor; no page horizontal overflow; zero contrast failures with a minimum ratio of `5.72:1`; touch targets unchanged at `52` px and above; focus order unchanged — the language group, then the one action; and instruction, note, lead and step typography identical before and after.
+
+**Gates.** Type checking, the full suite and the production build run sequentially, all passing: `tsc --noEmit` clean, **840 tests across 23 test files**, clean build. `git diff --check` clean.
+
+**Residual, unchanged by this work.** At a `32px` root the German compound *unzerbrechliche* is still wider than the column and breaks across two lines. No spacing change fits a `250` px word into a `160` px column without shrinking the type, which is out of scope.
+
+**Task 3 is still not complete.** Its clipping defect and its spacing portion are done. Its remaining obligations — the measured reduction in card height and set span at narrow widths, and the record naming what that change did and did not achieve — are untouched and still unauthorized, as are Tasks 4, 5 and 6. Ready, active, settings, the Reward Card and Mission History are unchanged.
+
 ### Task 4 — Remove unnecessary non-content height on the ready and active views
 
 **Outcome.** Measured non-content height falls on both views in all three languages, from a baseline of `463`–`487` px on ready and `374`–`397` px on active at `390x780`, by removing excessive spacing while useful separation and touch-target space stay. Content is preserved on all four terms: complete wording, readable typography, required guidance, semantic order. A content height that falls through legitimate reflow is an acceptable outcome and is reported as such rather than treated as a shortfall. **No whitespace is added to any language to make it resemble another, no text is shrunk, nothing is clipped, and no safety content is reordered.** Remaining language-dependent height differences are the expected outcome. The lifecycle, deliberate start, exactly-once completion, timer derivation, leave paths and confirmations are untouched.
@@ -461,6 +490,6 @@ Kept in the acceptance criteria throughout: English, German and Russian; accessi
 
 ## Definition of complete
 
-Tasks 1 and 2 are implemented, verified and recorded above and await human visual acceptance. One bounded part of Task 3 — the reproduced clipping defect — is done and recorded above. This plan stays active because the rest of Task 3 and Tasks 4 to 6 are neither authorized nor done.
+Tasks 1 and 2 are implemented, verified and recorded above and await human visual acceptance. Two bounded parts of Task 3 — the reproduced clipping defect and the narrow-screen spacing correction — are done and recorded above, together with the introduction's desktop composition and the flow step that explains the deliberate start. This plan stays active because the rest of Task 3 and Tasks 4 to 6 are neither authorized nor done.
 
 This plan is complete when its authorized scope is implemented, each task's verification has actually been run and recorded truthfully here and in the changelog, and the diff is limited to that scope. It claims no MissionKid MVP completion, no deployment readiness, no CI result, no assistive-technology acceptance and no professional translation review. Human acceptance of anything built under it would be recorded separately, as the Reward Card follow-up's was.
