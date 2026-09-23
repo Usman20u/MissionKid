@@ -1,7 +1,7 @@
 # MissionKid Plan 05 — guided entry and the presentation pass
 
 **Date:** 2026-09-22
-**Status:** Specification amendments prepared and revalidated; the reviewer's product decisions are recorded below. **Tasks 1 and 2 are authorized and were executed together as one integrated batch**, and await human visual acceptance, which is not recorded. **Two bounded parts of Task 3 — the reproduced Discovery clipping defect and the narrow-screen spacing correction — are authorized and done, together with two bounded introduction improvements; the rest of Task 3 is not.** Tasks 4–6 remain unauthorized and are not started. Nothing is pushed, merged or deployed.
+**Status:** Specification amendments prepared and revalidated; the reviewer's product decisions are recorded below. **Tasks 1 and 2 are authorized and were executed together as one integrated batch**, and await human visual acceptance, which is not recorded. **Two bounded parts of Task 3 — the reproduced Discovery clipping defect and the narrow-screen spacing correction — are authorized and done, together with two bounded introduction improvements, and a bounded Discovery visual direction is authorized; the rest of Task 3 is not.** Tasks 4–6 remain unauthorized and are not started. Nothing is pushed, merged or deployed.
 
 **Branch:** `feat/guided-entry-and-presentation`, taken from `14a5b16` on the unpublished `feat/reward-card-presentation`, which is preserved unchanged at that commit. No history was rewritten.
 
@@ -474,11 +474,56 @@ Two dead ends are recorded rather than hidden. A percentage width on the languag
 
 **Verification.** Type checking, the full suite and the production build run sequentially; the whole branch diff inspected against `main`; `git diff --check`. Across EN/DE/RU at `390x780`, `1280x900` and `320`px/`32px`, against the five judging criteria used throughout this plan: excessive spacing removed with useful separation and touch-target space intact; one dominant primary action per view with secondary and exit actions subordinate; complete readable content with no truncation, clipping or disclosed safety guidance; keyboard access with unchanged focus order, visible focus on every interactive element and touch targets at or above `52` px; and no overlap or horizontal overflow. Reduced motion respected and heading and reading order intact on every changed view. Language-dependent page heights and ordinary vertical scrolling, at default and increased text sizes, are recorded as acceptable outcomes rather than as findings. Contrast measured on the rendered page for every changed text element, as the Reward Card follow-up did.
 
+## Discovery visual direction — fourth authorization
+
+Recorded on 2026-09-23, before implementation. A visual reference for Mission Discovery, desktop and mobile, was supplied and the direction approved. **This authorizes a bounded visual implementation of the Discovery suggestion screen as the first reference screen, and nothing else.** Human visual acceptance of everything built under this plan remains outstanding.
+
+**Authorized.** Warm cream and restrained forest-green surfaces; confident typography at a comfortable reading measure; three equally weighted Mission cards on desktop and a readable vertical sequence on mobile; larger, more expressive Mission imagery with material, light and depth; clear separation of instruction, safety guidance and the choose action; a subordinate `Another set`; a quiet background that supports text rather than competing with the Missions. Asset improvement for **three Missions only**.
+
+**The three Missions, resolved from the repository rather than from the picture.** The reference depicts the tower, the sock friend and the friendly monster. Those are `creativity-02`, `creativity-05` and `creativity-10`, and they are already the real deterministic first set for *Creativity* at age bands `4–6` and `7–8`, by their own `catalogOrder` of `10`, `30` and `50`. **Nothing is pinned and no fixture is needed for the comparison**: the production application reaches this set through the ordinary eligibility and ordering rules.
+
+**The reference is a visual reference, not a source of product rules.** No wording, duration, eligibility or safety detail is taken from it. Its Russian headings, its subheading and its header controls are not implemented, because copy and navigation are not what was authorized. One generated inaccuracy is recorded so it cannot leak in later: the picture labels the monster Mission *about 3 min*, while the catalog says `300` seconds, and the application shows the catalog value.
+
+**Not authorized:** regenerating the other 51 scenes; changing any reviewed Mission text, duration, eligibility, adult-involvement level or safety guidance; pinning these three Missions; changing selection, bounded progression, persistence, localization or accessibility behavior; new copy; new navigation; any other view; a new dependency; and Tasks 4, 5 and 6.
+
+### Specification check, performed before code
+
+The instruction required the smallest explicit amendment wherever the Visual & Ergonomic Specification forbids the newly authorized asset treatment, and forbade silently reinterpreting the existing scene-replacement restriction. Checked clause by clause; the result is that **the specification forbids none of it, so no specification amendment is made.** What is amended is this plan.
+
+| Clause | Finding |
+| --- | --- |
+| *Controlled Mission Mini-World scene system* — rendering technology | Already permits "SVG, CSS, lightweight raster assets, or controlled static rendered imagery, in any combination". Richer bespoke scenes need no amendment. |
+| *Scene style* | Already asks for "semi-realistic or stylized three-dimensional or two-and-a-half-dimensional form, a miniature-diorama sense of place, recognizable real-world subjects, depth, light, material, atmosphere, and tactile form". The direction moves toward this clause, not away from it. |
+| *Scene composition* — one consistent grammar | The new scenes are built from the existing grammar and its layer vocabulary rather than beside it, so the three are executed at higher fidelity within the same system. |
+| Mission-specific compositions | Already authorized explicitly, both in the scene system and in the non-goals list. |
+| Palette | Deliberately open: the specification records that "No final palette or exact color token is selected here" and lists an exact final palette among its non-goals. Cream and forest green need no amendment. |
+| Three scenes are peers | Held: all three Missions in this set are improved together, so none is made to look recommended. Across the catalog the other 51 keep the current grammar, which is recorded as a limitation rather than a claim. |
+| Scene authority limits, accessibility, reduced motion, localization, performance | Unchanged and binding. Scenes stay decorative to assistive technology, carry no text, and no Mission meaning depends on one rendering. |
+
+**The one restriction that genuinely blocked this was in this plan, not in the specification**, and it is amended explicitly above rather than reinterpreted: *Boundaries* previously forbade replacing any of the 54 reviewed scenes. It now forbids replacing any of them **except** `creativity-02`, `creativity-05` and `creativity-10`.
+
+### Focused revalidation
+
+Scope: the scene system and the clauses adjacent to the authorized change. This is a focused revalidation of one presentation change, not a repeat of the foundation audit.
+
+| Check | Result |
+| --- | --- |
+| User Story / traceability | Passed. No story changes. `P3`, `P4` and `C1` describe Discovery behavior, and no behavior changes: eligibility, deterministic ordering, exactly-three presentation, selection, bounded progression and persistence are untouched. |
+| No behavior reached by a presentation change | Passed. `F002`'s eligibility and ordering rules, the `selected → ready → active → completed` lifecycle and the confirmed-write contract are not touched by a palette, a layout or a scene. |
+| Reviewed content preserved | Passed. Every card keeps its localized title, instruction, Mission Category, duration and required safety guidance as complete visible text. No catalog entry changes. |
+| Equal peers | Passed within the set: all three cards receive the same treatment, and no card gains a control, a badge, a rank or extra prominence. |
+| Anti-manipulation rules | Passed. No rating, count, popularity, urgency, scarcity, streak or collectible pattern is introduced, and no card is visually recommended. |
+| Accessibility baseline | Passed by construction and re-measured after implementation: scenes stay `aria-hidden`, text stays authoritative, focus order and visible focus are unchanged, touch targets stay at or above `52` px and contrast is measured on the rendered page. |
+| Runtime AI-generated imagery | Not used. Every asset is authored, bundled product content, as the specification requires. |
+| External assets | None. No image is hotlinked; the scenes are bundled with the application. |
+
+**Blockers: none. Unresolved contradictions: none.**
+
 ## Boundaries
 
 Preserved exactly: the `selected → ready → active → completed` lifecycle, the confirmed-write contract, exactly-once completion accounting, timer derivation from persisted timestamps, every recovery and temporary-mode path, Mission History, and Monthly Goal behavior including period identity and the single goal-complete prompt. The accepted Reward Card presentation and the Mission History presentation are not changed.
 
-Not authorized and not proposed: accounts, payments, a backend, analytics, rankings, streak pressure, collectible rewards, or any additional product feature. No new dependency. No new persisted field, storage key or snapshot version. No route, router or URL-addressable page. No change to reviewed catalog text, durations, age eligibility, adult-involvement levels or safety guidance. No regeneration or replacement of the 54 reviewed scenes. No component replaced that is already correct. No setup-to-introduction back control.
+Not authorized and not proposed: accounts, payments, a backend, analytics, rankings, streak pressure, collectible rewards, or any additional product feature. No new dependency. No new persisted field, storage key or snapshot version. No route, router or URL-addressable page. No change to reviewed catalog text, durations, age eligibility, adult-involvement levels or safety guidance. **No regeneration or replacement of the 54 reviewed scenes, except the three named under *Discovery visual direction* below, whose scenes that authorization explicitly replaces.** No component replaced that is already correct. No setup-to-introduction back control.
 
 Kept in the acceptance criteria throughout: English, German and Russian; accessible focus; comfortable touch targets; larger-text support with readable text and normal vertical scrolling; mobile performance.
 
