@@ -113,6 +113,91 @@ input {
   letter-spacing: -0.035em;
 }
 
+/* F001 first-use introduction.
+   One reading column: what MissionKid is for, the one example, the short flow,
+   then the single forward action. The language switch sits above all of it so a
+   parent who cannot read the current language reaches it without reading the
+   view. */
+.introduction {
+  margin-top: 1.5rem;
+}
+
+/* The title here is a sentence rather than a label, so the 18ch measure the
+   other views use would break it into four lines. */
+[data-view='introduction'] .app-view__title {
+  max-width: 24ch;
+}
+
+.introduction__languages {
+  margin-top: 0;
+}
+
+/* Quieter than a setup choice, because it is one: a switch, not a step. */
+.introduction__languages legend {
+  color: #4c625c;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.introduction__lead {
+  max-width: 62ch;
+  margin: 1.5rem 0 0;
+  color: #445752;
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+
+/* The same section label Discovery gives its set of three, so the example reads
+   as Mission presentation rather than as page copy. */
+.introduction__heading {
+  margin: 0 0 0.85rem;
+  color: #1d3630;
+  font-size: 1.05rem;
+  font-weight: 750;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.introduction__example,
+.introduction__flow {
+  margin-top: 2rem;
+}
+
+/* On a wide layout, held to roughly the width one of Discovery's three columns
+   gives a card, so the example carries a Mission card's prominence rather than
+   the page's. */
+.introduction__example .mission-card {
+  max-width: 24rem;
+  /* A grid column's automatic minimum is its min-content width, which is what
+     pushed the card's own content past the card at a large root size. Naming
+     the minimum lets the column take the width the card actually has. */
+  grid-template-columns: minmax(0, 1fr);
+}
+
+/* Below the width where Discovery gives its own Mission cards the panel's full
+   measure, the example takes the same one. A Mission card's padding is defined
+   in `rem`, so inside the panel's padding as well there is almost no text
+   column left at a large root size, and the reviewed instruction and safety
+   note become unreadable. This is the width a Mission card is presented at. */
+@media (max-width: 55.99rem) {
+  .introduction__example .mission-card {
+    max-width: none;
+    margin-inline: calc(-1 * var(--section-pad));
+  }
+}
+
+.introduction__steps {
+  max-width: 62ch;
+  margin: 0;
+  padding-left: 1.3rem;
+  color: #445752;
+  line-height: 1.6;
+}
+
+.introduction__steps li + li {
+  margin-top: 0.5rem;
+}
+
 .setup-form,
 .setup-complete {
   margin-top: 1.5rem;
@@ -208,6 +293,31 @@ input {
 .choice:has(input:focus-visible) {
   outline: 3px solid #b4650c;
   outline-offset: 2px;
+}
+
+/* Three short language names side by side where there is room, wrapping to a
+   column when there is not. */
+.choice-grid--inline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.choice--inline {
+  min-width: 0;
+  padding: 0.7rem 0.9rem;
+  flex: 0 1 auto;
+  gap: 0.55rem;
+  font-size: 0.95rem;
+}
+
+/* The same measuring problem the choice-group legend has, and the same remedy.
+   At a large root size a language name is wider than the column it sits in;
+   `break-word` does not reduce the intrinsic width the layout is measured
+   against, so without this the name either pushed the page into horizontal
+   scrolling or ran outside its own box. It wraps instead, complete. */
+.choice--inline span {
+  overflow-wrap: anywhere;
 }
 
 .parent-note {

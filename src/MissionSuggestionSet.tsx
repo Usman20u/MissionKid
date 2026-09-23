@@ -22,7 +22,12 @@ type CardProps = Readonly<{
 
 // Presentation only: an article, not a control. Task 5 has no choice behaviour,
 // so nothing here may look or behave like a button.
-function MissionCard({ mission, language, onChoose }: CardProps) {
+//
+// Exported so the F001 introduction shows its one example through the very
+// component discovery uses, with `onChoose` absent. A second rendering of a
+// Mission would be a second place for reviewed content, adult-involvement
+// wording and safety guidance to drift from what a Mission card presents.
+export function MissionCard({ mission, language, onChoose }: CardProps) {
   const t = (key: MessageKey) => translateMessage(language, key);
   const content = mission.content[language];
   const adultLabelKey = MISSION_ADULT_LABEL_KEYS[mission.adultInvolvement];

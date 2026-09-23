@@ -712,6 +712,8 @@ describe('lifecycle facts across a confirmed setup save', () => {
   it('still reaches the ordinary handoff from a first-use setup', () => {
     const h = harness();
     render(<App adapter={h.adapter} now={() => COMPLETED_AT} />);
+    // Through the introduction, which is where a first use now begins.
+    fireEvent.click(screen.getByRole('button', { name: t('introduction.action.setup') }));
 
     fireEvent.click(screen.getByRole('radio', { name: '4–6' }));
     fireEvent.click(screen.getByRole('button', { name: t('setup.action.complete') }));

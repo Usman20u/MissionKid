@@ -62,6 +62,13 @@ function createCompletedSnapshot(
   };
 }
 
+// First use now begins at the F001 parent introduction. The cases below are
+// about the setup form it leads into, so they take its one forward action
+// first; the introduction itself is covered in `ParentIntroduction.test.tsx`.
+function continueToSetup() {
+  fireEvent.click(screen.getByRole('button', { name: 'Set up MissionKid' }));
+}
+
 describe('parent-guided first-use setup', () => {
   it('defaults to English and requests only the approved setup choices', () => {
     const harness = createAdapterHarness();
@@ -71,6 +78,8 @@ describe('parent-guided first-use setup', () => {
         createProfileId={() => 'local-profile-1'}
       />,
     );
+
+    continueToSetup();
 
     expect(
       screen.getByRole('heading', { name: 'Parent setup' }),
@@ -131,6 +140,7 @@ describe('parent-guided first-use setup', () => {
     ({ label, language, title }) => {
       const harness = createAdapterHarness();
       render(<App adapter={harness.adapter} />);
+      continueToSetup();
 
       fireEvent.click(screen.getByRole('radio', { name: label }));
 
@@ -144,6 +154,7 @@ describe('parent-guided first-use setup', () => {
     (ageBand) => {
       const harness = createAdapterHarness();
       render(<App adapter={harness.adapter} />);
+      continueToSetup();
 
       const selected = screen.getByRole('radio', { name: ageBand });
       fireEvent.click(selected);
@@ -173,6 +184,7 @@ describe('parent-guided first-use setup', () => {
         createProfileId={createProfileId}
       />,
     );
+    continueToSetup();
 
     fireEvent.click(screen.getByRole('radio', { name: '9–10' }));
     expect(screen.queryByText(/language and age group are saved/i)).toBeNull();
@@ -209,6 +221,7 @@ describe('parent-guided first-use setup', () => {
         createProfileId={() => 'local-profile-1'}
       />,
     );
+    continueToSetup();
 
     fireEvent.click(screen.getByRole('radio', { name: 'Deutsch' }));
     fireEvent.click(screen.getByRole('radio', { name: '4–6' }));
@@ -384,6 +397,9 @@ describe('returning and editing setup', () => {
   it('contains no unauthorized later-function interface', () => {
     const harness = createAdapterHarness();
     render(<App adapter={harness.adapter} />);
+    // The setup form itself. The introduction before it does name Mission
+    // Category, in the short account of the flow that `F001` requires of it.
+    continueToSetup();
 
     expect(screen.queryByText(/Mission Category/i)).toBeNull();
     expect(screen.queryByText(/Mission suggestions/i)).toBeNull();
@@ -402,6 +418,7 @@ describe('Task 5 save and editing regressions', () => {
     persist.mockReturnValueOnce({ status: 'unconfirmed', reason: 'write-failed' });
     const createProfileId = vi.fn(() => 'stable-retry-profile');
     render(<App adapter={harness.adapter} createProfileId={createProfileId} />);
+    continueToSetup();
 
     fireEvent.click(screen.getByRole('radio', { name: '4–6' }));
     fireEvent.click(screen.getByRole('button', { name: 'Complete setup' }));
@@ -433,6 +450,7 @@ describe('Task 5 save and editing regressions', () => {
     (raw) => {
       const harness = createAdapterHarness();
       render(<App adapter={harness.adapter} />);
+      continueToSetup();
       harness.values.set(MISSIONKID_STORAGE_KEY, raw);
       fireEvent.click(screen.getByRole('radio', { name: '4–6' }));
       fireEvent.click(screen.getByRole('button', { name: 'Complete setup' }));
@@ -474,6 +492,7 @@ describe('Task 5 save and editing regressions', () => {
     });
     const createProfileId = vi.fn(() => 'profile');
     render(<App adapter={harness.adapter} createProfileId={createProfileId} />);
+    continueToSetup();
     fireEvent.click(screen.getByRole('radio', { name: '7–8' }));
     fireEvent.click(screen.getByRole('button', { name: 'Complete setup' }));
 

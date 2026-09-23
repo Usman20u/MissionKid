@@ -29,6 +29,7 @@ import { MissionResult } from './MissionResult';
 import { MissionCategorySelection } from './MissionDiscovery';
 import { MissionHistory } from './MissionHistory';
 import { MissionReady } from './MissionReady';
+import { ParentIntroduction } from './ParentIntroduction';
 import {
   createLocalProfileId,
   SetupFlow,
@@ -41,6 +42,8 @@ import {
 
 export type AppView =
   | 'pending'
+  // The F001 first-use introduction, ahead of the setup form it leads into.
+  | 'introduction'
   | 'setup-first-use'
   | 'setup-incomplete'
   | 'setup-editing'
@@ -70,6 +73,16 @@ const CHILD_FACING_VIEWS: readonly AppView[] = [
   'history',
 ];
 
+// The introduction is the other view they do not belong on, for both of those
+// reasons at once. It shows a Mission, and it exists to offer one dominant
+// forward action that a destructive control must not compete with. Nothing is
+// stored when it is shown, so a reset would have nothing to act on either. The
+// setup form it leads into keeps the control unchanged.
+const VIEWS_WITHOUT_RECOVERY_CONTROLS: readonly AppView[] = [
+  'introduction',
+  ...CHILD_FACING_VIEWS,
+];
+
 // Reaching `ready` and being `ready` are one context for the family: the
 // transition resolves in place, so focus moves into this area once rather than
 // again for a change the family did not make. Starting is a different context,
@@ -85,6 +98,10 @@ const VIEW_CONTENT: Record<AppView, ViewContent> = {
   pending: {
     context: 'app.brand',
     title: 'view.pending.title',
+  },
+  introduction: {
+    context: 'area.parent',
+    title: 'view.introduction.title',
   },
   'setup-first-use': {
     context: 'area.parent',
@@ -147,6 +164,8 @@ export function selectAppView(state: AppState): AppView {
       return 'recovery';
     case 'ready': {
       switch (state.setupView) {
+        case 'introduction':
+          return 'introduction';
         case 'first-use':
           return 'setup-first-use';
         case 'incomplete':
@@ -356,6 +375,8 @@ export function AppShell({
               <MissionReady adapter={adapter} />
             ) : view === 'history' ? (
               <MissionHistory now={now} />
+            ) : view === 'introduction' ? (
+              <ParentIntroduction />
             ) : view === 'discovery-categories' ? (
               // The same adapter the shell was given: one storage boundary for
               // the whole flow, so a selection and the transition that follows
@@ -389,7 +410,8 @@ export function AppShell({
               </button>
             </>
           ) : null}
-          {state.status !== 'pending' && !CHILD_FACING_VIEWS.includes(view) ? (
+          {state.status !== 'pending' &&
+          !VIEWS_WITHOUT_RECOVERY_CONTROLS.includes(view) ? (
             <div className="recovery-actions">
               {state.resetConfirm ? (
                 <section className="reset-panel" aria-labelledby="reset-heading" aria-describedby="reset-consequence">

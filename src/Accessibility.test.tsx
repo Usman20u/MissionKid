@@ -60,10 +60,18 @@ function click(name: string | RegExp) {
   fireEvent.click(screen.getByRole('button', { name }));
 }
 
+// First use now begins at the F001 parent introduction. The cases below are
+// about the setup form it leads into, so they take its one forward action
+// first; the introduction itself is covered in `ParentIntroduction.test.tsx`.
+function continueToSetup() {
+  fireEvent.click(screen.getByRole('button', { name: 'Set up MissionKid' }));
+}
+
 describe('F001 semantic structure', () => {
   it('exposes one labelled region, one level-1 heading, and native grouped controls', () => {
     const h = harness();
     const { container } = render(<App adapter={h.adapter} />);
+    continueToSetup();
 
     const region = screen.getByRole('region', { name: 'Parent setup' });
     const heading = screen.getByRole('heading', { level: 1, name: 'Parent setup' });
@@ -93,6 +101,7 @@ describe('F001 semantic structure', () => {
   it('keeps the blocked continue action explained by visible required context', () => {
     const h = harness();
     render(<App adapter={h.adapter} />);
+    continueToSetup();
 
     const submit = screen.getByRole('button', { name: 'Complete setup' }) as HTMLButtonElement;
     const required = screen.getByText('Required: choose one age group to continue.');
@@ -140,7 +149,7 @@ describe('F001 semantic structure', () => {
     click('Reset MissionKid data');
     click('Confirm reset');
 
-    expect(screen.getByRole('heading', { level: 1, name: 'Parent setup' })).toBeTruthy();
+    expect(screen.getByRole('heading', { level: 1, name: 'Small missions. Real-world adventures.' })).toBeTruthy();
   });
 });
 
@@ -148,6 +157,7 @@ describe('F001 deliberate focus movement', () => {
   it('moves focus to the new view heading when setup completes', () => {
     const h = harness();
     render(<App adapter={h.adapter} createProfileId={() => 'local-profile-1'} />);
+    continueToSetup();
 
     fireEvent.click(screen.getByRole('radio', { name: '9–10' }));
     click('Complete setup');
@@ -191,18 +201,20 @@ describe('F001 deliberate focus movement', () => {
     );
   });
 
-  it('moves focus to the fresh setup heading after a confirmed reset', () => {
+  it('moves focus to the introduction heading after a confirmed reset', () => {
+    // The reset removed the stored context, so storage works and holds nothing:
+    // the no-stored-context row, which is the introduction.
     const h = harness(JSON.stringify(completedSnapshot()));
     render(<App adapter={h.adapter} />);
 
     click('Reset MissionKid data');
     click('Confirm reset');
 
-    const heading = screen.getByRole('heading', { level: 1, name: 'Parent setup' });
+    const heading = screen.getByRole('heading', { level: 1, name: 'Small missions. Real-world adventures.' });
     expect(document.activeElement).toBe(heading);
-    expect(document.activeElement).not.toBe(
-      screen.getByRole('button', { name: 'Reset MissionKid data' }),
-    );
+    // Focus could not have stayed on the control that was pressed: it belongs
+    // to a different context now, and the introduction does not carry it.
+    expect(screen.queryByRole('button', { name: 'Reset MissionKid data' })).toBeNull();
   });
 
   it('moves focus to the recovery heading when protected state replaces setup', () => {
@@ -210,6 +222,7 @@ describe('F001 deliberate focus movement', () => {
     h.faults.corruptOnWrite = true;
     h.faults.write = true;
     render(<App adapter={h.adapter} />);
+    continueToSetup();
 
     fireEvent.click(screen.getByRole('radio', { name: '4–6' }));
     click('Complete setup');
@@ -228,6 +241,7 @@ describe('F001 deliberate focus movement', () => {
     h.faults.write = true;
     h.faults.readFailsAfterWrite = true;
     render(<App adapter={h.adapter} createProfileId={() => 'temporary-profile'} />);
+    continueToSetup();
 
     expect(screen.getByRole('heading', { level: 1, name: 'Parent setup' })).toBeTruthy();
 
@@ -244,15 +258,22 @@ describe('F001 deliberate focus movement', () => {
     const h = harness();
     h.faults.write = true;
     render(<App adapter={h.adapter} />);
+    continueToSetup();
 
     fireEvent.click(screen.getByRole('radio', { name: '4–6' }));
+    // Where a parent's focus actually is when the save is attempted: on the
+    // control they pressed. Reaching the form from the introduction has already
+    // moved focus to its heading once, deliberately, for that view change.
+    const submit = screen.getByRole('button', { name: 'Complete setup' });
+    submit.focus();
     click('Complete setup');
 
     const alert = screen.getByRole('alert');
-    const submit = screen.getByRole('button', { name: 'Complete setup' });
 
     expect(alert.textContent).toMatch(/Saving could not be confirmed/);
     expect(submit.getAttribute('aria-describedby')).toContain(alert.id);
+    // The failure is announced in place and takes nothing.
+    expect(document.activeElement).toBe(submit);
     expect(document.activeElement).not.toBe(
       screen.getByRole('heading', { level: 1, name: 'Parent setup' }),
     );
@@ -261,6 +282,7 @@ describe('F001 deliberate focus movement', () => {
   it('does not take focus when only the presentation language changes', () => {
     const h = harness();
     render(<App adapter={h.adapter} />);
+    continueToSetup();
 
     const german = screen.getByRole('radio', { name: 'Deutsch' });
     german.focus();
@@ -279,6 +301,7 @@ describe('F001 localization resilience', () => {
   ])('keeps reset confirmation semantics in $lang', ({ language, lang, reset, cancel }) => {
     const h = harness();
     render(<App adapter={h.adapter} />);
+    continueToSetup();
 
     fireEvent.click(screen.getByRole('radio', { name: language }));
     expect(document.documentElement.lang).toBe(lang);

@@ -18,6 +18,7 @@ import {
 // The views that present a Mission to the family. Their strings must resolve in
 // every language, and none of their text may live in the component itself.
 const LOCALIZED_VIEWS = [
+  'src/ParentIntroduction.tsx',
   'src/MissionDiscovery.tsx',
   'src/MissionSuggestionSet.tsx',
   'src/MissionReady.tsx',

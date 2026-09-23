@@ -22,6 +22,7 @@ const englishMessages = {
   'app.brand': 'MissionKid',
   'area.parent': 'Parent area',
   'view.pending.title': 'Preparing MissionKid',
+  'view.introduction.title': 'Small missions. Real-world adventures.',
   'view.setupFirstUse.title': 'Parent setup',
   'view.setupIncomplete.title': 'Parent setup needs attention',
   'view.setupEditing.title': 'Setup settings',
@@ -29,6 +30,17 @@ const englishMessages = {
   'view.recovery.title': 'Recovery needed',
   'view.setupCompleteHandoff.title': 'Setup complete',
   'error.unexpected.title': 'MissionKid needs attention',
+  'introduction.lead':
+    'Choose a short activity together, do it away from the screen, then come back to record its completion.',
+  'introduction.example.label': 'Example Mission',
+  'introduction.flow.heading': 'What the family does',
+  'introduction.flow.step1':
+    'Choose a Mission Category together, then pick one of three Missions.',
+  'introduction.flow.step2': 'Leave the screen and do the Mission in real life.',
+  'introduction.flow.step3': 'Come back and mark the Mission as done.',
+  'introduction.setup.brief':
+    'Setup is short: choose a language and an age group.',
+  'introduction.action.setup': 'Set up MissionKid',
   'setup.introduction':
     'A parent or caregiver sets up the language and age context for this family.',
   'setup.language.legend': 'Interface language',
@@ -209,6 +221,7 @@ export const INTERFACE_MESSAGES: CompleteInterfaceMessages = {
     'app.brand': 'MissionKid',
     'area.parent': 'Elternbereich',
     'view.pending.title': 'MissionKid wird vorbereitet',
+    'view.introduction.title': 'Kleine Missionen. Echte Abenteuer.',
     'view.setupFirstUse.title': 'Einrichtung durch Eltern',
     'view.setupIncomplete.title': 'Einrichtung durch Eltern prüfen',
     'view.setupEditing.title': 'Einrichtung verwalten',
@@ -216,6 +229,19 @@ export const INTERFACE_MESSAGES: CompleteInterfaceMessages = {
     'view.recovery.title': 'Wiederherstellung erforderlich',
     'view.setupCompleteHandoff.title': 'Einrichtung abgeschlossen',
     'error.unexpected.title': 'MissionKid benötigt Ihre Aufmerksamkeit',
+    'introduction.lead':
+      'Wählt gemeinsam eine kurze Aktivität aus, macht sie abseits des Bildschirms und kommt danach zurück, um sie als erledigt einzutragen.',
+    'introduction.example.label': 'Beispielmission',
+    'introduction.flow.heading': 'Was die Familie macht',
+    'introduction.flow.step1':
+      'Wählt gemeinsam eine Missionskategorie und danach eine von drei Missionen.',
+    'introduction.flow.step2':
+      'Verlasst den Bildschirm und macht die Mission im echten Leben.',
+    'introduction.flow.step3':
+      'Kommt zurück und tragt die Mission als erledigt ein.',
+    'introduction.setup.brief':
+      'Die Einrichtung ist kurz: Sprache und Altersgruppe auswählen.',
+    'introduction.action.setup': 'MissionKid einrichten',
     'setup.introduction':
       'Ein Elternteil oder eine Betreuungsperson richtet Sprache und Alterskontext für diese Familie ein.',
     'setup.language.legend': 'Sprache der Benutzeroberfläche',
@@ -365,6 +391,7 @@ export const INTERFACE_MESSAGES: CompleteInterfaceMessages = {
     'app.brand': 'MissionKid',
     'area.parent': 'Раздел для родителей',
     'view.pending.title': 'Подготавливаем MissionKid',
+    'view.introduction.title': 'Маленькие миссии. Настоящие приключения.',
     'view.setupFirstUse.title': 'Настройка для родителей',
     'view.setupIncomplete.title': 'Проверьте настройку для родителей',
     'view.setupEditing.title': 'Изменить настройки',
@@ -372,6 +399,19 @@ export const INTERFACE_MESSAGES: CompleteInterfaceMessages = {
     'view.recovery.title': 'Требуется восстановление',
     'view.setupCompleteHandoff.title': 'Настройка завершена',
     'error.unexpected.title': 'MissionKid требует вашего внимания',
+    'introduction.lead':
+      'Выберите вместе короткое занятие, выполните его вдали от экрана, а затем вернитесь и отметьте выполнение.',
+    'introduction.example.label': 'Пример миссии',
+    'introduction.flow.heading': 'Что делает семья',
+    'introduction.flow.step1':
+      'Выберите вместе категорию миссии, а затем одну из трёх миссий.',
+    'introduction.flow.step2':
+      'Отойдите от экрана и выполните миссию в реальной жизни.',
+    'introduction.flow.step3':
+      'Вернитесь и отметьте миссию как выполненную.',
+    'introduction.setup.brief':
+      'Настройка короткая: выберите язык и возрастную группу.',
+    'introduction.action.setup': 'Настроить MissionKid',
     'setup.introduction':
       'Родитель или другой взрослый выбирает язык и возрастную группу для этой семьи.',
     'setup.language.legend': 'Язык интерфейса',
