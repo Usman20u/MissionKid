@@ -1,7 +1,7 @@
 # MissionKid Plan 05 — guided entry and the presentation pass
 
 **Date:** 2026-09-22
-**Status:** Specification amendments prepared and revalidated; the reviewer's product decisions are recorded below. **Tasks 1 and 2 are authorized and were executed together as one integrated batch**, and await human visual acceptance, which is not recorded. **One bounded part of Task 3 — the reproduced Discovery clipping defect — is authorized and done; the rest of Task 3 is not.** Tasks 4–6 remain unauthorized and are not started. Nothing is pushed, merged or deployed.
+**Status:** Specification amendments prepared and revalidated; the reviewer's product decisions are recorded below. **Tasks 1 and 2 are authorized and were executed together as one integrated batch**, and await human visual acceptance, which is not recorded. **Two bounded parts of Task 3 — the reproduced Discovery clipping defect and the narrow-screen spacing correction — are authorized and done, together with two bounded introduction improvements; the rest of Task 3 is not.** Tasks 4–6 remain unauthorized and are not started. Nothing is pushed, merged or deployed.
 
 **Branch:** `feat/guided-entry-and-presentation`, taken from `14a5b16` on the unpublished `feat/reward-card-presentation`, which is preserved unchanged at that commit. No history was rewritten.
 
@@ -29,6 +29,22 @@ A second, narrower authorization was recorded on 2026-09-23, after the Tasks 1�
 - **Explicitly excluded from it:** the broader scene-height and spacing work in Task 3; shortening text, hiding it behind disclosure, shrinking typography, or replacing the clipping with horizontal overflow; and any change to the introduction, Reward Card, History, ready, active or settings presentation.
 - **Not authorized:** the rest of Task 3, and Tasks 4, 5 and 6.
 - Human visual acceptance of Tasks 1 and 2 remains outstanding and is not recorded by anyone but the reviewer.
+
+A third authorization was recorded on 2026-09-23, covering three bounded ergonomic improvements and nothing else. Human visual acceptance is still outstanding and is not recorded here.
+
+| # | Improvement | Owning task and specification |
+| --- | --- | --- |
+| 1 | **Introduction desktop composition.** Use the available desktop width: the example Mission beside a column carrying the flow explanation, the setup, privacy and responsibility context, and the single setup action. Semantic reading order and the approved single-column mobile order are preserved. Exactly one setup action, with no duplication, sticky positioning or overlay. The breakpoint is content-driven, so enlarged text returns safely to one column. | Task 1; Visual & Ergonomic *Parent introduction presentation*, *Mobile-first and responsive presentation*, *Action hierarchy*; `F001` criterion `13` |
+| 2 | **Narrow-screen spacing correction.** The spacing portion of Task 3 that the clipping correction left open, applied to the Discovery cards and to the introduction's shared example card, plus the language controls. Excessive nested horizontal padding is reduced so enlarged text has useful reading width; font sizes, readable line spacing, complete reviewed content, safety prominence and comfortable controls are preserved, and language control names stay readable. | Task 3 (spacing portion) and Task 1 for the shared card; Visual & Ergonomic *Mobile-first and responsive presentation*, *Localization resilience*, criteria `7` and `21`–`23` |
+| 3 | **Explain the deliberate start.** `introduction.flow.step2` is updated in all three languages so the account of the flow says that the family starts the Mission deliberately before leaving the screen, using each language's existing Start action wording. This explains behavior `F003` already owns; it adds no operation and changes no behavior. | Task 2; `F001` *First-use introduction*; `F003` deliberate start |
+
+Explicitly excluded from this authorization: reducing scene heights, replacing or regenerating scenes, rewriting catalog content, changing any other view, and Tasks 4, 5 and 6. **Completing this spacing work does not complete Task 3**, whose remaining obligations — the measured reduction in card height and set span at narrow widths, and the before-and-after record that names what the change did and did not achieve — are untouched and still unauthorized. Ready, active, settings, the Reward Card and Mission History stay unchanged.
+
+**No specification change is required for any of the three.** Checked before implementation, and recorded because the gate requires it rather than assumed:
+
+- The Visual & Ergonomic Specification already requires that wider layouts *"preserve the same content order and action hierarchy when additional desktop space is available"*, and its restriction on placing things side by side is about **peer choice groups**. The example and the guidance column are not peers of one another and are not a choice, the content order is unchanged, and exactly one action remains. Improvement `1` is that clause being satisfied, not amended.
+- Improvement `2` is presentation within the same specification's responsive and localization-resilience rules, and touches no owning behavior.
+- Improvement `3` states the deliberate start that `F003` already owns, inside the short account of the flow `F001` already requires. It adds no step, no control and no operation.
 
 Three bounded corrections were authorized with it and are applied throughout this plan. They needed no further approval round, and none of them uncovered an unresolved product contradiction.
 
