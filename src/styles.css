@@ -959,6 +959,16 @@ input {
   height: 100%;
 }
 
+/* A reviewed still fills the same window the authored scene does. The window
+   already reserves its height through `aspect-ratio`, and the stills share that
+   ratio, so `cover` scales without cropping anything out of them. */
+.mission-card__photo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 /* --- Scene grammar. Silhouettes inherit the category atmosphere; depth comes
    from layered planes, contact shadows and light falloff rather than motion. --- */
 .s-el {

@@ -1,0 +1,32 @@
+import tallestTower from './assets/missions/creativity-02-tallest-tower.jpg';
+import kindMonster from './assets/missions/creativity-10-kind-monster.jpg';
+
+// Presentation only, keyed by the stable Mission identifier. This adds no field
+// to Mission catalog content, no persisted value and no snapshot data: the
+// catalog remains the single source of what a Mission is, and a Mission with no
+// entry here renders its authored scene exactly as before.
+//
+// Each asset is a reviewed still bundled with the application by the ordinary
+// build. Nothing is fetched from another origin and nothing is generated at
+// runtime.
+//
+// The intrinsic size is carried with the URL so the card can reserve the space
+// before the file arrives, rather than reflowing the text under it when it
+// does.
+export type MissionImage = Readonly<{
+  src: string;
+  width: number;
+  height: number;
+}>;
+
+const MISSION_IMAGES: Readonly<Record<string, MissionImage>> = {
+  'creativity-02': { src: tallestTower, width: 1000, height: 666 },
+  'creativity-10': { src: kindMonster, width: 1000, height: 666 },
+};
+
+export function resolveMissionImage(missionId: string): MissionImage | null {
+  return MISSION_IMAGES[missionId] ?? null;
+}
+
+// Exported for the tests that hold this map to its authorized scope.
+export const MISSION_IMAGE_IDS: readonly string[] = Object.keys(MISSION_IMAGES);

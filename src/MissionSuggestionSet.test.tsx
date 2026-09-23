@@ -12,6 +12,7 @@ import {
   type MessageKey,
   type SupportedLanguage,
 } from './localization';
+import { MISSION_IMAGE_IDS } from './missionImages';
 import { MissionSuggestionSet } from './MissionSuggestionSet';
 import { deriveSuggestionSet, type SuggestionContext } from './missionSuggestions';
 
@@ -761,6 +762,83 @@ describe('the insufficient-content state', () => {
     expect(screen.queryAllByRole('article')).toHaveLength(0);
   });
 });
+// Reviewed stills replace the authored scene for the Missions they were made
+// for, and for no others. They are decoration in exactly the sense the scene
+// they replace was: the card's meaning stays in its text, and nothing about
+// eligibility, ordering or content moves because a picture exists.
+describe('reviewed Mission stills', () => {
+  const withImages = ['creativity-02', 'creativity-10'];
+
+  it('covers exactly the Missions the still authorization names', () => {
+    expect([...MISSION_IMAGE_IDS].sort()).toEqual(withImages);
+
+    // Every one of them is a real, reviewed, discovery-eligible catalog entry.
+    for (const id of MISSION_IMAGE_IDS) {
+      const mission = MISSION_CATALOG.find((record) => record.missionId === id);
+      expect(mission?.reviewed).toBe(true);
+      expect(mission?.discoveryEligible).toBe(true);
+    }
+  });
+
+  it('presents a still as decoration and keeps the card readable without it', () => {
+    const mission = MISSION_CATALOG.find((record) => record.missionId === 'creativity-02')!;
+    const { container } = render(
+      <MissionSuggestionSet
+        catalog={MISSION_CATALOG}
+        context={context({ category: 'Creativity', ageBand: '4–6' })}
+      />,
+    );
+
+    const card = screen.getByRole('article', { name: mission.content.en.title });
+    const photo = card.querySelector('img')!;
+
+    expect(photo.getAttribute('alt')).toBe('');
+    expect(photo.getAttribute('aria-hidden')).toBe('true');
+    // The intrinsic size travels with it, so the card reserves the space before
+    // the file arrives instead of reflowing the text under it.
+    expect(photo.getAttribute('width')).toBe('1000');
+    expect(photo.getAttribute('height')).toBe('666');
+    // Bundled by the build, not fetched from anywhere else.
+    expect(photo.getAttribute('src')).not.toMatch(/^https?:/);
+
+    // Assistive technology is offered no image at all, here or anywhere in the set.
+    expect(screen.queryAllByRole('img')).toHaveLength(0);
+
+    // Every reviewed field is still present as text, independently of the file.
+    expect(within(card).getByRole('heading', { level: 3 }).textContent).toBe(mission.content.en.title);
+    expect(within(card).getByText(mission.content.en.instruction)).toBeTruthy();
+    expect(card.textContent).toContain(mission.content.en.safetyNote);
+    expect(card.textContent).toContain(translateMessage('en', 'discovery.category.creativity'));
+    expect(card.textContent).toContain(`${Math.round(mission.durationSeconds / 60)}`);
+
+    // A Mission with no still keeps its authored scene rather than an empty frame.
+    const sockCard = screen.getByRole('article', {
+      name: MISSION_CATALOG.find((record) => record.missionId === 'creativity-05')!.content.en.title,
+    });
+    expect(sockCard.querySelector('img')).toBeNull();
+    expect(sockCard.querySelectorAll('.mission-scene .s-el').length).toBeGreaterThan(0);
+    expect(container.querySelectorAll('.mission-card')).toHaveLength(3);
+  });
+
+  it('changes no Mission content, eligibility or ordering', () => {
+    // The set the family actually receives is the one the ordering rules give,
+    // derived here without any reference to the stills.
+    const result = deriveSuggestionSet(
+      MISSION_CATALOG,
+      context({ category: 'Creativity', ageBand: '4–6' }),
+    );
+    if (result.status !== 'complete') throw new Error('expected a complete set');
+
+    expect(result.missions.map((mission) => mission.missionId)).toEqual([
+      'creativity-02',
+      'creativity-05',
+      'creativity-10',
+    ]);
+    // Ordered by their own catalogOrder, not by which of them has a picture.
+    expect(result.missions.map((mission) => mission.catalogOrder)).toEqual([10, 30, 50]);
+  });
+});
+
 // A grid column's automatic minimum is its min-content width. A rule that makes
 // an element a grid and also clips its overflow will therefore cut its own
 // content off whenever a word is wider than the element, and nothing about the
