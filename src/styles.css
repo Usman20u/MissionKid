@@ -139,12 +139,16 @@ input {
   font-weight: 700;
 }
 
+/* The purpose of the product, given the weight of a lead rather than of body
+   copy: it is the first thing the page says once the language switch above it
+   has done its job. */
 .introduction__lead {
-  max-width: 62ch;
+  max-width: 52ch;
   margin: 1.5rem 0 0;
-  color: #445752;
-  font-size: 1.05rem;
-  line-height: 1.6;
+  color: #344742;
+  font-size: 1.2rem;
+  line-height: 1.55;
+  letter-spacing: -0.005em;
 }
 
 /* The same section label Discovery gives its set of three, so the example reads
@@ -166,7 +170,7 @@ input {
 .introduction__columns {
   display: flex;
   flex-wrap: wrap;
-  align-items: flex-start;
+  align-items: stretch;
   gap: 2rem 2.5rem;
   margin-top: 2rem;
 }
@@ -178,9 +182,47 @@ input {
   flex: 0 1 24rem;
 }
 
+/* What the family does, what setup involves and the one action are one block,
+   on the same quiet warm panel Discovery gives its set of three. Without it the
+   column read as three stacked items above a large empty area on a wide
+   screen. Nothing is reordered: this is the same document order the narrow
+   layout reads top to bottom. */
 .introduction__guidance {
+  display: flex;
   min-width: 0;
   flex: 1 1 26rem;
+  flex-direction: column;
+}
+
+/* The panel is given only where the column can afford it. The threshold is in
+   `rem`, so it is the content's own measure rather than a device width: a
+   reader who enlarges text gets the plain column back automatically. Measured
+   at a 32px root, the panel's inset narrowed the text column enough to add
+   about a sixth to the page's height, which is not a trade worth making for a
+   surface that is already one column there. */
+@media (min-width: 24rem) {
+  .introduction__guidance {
+    /* The inset still carries a ceiling measured against its own column, for
+       the same reason the Mission card's note does. */
+    padding: 1.05rem min(1.35rem, 7%) 1.5rem;
+    border: 1px solid #ece2cf;
+    border-radius: 1.25rem;
+    background:
+      radial-gradient(120% 90% at 50% 0%, #fdfaf3 0, #f7f1e4 100%);
+  }
+
+  /* The action closes the block: on a wide layout it settles to the foot of the
+     column so the two columns end together. Splitting the slack between the
+     note and the action as well was tried and rejected: it left the guidance
+     floating between two gaps instead of reading as one block. */
+  .introduction__guidance .button {
+    margin-top: auto;
+    align-self: flex-start;
+  }
+
+  .introduction__guidance .introduction__flow {
+    margin-bottom: 0.25rem;
+  }
 }
 
 /* On a wide layout, held to roughly the width one of Discovery's three columns
@@ -205,9 +247,16 @@ input {
 .introduction__steps {
   max-width: 62ch;
   margin: 0;
-  padding-left: 1.3rem;
-  color: #445752;
+  padding-left: 1.4rem;
+  color: #3d514c;
   line-height: 1.6;
+}
+
+/* The family's three steps are the substance of this block, so their numbers
+   are given the product's own green rather than the browser's default grey. */
+.introduction__steps ::marker {
+  color: #2f6b58;
+  font-weight: 750;
 }
 
 .introduction__steps li + li {
@@ -453,6 +502,60 @@ input {
 .setup-complete > p:last-of-type {
   color: #445752;
   line-height: 1.55;
+}
+
+/* Scoped to the entry setup. The choices are short, and stretching three of
+   them across the full width of a wide panel left a small label adrift in a
+   large box and made the group slower to scan, not faster. Each group is held
+   to the width its own content needs. */
+[data-view='setup-first-use'] .choice-grid--languages,
+[data-view='setup-incomplete'] .choice-grid--languages {
+  max-width: 40rem;
+}
+
+[data-view='setup-first-use'] .choice-grid--ages,
+[data-view='setup-incomplete'] .choice-grid--ages {
+  max-width: 27rem;
+}
+
+/* The selected value carries the same weight it carries in Discovery: a heavier
+   rim and a slight lift on top of the native radio's own filled mark, so it is
+   never signalled by colour alone. */
+[data-view='setup-first-use'] .choice:has(input:checked),
+[data-view='setup-incomplete'] .choice:has(input:checked) {
+  border-color: #17493c;
+  box-shadow:
+    inset 0 0 0 2px #17493c,
+    0 0.5rem 1.1rem rgb(23 73 60 / 12%);
+  transform: translateY(-2px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-view='setup-first-use'] .choice:has(input:checked),
+  [data-view='setup-incomplete'] .choice:has(input:checked) {
+    transform: none;
+  }
+}
+
+/* The save action closes the form, so it is separated from the guidance above
+   it by the same hairline a Mission card puts above its own action. */
+/* The save action closes the form, so it is given room of its own rather than
+   sitting immediately under the guidance it follows. */
+[data-view='setup-first-use'] .setup-form > .button--primary,
+[data-view='setup-incomplete'] .setup-form > .button--primary {
+  margin-top: 2rem;
+}
+
+/* The parent's guidance carries the same warm tint on both entry surfaces, so
+   the note does not read as the one cool element on a warm page. It stays
+   clearly separated from the controls above it by its own panel, its left mark
+   and its tint. */
+[data-view='introduction'] .parent-note,
+[data-view='setup-first-use'] .parent-note,
+[data-view='setup-incomplete'] .parent-note {
+  border-left-color: #a8752f;
+  background: #f8efdf;
+  color: #4f3a1b;
 }
 
 @media (min-width: 34rem) {
@@ -789,6 +892,26 @@ input {
   font-weight: 750;
   letter-spacing: 0.02em;
   text-transform: uppercase;
+}
+
+/* The parent's first two screens carry the same warm ground Discovery uses, so
+   entering the product and using it are one surface rather than two. Scoped to
+   the entry views this batch authorizes: the settings form, temporary mode and
+   recovery keep their current surface until their own authorization, which the
+   plan records as a known divergence rather than an oversight. */
+.app-shell:has([data-view='introduction']),
+.app-shell:has([data-view='setup-first-use']),
+.app-shell:has([data-view='setup-incomplete']) {
+  background:
+    radial-gradient(circle at 50% 0%, #f1e8d6 0, transparent 34rem),
+    #f7f2e6;
+}
+
+.app-shell:has([data-view='introduction']) .app-shell__main > section,
+.app-shell:has([data-view='setup-first-use']) .app-shell__main > section,
+.app-shell:has([data-view='setup-incomplete']) .app-shell__main > section {
+  border-color: #ece2cf;
+  background: rgb(255 253 248 / 94%);
 }
 
 /* The page behind Mission Discovery goes warm with it, so the cards sit on one
