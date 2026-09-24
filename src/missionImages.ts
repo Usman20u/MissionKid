@@ -1,4 +1,5 @@
 import tallestTower from './assets/missions/creativity-02-tallest-tower.jpg';
+import sockFriend from './assets/missions/creativity-05-sock-friend.jpg';
 import kindMonster from './assets/missions/creativity-10-kind-monster.jpg';
 
 // Presentation only, keyed by the stable Mission identifier. This adds no field
@@ -21,6 +22,7 @@ export type MissionImage = Readonly<{
 
 const MISSION_IMAGES: Readonly<Record<string, MissionImage>> = {
   'creativity-02': { src: tallestTower, width: 1000, height: 666 },
+  'creativity-05': { src: sockFriend, width: 1000, height: 666 },
   'creativity-10': { src: kindMonster, width: 1000, height: 666 },
 };
 

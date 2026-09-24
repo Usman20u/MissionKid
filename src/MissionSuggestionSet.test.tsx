@@ -767,7 +767,7 @@ describe('the insufficient-content state', () => {
 // they replace was: the card's meaning stays in its text, and nothing about
 // eligibility, ordering or content moves because a picture exists.
 describe('reviewed Mission stills', () => {
-  const withImages = ['creativity-02', 'creativity-10'];
+  const withImages = ['creativity-02', 'creativity-05', 'creativity-10'];
 
   it('covers exactly the Missions the still authorization names', () => {
     expect([...MISSION_IMAGE_IDS].sort()).toEqual(withImages);
@@ -811,13 +811,27 @@ describe('reviewed Mission stills', () => {
     expect(card.textContent).toContain(translateMessage('en', 'discovery.category.creativity'));
     expect(card.textContent).toContain(`${Math.round(mission.durationSeconds / 60)}`);
 
-    // A Mission with no still keeps its authored scene rather than an empty frame.
-    const sockCard = screen.getByRole('article', {
-      name: MISSION_CATALOG.find((record) => record.missionId === 'creativity-05')!.content.en.title,
-    });
-    expect(sockCard.querySelector('img')).toBeNull();
-    expect(sockCard.querySelectorAll('.mission-scene .s-el').length).toBeGreaterThan(0);
     expect(container.querySelectorAll('.mission-card')).toHaveLength(3);
+  });
+
+  it('keeps the authored scene for a Mission that has no still', () => {
+    // The stills cover Creativity's first set and nothing else, so a set drawn
+    // from another Mission Category still renders its authored scenes rather
+    // than an empty frame. This is the fallback the map's default depends on.
+    const { container } = render(
+      <MissionSuggestionSet
+        catalog={MISSION_CATALOG}
+        context={context({ category: 'Movement', ageBand: '4–6' })}
+      />,
+    );
+
+    const missionCards = [...container.querySelectorAll('.mission-card')];
+    expect(missionCards).toHaveLength(3);
+
+    for (const card of missionCards) {
+      expect(card.querySelector('img')).toBeNull();
+      expect(card.querySelectorAll('.mission-scene .s-el').length).toBeGreaterThan(0);
+    }
   });
 
   it('changes no Mission content, eligibility or ordering', () => {
