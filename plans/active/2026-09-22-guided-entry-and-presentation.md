@@ -560,7 +560,7 @@ Three stills were proposed for the three Missions of the authorized visual pass,
 | --- | --- | --- |
 | `creativity-02` *Tallest Tower* | Kraft boxes and lilac plastic cups stacked on a plain surface | **Integrated** |
 | `creativity-10` *The Kind Monster* | A fluffy purple crayon monster with a big smile, beside two wax crayons | **Integrated** |
-| `creativity-05` *Sock Friend* | A yellow knitted hand covering, raised, forming an open mouth | **Not integrated — concrete conflict** |
+| `creativity-05` *Sock Friend* | A yellow knitted hand covering, raised, forming an open mouth | **Not integrated — concrete conflict.** This verdict on this image stands; a different replacement image was later inspected and integrated, recorded below. |
 
 **`creativity-02`.** The instruction names "light, unbreakable things like plastic cups, blocks or small boxes"; the still shows two of those three materials and a tower standing on its own. No child, no text, no interior décor. *One ambiguity is recorded rather than smoothed over:* the safety note says "Build on the floor", and the still's surface is a plain pale plane meeting a plain wall with no table edge, leg or furniture visible. It reads as a floor against a wall and cannot be read as clearly contradicting the note, but it does not positively establish a floor either. That is a judgement for the content reviewer, and it is flagged rather than decided here.
 
@@ -586,7 +586,51 @@ Three stills were proposed for the three Missions of the authorized visual pass,
 
 **Gates**, with full output captured to files before being summarized: `tsc --noEmit` clean, **843 tests across 23 test files**, clean production build, `git diff --check` clean. A second full run was also clean at `843`. No failure occurred in this pass, so no failure output was retained.
 
-**Remaining differences from the supplied reference.** Two of three cards now carry photographic stills and the third carries an authored SVG scene, so **the set is visibly mixed in this pass** — that is the honest cost of not forcing an unsuitable image in. Copy and navigation remain unchanged, the other 51 scenes are untouched, and the reference's styled interiors, rug, plants and knitted throw are deliberately absent: the integrated stills sit on plain surfaces, which keeps them clear of the clauses on housing, resources and household type.
+**Remaining differences from the supplied reference.** Two of three cards now carry photographic stills and the third carries an authored SVG scene, so **the set is visibly mixed in this pass** — that is the honest cost of not forcing an unsuitable image in. (That mixture was resolved later by the replacement still recorded below; it was true of this pass.) Copy and navigation remain unchanged, the other 51 scenes are untouched, and the reference's styled interiors, rug, plants and knitted throw are deliberately absent: the integrated stills sit on plain surfaces, which keeps them clear of the clauses on housing, resources and household type.
+
+### Replacement `creativity-05` still — inspection and integration, at `cc3c07f`
+
+A replacement still for `creativity-05` was supplied on 2026-09-24. **The rejection above is unchanged and was not reinterpreted**: that mitten image remains rejected on its recorded grounds. This is a separate inspection of a different file, under the same authorization, and it changes no catalog content and no eligibility.
+
+**Image inspection — passed.** The replacement was examined at magnification on the exact feature the rejection turned on. The object is one continuous tube: a closed, rounded toe carrying its linking seam, a heel turn, and a single ribbed leg cuff worn over a plain sleeve. **No separately knitted thumb compartment with its own ribbing and finished tip is present anywhere in the frame**, which is what made the previous image a mitten. The object the instruction names and the object the image shows are the same object.
+
+| Clause | Outcome |
+| --- | --- |
+| Depicts only what the Mission instructs | Passed. A clean sock on a raised hand is exactly the instructed setup. The sock is undecorated, which matters: the instruction asks for a name and a voice, not for marking or drawing on the sock, so a plain sock avoids implying an uninstructed action. |
+| Consistent with the safety note | Passed. The note requires keeping the sock away from face and mouth; the sock is held clear and **no face appears in the frame at all**. |
+| No text inside the image | Passed. |
+| No recognizable real child, no implied photo or video capture | Passed. No face, no hand skin, no identifying feature. |
+| Housing, resources, family structure | Passed. A plain pale ground with no interior, décor or furnishing; no household signal of any kind. |
+| Globally recognizable, not tied to one household type | Passed. A plain knitted sock. |
+| One hero object, nothing frightening | Passed. One focal subject, no competing object. |
+
+**One observation recorded rather than decided.** A forearm in a plain sleeve is visible. No recognizable person is depicted, so no clause is engaged, but it is flagged for the content reviewer in the same way the `creativity-02` floor ambiguity was rather than treated as settled.
+
+**How it is integrated.** The same local static-asset path as `creativity-02` and `creativity-10`: presentation only, keyed by the stable Mission identifier, no catalog field, no persisted value, no snapshot data. The source is `1536x1024`, which is `3:2`, and the window is already `3:2`, so **nothing is cropped** and the complete subject is preserved from toe to cuff. It is bundled at the reviewed dimensions of `1000x666`, matching the other two, and emitted by the build as a fingerprinted local asset of `105 kB`. The authored `creativity-05` scene definition stays in place exactly as the other two integrated Missions' definitions did.
+
+**Verified on the production build**, English, German and Russian at `1280x900`, `390x780` and `320` CSS px with a `32px` root, reached through the ordinary flow rather than seeded:
+
+| Check | Result |
+| --- | --- |
+| Replacement present and decoded | yes in all nine; `decode()` resolved, natural size `1000x666`, served `200` |
+| Rendered box | `317.2x211.5` desktop, `354x236` mobile, `252x168` enlarged — `3:2` throughout, identical to the two already recorded |
+| Decorative to assistive technology | `alt=""` and `aria-hidden`; **no element exposes the `img` role anywhere** |
+| Space reserved before the file arrives | intrinsic `width` and `height` present, plus the window's own `aspect-ratio` |
+| Three cards, equal width | yes in all nine; equal height and one action line on desktop |
+| Clipping and overflow | `0` clipped elements, no page horizontal overflow, in all nine |
+| Requests | `0` external, `0` failed, in all nine |
+| Text independent of imagery | every reviewed title, instruction, Mission Category, duration and safety note present as text in all three languages |
+| Enlarged text | at a `32px` root the window holds `3:2` at `252x168`, text reflows and scrolls normally, `0` clipped, touch target `178.4` px |
+
+**A screenshot artifact is recorded rather than passed off as a result.** The first full-page mobile capture showed the second and third cards as empty category washes. That was the capture path, not the product: on the same page all three images reported `complete`, `decode()` resolved for each, and all three were served `200` with no failed request, and a screenshot of the real viewport scrolled to the card shows the still rendered correctly. The delivered mobile screenshot was recaptured after scrolling the page so the compositor rasterizes every region.
+
+**Regression coverage was preserved rather than dropped.** The scope test now pins all three authorized Missions. The fallback assertion that a Mission without a still keeps its authored scene was **moved to a Movement set** instead of being deleted, because all three Creativity cards now carry stills.
+
+**Gates.** `tsc --noEmit` clean, **844 tests across 23 test files** (one test added), clean production build, `git diff --check` clean.
+
+**Ergonomic outcome.** The set now reads as one consistent family, and the mixed appearance recorded in the previous pass is resolved. All three cards remain equal peers: same window, same treatment, no badge, rank or extra prominence. No further change was made, because none was needed.
+
+**Image inspection is not human visual acceptance.** This records inspection against the content rules and integration. Human visual acceptance of this still, and of everything built under this plan, remains outstanding.
 
 ## Boundaries
 
