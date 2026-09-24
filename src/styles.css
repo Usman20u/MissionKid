@@ -170,7 +170,12 @@ input {
 .introduction__columns {
   display: flex;
   flex-wrap: wrap;
-  align-items: stretch;
+  /* Each column takes the height its own content needs. Stretching the
+     guidance to match the example card was tried and reverted: matching the
+     bottoms opened a gap between the explanation and the action that follows
+     it, which detached the two. Columns of unequal height are the honest
+     result of unequal content. */
+  align-items: flex-start;
   gap: 2rem 2.5rem;
   margin-top: 2rem;
 }
@@ -211,12 +216,9 @@ input {
       radial-gradient(120% 90% at 50% 0%, #fdfaf3 0, #f7f1e4 100%);
   }
 
-  /* The action closes the block: on a wide layout it settles to the foot of the
-     column so the two columns end together. Splitting the slack between the
-     note and the action as well was tried and rejected: it left the guidance
-     floating between two gaps instead of reading as one block. */
+  /* The action follows the note it belongs to, at the ordinary gap every action
+     on this surface uses. It is not stretched across the panel. */
   .introduction__guidance .button {
-    margin-top: auto;
     align-self: flex-start;
   }
 
