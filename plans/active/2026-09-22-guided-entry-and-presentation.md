@@ -679,6 +679,66 @@ Kept, and verified rather than assumed: all five categories visible and directly
 **Limitations.** One engine, one build, no real device, no assistive technology, no CI. Contrast was not re-measured: no colour, text colour or surface changed. Human visual acceptance of this change is outstanding and is not recorded here.
 
 
+## Whole-application visual completion
+
+Added on 2026-09-24. This section widens what this plan accounts for. It does not widen what is authorized: every surface below stays unauthorized until an authorization names it, and this section authorizes no implementation by itself.
+
+### Sixth authorization — whole-application accounting, and the introduction and setup batch
+
+Authorized on 2026-09-24, **recorded before implementation**, covering exactly two things:
+
+1. Updating this plan to account explicitly for the whole application's visual completion, through the inventory below.
+2. Implementing the next presentation batch: the **parent introduction** and **first-use setup**.
+
+Nothing else. Tasks 4, 5 and 6 remain unauthorized; the remainder of Task 3 remains unauthorized; Discovery, the accepted Reward Card, Ready, Active, History, the Monthly Goal, recovery and the reset panel stay stable in this batch. No parallel plan is created.
+
+**The previous batch's late record stands as written.** The category selector authorization was recorded after its implementation, and that fact is stated in its own section and in the changelog. It is not backdated, rewritten or removed, and this section does not repair it retrospectively.
+
+### Inventory — every surface, and what each still needs
+
+Condition uses four distinct states. **Implemented** means the behaviour exists and its own function plan verified it. **Verified** means presentation was additionally measured on a served build in this plan. **Awaiting visual review** means measured and recorded here but not yet accepted by a human. **Accepted** is recorded only where a human actually gave it. **Not started** means no presentation work has been done on it in this plan.
+
+| Surface | Condition | Concrete remaining improvement | Owning specification | Verification needed |
+| --- | --- | --- | --- | --- |
+| Hydration / `pending` | Implemented | Confirm it cannot flash an unstyled or mis-scaled frame before the first view | Technical Architecture; Visual & Ergonomic *Mobile-first* | One timed capture from cold load |
+| Parent introduction | Verified, awaiting visual review | **This batch:** purpose, example, family steps and the setup action read as one composition on both layouts | `F001`; Visual & Ergonomic *Controlled scene system*, *Mobile-first* | EN/DE/RU at three configurations; flow to confirmed setup |
+| First-use setup | Implemented, presentation not revisited in this plan | **This batch:** language and age easy to scan, selected values unmistakable, save action easy to find, guidance kept separate from controls | `F001`; Visual & Ergonomic *Approved MVP view inventory* | Same three configurations; keyboard and focus |
+| Setup incomplete | Implemented | Should read as the same form in a different state, not a different screen | `F001` | Carried by the setup batch's checks |
+| Setup editing / settings | Implemented; **Task 5 not started** | Non-content height, and the change-effect wording sitting clearly with its control | `F001`; Task 5 | Before/after height measurement per Task 5 |
+| Setup complete handoff | Implemented, presentation not revisited | The summary pair and the two onward actions need the same surface language as the rest | `F001` | Three configurations once authorized |
+| Temporary mode | Implemented and verified under `F001` | Confirm the temporary state is legible without becoming alarming | `F001`; Visual & Ergonomic *parent surfaces stay restrained* | Three configurations once authorized |
+| Recovery | Implemented and verified under `F001` | Same restraint check; no warning-banner styling for a recoverable state | `F001` | Three configurations once authorized |
+| Discovery — category selector | Verified, awaiting visual review | None known. Compacted and its label clipping fixed at `c067eaa` | `F002`; Visual & Ergonomic *peer-choice group* | Done for this pass |
+| Discovery — three suggestions | Verified, awaiting visual review | The rest of Task 3: the measured height reduction it still owns, reconciled below | `F002`; Visual & Ergonomic *F002 exactly-three* | Per Task 3, once authorized |
+| Discovery — unavailable / bounded / conflict states | Implemented | Confirm each reads as a calm bounded state on the warm Discovery ground | `F002` | Three configurations once authorized |
+| Session opening / ready | Implemented and verified under `F003`; **Task 4 not started** | Non-content height, per Task 4 | `F003`; Task 4 | Before/after height measurement per Task 4 |
+| Session active | Implemented and verified under `F003`; **Task 4 not started** | Non-content height, per Task 4 | `F003`; Task 4 | Same |
+| Leave / abandonment confirmation | Implemented and verified under `F003` | Confirm the most consequential screen still reads as the calmest | `F003` | Three configurations once authorized |
+| Reward Card | **Accepted** — human visual acceptance given 2026-09-22 | None. Do not change it | `F004` | None; keep stable |
+| Mission History | Implemented and verified under `F004` | Presentation not revisited in this plan | `F004` | Three configurations once authorized |
+| Monthly Goal | Implemented and verified under `F004` | Same | `F004` | Same |
+| History empty state | Implemented | Confirm it reads as a beginning rather than a failure | `F004` | Same |
+| Reset panel and its confirmation | Implemented | Confirm the destructive action stays subordinate everywhere it appears | `F001` | Same |
+
+### Mission presentation — all 54, counted rather than assumed
+
+Counted from the repository: **54 reviewed, discovery-eligible Missions** — Movement `12`, Creativity `12`, Helping at Home `9`, Learning `11`, Calm `10`. All 54 have an authored scene. **Three** carry a reviewed photographic still: `creativity-02`, `creativity-05`, `creativity-10`. **Fifty-one do not.**
+
+**Three stills do not mean the imagery is complete.** One Mission Category has three Missions presented photographically and the other four have none, so the set a family sees varies in kind by category. This is recorded as an open gap, not as finished work.
+
+**Remaining asset need, identified separately.** Closing it needs `51` further reviewed stills, or an accepted decision that authored scenes are the product's presentation and the three stills are the exception. Either is a content and authorization decision, not an implementation one. **Unavailable assets are not a reason to stop unrelated interface work**, and this plan does not treat them as one: the introduction and setup batch proceeds with the existing scene. **The other 51 scenes are not to be replaced automatically**, and the boundary forbidding their replacement stands except for the three already named.
+
+### Reconciling Task 3's height target with the imagery and layout authorized after it
+
+Task 3 was written before the Discovery visual direction and before any still existed. It asks for a **measured reduction in Mission card height and set span at narrow widths**. Three authorizations landed after it and moved in the opposite direction, deliberately:
+
+- the clipping fix, which made cards taller at `320` px / `32px` because text that was cut off is now shown — set span `8141` → `10881` px EN, `7954` → `12546` px DE, `8253` → `13772` px RU;
+- the visual direction, which took the image window from `20 / 11` to `3 / 2`, giving each card more height on purpose;
+- the three stills, which occupy that window at `3:2`.
+
+**That original height target is therefore superseded, not achieved.** The historical measurements above are preserved exactly as recorded and are not restated as successes. What remains genuinely open from Task 3 is narrower than what it was written to mean: whether any **non-content** height — spacing and chrome rather than text, image or safety guidance — can still come out of the card at narrow widths, measured against the current design rather than the pre-imagery one. A new baseline must be taken before that is attempted, because every figure Task 3 was written against predates the imagery. Task 3 remains unauthorized and is not claimed complete.
+
+
 ## Boundaries
 
 Preserved exactly: the `selected → ready → active → completed` lifecycle, the confirmed-write contract, exactly-once completion accounting, timer derivation from persisted timestamps, every recovery and temporary-mode path, Mission History, and Monthly Goal behavior including period identity and the single goal-complete prompt. The accepted Reward Card presentation and the Mission History presentation are not changed.
