@@ -777,6 +777,36 @@ Task 3 was written before the Discovery visual direction and before any still ex
 **Limitations.** One engine, one build, no real device, no assistive technology, no CI. Human visual acceptance is not given and not recorded. Discovery, the Reward Card, Ready, Active, History, the Monthly Goal, settings, temporary mode and recovery are unchanged by this batch, and no claim of overall design completion is made.
 
 
+### Seventh authorization — one bounded correction to the introduction batch
+
+Authorized on 2026-09-24 at HEAD `6087a20`, **recorded before implementation**, from review of the supplied screenshots. It covers one correction and one verification, and nothing else.
+
+**The correction.** On the desktop introduction, the guidance panel carries a large empty area between the explanatory note and the setup action, because the panel was made to match the example card's height and the action was anchored to its foot. That visually detached the action from the explanation it follows. The action is to sit immediately after the note with an ordinary, comfortable gap, and the panel is to size naturally to its own content. **Matching column bottoms is explicitly abandoned as a goal**, and empty space is not to be used to anchor the action.
+
+Preserved: the mobile reading order, all reviewed content, typography, the single primary action, the example Mission, and every behaviour. No other surface is touched and nothing is redesigned.
+
+**The verification, carried out before this authorization and recorded below.** The supplied German mobile setup screenshot was checked against the intended first-use styling rather than accepted or dismissed by eye.
+
+### Setup screenshot attribution — verified, no defect
+
+**Source file.** `~/Desktop/MissionKid-entry-surfaces-review/after-setup-mobile-390x780-de.png`, copied from the batch's own capture run. **Status: a genuine after-shot.** **Build:** the production build of commit `9509bc5`, the batch's implementation commit. **Application state at capture:** the probe taken in the same step recorded `view=setup-first-use`, title *Einrichtung durch Eltern* — the exact view the authorized styling targets, not a recovery, settings or temporary state.
+
+**The authorized styling is present.** Pixels sampled from the before and after files at identical coordinates:
+
+| Element | Before (`f351e5e`) | After (`9509bc5`) |
+| --- | --- | --- |
+| Page ground, top | `#e4eee7` cool | `#f1e8d6` **warm** |
+| Page ground, edge | `#edf0ea` cool | `#f0eadc` **warm** |
+| Section surface | `#fefffe` cool | `#fffcf7` **warm** |
+| Parent note fill | `#f1f7f3` cool green | `#f8efdf` **warm** |
+| Parent note left mark | `#4d7d6d` cool green | `#a8752f` **warm amber** |
+| Selected choice border | `#1d6654` | `#17493c` **heavier rim** |
+
+**So the screenshot is not a before-shot, is not an excluded state, and the styling is not missing.** No correction is needed and nothing is recoloured.
+
+**The one accurate observation in the report, explained rather than changed.** The choices are indeed full width in that screenshot. That is the correct and unchanged mobile presentation: `.choice-grid` is a single full-width column at base, and both the three-column rule and this batch's width ceilings apply only from `34rem` (`544` px). The phone's content column is about `356` px, so the ceilings — `40rem` and `27rem` — are far wider than the space available and can have no effect there. The ceilings were a wide-viewport scanning improvement and were never intended to alter a phone. The single-column reading order on a narrow screen is what the Visual & Ergonomic Specification requires.
+
+
 ## Boundaries
 
 Preserved exactly: the `selected → ready → active → completed` lifecycle, the confirmed-write contract, exactly-once completion accounting, timer derivation from persisted timestamps, every recovery and temporary-mode path, Mission History, and Monthly Goal behavior including period identity and the single goal-complete prompt. The accepted Reward Card presentation and the Mission History presentation are not changed.
