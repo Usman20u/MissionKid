@@ -632,11 +632,58 @@ A replacement still for `creativity-05` was supplied on 2026-09-24. **The reject
 
 **Image inspection is not human visual acceptance.** This records inspection against the content rules and integration. Human visual acceptance of this still, and of everything built under this plan, remains outstanding.
 
+### Discovery category selector — fifth authorization
+
+Authorized on 2026-09-24 within this plan: one bounded ergonomic improvement making the Mission Category selector more compact, especially on mobile, while keeping the choice clear and the interaction comfortable. **It authorizes nothing else.** Tasks 4, 5 and 6 remain unauthorized, the rest of Task 3 is unchanged, no general redesign is authorized, and no other view is touched.
+
+**A process deviation is recorded rather than hidden.** The instruction was to record this authorization before implementation. It was written after the implementation and its verification, so the plan did not carry the authorization while the work was done. The scope below is the scope that was actually worked to, not a scope written to fit the result.
+
+Kept, and verified rather than assumed: all five categories visible and directly selectable; full localized labels, age context, legend and explanatory help; a selected state that does not rest on colour alone; the existing radio-group semantics, keyboard behaviour, focus visibility and touch-target minimum; readable type and ordinary vertical scrolling at enlarged text. Excluded and not built: a dropdown, a collapsed section, a horizontal carousel, icon-only controls, hidden labels, sticky controls, new copy, new navigation, and any automatic scroll or focus move after selection.
+
+### Discovery category selector — outcome, at `c067eaa`
+
+**The change is one stylesheet file.** The selector was a single-column grid of five `4.75rem` controls on narrow screens and five `12.5rem` columns on wide ones. It is now one wrapping group of controls with a `3.25rem` minimum, so how many share a row is left to the viewport. No markup, no component, no state, no copy and no localization changed.
+
+**Two defects were found by measurement and fixed; both are recorded because neither was visible from the code.**
+
+1. **Pre-existing label clipping at enlarged text.** The selected-state cue reserved a fixed `min-width: 5.5rem`, which at a `32px` root is `176` px inside a `170` px control that clips its own overflow. The labels were being cut off on the served build: at `320` CSS px *Bewegung* rendered as *Be*, *Kreativität* as *Kr*, and *Zu Hause helfen* as *Zu Ha*, with `10` clipped elements per language before selection and `12` after. This was present before this work and is now `0` in all nine configurations.
+2. **A regression introduced and then removed during this work.** Sizing the flex line from content made the group rewrap and reorder the moment a category was chosen, because only the selected control gains the cue: on desktop one row became two in English and German and three in Russian, with controls changing places. The controls now take a definite basis that depends on neither the label nor the selection, and the group is measured stable.
+
+**Before and after, measured on the production build** in English, German and Russian, reached through the ordinary flow rather than seeded. Category group is the fieldset; controls is the wrapping group inside it; first Mission is the top of the first suggestion card once a category is chosen.
+
+| Configuration | Controls | Category group | First Mission | Rows | Clipped |
+| --- | --- | --- | --- | --- | --- |
+| `390x780` EN / DE | `428` → `232` px (**−45.9%**) | `522` → `326` px | `847` → `673` px | `5` → `3` | `0` → `0` |
+| `390x780` RU | `428` → `253` px (**−41.0%**) | `522` → `346` px | `847` → `699` px | `5` → `3` | `0` → `0` |
+| `1280x900` EN / DE / RU | `200` → `86` px (**−56.8%**) | `269` → `155` px | `626` → `514` px | `1` → `1` | `0` → `0` |
+| `320` px @ `32px` root EN | `897` → `1085` px (**+21.0%**) | `1376` → `1565` px | `2310` → `2587` px | `5` → `5` | **`10` → `0`** |
+| `320` px @ `32px` root DE | `897` → `1044` px (**+16.4%**) | `1475` → `1622` px | `2474` → `2741` px | `5` → `5` | **`10` → `0`** |
+| `320` px @ `32px` root RU | `856` → `1138` px (**+32.9%**) | `1435` → `1717` px | `2368` → `2770` px | `5` → `5` | **`10` → `0`** |
+
+**The enlarged-text configuration got taller, and that is the honest cost of the fix.** Its labels were previously cut off; showing them in full takes the height the text actually needs. Height was not the goal there and was not traded against readability: clipping went from `10` elements per language to `0`. Reduced height was achieved where the labels already fitted — mobile and desktop.
+
+**Verified in all nine configurations:** five radio controls with unchanged semantics, correct `name`, none disabled and no `tabindex` override; document order still Movement, Creativity, Helping at Home, Learning, Calm, and the wrap reads in that order; arrow keys move through all five; the focus ring is unchanged at `solid 3px #b4650c` with `3px` offset; the legend, the help text and the age context stay visible; every label is present and complete; minimum touch target `52` px on mobile, `86.4` px on desktop and `151` px at enlarged text; no page horizontal overflow; and **no clipping against any ancestor**, checked by walking each element's clipping ancestors rather than by reading `document.scrollWidth`.
+
+**Layout stability on selection was measured, not assumed.** Every control's `x` and width and the whole row grouping are identical before and after a category is chosen, in all nine configurations. Selecting a category and then changing it moves neither scroll position nor focus: `scrollY` stayed `0` and the active element was unchanged across both.
+
+**All five categories still produce their own correct set:** each selection yields exactly three cards, all of the selected Mission Category, with that category checked — in all three languages and all three configurations.
+
+**The Mission cards are untouched**, confirmed rather than assumed: three cards, three stills, rendered `317.2x211.5` desktop, `354x236` mobile and `252x168` at enlarged text — `3:2` and identical to the values recorded for the previous pass — natural size `1000x666`, every still `alt=""` and `aria-hidden` with no `img` role exposed, choose actions at `52` px and `178.4` px, safety guidance present, and zero failed requests.
+
+**One rejected alternative is recorded.** Giving the label a zero flex basis made mobile and desktop shorter still (`232` → `201` px and `86` → `68` px) but squeezed the label into a narrow column at large text, taking the enlarged-text group from `1044` to `2036` px in German. It was measured, rejected for regressing the accessibility configuration, and the reason is left in the stylesheet so it is not retried blindly.
+
+**Three stylesheet invariant tests were added**, following the precedent already set for the Mission card: the group wraps, so its row structure is a layout property and jsdom has no layout engine to assert it by rendering. They pin the definite basis, the shrinkable label and cue, and the absence of a fixed reservation. **Each was proven to fail when its fix is removed** — reverting the basis fails the first, restoring `min-width: 5.5rem` fails the other two — and all pass when restored.
+
+**Gates**, run sequentially with output captured to files: relevant tests first (`MissionDiscovery` and `Accessibility`, `69` passed), then `tsc --noEmit` clean, the full suite at **847 tests across 23 test files** (`844` before, three added), clean production build, `git diff --check` clean. No test failed at any point in this pass, so no failure output was retained.
+
+**Limitations.** One engine, one build, no real device, no assistive technology, no CI. Contrast was not re-measured: no colour, text colour or surface changed. Human visual acceptance of this change is outstanding and is not recorded here.
+
+
 ## Boundaries
 
 Preserved exactly: the `selected → ready → active → completed` lifecycle, the confirmed-write contract, exactly-once completion accounting, timer derivation from persisted timestamps, every recovery and temporary-mode path, Mission History, and Monthly Goal behavior including period identity and the single goal-complete prompt. The accepted Reward Card presentation and the Mission History presentation are not changed.
 
-Not authorized and not proposed: accounts, payments, a backend, analytics, rankings, streak pressure, collectible rewards, or any additional product feature. No new dependency. No new persisted field, storage key or snapshot version. No route, router or URL-addressable page. No change to reviewed catalog text, durations, age eligibility, adult-involvement levels or safety guidance. **No regeneration or replacement of the 54 reviewed scenes, except the three named under *Discovery visual direction* below, whose scenes that authorization explicitly replaces.** No component replaced that is already correct. No setup-to-introduction back control.
+Not authorized and not proposed: accounts, payments, a backend, analytics, rankings, streak pressure, collectible rewards, or any additional product feature. No new dependency. No new persisted field, storage key or snapshot version. No route, router or URL-addressable page. No change to reviewed catalog text, durations, age eligibility, adult-involvement levels or safety guidance. **No regeneration or replacement of the 54 reviewed scenes, except the three named under *Discovery visual direction* below, whose scenes that authorization explicitly replaces.** No component replaced that is already correct. No setup-to-introduction back control. The Mission Category selector's presentation is compacted under the fifth authorization above; its five categories, semantics, labels and selection behaviour are unchanged.
 
 Kept in the acceptance criteria throughout: English, German and Russian; accessible focus; comfortable touch targets; larger-text support with readable text and normal vertical scrolling; mobile performance.
 
