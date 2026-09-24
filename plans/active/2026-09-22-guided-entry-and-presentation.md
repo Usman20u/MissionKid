@@ -739,6 +739,44 @@ Task 3 was written before the Discovery visual direction and before any still ex
 **That original height target is therefore superseded, not achieved.** The historical measurements above are preserved exactly as recorded and are not restated as successes. What remains genuinely open from Task 3 is narrower than what it was written to mean: whether any **non-content** height — spacing and chrome rather than text, image or safety guidance — can still come out of the card at narrow widths, measured against the current design rather than the pre-imagery one. A new baseline must be taken before that is attempted, because every figure Task 3 was written against predates the imagery. Task 3 remains unauthorized and is not claimed complete.
 
 
+### Parent introduction and first-use setup — outcome, at `9509bc5`
+
+**One stylesheet file**, `130` insertions and `7` deletions. No markup, component, state, copy, localization, route or dependency changed, and no behaviour changed.
+
+**Carried from Discovery into the entry surfaces.** The warm ground and panel surface Discovery already uses now also carry the introduction, first-use setup and the incomplete-setup form, so entering the product and using it are one surface rather than a cool entrance onto a warm product. The parent's guidance note takes the warm tint the Mission cards already give safety guidance, so it is no longer the single cool element on a warm page. Deep green actions, the focus ring, the borders and the spacing scale were already shared and are unchanged.
+
+**The introduction now reads as one composition.** The purpose is given the weight of a lead rather than of body copy. What the family does, what setup involves and the one action sit together on the quiet warm panel Discovery gives its set of three, so the column reads as a designed block instead of three stacked items above a large empty area; on a wide layout the action settles to the foot of that block so the two columns end together. The family's three steps carry the product's own green on their numbers.
+
+**Setup is easier to scan and its selection unmistakable.** Each choice group is held to the width its own content needs rather than stretched across a wide panel, which had left a short label adrift in a large box. The selected value carries the same heavier rim and slight lift Discovery gives a chosen category, on top of the native radio's own filled mark, so it is never signalled by colour alone. The save action is given room of its own below the guidance it follows. The separation between controls and guidance is preserved: the note keeps its own panel, its left mark and its tint.
+
+**Scope, and a divergence recorded rather than hidden.** These changes are scoped to `introduction`, `setup-first-use` and `setup-incomplete`. The same form is also used by the settings view, temporary mode and recovery, and those keep their current cool surface because this batch does not authorize them — settings belongs to Task 5. **Until they are authorized, the same form looks different in those states.** That is a known, deliberate consequence of keeping unauthorized surfaces stable, and it is listed in the inventory above.
+
+**Measured on the production build**, English, German and Russian at `1280x900`, `390x780` and `320` CSS px with a `32px` root, walked through the ordinary flow rather than seeded. Across all `36` surface-and-configuration combinations — introduction, setup, setup with an age chosen, and the confirmed handoff: **no clipping against any ancestor, no contrast failure, exactly one primary action, and a focus order identical to before.**
+
+| Configuration | Introduction | First-use setup |
+| --- | --- | --- |
+| `1280x900` EN / DE / RU | `1166` → `1172`, `1193` → `1199`, `1239` → `1245` px | `1000` → `1008`, `1027` → `1035`, `1073` → `1081` px |
+| `390x780` EN / DE / RU | `1796` → `1877`, `1895` → `2034`, `1927` → `2062` px | `1373` → `1381`, `1425` → `1433`, `1457` → `1465` px |
+| `320` px @ `32px` root EN / DE / RU | `7969` → `8197`, `9060` → `9325`, `9320` → `9560` px | `5196` → `5212`, `6115` → `6131`, `6184` → `6200` px |
+
+**Height was not a goal here and modestly increased.** The panel's own inset and a larger lead account for it. Minimum contrast is unchanged at `5.23:1` with zero failures; minimum touch targets are unchanged at `52` px, `107.2` px and `174` px.
+
+**The real flow was walked, not assumed.** In all three configurations: the introduction is the first view; changing language there changes both the interface and the example Mission's reviewed content — *The Table Surprise* becomes *Die Tischüberraschung* — and **nothing is written to storage while the introduction is shown**; the one action leads to `setup-first-use` with the chosen language carried; choosing an age band enables the save; saving reaches `setup-complete-handoff` and writes a snapshot carrying `settings.language` and `childProfile.ageBand` with a local profile id; and a reload then returns the family to the handoff rather than to the introduction. Tabbing through the introduction reaches the language group and the one action, each showing the product's `solid 3px` ring.
+
+**Two regressions were introduced during this work and removed; both are recorded because only the measurement found them.**
+
+1. **The one action became an `85.6` px wide, `679` px tall ribbon at a `32px` root.** The new panel's `rem` inset left a `90` px column. This is the same defect class the plan already fixed for the Mission card's note and the language controls, and it took the same remedy: an inset with a ceiling measured against its own column. The action measured `147.7` px wide afterwards and the configuration's minimum target returned to `107.2` px.
+2. **The panel cost about a sixth of the introduction's height at a `32px` root** — `7969` → `9290` px in English — because its inset narrowed the text column and every paragraph wrapped more. The panel is now given only above a `rem`-based threshold, so it is the content's own measure rather than a device width: a reader who enlarges text gets the plain column back automatically, and the residual increase is `228`–`265` px, which is the larger lead rather than the panel.
+
+**One alternative was tried and rejected.** Splitting the panel's spare height between the note and the action, rather than collecting it above the action, left the guidance floating between two gaps instead of reading as one block. It was reverted and the reason left in the stylesheet.
+
+**Gates**, run sequentially with output captured to files: relevant tests first (`ParentIntroduction`, `SetupFlow`, `Accessibility`, `App` — `102` passed), `tsc --noEmit` clean, the full suite at **847 tests across 23 test files**, clean production build, `git diff --check` clean. No test was added: the change is presentation, and a test mirroring a CSS declaration would assert the stylesheet against itself.
+
+**One failed test run is recorded rather than explained away.** A full-suite run was killed by the environment partway through; before it died it reported `src/MissionSuggestionSet.test.tsx (56 tests | 1 failed)`, with `presents exactly three distinct Missions in every approved context` failing after `8319` ms. **The kill truncated the output before the assertion was printed, so the failure's detail was not retained — that is a gap in this verification.** The file then passed in isolation at `56 passed`, with that test taking `1236` ms, and the full suite passed twice afterwards at `847`. **Cause unknown, not reproduced, not attributed**, and passing on re-run identifies nothing.
+
+**Limitations.** One engine, one build, no real device, no assistive technology, no CI. Human visual acceptance is not given and not recorded. Discovery, the Reward Card, Ready, Active, History, the Monthly Goal, settings, temporary mode and recovery are unchanged by this batch, and no claim of overall design completion is made.
+
+
 ## Boundaries
 
 Preserved exactly: the `selected → ready → active → completed` lifecycle, the confirmed-write contract, exactly-once completion accounting, timer derivation from persisted timestamps, every recovery and temporary-mode path, Mission History, and Monthly Goal behavior including period identity and the single goal-complete prompt. The accepted Reward Card presentation and the Mission History presentation are not changed.
