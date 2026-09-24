@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+
 import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -1005,6 +1007,67 @@ describe('discovery accessibility', () => {
       }
 
       unmount();
+    }
+  });
+});
+
+// The category group wraps, so its row structure is a layout property. jsdom has
+// no layout engine and cannot assert it by rendering: these are stylesheet
+// invariants that encode the cause of two defects measured on the served build.
+//
+// 1. A fixed reservation on the selected-state cue was wider than the whole
+//    control at a 32px root, which pushed the label out of a control that clips
+//    its own overflow. Measured at 320 CSS px: "Bewegung" rendered as "Be",
+//    "Zu Hause helfen" as "Zu Ha" — 10 clipped elements per language.
+// 2. Sizing the flex line from content made the group rewrap and reorder the
+//    moment a category was chosen, because the selected control alone gains the
+//    cue. Measured on desktop: one row became two in English and German and
+//    three in Russian, with controls changing places.
+describe('Mission category group layout invariants', () => {
+  const stylesheet = readFileSync('src/styles.css', 'utf8');
+  const rules = [...stylesheet.matchAll(/([^{}]+)\{([^{}]*)\}/g)].map((match) => ({
+    selector: match[1]!.trim().split('\n').at(-1)!.trim(),
+    body: match[2]!,
+  }));
+  const ruleFor = (selector: string) =>
+    rules.filter((rule) => rule.selector === selector);
+
+  it('sizes a control from a definite basis rather than from its content', () => {
+    const [control] = ruleFor('.mission-world');
+    expect(control).toBeDefined();
+
+    // A definite basis, so the line break cannot depend on the label or on
+    // whether this control is the selected one.
+    const flex = /flex:\s*([^;]+);/.exec(control!.body)?.[1]?.trim();
+    expect(flex).toBeDefined();
+    expect(flex).not.toMatch(/\bauto\b|\bcontent\b/);
+    expect(flex).toMatch(/\d/);
+
+    // Without this, a flex item's automatic minimum is its min-content width,
+    // which would restore the content dependency the basis just removed.
+    expect(control!.body).toMatch(/min-width:\s*0/);
+  });
+
+  it('lets the label and the selected cue shrink instead of overflowing', () => {
+    const [label] = ruleFor('.mission-world__label');
+    const [state] = ruleFor('.mission-world__state');
+    expect(label).toBeDefined();
+    expect(state).toBeDefined();
+
+    expect(label!.body).toMatch(/min-width:\s*0/);
+    expect(state!.body).toMatch(/min-width:\s*0/);
+
+    // The cue is wider than the whole control at large text sizes, so it must
+    // be able to break rather than overflow a control that clips.
+    expect(state!.body).toMatch(/overflow-wrap:\s*anywhere/);
+  });
+
+  it('reserves no fixed width for the selected cue', () => {
+    // The reservation this replaces was `min-width: 5.5rem`, which at a 32px
+    // root was 176px inside a 170px control.
+    for (const rule of ruleFor('.mission-world__state')) {
+      const minWidth = /min-width:\s*([^;]+);/.exec(rule.body)?.[1]?.trim();
+      if (minWidth !== undefined) expect(minWidth).toBe('0');
     }
   });
 });
