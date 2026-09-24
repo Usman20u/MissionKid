@@ -807,6 +807,29 @@ Preserved: the mobile reading order, all reviewed content, typography, the singl
 **The one accurate observation in the report, explained rather than changed.** The choices are indeed full width in that screenshot. That is the correct and unchanged mobile presentation: `.choice-grid` is a single full-width column at base, and both the three-column rule and this batch's width ceilings apply only from `34rem` (`544` px). The phone's content column is about `356` px, so the ceilings — `40rem` and `27rem` — are far wider than the space available and can have no effect there. The ceilings were a wide-viewport scanning improvement and were never intended to alter a phone. The single-column reading order on a narrow screen is what the Visual & Ergonomic Specification requires.
 
 
+### Introduction correction — outcome, at `178bcc0`
+
+**Two declarations.** The columns no longer stretch to a common height, and the action no longer takes the column's spare height. The guidance panel sizes to its own content and the action follows the note at the ordinary `1.5rem` gap every action on this surface uses. **Matching column bottoms is abandoned**, and the columns now end where their own content ends.
+
+**A second defect the same anchoring had caused, found by the correction.** On a narrow screen the anchoring resolved to no top margin at all, so the action sat flush against the note with no gap. It now carries the same comfortable gap as on a wide screen, which is the `+24` px the mobile introduction gains.
+
+**Measured on the production build**, English, German and Russian at `1280x900`, `390x780` and `320` CSS px with a `32px` root, through the ordinary flow. Across all `36` surface-and-configuration combinations: no clipping against any ancestor, no contrast failure, exactly one primary action, focus order identical to before the batch. Minimum contrast `5.23:1`; minimum targets `52`, `107.2` and `174` px; the confirmed handoff reached everywhere.
+
+| Configuration | Introduction, before → batch → corrected | Setup |
+| --- | --- | --- |
+| `1280x900` EN / DE / RU | `1166`→`1172`→`1172`, `1193`→`1199`→`1199`, `1239`→`1245`→`1245` px | unchanged |
+| `390x780` EN / DE / RU | `1796`→`1877`→`1901`, `1895`→`2034`→`2058`, `1927`→`2062`→`2086` px | unchanged |
+| `320` px @ `32px` root | `7969`→`8197`→`8197`, `9060`→`9325`→`9325`, `9320`→`9560`→`9560` px | unchanged |
+
+Desktop and enlarged page heights are unchanged, because the example card was always the taller column. **First-use setup is unchanged to the pixel in all nine configurations**, as this correction does not touch it.
+
+Preserved and re-checked: the mobile reading order, every reviewed field, typography, the single primary action, the example Mission, and the flow's behaviour. No other surface was touched.
+
+**Gates.** Relevant tests first (`ParentIntroduction`, `Accessibility` — `58` passed), `tsc --noEmit` clean, the full suite at **847 tests across 23 test files**, clean production build, `git diff --check` clean. No test added: two CSS declarations, and a test mirroring them would assert the stylesheet against itself.
+
+**Limitations.** One engine, one build, no real device, no assistive technology, no CI. Human visual acceptance is not given and not recorded.
+
+
 ## Boundaries
 
 Preserved exactly: the `selected → ready → active → completed` lifecycle, the confirmed-write contract, exactly-once completion accounting, timer derivation from persisted timestamps, every recovery and temporary-mode path, Mission History, and Monthly Goal behavior including period identity and the single goal-complete prompt. The accepted Reward Card presentation and the Mission History presentation are not changed.
