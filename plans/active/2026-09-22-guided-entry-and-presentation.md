@@ -1,7 +1,7 @@
 # MissionKid Plan 05 — guided entry and the presentation pass
 
 **Date:** 2026-09-22
-**Status:** Specification amendments prepared and revalidated; the reviewer's product decisions are recorded below. **Tasks 1 and 2 are authorized and were executed together as one integrated batch**, and await human visual acceptance, which is not recorded. **Two bounded parts of Task 3 — the reproduced Discovery clipping defect and the narrow-screen spacing correction — are authorized and done, together with two bounded introduction improvements and the bounded Discovery visual direction; the rest of Task 3 is not.** The presentation work on Ready, Active, the leave confirmation and settings is authorized under the *Eighth authorization* and done at `c3af6df`, awaiting human visual acceptance; Tasks 4 and 5 are not claimed complete, because their written height targets are not met. Task 6 remains unauthorized and is not started. Nothing is pushed, merged or deployed.
+**Status:** Specification amendments prepared and revalidated; the reviewer's product decisions are recorded below. **Tasks 1 and 2 are authorized and were executed together as one integrated batch**, and await human visual acceptance, which is not recorded. **Two bounded parts of Task 3 — the reproduced Discovery clipping defect and the narrow-screen spacing correction — are authorized and done, together with two bounded introduction improvements and the bounded Discovery visual direction; the rest of Task 3 is not.** The presentation work on Ready, Active, the leave confirmation and settings is authorized under the *Eighth authorization* and done at `c3af6df`, awaiting human visual acceptance; Tasks 4 and 5 are not claimed complete. Under the *Ninth authorization*, recorded before implementation, their height targets are superseded rather than achieved, and the diagnosed enlarged-text overflow and the remaining consistency pass are authorized and in progress. Task 6 remains unauthorized and is not started. Nothing is pushed, merged or deployed.
 
 **Branch:** `feat/guided-entry-and-presentation`, taken from `14a5b16` on the unpublished `feat/reward-card-presentation`, which is preserved unchanged at that commit. No history was rewritten.
 
@@ -452,6 +452,8 @@ Two dead ends are recorded rather than hidden. A percentage width on the languag
 
 ### Task 4 — Remove unnecessary non-content height on the ready and active views
 
+> **Superseded criteria, 2026-09-28.** The height target below is kept as the historical record and is **superseded rather than achieved**. Task 4 is now judged on the six criteria under the *Ninth authorization*, Decision 1, which also records which of these baselines still reproduce.
+
 **Outcome.** Measured non-content height falls on both views in all three languages, from a baseline of `463`–`487` px on ready and `374`–`397` px on active at `390x780`, by removing excessive spacing while useful separation and touch-target space stay. Content is preserved on all four terms: complete wording, readable typography, required guidance, semantic order. A content height that falls through legitimate reflow is an acceptable outcome and is reported as such rather than treated as a shortfall. **No whitespace is added to any language to make it resemble another, no text is shrunk, nothing is clipped, and no safety content is reordered.** Remaining language-dependent height differences are the expected outcome. The lifecycle, deliberate start, exactly-once completion, timer derivation, leave paths and confirmations are untouched.
 
 **Trace.** `F003`; Visual & Ergonomic *F003 — Ready Mission presentation*, *Mission Break transition and active presentation*, *Action hierarchy*, *Localization resilience*, criteria `8` and `9`.
@@ -459,6 +461,8 @@ Two dead ends are recorded rather than hidden. A percentage width on the languag
 **Verification.** The page/content/non-content measurement in all three languages at `390x780` and `320`px/`32px`, before and after, taken by the method above and reported as context. The verdict comes from the direct checks: every required string present and rendered in full; computed `font-size` and `line-height` unchanged or better on every changed text element; safety and adult-involvement text present, outside any disclosure and unmoved in document order; heading order unchanged; one dominant primary action with secondary and exit actions subordinate and available; focus order and visible focus unchanged; every interactive element at or above `52` px; and no overlap or horizontal overflow. Where content height falls, the record states which reflow produced it. The existing `F003` suite unchanged, including exactly-once start and completion. Timer live-region behavior re-checked.
 
 ### Task 5 — Remove unnecessary non-content height on the settings view
+
+> **Superseded criteria, 2026-09-28.** As for Task 4: the `725` px target below is kept as the historical record, superseded rather than achieved, and Task 5 is judged on the six criteria under the *Ninth authorization*, Decision 1.
 
 **Outcome.** Measured non-content height falls from its `725` px baseline in all three languages, by removing excessive spacing while useful separation and touch-target space stay. Content is preserved on the same four terms: both effect explanations and both parent notes keep their complete wording, their current type size and line height, their visibility outside any disclosure, and their place in the reading order. A content height that falls through legitimate reflow is acceptable and is reported with the reflow that produced it. The same prohibitions as Task 4 apply — no added whitespace, no smaller text, no clipping, no reordered safety or consequence content.
 
@@ -918,6 +922,77 @@ At the enlarged configuration every authorized state is `23.5`–`49.9` % shorte
 **Limitations.** One engine, one build, no real device, no Safari or Firefox, no assistive technology, no CI. Human visual acceptance is not given and not recorded.
 
 
+### Ninth authorization — superseded height criteria, the diagnosed overflow, and the remaining consistency pass
+
+Recorded on 2026-09-28 at HEAD `b048040`, **before implementation**. Two decisions and two authorizations.
+
+#### Decision 1 — Tasks 4 and 5 are judged without a height target
+
+Reduced page height is no longer a required outcome of Task 4 or Task 5. Both are evaluated on six things instead: **clear action hierarchy, complete readable content, comfortable controls, useful spacing, keyboard and focus behaviour, and the absence of clipping or horizontal overflow.** The original targets and every measurement recorded against them stay in this plan unchanged, as historical records **superseded rather than achieved**. Changing the criteria does not complete either task: each closes only when its remaining obligations are met.
+
+What of those baselines can still be reproduced was measured rather than assumed, on a rebuild of `f5a6912` — the build they were taken from — at `390x780`, walking the first Mission of every Mission Category in every age band:
+
+| Baseline | Recorded | Measured now on `f5a6912` | Status |
+| --- | --- | --- | --- |
+| Ready, page height | `911` / `938` / `988` px | `911` / `938` / `988` px with `movement-02` *Bear, Crab, Bird*, the first Movement Mission for `4–6` and `7–8` | **Reproduced**; the Mission, which was not recorded, is now identified |
+| Active, page height | `838` / `864` / `938` px | `838` / `864` / `915` px with the same Mission | English and German reproduced; **Russian differs by `23` px, one line**, and the cause is not established |
+| Settings, page height | `1547` / `1648` / `1648` px | `1547` / `1648` / `1648` px | **Reproduced** |
+| Content height — Ready, Active, settings | `448`/`474`/`501`, `463`/`490`/`541`, `822`/`923`/`923` px | Union of element boxes: `627`/`654`/`704`, `558`/`585`/`635`, `1056`/`1157`/`1157`. Union of text lines and controls: `500`/`520`/`558`, `450`/`470`/`508`, `710`/`784`/`784` | **Not reproduced.** Neither reading of the recorded method gives the recorded figures, and the script that produced them was not retained. The record also has Active's content exceeding Ready's while Active's page is shorter, which is the reverse of what both readings give |
+| Non-content height — `463`–`487`, `374`–`397`, `725` px | Page minus content | Follows from the row above | **Not reproducible** |
+
+The evidence that remains is the recorded figures themselves, the page heights that reproduce to the pixel, the Mission now identified, and the `f5a6912` build, which rebuilds from history.
+
+#### Decision 2 — a way to leave settings without saving is a separate product decision
+
+It is not made here and no control is added.
+
+#### Authorization A — the diagnosed enlarged-text overflow
+
+The overflow corrections in the **reset panel, first-use setup, temporary mode and recovery**, and in **any shared form layout responsible for those defects** — which includes the incomplete-setup form, since it is the same form. Readable font sizes, full labels and guidance, destructive-action safeguards, semantic order and focus management are preserved, and overflow hiding is not used to conceal anything.
+
+**Reproduced before editing**, on the production build of `b048040` in Chrome for Testing headless shell `149.0.7827.55`, through real conditions — the ordinary flow, the stored age removed and reloaded, the browser's storage made to throw, an unreadable stored snapshot. Page horizontal overflow at `320` CSS px with a `32px` root, EN / DE / RU; `0` at `1280x900` and `390x780` in every state:
+
+| State | Overflow | Elements responsible |
+| --- | --- | --- |
+| First-use setup | `14` / `14` / `14` px | The three language controls |
+| Incomplete setup | `14` / `14` / `14` px | The same |
+| Temporary mode | `14` / `91` / `15` px | The same, and in German the retry help, the retry action and the reset entry, each widened to `338` px |
+| Reset panel, on first-use setup, the handoff and temporary mode | `39` / `124` / `127` px | The panel, sized to its longest word |
+| Reset panel, on recovery | `39` px in all three | The same. Recovery renders in English whatever the family's language, because an unreadable snapshot yields no language and the view offers no choice — the existing `F001` fallback |
+| Recovery, reset unconfirmed | `0` | — |
+
+**Two shared causes**, both the grid-minimum defect this plan has already fixed twice: each language control's own padding, radio and gap reach `261` px of min-content in a narrower column, and `.recovery-actions` is a grid with no named column minimum, so everything in it — the retry help, the retry action, the reset entry and the reset panel — is sized to its own longest word.
+
+#### Reconciling the earlier first-use report with the `14` px
+
+Every earlier statement about horizontal overflow on first-use setup was located and set against a rebuild of its own commit, measured in the same state — setup before and after an age is chosen — at `320x568`, `320x780` and `360x740`, with the `32px` root applied two ways: an injected root style, and the browser's own default-font-size setting.
+
+| Commit | What its record says | Measured on a rebuild of that commit |
+| --- | --- | --- |
+| `ee35a70`, recorded in `e4f8511` (`F002`) | *"first-use setup, setup editing, blocked recovery and the reset confirmation were re-checked at 320, 360, 390 and 1280 pixels in all three languages at normal and 200% text with no regression"* | `14` px at `320` px wide, in every language, with both text methods, with and without an age; `0` at `360` px |
+| `c8380a4`, recorded in `5eb9562` (Plan 03) | *"144 combinations: 8 implemented states … none scrolls horizontally"* | The eight states are not named, and that plan's scope was the `F003` and `F004` surfaces. First-use setup measures `14` px at this commit, so the statement cannot have covered it |
+| `02bbe68` (this plan, Tasks 1–2) | Records `14` px on the setup form as pre-existing | `14` px — reproduced |
+| `9509bc5` (this plan, introduction and setup) | *"no clipping against any ancestor"* — no page-overflow claim for setup | Clipping `0`, page overflow `14` px — consistent, a different check |
+| `b048040` | Records `14` px | `14` px |
+
+**Verdict: not a regression.** The same `14` px from the same three controls is present on every build from `ee35a70` to `b048040`. For the `F002` statement, this is **unresolved evidence**: the measurement contradicts it on its own commit's build, and that record keeps neither its method nor its per-configuration results, so why it reported no defect cannot be established. The statement is left as written and superseded by this measurement, not rewritten.
+
+#### Authorization B — the remaining presentation consistency pass
+
+Presentation-only work on the remaining surfaces in the inventory: **the setup handoff, temporary mode, recovery, the reset panel, Discovery's unavailable and bounded states, and loading.** The established visual language is given where it is useful, while each surface keeps its own meaning: **error and recovery states stay clearly different from successful completion.** Existing copy, controls, navigation, lifecycle and persistence behaviour are retained.
+
+**History, the Monthly Goal and the accepted Reward Card are reviewed for integration issues** and are not restyled merely to make every surface identical.
+
+**Not done:** a settings cancel or back action; replacing the remaining Mission artwork; new routes, dependencies, animation or features.
+
+**Two facts recorded before implementation.**
+
+- **Discovery's unavailable state cannot be reached with the reviewed catalog.** Every Mission Category has at least six eligible Missions in every age band — `6`–`9` — so exactly three can always be presented. It can be shown only through a probe build with a reduced catalog, which is evidence about its presentation and never about the product.
+- **The loading view never renders in the product.** Hydration runs synchronously in the initial state, so `pending` is never the first view, and busy operations resolve within one task under `flushSync`, so their status is never painted. What does paint before the application mounts is a blank frame of the page's cool ground: at `136` ms on a normal cold load, and for about `2.3` s under `6x` CPU and slow-network throttling, after which the resolved view — warm for every landing view except the Reward Card — replaces it.
+
+**Specification check, before code.** No amendment is required: the palette is open, the work sits inside the existing responsive, localization-resilience, action-hierarchy, confirmation and recovery-presentation rules, and nothing reaches behaviour.
+
+
 ## Boundaries
 
 Preserved exactly: the `selected → ready → active → completed` lifecycle, the confirmed-write contract, exactly-once completion accounting, timer derivation from persisted timestamps, every recovery and temporary-mode path, Mission History, and Monthly Goal behavior including period identity and the single goal-complete prompt. The accepted Reward Card presentation and the Mission History presentation are not changed.
@@ -931,9 +1006,9 @@ Kept in the acceptance criteria throughout: English, German and Russian; accessi
 1. **Renewed implementation authorization for the remainder of Task 3 and for Task 6.** Tasks 1 and 2 are authorized above, bounded parts of Task 3 under the second to fifth authorizations, and Tasks 4 and 5 with the leave confirmation under the eighth. Nothing else may begin until its own authorization is recorded here. This is the gate.
 2. **Translation review of the proposed copy.** The strings above are proposed product copy. Whether they need review by a German and a Russian speaker before release is a release decision, not one this plan makes.
 3. **Instruction length**, recorded under Decision 3 as a separate content consideration for Mission Catalog and Safety. Not scheduled, not assumed, and not addressed by anything in this plan.
-4. **Tasks 4 and 5's height targets.** Not met at `390x780`, and taken on baselines this pass could not reproduce. Whether they are superseded, as Task 3's target was, or pursued further is the reviewer's decision.
-5. **A way to leave settings without saving.** The view has none. Adding one is a new control and a product decision, not presentation.
-6. **The reset panel's sideways scroll, and the setup form's on the other views that share it**, both at `320` px with a `32px` root. Both are diagnosed under the eighth authorization's outcome and need their own authorization.
+4. ~~**Tasks 4 and 5's height targets.**~~ **Decided on 2026-09-28:** superseded, not achieved — the *Ninth authorization*, Decision 1.
+5. **A way to leave settings without saving.** The view has none. Adding one is a new control and a separate product decision, not presentation; the *Ninth authorization*, Decision 2, keeps it out of this plan's batches. **Still open.**
+6. ~~**The reset panel's sideways scroll, and the setup form's on the other views that share it.**~~ **Authorized on 2026-09-28** under the *Ninth authorization*, Authorization A.
 
 ## Definition of complete
 
