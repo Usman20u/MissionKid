@@ -506,17 +506,19 @@ input {
   line-height: 1.55;
 }
 
-/* Scoped to the entry setup. The choices are short, and stretching three of
-   them across the full width of a wide panel left a small label adrift in a
-   large box and made the group slower to scan, not faster. Each group is held
-   to the width its own content needs. */
+/* Scoped to the setup form wherever this plan has authorized it. The choices
+   are short, and stretching three of them across the full width of a wide
+   panel left a small label adrift in a large box and made the group slower to
+   scan, not faster. Each group is held to the width its own content needs. */
 [data-view='setup-first-use'] .choice-grid--languages,
-[data-view='setup-incomplete'] .choice-grid--languages {
+[data-view='setup-incomplete'] .choice-grid--languages,
+[data-view='setup-editing'] .choice-grid--languages {
   max-width: 40rem;
 }
 
 [data-view='setup-first-use'] .choice-grid--ages,
-[data-view='setup-incomplete'] .choice-grid--ages {
+[data-view='setup-incomplete'] .choice-grid--ages,
+[data-view='setup-editing'] .choice-grid--ages {
   max-width: 27rem;
 }
 
@@ -524,7 +526,8 @@ input {
    rim and a slight lift on top of the native radio's own filled mark, so it is
    never signalled by colour alone. */
 [data-view='setup-first-use'] .choice:has(input:checked),
-[data-view='setup-incomplete'] .choice:has(input:checked) {
+[data-view='setup-incomplete'] .choice:has(input:checked),
+[data-view='setup-editing'] .choice:has(input:checked) {
   border-color: #17493c;
   box-shadow:
     inset 0 0 0 2px #17493c,
@@ -534,30 +537,59 @@ input {
 
 @media (prefers-reduced-motion: reduce) {
   [data-view='setup-first-use'] .choice:has(input:checked),
-  [data-view='setup-incomplete'] .choice:has(input:checked) {
+  [data-view='setup-incomplete'] .choice:has(input:checked),
+  [data-view='setup-editing'] .choice:has(input:checked) {
     transform: none;
   }
 }
 
-/* The save action closes the form, so it is separated from the guidance above
-   it by the same hairline a Mission card puts above its own action. */
 /* The save action closes the form, so it is given room of its own rather than
    sitting immediately under the guidance it follows. */
 [data-view='setup-first-use'] .setup-form > .button--primary,
-[data-view='setup-incomplete'] .setup-form > .button--primary {
+[data-view='setup-incomplete'] .setup-form > .button--primary,
+[data-view='setup-editing'] .setup-form > .button--primary {
   margin-top: 2rem;
 }
 
-/* The parent's guidance carries the same warm tint on both entry surfaces, so
-   the note does not read as the one cool element on a warm page. It stays
-   clearly separated from the controls above it by its own panel, its left mark
-   and its tint. */
+/* The parent's guidance carries the same warm tint on every authorized parent
+   surface, so the note does not read as the one cool element on a warm page.
+   It stays clearly separated from the controls above it by its own panel, its
+   left mark and its tint. */
 [data-view='introduction'] .parent-note,
 [data-view='setup-first-use'] .parent-note,
-[data-view='setup-incomplete'] .parent-note {
+[data-view='setup-incomplete'] .parent-note,
+[data-view='setup-editing'] .parent-note {
   border-left-color: #a8752f;
   background: #f8efdf;
   color: #4f3a1b;
+}
+
+/* What saving a change will do is what a parent opens this view to learn, so
+   it is its own line in the body ink rather than the tail of the help above
+   it. The words, their size and their place in the group's description are
+   unchanged. */
+.choice-group__effect {
+  display: block;
+  margin-top: 0.5rem;
+  color: #33483f;
+}
+
+/* At a 32px root the language names' own padding, radio and gap came to 261px
+   in a narrower column and scrolled the page sideways by 14px. The same
+   viewport ceilings as the shell: unchanged at every ordinary size, and at an
+   enlarged size the insets stop growing while the label keeps its size. */
+[data-view='setup-editing'] .choice {
+  padding-inline: min(1rem, 5vw);
+  gap: min(0.75rem, 3.75vw);
+}
+
+[data-view='setup-editing'] .choice input {
+  width: min(1.2rem, 6vw);
+  height: min(1.2rem, 6vw);
+}
+
+[data-view='setup-editing'] .parent-note {
+  padding-inline: min(1.1rem, 5.5vw);
 }
 
 @media (min-width: 34rem) {
@@ -896,14 +928,15 @@ input {
   text-transform: uppercase;
 }
 
-/* The parent's first two screens carry the same warm ground Discovery uses, so
-   entering the product and using it are one surface rather than two. Scoped to
-   the entry views this batch authorizes: the settings form, temporary mode and
-   recovery keep their current surface until their own authorization, which the
-   plan records as a known divergence rather than an oversight. */
+/* The parent's screens carry the same warm ground Discovery uses, so entering
+   the product, using it and changing its setup later are one surface rather
+   than two. Temporary mode and recovery keep their current surface until their
+   own authorization, which the plan records as a known divergence rather than
+   an oversight. */
 .app-shell:has([data-view='introduction']),
 .app-shell:has([data-view='setup-first-use']),
-.app-shell:has([data-view='setup-incomplete']) {
+.app-shell:has([data-view='setup-incomplete']),
+.app-shell:has([data-view='setup-editing']) {
   background:
     radial-gradient(circle at 50% 0%, #f1e8d6 0, transparent 34rem),
     #f7f2e6;
@@ -911,23 +944,56 @@ input {
 
 .app-shell:has([data-view='introduction']) .app-shell__main > section,
 .app-shell:has([data-view='setup-first-use']) .app-shell__main > section,
-.app-shell:has([data-view='setup-incomplete']) .app-shell__main > section {
+.app-shell:has([data-view='setup-incomplete']) .app-shell__main > section,
+.app-shell:has([data-view='setup-editing']) .app-shell__main > section {
   border-color: #ece2cf;
   background: rgb(255 253 248 / 94%);
 }
 
 /* The page behind Mission Discovery goes warm with it, so the cards sit on one
-   continuous ground rather than on a cool page with a warm panel on it. Scoped
-   to this view: no other surface changes in this pass. */
-.app-shell:has([data-view='discovery-categories']) {
+   continuous ground rather than on a cool page with a warm panel on it. The
+   Mission the family chose keeps that ground while it is made ready, while it
+   waits to start and while it runs, so choosing a Mission does not drop them
+   onto a different surface. The accepted Reward Card keeps its own. */
+.app-shell:has([data-view='discovery-categories']),
+.app-shell:has([data-view='session-opening']),
+.app-shell:has([data-view='session-ready']),
+.app-shell:has([data-view='session-active']) {
   background:
     radial-gradient(circle at 50% 0%, #f1e8d6 0, transparent 34rem),
     #f7f2e6;
 }
 
-.app-shell:has([data-view='discovery-categories']) .app-shell__main > section {
+.app-shell:has([data-view='discovery-categories']) .app-shell__main > section,
+.app-shell:has([data-view='session-opening']) .app-shell__main > section,
+.app-shell:has([data-view='session-ready']) .app-shell__main > section,
+.app-shell:has([data-view='session-active']) .app-shell__main > section {
   border-color: #ece2cf;
   background: rgb(255 253 248 / 94%);
+}
+
+/* At an enlarged text size the shell's `rem` insets stack: at a 32px root on a
+   320px screen the page gutter and the section's own padding took 72px from
+   each side, and every panel inside took more, until the leave confirmation's
+   actions were a column one letter wide and the adult-involvement note broke
+   ordinary words in half. Each ceiling is a share of the viewport, so it sits
+   above the `rem` value at every ordinary size from 320px up and changes
+   nothing there; it only stops the insets growing with the text. Scoped to the
+   views this batch authorizes. */
+.app-shell:has([data-view='session-opening']) :is(.app-shell__header, .app-shell__main),
+.app-shell:has([data-view='session-ready']) :is(.app-shell__header, .app-shell__main),
+.app-shell:has([data-view='session-active']) :is(.app-shell__header, .app-shell__main),
+.app-shell:has([data-view='setup-editing']) :is(.app-shell__header, .app-shell__main) {
+  padding-inline: min(1rem, 5vw);
+}
+
+/* The section's own padding, not `--section-pad`: the reset panel inherits that
+   variable, and this batch does not change the reset panel. */
+.app-shell:has([data-view='session-opening']) .app-shell__main > section,
+.app-shell:has([data-view='session-ready']) .app-shell__main > section,
+.app-shell:has([data-view='session-active']) .app-shell__main > section,
+.app-shell:has([data-view='setup-editing']) .app-shell__main > section {
+  padding: clamp(min(1.25rem, 6.25vw), 4vw, 2rem);
 }
 
 .mission-suggestions__set {
@@ -1599,8 +1665,27 @@ input {
    and whether it has started; the ready screen's own content and its start
    action are a later step, so nothing here is a control the family could
    mistake for starting the Mission. */
+/* A column, so each action takes its own line. Its buttons are inline boxes,
+   and as siblings in ordinary flow a wide screen set the primary action and the
+   way out against one another with no space between them, reading as one
+   two-part control. Every other child stretches to the column as a block would,
+   and none of them has a bottom margin, so no spacing changes. */
 .mission-session {
+  display: flex;
+  flex-direction: column;
   margin-top: 1.5rem;
+}
+
+/* Flex items do not collapse margins with their container, so the first child
+   gives up its own, as it did when that margin collapsed into this one. */
+.mission-session > :first-child {
+  margin-top: 0;
+}
+
+/* Every action keeps its own width rather than stretching across the column;
+   the primary action's full width on a phone is its own rule. */
+.mission-session > .button {
+  align-self: flex-start;
 }
 
 .mission-session__mission {
@@ -1647,11 +1732,13 @@ input {
 /* Required adult and safety content: its own material layer, always visible,
    never behind disclosure, and close enough to the Mission action to read as
    part of it. */
+/* The side insets carry the shell's viewport ceilings: at a 32px root they took
+   66px of a 174px column and left the guidance a 108px measure. */
 .mission-session__note {
   position: relative;
   max-width: 48ch;
   margin: 0.85rem 0 0;
-  padding: 0.75rem 0.9rem 0.75rem 1.15rem;
+  padding: 0.75rem min(0.9rem, 5vw) 0.75rem min(1.15rem, 6vw);
   border-radius: 0.6rem;
   color: #23423a;
   font-size: 0.95rem;
@@ -1662,7 +1749,7 @@ input {
   position: absolute;
   top: 0.75rem;
   bottom: 0.75rem;
-  left: 0.45rem;
+  left: min(0.45rem, 2.5vw);
   width: 3px;
   border-radius: 2px;
 }
@@ -1690,10 +1777,15 @@ input {
 }
 
 /* Mission Break: the brief step towards the real-life Mission. It is calm
-   supporting text, not a banner and not a second decision. */
+   supporting text, not a banner and not a second decision. It opens the part
+   of the view that is about starting, so the same hairline a Mission card puts
+   above its own action separates it from the Mission and its guidance; without
+   it, the step read as one more paragraph of the instruction. */
 .mission-session__break {
   max-width: 48ch;
-  margin: 1.1rem 0 0;
+  margin: 1.35rem 0 0;
+  padding-top: 1.1rem;
+  border-top: 1px solid #ece2cf;
   color: #23423a;
   line-height: 1.6;
 }
@@ -1732,6 +1824,15 @@ input {
   margin-top: 0.3rem;
 }
 
+/* The running Mission is grouped the same way as the ready one: the Mission and
+   its guidance above the hairline, the time guide and what the family does on
+   return below it. */
+:is(.mission-session__instruction, .mission-session__note) + .mission-session__guidance {
+  margin-top: 1.35rem;
+  padding-top: 1.1rem;
+  border-top: 1px solid #ece2cf;
+}
+
 /* The one dominant action of the ready Mission. It sits last, after everything
    the family needs in order to decide, and nothing else on the view competes
    with it. */
@@ -1765,12 +1866,16 @@ input {
    restrained surface as the other confirmation in the product: the consequence
    is stated plainly, staying comes first and reads as the easy choice, and
    leaving is explicit and visually separated. Nothing here hurries the family. */
+/* It is an inset on the warm surface, one step deeper than the page, and it
+   keeps the Mission's own reading measure rather than running across a wide
+   screen as a banner with its question in one corner. */
 .mission-session__confirm {
+  max-width: 48ch;
   margin-top: 1.25rem;
-  padding: 1.1rem 1.2rem;
-  border: 1px solid #d8e1da;
+  padding: 1.1rem min(1.2rem, 6vw);
+  border: 1px solid #e8dfcd;
   border-radius: 1.25rem;
-  background: rgb(255 255 255 / 92%);
+  background: #fbf6ea;
 }
 
 .mission-session__confirm-title {
@@ -1798,6 +1903,36 @@ input {
   margin-bottom: 1.25rem;
 }
 
+/* In the Discovery conflict the confirmation takes the place of the two
+   actions above, so it keeps their distance from the set below rather than
+   sitting against the first card. */
+.mission-suggestions .mission-session__confirm {
+  margin-bottom: 1.25rem;
+}
+
+/* The group's gap owns the spacing between the two choices. The shared button
+   margin sat on top of it, putting 40px between the consequence and the
+   choices it asks about, and 36px between the choices once they wrapped. The
+   side insets take the same viewport ceiling as the panel, which is what kept
+   each label a column one letter wide at an enlarged text size. */
+.mission-session__confirm-actions .button {
+  margin-top: 0;
+  padding-inline: min(1.2rem, 6vw);
+}
+
+/* While the family is deciding whether to leave, that decision is the one
+   question on the view, and staying is its easy choice. **Mission done** is
+   still there and still works, in the same place and the same focus order; it
+   steps back to the secondary treatment until the question is answered, so
+   two equal green actions no longer compete for the one answer. */
+.mission-session:has(> .mission-session__confirm) > .mission-session__done,
+.mission-session:has(> .mission-session__confirm) > .mission-session__done:hover {
+  border-color: #6b857d;
+  background: #fff;
+  color: #174c40;
+  box-shadow: none;
+}
+
 /* The suggestion set's choices as one group, so an unresolved existing session
    can withhold choosing through the native disabled cascade without changing
    the layout or hiding any Mission the family is reading. */
@@ -1808,7 +1943,7 @@ input {
 }
 
 /* The one dominant action of the running Mission: what the family came back to
-   do. It sits before the way out, which stays secondary beside it. */
+   do. It sits before the way out, which stays secondary below it. */
 .mission-session__done {
   margin-top: 1.25rem;
   align-self: flex-start;

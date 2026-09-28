@@ -118,9 +118,13 @@ export function SetupFlow({ adapter, createProfileId }: SetupFlowProps) {
         <legend>{translateMessage(language, 'setup.language.legend')}</legend>
         <p className="choice-group__help" id="setup-language-help">
           {translateMessage(language, 'setup.language.help')}
-          {isEditing
-            ? ` ${translateMessage(language, 'setup.edit.languageEffect')}`
-            : null}
+          {/* Its own element only so it can be its own line; the paragraph,
+              and so the group's description, reads exactly as before. */}
+          {isEditing ? (
+            <span className="choice-group__effect">
+              {` ${translateMessage(language, 'setup.edit.languageEffect')}`}
+            </span>
+          ) : null}
         </p>
         <div className="choice-grid choice-grid--languages">
           {SUPPORTED_LANGUAGES.map((languageChoice) => (
@@ -155,9 +159,11 @@ export function SetupFlow({ adapter, createProfileId }: SetupFlowProps) {
         <legend>{translateMessage(language, 'setup.age.legend')}</legend>
         <p className="choice-group__help" id={ageHelpId}>
           {translateMessage(language, 'setup.age.help')}
-          {isEditing
-            ? ` ${translateMessage(language, 'setup.edit.ageEffect')}`
-            : null}
+          {isEditing ? (
+            <span className="choice-group__effect">
+              {` ${translateMessage(language, 'setup.edit.ageEffect')}`}
+            </span>
+          ) : null}
         </p>
         <div className="choice-grid choice-grid--ages">
           {AGE_BANDS.map((ageBandChoice: AgeBand) => (

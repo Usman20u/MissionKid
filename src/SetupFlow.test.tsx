@@ -521,6 +521,23 @@ describe('Task 5 save and editing regressions', () => {
     fireEvent.click(screen.getByRole('button', { name: scenario.edit }));
     expect(screen.getByText(scenario.languageEffect)).toBeTruthy();
     expect(screen.getByText(scenario.ageEffect)).toBeTruthy();
+    // Each effect is its own line, and the group's description still reads
+    // exactly as the help and the effect did as one sentence pair.
+    for (const [legend, help, effect] of [
+      ['setup.language.legend', 'setup.language.help', 'setup.edit.languageEffect'],
+      ['setup.age.legend', 'setup.age.help', 'setup.edit.ageEffect'],
+    ] as const) {
+      const group = screen.getByRole('group', { name: translateMessage(scenario.language, legend) });
+      const description = document.getElementById(
+        group.getAttribute('aria-describedby')!.split(' ')[0]!,
+      )!;
+      expect(description.textContent).toBe(
+        `${translateMessage(scenario.language, help)} ${translateMessage(scenario.language, effect)}`,
+      );
+      expect(description.querySelector('.choice-group__effect')?.textContent?.trim()).toBe(
+        translateMessage(scenario.language, effect),
+      );
+    }
     expect(screen.getAllByRole('radio')).toHaveLength(6);
     fireEvent.click(screen.getByRole('radio', { name: '9–10' }));
     fireEvent.click(screen.getByRole('button', { name: scenario.save }));
