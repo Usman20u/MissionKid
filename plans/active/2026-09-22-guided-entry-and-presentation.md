@@ -1,7 +1,7 @@
 # MissionKid Plan 05 — guided entry and the presentation pass
 
 **Date:** 2026-09-22
-**Status:** Specification amendments prepared and revalidated; the reviewer's product decisions are recorded below. **Tasks 1 and 2 are authorized and were executed together as one integrated batch**, and await human visual acceptance, which is not recorded. **Two bounded parts of Task 3 — the reproduced Discovery clipping defect and the narrow-screen spacing correction — are authorized and done, together with two bounded introduction improvements and the bounded Discovery visual direction; the rest of Task 3 is not.** The presentation work on Ready, Active, the leave confirmation and settings is authorized under the *Eighth authorization* and done at `c3af6df`, awaiting human visual acceptance; Tasks 4 and 5 are not claimed complete. Under the *Ninth authorization*, recorded before implementation, their height targets are superseded rather than achieved, and the diagnosed enlarged-text overflow and the remaining consistency pass are authorized and in progress. Task 6 remains unauthorized and is not started. Nothing is pushed, merged or deployed.
+**Status:** Specification amendments prepared and revalidated; the reviewer's product decisions are recorded below. **Tasks 1 and 2 are authorized and were executed together as one integrated batch**, and await human visual acceptance, which is not recorded. **Two bounded parts of Task 3 — the reproduced Discovery clipping defect and the narrow-screen spacing correction — are authorized and done, together with two bounded introduction improvements and the bounded Discovery visual direction; the rest of Task 3 is not.** The presentation work on Ready, Active, the leave confirmation and settings is authorized under the *Eighth authorization* and done at `c3af6df`, awaiting human visual acceptance; Under the *Ninth authorization*, recorded before implementation, Tasks 4 and 5's height targets are superseded rather than achieved, and the diagnosed enlarged-text overflow and the remaining consistency pass are done at `958a578` and `36c4b60`. **Tasks 1, 2, 4, 5 and 6 are implementation-verified and await human visual review; Task 3's bounded parts likewise, with its remainder outstanding and unauthorized.** No task is recorded complete, because human visual acceptance is outstanding for all of them. Nothing is pushed, merged or deployed.
 
 **Branch:** `feat/guided-entry-and-presentation`, taken from `14a5b16` on the unpublished `feat/reward-card-presentation`, which is preserved unchanged at that commit. No history was rewritten.
 
@@ -704,25 +704,25 @@ Condition uses four distinct states. **Implemented** means the behaviour exists 
 
 | Surface | Condition | Concrete remaining improvement | Owning specification | Verification needed |
 | --- | --- | --- | --- | --- |
-| Hydration / `pending` | Implemented | Confirm it cannot flash an unstyled or mis-scaled frame before the first view | Technical Architecture; Visual & Ergonomic *Mobile-first* | One timed capture from cold load |
+| Hydration / `pending` | Verified, awaiting visual review — at `958a578` | Done: the `pending` view never renders in the product; the blank frame painted before mounting now carries the warm ground. Residual: a returning family landing on the Reward Card sees that warm blank before the card's cool ground | Technical Architecture; Visual & Ergonomic *Mobile-first* | Recorded under the ninth authorization's outcome |
 | Parent introduction | Verified, awaiting visual review | **This batch:** purpose, example, family steps and the setup action read as one composition on both layouts | `F001`; Visual & Ergonomic *Controlled scene system*, *Mobile-first* | EN/DE/RU at three configurations; flow to confirmed setup |
-| First-use setup | Implemented, presentation not revisited in this plan | **This batch:** language and age easy to scan, selected values unmistakable, save action easy to find, guidance kept separate from controls | `F001`; Visual & Ergonomic *Approved MVP view inventory* | Same three configurations; keyboard and focus |
-| Setup incomplete | Implemented | Should read as the same form in a different state, not a different screen | `F001` | Carried by the setup batch's checks |
+| First-use setup | Verified, awaiting visual review — at `9509bc5`, `958a578` and `36c4b60` | Done: the entry batch's treatment, and the `14` px enlarged-text sideways scroll ended with long words hyphenated | `F001`; Visual & Ergonomic *Approved MVP view inventory* | Recorded |
+| Setup incomplete | Verified, awaiting visual review — at `958a578` | Done: the same form, the same enlarged-text correction. Not revisited: the discovery-gate note above the form keeps its cool tint | `F001` | Recorded |
 | Setup editing / settings | Verified, awaiting visual review — at `c3af6df` | Done: the first-use form's surface and grouping, the effect sentences on their own lines, the enlarged-text sideways scroll. Open: Task 5's written height target, which is not met | `F001`; Task 5 | Recorded under the eighth authorization's outcome |
-| Setup complete handoff | Implemented, presentation not revisited | The summary pair and the two onward actions need the same surface language as the rest | `F001` | Three configurations once authorized |
-| Temporary mode | Implemented and verified under `F001` | Confirm the temporary state is legible without becoming alarming | `F001`; Visual & Ergonomic *parent surfaces stay restrained* | Three configurations once authorized |
-| Recovery | Implemented and verified under `F001` | Same restraint check; no warning-banner styling for a recoverable state | `F001` | Three configurations once authorized |
+| Setup complete handoff | Verified, awaiting visual review — at `958a578` | Done: warm surface and summary tiles; the two onward actions no longer touch. The order *Change setup*, *Find a Mission*, *Mission history* is unchanged | `F001` | Recorded |
+| Temporary mode | Verified, awaiting visual review — at `958a578` | Done: warm surface, the setup form's treatment, the warning kept as a warning, the temporary-setup status given its own notice, the enlarged-text overflow ended | `F001`; Visual & Ergonomic *parent surfaces stay restrained* | Recorded |
+| Recovery | Verified, awaiting visual review — at `958a578` | Done: warm surface and a calm notice rather than the warning box. It renders in English whatever the family's language, which is the existing `F001` fallback | `F001` | Recorded |
 | Discovery — category selector | Verified, awaiting visual review | None known. Compacted and its label clipping fixed at `c067eaa` | `F002`; Visual & Ergonomic *peer-choice group* | Done for this pass |
 | Discovery — three suggestions | Verified, awaiting visual review | The rest of Task 3: the measured height reduction it still owns, reconciled below | `F002`; Visual & Ergonomic *F002 exactly-three* | Per Task 3, once authorized |
-| Discovery — unavailable / bounded / conflict states | Implemented | Confirm each reads as a calm bounded state on the warm Discovery ground | `F002` | Three configurations once authorized |
+| Discovery — unavailable / bounded / conflict states | Verified, awaiting visual review — at `958a578` | Done: on a phone the set's heading, notice, bounded sentence and unavailable state keep the section's inset. The unavailable state is unreachable with the reviewed catalog and was shown only through a probe build | `F002` | Recorded |
 | Session opening / ready | Verified, awaiting visual review — at `c3af6df` | Done: warm surface, separated actions, the start step grouped, enlarged-text insets. Open: Task 4's written height target, which is not met | `F003`; Task 4 | Recorded under the eighth authorization's outcome |
 | Session active | Verified, awaiting visual review — at `c3af6df` | Same as ready | `F003`; Task 4 | Same |
 | Leave / abandonment confirmation | Verified, awaiting visual review — at `c3af6df` | Done: spacing, warm inset at the reading measure, one dominant choice while open, enlarged-text actions. Residual: *Weitermachen* breaks once at a `32px` root | `F003` | Same |
-| Reward Card | **Accepted** — human visual acceptance given 2026-09-22 | None. Do not change it | `F004` | None; keep stable |
-| Mission History | Implemented and verified under `F004` | Presentation not revisited in this plan | `F004` | Three configurations once authorized |
-| Monthly Goal | Implemented and verified under `F004` | Same | `F004` | Same |
-| History empty state | Implemented | Confirm it reads as a beginning rather than a failure | `F004` | Same |
-| Reset panel and its confirmation | Implemented | Confirm the destructive action stays subordinate everywhere it appears | `F001` | Same |
+| Reward Card | **Accepted** — human visual acceptance given 2026-09-22; reviewed for integration, **unchanged** | Open decision: it is now the one cool screen in the Mission flow, between the warm running Mission and the warm Discovery | `F004` | None; kept stable |
+| Mission History | Implemented and verified under `F004`; reviewed for integration, **unchanged** | Open decision: it keeps the cool ground inside the warm Discovery doorway, and its goal panel sits closer to its heading than any other view's content | `F004` | Reviewed at three configurations |
+| Monthly Goal | Implemented and verified under `F004`; reviewed for integration, **unchanged** | None found beyond History's | `F004` | Same |
+| History empty state | Implemented; reviewed, **unchanged** | None: it reads as a beginning — a plain sentence, a neutral `0 / 20`, one route onward | `F004` | Same |
+| Reset panel and its confirmation | Verified, awaiting visual review — at `958a578` and `36c4b60` | Done: the leave confirmation's warm inset; *Cancel* first and primary, *Confirm reset* outlined red, focus to its heading and back unchanged; the enlarged-text overflow ended with long words hyphenated | `F001` | Recorded |
 
 ### Mission presentation — all 54, counted rather than assumed
 
@@ -992,6 +992,86 @@ Presentation-only work on the remaining surfaces in the inventory: **the setup h
 
 **Specification check, before code.** No amendment is required: the palette is open, the work sits inside the existing responsive, localization-resilience, action-hierarchy, confirmation and recovery-presentation rules, and nothing reaches behaviour.
 
+### Ninth authorization — outcome, at `958a578` and `36c4b60`
+
+**Two files.** `src/styles.css`, and `src/SetupFlow.test.tsx`, which gains two stylesheet invariants. No markup, copy, control, state, route, dependency, persistence or behaviour changed.
+
+#### Authorization A — the overflow, ended
+
+**The two shared causes are fixed.** `.choice-grid` and `.recovery-actions` now name a zero column minimum. Viewport ceilings — each above its `rem` value at every ordinary size from `320` px up — are added to the choice control's inset, gap and radio, the reset panel's padding, the recovery and reset actions' side insets, and the shell of every parent view that shows the setup form or the reset panel. The choice rule moved from settings into the base control, so every state of the form shares it; the introduction's own language controls override it and are unchanged.
+
+| State, `320` px with a `32px` root | Before (`b048040`) | After |
+| --- | --- | --- |
+| First-use setup | `14` / `14` / `14` px | `0` |
+| Incomplete setup | `14` / `14` / `14` px | `0` |
+| Temporary mode | `14` / `91` / `15` px | `0` |
+| Reset panel on first-use setup, the handoff and temporary mode | `39` / `124` / `127` px | `0` |
+| Reset panel on recovery | `39` px in all three | `0` |
+| Reset panel on settings | `3` / `88` / `91` px | `0` |
+
+**The fix exposed a readability cost, and `36c4b60` corrects it.** With the overflow gone, the reset panel's column at a `32px` root is `204` px, and some words are wider than any column a `320` px screen can give them — German *zurücksetzen* in its `40` px heading, *wiederherstellen*, *Abbrechen* on its button. They broke at whichever letter reached the edge: *MissionKi|d-Daten*, *zurückset|zen*, *Abbreche|n*. Before the fix those words read whole only because the panel ran off the screen, with its destructive action partly out of view. Automatic hyphenation now breaks them at a syllable, following the page's language — *zurück-setzen*, *Einstel-lungen*, *Grundla-gen* — on the setup form, the handoff, the parent notices and the recovery actions. It applies only under `max-width: 15rem`, which matches when the reader's own text size is large against the viewport and never at a `16px` default from `320` px up, so ordinary sizes are unchanged. One cost is recorded: it also divides the product name, *Mission-Kid-Daten*, which still reads better than *MissionKi|d-Daten*. An engine without hyphenation for a language keeps the plain break.
+
+**A measurement fact this depends on, recorded so it is not rediscovered.** Media queries resolve `rem` against the browser's default font size, not against a size a page sets on its root. Every other enlarged-text measurement in this plan injected a `32px` root style, under which this media query never matches, so those results are unaffected by `36c4b60`. The hyphenation was therefore verified separately under the browser's own `32px` default-font setting, with the root asserted to be `32px` before and after every capture, because the automation's full-page screenshot was found to drop that setting silently: **no overflow and no clipping in any of `21` parent states**, and the before-build overflowing by exactly the amounts the injected method had measured.
+
+**A regression was introduced during this work and removed.** The first version of the Discovery inset below also inset the leave confirmation, which at a `32px` root made the panel narrower than its own actions and pushed the Discovery conflict `46` / `40` px sideways in English and German. Found by re-running the previous batch's harness against its recorded results; the confirmation and the controls now keep the full width, and the conflict measures `0` again.
+
+**The invariant test.** jsdom has no layout engine, so, following the precedent this plan set for the Mission card, two tests pin the cause: both grids must name a zero column minimum. **Each was proven to bite** — with either minimum removed its case fails, and both pass once restored.
+
+#### Authorization B — the remaining consistency pass
+
+| Surface | Change |
+| --- | --- |
+| Setup handoff | Warm ground and summary tiles. Its two onward actions each take their own line: as inline siblings a wide screen set *Find a Mission* and *Mission history* against each other with no space, the same defect Ready and Active had. The order — *Change setup*, *Find a Mission*, *Mission history* — is unchanged |
+| Temporary mode | Warm ground and the setup form's treatment, so it reads as the same form in a different state. Its warning keeps the warning box, as the specification asks for *a clearly parent-oriented warning*. The sentence that the temporary setup applies to this page only followed the parent note directly, where it read as that note's last line; it takes the calm notice the product uses for a step that did not become durable |
+| Recovery | Warm ground, and its explanation takes that calm notice instead of the warning box, which the inventory had flagged for a recoverable state. It stays unmistakably not a success. It renders in English whatever the family's language, which is the existing `F001` fallback for an unreadable snapshot |
+| Reset panel | The leave confirmation's warm inset instead of a second floating card. What marks it destructive is its wording and its outlined red action, never an alarm surface. *Cancel* stays first and primary, *Confirm reset* outlined red, and focus still moves to its heading and back to its entry |
+| Discovery bounded and unavailable | On a phone the set's heading, its notice, the bounded sentence and the unavailable state ran flush against the panel edge, because the rule that gives the cards the full width also removed their inset. They now keep the section's inset — `356 → 316` px at `390` px — while the cards, the controls and the leave confirmation keep the full width. The same heading appears in the ordinary set, so this also changes it |
+| Loading | The blank frame painted before the application mounts takes the warm ground, measured on a painted pre-mount frame: `rgb(244, 246, 241)` before, `rgb(247, 242, 230)` after, which is the introduction's own ground |
+
+**Discovery's unavailable state** was shown only through a probe build of the working tree whose catalog kept two Calm Missions — never shipped, differing from the product only in `src/catalogContent.ts`. Its before and after are identical except the inset, with no clipping, overflow or contrast failure in nine configurations.
+
+**History, the Monthly Goal and the accepted Reward Card were reviewed for integration and are unchanged** — to the pixel, in every measured configuration. Two observations are recorded as decisions rather than acted on:
+
+- **The Reward Card and History are now the only cool screens in a warm flow**: the running Mission is warm, the Reward Card after it cool, and Discovery after that warm again; History sits cool inside the warm Discovery doorway. The accepted card's own green recognition surface was designed against that cool ground, which is why changing it is a decision for the reviewer and not a consistency fix.
+- **History's goal panel sits about `12` px under its heading**, where every other view leaves `1.5rem`.
+
+#### Verification
+
+Measured on production builds against `b048040`, in Chrome for Testing headless shell `149.0.7827.55`, English, German and Russian, through real conditions throughout. This batch's harness ran on `36c4b60` itself. The previous batch's harness and the probe ran on `958a578`, whose only difference from `36c4b60` is the hyphenation media query, which does not match at any configuration they use. Each measured build is identical by content hash to the gate build of its commit.
+
+| Harness | Combinations | Result against the before-state |
+| --- | --- | --- |
+| This batch's surfaces — introduction, first-use setup and its reset panel, handoff and its reset panel, History empty and with a record, incomplete setup, temporary mode, its ready state and its reset panel, recovery, its reset panel and reset unconfirmed, Discovery bounded and unconfirmed, the Reward Card — at `1280x900`, `390x780` and `320` px with a `32px` root | `153` | The same words in the same order; every font size and line height unchanged; heading order, keyboard order and focus rings unchanged; all `36` reset panels still take focus on their heading and tab *Cancel* then *Confirm reset*, and *Cancel* returns focus to the entry; `0` clipping against any clipping ancestor, `0` overlap, `0` page overflow |
+| The previous batch's states, plus the Discovery conflict before its confirmation | `126` | Unchanged; Ready, Active and the leave confirmation identical in all `36` of their states |
+| Discovery unavailable, probe builds | `9` | Unchanged except the inset |
+| Parent states under the browser's own `32px` setting | `21` | `0` overflow, `0` clipping |
+
+- **Contrast:** minimum `5.23:1` before, `5.10:1` after, zero failures. The one lower pair is the handoff's summary labels, `#5a6d67` small text, now on the warm tile `#fbf6ea` rather than `#f7faf8`; it clears the `4.5:1` requirement.
+- **Touch targets:** minimum `52` px before and after.
+- **Ordinary sizes:** the introduction, the Reward Card and History identical to the pixel in all nine configurations; first-use setup identical at `1280x900` and `390x780`.
+- **Reduced motion:** under `prefers-reduced-motion: reduce` no changed view carries any transition, animation or transform; the one remaining transform is a static positioning transform on an SVG group in the introduction's example scene.
+- **Timer:** the running Mission's time guide carries no `aria-live`, no role and no `aria-atomic`, and its view has no live region at all.
+- **Whole branch against `main`:** `36` commits; every changed file traces to this plan or to the inherited Reward Card follow-up.
+
+**Height, as context and not a verdict.** At a `32px` root, first-use setup went `5212 → 3840`, `6131 → 4523`, `6200 → 4618` px; temporary mode `7219 → 5322`, `8122 → 6290`, `8512 → 6432` px; recovery `2879 → 2135` px; the handoff `2658 → 2103`, `2988 → 2327`, `2786 → 2435` px, by the same text at a wider column. Discovery's bounded state grew `137`–`222` px there, because its text now takes the column's measure instead of the panel's. At ordinary sizes, measured across every state: temporary mode `+8` px from the save action's room, its ready state `+27` to `+58` px from the status notice, and Discovery on a phone `+23` to `+45` px in German and Russian — the unconfirmed notice, the bounded sentence and the conflict — where inset text wraps one or two lines more. Nothing else moved.
+
+**Gates**, run sequentially with complete output captured, twice: after `958a578` — relevant tests (`270` passed), `tsc --noEmit` clean, the full suite at **849 tests across 23 test files**, a clean production build, `git diff --check` clean — and again after `36c4b60`, with the same results. The measured builds are identical by content hash to the gate builds. No test failed at any point.
+
+#### Task statuses
+
+| Task | Status |
+| --- | --- |
+| 1 — introduction | **Implementation verified; awaiting human visual review** |
+| 2 — introduction copy | **Implementation verified; awaiting human visual review.** The copy is proposed product copy; translation review is a separate release decision |
+| 3 — Discovery | **Bounded parts implemented and verified, awaiting human visual review.** Its original height target is superseded, not achieved. **Genuinely outstanding and unauthorized:** whether non-content height can still come out of the card at narrow widths, measured against a new baseline of the current design |
+| 4 — Ready and Active | **Implementation verified against Decision 1's six criteria** at `c3af6df` and unchanged at `36c4b60`; the timer's live-region check done in this pass. **Awaiting human visual review** |
+| 5 — settings | **Implementation verified against the same six criteria**; the enlarged-text overflow ended at `c3af6df`. Its age-change obligations are carried by existing tests that pass: `Restoration.test.tsx` *resumes the same running Mission without a refresh*, `MissionReady.test.tsx` *is unchanged by a current age band that no longer matches the selection* and `MissionHistory.test.tsx` *keeps every completion when the current age band no longer matches*. **Awaiting human visual review** |
+| 6 — consistency and full verification | Its outcome is the pass Authorization B carried out, and its verification list was run: the gates, the whole branch against `main`, `git diff --check`, three languages at three configurations, reduced motion, heading and reading order, and contrast on every changed text element. **Implementation verified; awaiting human visual review.** The Reward Card and History are unchanged, as Task 6 requires |
+
+**None of these is complete**: human visual acceptance is outstanding for every one of them and is not recorded by anyone but the reviewer.
+
+**Limitations.** One engine, one build, no real device, no Safari or Firefox — hyphenation in Safari relies on the prefixed property and is unverified — no assistive technology, no CI.
+
 
 ## Boundaries
 
@@ -1008,10 +1088,11 @@ Kept in the acceptance criteria throughout: English, German and Russian; accessi
 3. **Instruction length**, recorded under Decision 3 as a separate content consideration for Mission Catalog and Safety. Not scheduled, not assumed, and not addressed by anything in this plan.
 4. ~~**Tasks 4 and 5's height targets.**~~ **Decided on 2026-09-28:** superseded, not achieved — the *Ninth authorization*, Decision 1.
 5. **A way to leave settings without saving.** The view has none. Adding one is a new control and a separate product decision, not presentation; the *Ninth authorization*, Decision 2, keeps it out of this plan's batches. **Still open.**
-6. ~~**The reset panel's sideways scroll, and the setup form's on the other views that share it.**~~ **Authorized on 2026-09-28** under the *Ninth authorization*, Authorization A.
+6. ~~**The reset panel's sideways scroll, and the setup form's on the other views that share it.**~~ **Authorized on 2026-09-28** under the *Ninth authorization*, Authorization A, and done.
+7. **Whether the Reward Card and History take the warm ground.** They are now the only cool screens in a warm flow. The Reward Card is accepted and its recognition surface was designed against the cool ground, so this is the reviewer's decision. History's goal panel also sits closer to its heading than any other view's content. **Open.**
 
 ## Definition of complete
 
-Tasks 1 and 2 are implemented, verified and recorded above and await human visual acceptance. Two bounded parts of Task 3 — the reproduced clipping defect and the narrow-screen spacing correction — are done and recorded above, together with the introduction's desktop composition and the flow step that explains the deliberate start. The presentation work on Ready, Active, the leave confirmation and settings is done and awaits human visual acceptance, while Tasks 4 and 5 stay open on their height targets. This plan stays active because the rest of Task 3, the decision on Tasks 4 and 5, and Task 6 are not done.
+The implementation this plan has authorized is done and verified: Tasks 1, 2, 4, 5 and 6 and the bounded parts of Task 3, each recorded above with the verification that actually ran. **This plan stays active** because three things remain: human visual acceptance of all of it, which only the reviewer can record; the remainder of Task 3, which is unauthorized; and the open decisions listed above — a way to leave settings without saving, and whether the Reward Card and History should take the warm ground.
 
 This plan is complete when its authorized scope is implemented, each task's verification has actually been run and recorded truthfully here and in the changelog, and the diff is limited to that scope. It claims no MissionKid MVP completion, no deployment readiness, no CI result, no assistive-technology acceptance and no professional translation review. Human acceptance of anything built under it would be recorded separately, as the Reward Card follow-up's was.
