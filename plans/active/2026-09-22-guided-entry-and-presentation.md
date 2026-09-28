@@ -1,7 +1,7 @@
 # MissionKid Plan 05 — guided entry and the presentation pass
 
 **Date:** 2026-09-22
-**Status:** Specification amendments prepared and revalidated; the reviewer's product decisions are recorded below. **Tasks 1 and 2 are authorized and were executed together as one integrated batch**, and await human visual acceptance, which is not recorded. **Two bounded parts of Task 3 — the reproduced Discovery clipping defect and the narrow-screen spacing correction — are authorized and done, together with two bounded introduction improvements and the bounded Discovery visual direction; the rest of Task 3 is not.** Tasks 4–6 remain unauthorized and are not started. Nothing is pushed, merged or deployed.
+**Status:** Specification amendments prepared and revalidated; the reviewer's product decisions are recorded below. **Tasks 1 and 2 are authorized and were executed together as one integrated batch**, and await human visual acceptance, which is not recorded. **Two bounded parts of Task 3 — the reproduced Discovery clipping defect and the narrow-screen spacing correction — are authorized and done, together with two bounded introduction improvements and the bounded Discovery visual direction; the rest of Task 3 is not.** Tasks 4 and 5, with the leave confirmation, are authorized under the *Eighth authorization* and are in progress; Task 6 remains unauthorized and is not started. Nothing is pushed, merged or deployed.
 
 **Branch:** `feat/guided-entry-and-presentation`, taken from `14a5b16` on the unpublished `feat/reward-card-presentation`, which is preserved unchanged at that commit. No history was rewritten.
 
@@ -830,6 +830,30 @@ Preserved and re-checked: the mobile reading order, every reviewed field, typogr
 **Limitations.** One engine, one build, no real device, no assistive technology, no CI. Human visual acceptance is not given and not recorded.
 
 
+### Eighth authorization — Ready, Active, the leave confirmation and settings
+
+Authorized on 2026-09-28 at HEAD `e576e13`, **recorded before implementation**. It covers presentation work on four surfaces and nothing else.
+
+| Surface | What it covers | Owning task and specification |
+| --- | --- | --- |
+| Ready Mission | `session-opening` and `session-ready`, including their issue, retry and Mission-unavailable states | Task 4; Visual & Ergonomic *F003 — Ready Mission presentation*; `F003` criteria `2` and `3` |
+| Active Mission | `session-active`, including zero, timing-unavailable, completion-unconfirmed and Mission-unavailable states | Task 4; Visual & Ergonomic *Mission Break transition and active presentation*; `F003` criteria `5`–`7` |
+| Leave confirmation | The one `MissionLeaveConfirmation` panel, wherever it renders: on the running Mission, on a Mission that cannot be shown, and in the Discovery conflict. It is one component, so it keeps one presentation; in the Discovery conflict it sits on the already-warm Discovery surface and no other Discovery element changes | Visual & Ergonomic *Confirmed abandonment and completion presentation*, *Confirmations*; `F003` criterion `16` |
+| Parent settings | `setup-editing` | Task 5; Visual & Ergonomic *Setup presentation*; `F001` *Changing setup later*, criteria `6` and `7` |
+
+**Direction.** Carry forward the established warm surfaces, deep-green actions, readable typography and clear hierarchy, and improve excessive spacing and confusing visual grouping where there is a concrete benefit. Tasks 4 and 5 are judged by the five criteria under *How these changes are judged*; page, content and non-content height are reported as context, not as a verdict.
+
+**Preserved:** full instructions, adult-involvement and safety guidance; explicit start and explicit completion; quiet timer behaviour; every recovery state; confirmation ordering with the safe choice first, keyboard operation, focus management and focus return; settings behaviour, in which **Save changes** is the one way a change is kept and the reset confirmation cancels through its own **Cancel**; an age change affecting future suggestions only; and every persistence, lifecycle, identity, localization and navigation rule.
+
+**Not done:** forcing content above the fold, shrinking text, hiding guidance, adding animation, changing reviewed copy, or inventing controls.
+
+**Unchanged:** the accepted Reward Card, Mission History and the Monthly Goal, the Discovery images and the catalog. Also unchanged because this authorization does not name them: the introduction and first-use setup, Discovery apart from the conflict panel, the setup handoff, temporary mode, recovery and the reset panel. Task 6 and the remainder of Task 3 stay unauthorized.
+
+**Specification check, before code.** No amendment is required. The palette is deliberately open, spacing and grouping sit inside the existing responsive, localization-resilience and action-hierarchy rules, and nothing here reaches behaviour. A desired change that turns out to need a new product rule is recorded as a decision and not implemented.
+
+**One fact recorded now rather than discovered later.** The settings view has no cancel control: **Save changes** keeps a change, and nothing on the view discards one. Adding a way to leave without saving would be a new control and a product decision, so this batch does not add one.
+
+
 ## Boundaries
 
 Preserved exactly: the `selected → ready → active → completed` lifecycle, the confirmed-write contract, exactly-once completion accounting, timer derivation from persisted timestamps, every recovery and temporary-mode path, Mission History, and Monthly Goal behavior including period identity and the single goal-complete prompt. The accepted Reward Card presentation and the Mission History presentation are not changed.
@@ -840,7 +864,7 @@ Kept in the acceptance criteria throughout: English, German and Russian; accessi
 
 ## Remaining decisions requiring approval
 
-1. **Renewed implementation authorization for Tasks 3–6.** It is recorded for Tasks 1 and 2 above and for nothing else. Nothing in Tasks 3, 4, 5 or 6 may begin until its own authorization is recorded here. This is the gate.
+1. **Renewed implementation authorization for the remainder of Task 3 and for Task 6.** Tasks 1 and 2 are authorized above, bounded parts of Task 3 under the second to fifth authorizations, and Tasks 4 and 5 with the leave confirmation under the eighth. Nothing else may begin until its own authorization is recorded here. This is the gate.
 2. **Translation review of the proposed copy.** The strings above are proposed product copy. Whether they need review by a German and a Russian speaker before release is a release decision, not one this plan makes.
 3. **Instruction length**, recorded under Decision 3 as a separate content consideration for Mission Catalog and Safety. Not scheduled, not assumed, and not addressed by anything in this plan.
 
