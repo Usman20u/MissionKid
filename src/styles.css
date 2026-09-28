@@ -28,6 +28,16 @@ body {
     #f4f6f1;
 }
 
+/* The one frame painted before the application mounts carries no content, and
+   on a slow device it stays for seconds. It takes the warm ground that almost
+   every first view carries, so arriving is not a cool blank that turns warm.
+   Once anything is mounted this no longer applies. */
+body:has(> #root:empty) {
+  background:
+    radial-gradient(circle at 50% 0%, #f1e8d6 0, transparent 34rem),
+    #f7f2e6;
+}
+
 button,
 input {
   font: inherit;
@@ -76,13 +86,18 @@ input {
   box-shadow: 0 1.25rem 3rem rgb(32 48 45 / 8%);
 }
 
-/* Kept explicitly now that the rule above no longer reaches nested sections. */
+/* The product's other confirmation, so it takes the leave confirmation's
+   form: an inset one step deeper than the warm page rather than a second
+   floating card, with a calm edge. What makes it the destructive one is its
+   wording and its outlined red action, never an alarm surface. Its padding is
+   the section's, with the same viewport ceiling the parent views' shell
+   carries: at a 32px root the section's own `rem` padding left the reset
+   consequence a 92px column. */
 .reset-panel {
-  padding: var(--section-pad);
-  border: 1px solid #d8e1da;
+  padding: clamp(min(1.25rem, 6.25vw), 4vw, 2rem);
+  border: 1px solid #e8dfcd;
   border-radius: 1.25rem;
-  background: rgb(255 255 255 / 92%);
-  box-shadow: 0 1.25rem 3rem rgb(32 48 45 / 8%);
+  background: #fbf6ea;
 }
 
 .app-view__context {
@@ -316,16 +331,25 @@ input {
 
 .choice-grid {
   display: grid;
-  grid-template-columns: 1fr;
+  /* A named minimum, as on the Mission card: a `1fr` column's automatic
+     minimum is its widest control, which at a 32px root pushed the setup form
+     14px past a 320px screen. */
+  grid-template-columns: minmax(0, 1fr);
   gap: 0.75rem;
 }
 
+/* The side inset, gap and radio carry viewport ceilings, which sit above their
+   `rem` values at every ordinary size from 320px up and change nothing there.
+   At an enlarged text size they stop growing, so the language names fit their
+   column at full size instead of widening the page; the label stays the
+   touch target at its full height. Every state of the setup form shares this:
+   first use, incomplete setup, settings and temporary mode. */
 .choice {
   display: flex;
   min-height: 3.35rem;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.8rem 1rem;
+  gap: min(0.75rem, 3.75vw);
+  padding: 0.8rem min(1rem, 5vw);
   border: 2px solid #7d968d;
   border-radius: 0.8rem;
   background: #fff;
@@ -350,8 +374,8 @@ input {
 }
 
 .choice input {
-  width: 1.2rem;
-  height: 1.2rem;
+  width: min(1.2rem, 6vw);
+  height: min(1.2rem, 6vw);
   flex: 0 0 auto;
   margin: 0;
   accent-color: #1d6654;
@@ -482,11 +506,12 @@ input {
   margin: 1.5rem 0;
 }
 
+/* The saved pair, as the same warm inset the product's confirmations use. */
 .setup-summary div {
   padding: 1rem;
-  border: 1px solid #d4dfd8;
+  border: 1px solid #e8dfcd;
   border-radius: 0.75rem;
-  background: #f7faf8;
+  background: #fbf6ea;
 }
 
 .setup-summary dt {
@@ -506,28 +531,42 @@ input {
   line-height: 1.55;
 }
 
-/* Scoped to the setup form wherever this plan has authorized it. The choices
-   are short, and stretching three of them across the full width of a wide
-   panel left a small label adrift in a large box and made the group slower to
-   scan, not faster. Each group is held to the width its own content needs. */
-[data-view='setup-first-use'] .choice-grid--languages,
-[data-view='setup-incomplete'] .choice-grid--languages,
-[data-view='setup-editing'] .choice-grid--languages {
+/* The handoff's two onward actions each take their own line. As inline
+   siblings a wide screen set *Find a Mission* and *Mission history* against
+   each other with no space, reading as one two-part control. */
+[data-view='setup-complete-handoff'] .recovery-controls > .button {
+  display: block;
+}
+
+/* Recovery is a recoverable state with a safe next step, so its explanation
+   takes the calm notice the product uses wherever something could not be
+   completed, rather than the warning box temporary mode keeps for the risk of
+   losing what is on the page. It stays unmistakably not a success. */
+[data-view='recovery'] .save-feedback {
+  border: 0;
+  border-left: 3px solid #b4650c;
+  border-radius: 0.5rem;
+  background: #fdf5ec;
+  color: #23423a;
+}
+
+/* The setup form in every state it appears in: first use, incomplete setup,
+   settings and temporary mode. The choices are short, and stretching three of
+   them across the full width of a wide panel left a small label adrift in a
+   large box and made the group slower to scan, not faster. Each group is held
+   to the width its own content needs. */
+.setup-form .choice-grid--languages {
   max-width: 40rem;
 }
 
-[data-view='setup-first-use'] .choice-grid--ages,
-[data-view='setup-incomplete'] .choice-grid--ages,
-[data-view='setup-editing'] .choice-grid--ages {
+.setup-form .choice-grid--ages {
   max-width: 27rem;
 }
 
 /* The selected value carries the same weight it carries in Discovery: a heavier
    rim and a slight lift on top of the native radio's own filled mark, so it is
    never signalled by colour alone. */
-[data-view='setup-first-use'] .choice:has(input:checked),
-[data-view='setup-incomplete'] .choice:has(input:checked),
-[data-view='setup-editing'] .choice:has(input:checked) {
+.setup-form .choice:has(input:checked) {
   border-color: #17493c;
   box-shadow:
     inset 0 0 0 2px #17493c,
@@ -536,32 +575,32 @@ input {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  [data-view='setup-first-use'] .choice:has(input:checked),
-  [data-view='setup-incomplete'] .choice:has(input:checked),
-  [data-view='setup-editing'] .choice:has(input:checked) {
+  .setup-form .choice:has(input:checked) {
     transform: none;
   }
 }
 
 /* The save action closes the form, so it is given room of its own rather than
    sitting immediately under the guidance it follows. */
-[data-view='setup-first-use'] .setup-form > .button--primary,
-[data-view='setup-incomplete'] .setup-form > .button--primary,
-[data-view='setup-editing'] .setup-form > .button--primary {
+.setup-form > .button--primary {
   margin-top: 2rem;
 }
 
-/* The parent's guidance carries the same warm tint on every authorized parent
-   surface, so the note does not read as the one cool element on a warm page.
-   It stays clearly separated from the controls above it by its own panel, its
-   left mark and its tint. */
+/* The parent's guidance carries the same warm tint on every parent surface, so
+   the note does not read as the one cool element on a warm page. It stays
+   clearly separated from the controls above it by its own panel, its left mark
+   and its tint. Its side inset takes the same viewport ceiling as the choices,
+   so the parent's responsibility and privacy sentences keep a readable measure
+   at an enlarged text size. */
 [data-view='introduction'] .parent-note,
-[data-view='setup-first-use'] .parent-note,
-[data-view='setup-incomplete'] .parent-note,
-[data-view='setup-editing'] .parent-note {
+.setup-form .parent-note {
   border-left-color: #a8752f;
   background: #f8efdf;
   color: #4f3a1b;
+}
+
+.setup-form .parent-note {
+  padding-inline: min(1.1rem, 5.5vw);
 }
 
 /* What saving a change will do is what a parent opens this view to learn, so
@@ -574,22 +613,19 @@ input {
   color: #33483f;
 }
 
-/* At a 32px root the language names' own padding, radio and gap came to 261px
-   in a narrower column and scrolled the page sideways by 14px. The same
-   viewport ceilings as the shell: unchanged at every ordinary size, and at an
-   enlarged size the insets stop growing while the label keeps its size. */
-[data-view='setup-editing'] .choice {
-  padding-inline: min(1rem, 5vw);
-  gap: min(0.75rem, 3.75vw);
-}
-
-[data-view='setup-editing'] .choice input {
-  width: min(1.2rem, 6vw);
-  height: min(1.2rem, 6vw);
-}
-
-[data-view='setup-editing'] .parent-note {
-  padding-inline: min(1.1rem, 5.5vw);
+/* In temporary mode, the sentence saying the setup now applies to this page
+   only. It follows the parent's note directly, where it read as that note's
+   last line; it is a state of its own, so it takes the calm notice the
+   product uses for a step that did not become durable. */
+.setup-form > p[role='status'] {
+  max-width: 64ch;
+  margin: 1.25rem 0 0;
+  padding: 0.8rem 1rem;
+  border-left: 3px solid #b4650c;
+  border-radius: 0.5rem;
+  background: #fdf5ec;
+  color: #23423a;
+  line-height: 1.5;
 }
 
 @media (min-width: 34rem) {
@@ -625,17 +661,30 @@ input {
   min-width: 0;
 }
 
+/* The column names its minimum. Without it a grid column is as wide as its
+   widest item, so at a 32px root the reset panel, the retry action and its
+   help were each sized to their longest word and scrolled the page sideways by
+   up to 127px. */
 .recovery-actions {
   margin-top: 1.5rem;
   padding-top: 1rem;
-  border-top: 1px solid #cbd9d2;
+  border-top: 1px solid #e3d7c1;
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 1rem;
 }
 
 /* Grid gap owns recovery spacing; the shared button margin would double it. */
 .recovery-actions .button {
   margin-top: 0;
+}
+
+/* The same side-inset ceiling as the leave confirmation's actions, so an
+   enlarged label keeps the width it needs. The reset entry is a text link and
+   keeps no inset at all. */
+.recovery-actions > .button,
+.recovery-actions__buttons .button {
+  padding-inline: min(1.2rem, 6vw);
 }
 
 .recovery-actions__help {
@@ -649,7 +698,7 @@ input {
    When it is the only recovery action the container rule already separates it. */
 .recovery-actions__reset:not(:first-child) {
   padding-top: 1rem;
-  border-top: 1px solid #cbd9d2;
+  border-top: 1px solid #e3d7c1;
 }
 
 .reset-panel p {
@@ -929,23 +978,33 @@ input {
 }
 
 /* The parent's screens carry the same warm ground Discovery uses, so entering
-   the product, using it and changing its setup later are one surface rather
-   than two. Temporary mode and recovery keep their current surface until their
-   own authorization, which the plan records as a known divergence rather than
-   an oversight. */
-.app-shell:has([data-view='introduction']),
-.app-shell:has([data-view='setup-first-use']),
-.app-shell:has([data-view='setup-incomplete']),
-.app-shell:has([data-view='setup-editing']) {
+   the product, using it, changing its setup later and recovering it are one
+   surface rather than two. Recovery and temporary mode keep their own meaning
+   through what sits on that ground — their notices — not through a different
+   page. */
+.app-shell:has(:is(
+  [data-view='introduction'],
+  [data-view='setup-first-use'],
+  [data-view='setup-incomplete'],
+  [data-view='setup-editing'],
+  [data-view='setup-complete-handoff'],
+  [data-view='temporary-mode'],
+  [data-view='recovery']
+)) {
   background:
     radial-gradient(circle at 50% 0%, #f1e8d6 0, transparent 34rem),
     #f7f2e6;
 }
 
-.app-shell:has([data-view='introduction']) .app-shell__main > section,
-.app-shell:has([data-view='setup-first-use']) .app-shell__main > section,
-.app-shell:has([data-view='setup-incomplete']) .app-shell__main > section,
-.app-shell:has([data-view='setup-editing']) .app-shell__main > section {
+.app-shell:has(:is(
+  [data-view='introduction'],
+  [data-view='setup-first-use'],
+  [data-view='setup-incomplete'],
+  [data-view='setup-editing'],
+  [data-view='setup-complete-handoff'],
+  [data-view='temporary-mode'],
+  [data-view='recovery']
+)) .app-shell__main > section {
   border-color: #ece2cf;
   background: rgb(255 253 248 / 94%);
 }
@@ -955,19 +1014,23 @@ input {
    Mission the family chose keeps that ground while it is made ready, while it
    waits to start and while it runs, so choosing a Mission does not drop them
    onto a different surface. The accepted Reward Card keeps its own. */
-.app-shell:has([data-view='discovery-categories']),
-.app-shell:has([data-view='session-opening']),
-.app-shell:has([data-view='session-ready']),
-.app-shell:has([data-view='session-active']) {
+.app-shell:has(:is(
+  [data-view='discovery-categories'],
+  [data-view='session-opening'],
+  [data-view='session-ready'],
+  [data-view='session-active']
+)) {
   background:
     radial-gradient(circle at 50% 0%, #f1e8d6 0, transparent 34rem),
     #f7f2e6;
 }
 
-.app-shell:has([data-view='discovery-categories']) .app-shell__main > section,
-.app-shell:has([data-view='session-opening']) .app-shell__main > section,
-.app-shell:has([data-view='session-ready']) .app-shell__main > section,
-.app-shell:has([data-view='session-active']) .app-shell__main > section {
+.app-shell:has(:is(
+  [data-view='discovery-categories'],
+  [data-view='session-opening'],
+  [data-view='session-ready'],
+  [data-view='session-active']
+)) .app-shell__main > section {
   border-color: #ece2cf;
   background: rgb(255 253 248 / 94%);
 }
@@ -979,20 +1042,35 @@ input {
    ordinary words in half. Each ceiling is a share of the viewport, so it sits
    above the `rem` value at every ordinary size from 320px up and changes
    nothing there; it only stops the insets growing with the text. Scoped to the
-   views this batch authorizes. */
-.app-shell:has([data-view='session-opening']) :is(.app-shell__header, .app-shell__main),
-.app-shell:has([data-view='session-ready']) :is(.app-shell__header, .app-shell__main),
-.app-shell:has([data-view='session-active']) :is(.app-shell__header, .app-shell__main),
-.app-shell:has([data-view='setup-editing']) :is(.app-shell__header, .app-shell__main) {
+   views this plan has authorized for it: the Mission Session views, and every
+   parent view that shows the setup form or the reset panel. */
+.app-shell:has(:is(
+  [data-view='session-opening'],
+  [data-view='session-ready'],
+  [data-view='session-active'],
+  [data-view='setup-first-use'],
+  [data-view='setup-incomplete'],
+  [data-view='setup-editing'],
+  [data-view='setup-complete-handoff'],
+  [data-view='temporary-mode'],
+  [data-view='recovery']
+)) :is(.app-shell__header, .app-shell__main) {
   padding-inline: min(1rem, 5vw);
 }
 
-/* The section's own padding, not `--section-pad`: the reset panel inherits that
-   variable, and this batch does not change the reset panel. */
-.app-shell:has([data-view='session-opening']) .app-shell__main > section,
-.app-shell:has([data-view='session-ready']) .app-shell__main > section,
-.app-shell:has([data-view='session-active']) .app-shell__main > section,
-.app-shell:has([data-view='setup-editing']) .app-shell__main > section {
+/* The section's own padding rather than `--section-pad`, which Discovery's
+   narrow-screen layout reads. */
+.app-shell:has(:is(
+  [data-view='session-opening'],
+  [data-view='session-ready'],
+  [data-view='session-active'],
+  [data-view='setup-first-use'],
+  [data-view='setup-incomplete'],
+  [data-view='setup-editing'],
+  [data-view='setup-complete-handoff'],
+  [data-view='temporary-mode'],
+  [data-view='recovery']
+)) .app-shell__main > section {
   padding: clamp(min(1.25rem, 6.25vw), 4vw, 2rem);
 }
 
@@ -2224,4 +2302,22 @@ input {
   flex-wrap: wrap;
   gap: 0.6rem;
   margin-top: 1.5rem;
+}
+
+/* On a narrow screen the suggestion set gives its width to the cards, which
+   carry their own edges. Its text has no edge of its own, so the set's heading,
+   its notice, the bounded sentence and the whole unavailable state keep the
+   section's own inset instead of running flush against the panel. Controls and
+   the leave confirmation carry their own edges, as the cards do, and keep the
+   full width: inset as well, the confirmation was narrower than its own
+   actions at a 32px root and pushed the page sideways. Last in the file, after
+   every rule whose margin it adjusts. */
+@media (max-width: 55.99rem) {
+  .mission-suggestions__title,
+  .mission-suggestions__issue,
+  .mission-suggestions__bounded,
+  .mission-unavailable__title,
+  .mission-unavailable__body {
+    margin-inline: var(--section-pad);
+  }
 }

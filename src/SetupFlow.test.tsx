@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -548,4 +550,34 @@ describe('Task 5 save and editing regressions', () => {
       childProfile: { localProfileId: 'stable-local-profile', ageBand: '9–10' },
     });
   });
+});
+
+// A grid column's automatic minimum is its widest item. Both layouts below are
+// grids, and without a named minimum each was sized to its longest content at an
+// enlarged text size: at 320 CSS px with a 32px root the setup form's language
+// controls pushed the page 14px sideways in every language on every build from
+// ee35a70 onward, and the recovery actions — the reset panel, the retry action
+// and its help — pushed it up to 127px. Page-level checks did catch these, but
+// an earlier record reported the setup form clean, so the cause is pinned here.
+//
+// jsdom has no layout engine, so this is a stylesheet invariant that encodes the
+// cause rather than the symptom. The rendered proof is the browser measurement
+// recorded in the plan.
+describe('parent form and recovery layout invariants', () => {
+  const stylesheet = readFileSync('src/styles.css', 'utf8');
+  const rules = [...stylesheet.matchAll(/([^{}]+)\{([^{}]*)\}/g)].map((match) => ({
+    selector: match[1]!.trim().split('\n').at(-1)!.trim(),
+    body: match[2]!,
+  }));
+
+  it.each(['.choice-grid', '.recovery-actions'])(
+    'names a zero column minimum on the %s grid',
+    (selector) => {
+      const rule = rules.find((candidate) => candidate.selector === selector);
+
+      expect(rule).toBeDefined();
+      expect(rule!.body).toMatch(/display:\s*grid/);
+      expect(rule!.body).toMatch(/grid-template-columns:\s*minmax\(\s*0\s*,/);
+    },
+  );
 });
