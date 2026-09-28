@@ -1,7 +1,7 @@
 # MissionKid Plan 05 — guided entry and the presentation pass
 
 **Date:** 2026-09-22
-**Status:** Specification amendments prepared and revalidated; the reviewer's product decisions are recorded below. **Tasks 1 and 2 are authorized and were executed together as one integrated batch**, and await human visual acceptance, which is not recorded. **Two bounded parts of Task 3 — the reproduced Discovery clipping defect and the narrow-screen spacing correction — are authorized and done, together with two bounded introduction improvements and the bounded Discovery visual direction; the rest of Task 3 is not.** The presentation work on Ready, Active, the leave confirmation and settings is authorized under the *Eighth authorization* and done at `c3af6df`, awaiting human visual acceptance; Under the *Ninth authorization*, recorded before implementation, Tasks 4 and 5's height targets are superseded rather than achieved, and the diagnosed enlarged-text overflow and the remaining consistency pass are done at `958a578` and `36c4b60`. **Tasks 1, 2, 4, 5 and 6 are implementation-verified and await human visual review; Task 3's bounded parts likewise, with its remainder outstanding and unauthorized.** No task is recorded complete, because human visual acceptance is outstanding for all of them. Nothing is pushed, merged or deployed.
+**Status:** Specification amendments prepared and revalidated; the reviewer's product decisions are recorded below. **Tasks 1 and 2 are authorized and were executed together as one integrated batch**, and await human visual acceptance, which is not recorded. **Two bounded parts of Task 3 — the reproduced Discovery clipping defect and the narrow-screen spacing correction — are authorized and done, together with two bounded introduction improvements and the bounded Discovery visual direction; the rest of Task 3 is not.** The presentation work on Ready, Active, the leave confirmation and settings is authorized under the *Eighth authorization* and done at `c3af6df`, awaiting human visual acceptance; Under the *Ninth authorization*, recorded before implementation, Tasks 4 and 5's height targets are superseded rather than achieved, and the diagnosed enlarged-text overflow and the remaining consistency pass are done at `958a578` and `36c4b60`. **Tasks 1, 2, 4, 5 and 6 are implementation-verified and await human visual review; Task 3's bounded parts likewise, and its remaining height obligation was withdrawn on 2026-09-28.** No task is recorded complete, because human visual acceptance is outstanding for all of them. Nothing is pushed, merged or deployed.
 
 **Branch:** `feat/guided-entry-and-presentation`, taken from `14a5b16` on the unpublished `feat/reward-card-presentation`, which is preserved unchanged at that commit. No history was rewritten.
 
@@ -1063,14 +1063,24 @@ Measured on production builds against `b048040`, in Chrome for Testing headless 
 | --- | --- |
 | 1 — introduction | **Implementation verified; awaiting human visual review** |
 | 2 — introduction copy | **Implementation verified; awaiting human visual review.** The copy is proposed product copy; translation review is a separate release decision |
-| 3 — Discovery | **Bounded parts implemented and verified, awaiting human visual review.** Its original height target is superseded, not achieved. **Genuinely outstanding and unauthorized:** whether non-content height can still come out of the card at narrow widths, measured against a new baseline of the current design |
+| 3 — Discovery | **Bounded parts implemented and verified, awaiting human visual review.** Its original height target is superseded, not achieved, and under the review-handoff decisions below reduced height is no longer an obligation for the Discovery cards, so **no implementation obligation remains**. The one concrete usability residual in the existing evidence is recorded there |
 | 4 — Ready and Active | **Implementation verified against Decision 1's six criteria** at `c3af6df` and unchanged at `36c4b60`; the timer's live-region check done in this pass. **Awaiting human visual review** |
 | 5 — settings | **Implementation verified against the same six criteria**; the enlarged-text overflow ended at `c3af6df`. Its age-change obligations are carried by existing tests that pass: `Restoration.test.tsx` *resumes the same running Mission without a refresh*, `MissionReady.test.tsx` *is unchanged by a current age band that no longer matches the selection* and `MissionHistory.test.tsx` *keeps every completion when the current age band no longer matches*. **Awaiting human visual review** |
-| 6 — consistency and full verification | Its outcome is the pass Authorization B carried out, and its verification list was run: the gates, the whole branch against `main`, `git diff --check`, three languages at three configurations, reduced motion, heading and reading order, and contrast on every changed text element. **Implementation verified; awaiting human visual review.** The Reward Card and History are unchanged, as Task 6 requires |
+| 6 — consistency and full verification | Its outcome is the pass Authorization B carried out — which, as the reviewer confirmed on 2026-09-28, included Task 6 — and its verification list was run: the gates, the whole branch against `main`, `git diff --check`, three languages at three configurations, reduced motion, heading and reading order, and contrast on every changed text element. **Implementation verified; awaiting human visual review.** The Reward Card and History are unchanged, as Task 6 requires |
 
 **None of these is complete**: human visual acceptance is outstanding for every one of them and is not recorded by anyone but the reviewer.
 
 **Limitations.** One engine, one build, no real device, no Safari or Firefox — hyphenation in Safari relies on the prefixed property and is unverified — no assistive technology, no CI.
+
+### Review handoff — decisions recorded on 2026-09-28
+
+Recorded from the reviewer's instruction preparing the final visual review. **No implementation is authorized by it**, and nothing in the product changed.
+
+- **Task 6** was included in the authorized consistency pass, which is how its status above already reads.
+- **Reduced height is not an obligation for the Discovery cards.** Task 3's remaining height obligation is withdrawn — superseded, not achieved — and no spacing work is invented to satisfy it. The existing evidence shows one concrete usability residual on the cards, at an enlarged text size only: German compounds wider than the column, such as *unzerbrechliche*, still break mid-word without a hyphen, as recorded at `ea77864`.
+- **The accepted Reward Card is preserved.** A different surface colour is not on its own a defect.
+- **A way to leave settings without saving** remains a separate product decision.
+- **Hyphenation and every other detail stay as they are** until the visual review.
 
 
 ## Boundaries
@@ -1089,10 +1099,10 @@ Kept in the acceptance criteria throughout: English, German and Russian; accessi
 4. ~~**Tasks 4 and 5's height targets.**~~ **Decided on 2026-09-28:** superseded, not achieved — the *Ninth authorization*, Decision 1.
 5. **A way to leave settings without saving.** The view has none. Adding one is a new control and a separate product decision, not presentation; the *Ninth authorization*, Decision 2, keeps it out of this plan's batches. **Still open.**
 6. ~~**The reset panel's sideways scroll, and the setup form's on the other views that share it.**~~ **Authorized on 2026-09-28** under the *Ninth authorization*, Authorization A, and done.
-7. **Whether the Reward Card and History take the warm ground.** They are now the only cool screens in a warm flow. The Reward Card is accepted and its recognition surface was designed against the cool ground, so this is the reviewer's decision. History's goal panel also sits closer to its heading than any other view's content. **Open.**
+7. ~~**Whether the Reward Card and History take the warm ground.**~~ **Decided on 2026-09-28:** the accepted Reward Card is preserved, and a different surface colour is not on its own a defect. History's goal-panel spacing remains an observation for the visual review.
 
 ## Definition of complete
 
-The implementation this plan has authorized is done and verified: Tasks 1, 2, 4, 5 and 6 and the bounded parts of Task 3, each recorded above with the verification that actually ran. **This plan stays active** because three things remain: human visual acceptance of all of it, which only the reviewer can record; the remainder of Task 3, which is unauthorized; and the open decisions listed above — a way to leave settings without saving, and whether the Reward Card and History should take the warm ground.
+The implementation this plan has authorized is done and verified: Tasks 1 to 6, Task 3 in its bounded parts, each recorded above with the verification that actually ran. **This plan stays active** for one thing: human visual acceptance of all of it, which only the reviewer can record. A way to leave settings without saving remains a separate product decision outside this plan.
 
 This plan is complete when its authorized scope is implemented, each task's verification has actually been run and recorded truthfully here and in the changelog, and the diff is limited to that scope. It claims no MissionKid MVP completion, no deployment readiness, no CI result, no assistive-technology acceptance and no professional translation review. Human acceptance of anything built under it would be recorded separately, as the Reward Card follow-up's was.
