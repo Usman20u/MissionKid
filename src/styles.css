@@ -2321,3 +2321,22 @@ input {
     margin-inline: var(--section-pad);
   }
 }
+
+/* At an enlarged text size on a narrow screen some words are wider than any
+   column the screen can give them — at a 32px root, German *zurücksetzen* or
+   *wiederherstellen* in the reset panel — and they have to break somewhere.
+   Automatic hyphenation breaks them at a syllable, following the page's own
+   language, rather than at whichever letter reached the edge. The threshold is
+   the reader's text size against the viewport, so it applies only when text is
+   enlarged: at a 16px default it would need a viewport under 240px, below the
+   320px floor. An engine without hyphenation for a language keeps the plain
+   break it had before. Scoped to the parent surfaces this batch authorizes. */
+@media (max-width: 15rem) {
+  .setup-form,
+  .setup-complete,
+  .save-feedback,
+  .recovery-actions {
+    -webkit-hyphens: auto;
+    hyphens: auto;
+  }
+}
