@@ -1,7 +1,7 @@
 # MissionKid Plan 05 — guided entry and the presentation pass
 
 **Date:** 2026-09-22
-**Status:** Specification amendments prepared and revalidated; the reviewer's product decisions are recorded below. **Tasks 1 and 2 are authorized and were executed together as one integrated batch**, and await human visual acceptance, which is not recorded. **Two bounded parts of Task 3 — the reproduced Discovery clipping defect and the narrow-screen spacing correction — are authorized and done, together with two bounded introduction improvements and the bounded Discovery visual direction; the rest of Task 3 is not.** Tasks 4 and 5, with the leave confirmation, are authorized under the *Eighth authorization* and are in progress; Task 6 remains unauthorized and is not started. Nothing is pushed, merged or deployed.
+**Status:** Specification amendments prepared and revalidated; the reviewer's product decisions are recorded below. **Tasks 1 and 2 are authorized and were executed together as one integrated batch**, and await human visual acceptance, which is not recorded. **Two bounded parts of Task 3 — the reproduced Discovery clipping defect and the narrow-screen spacing correction — are authorized and done, together with two bounded introduction improvements and the bounded Discovery visual direction; the rest of Task 3 is not.** The presentation work on Ready, Active, the leave confirmation and settings is authorized under the *Eighth authorization* and done at `c3af6df`, awaiting human visual acceptance; Tasks 4 and 5 are not claimed complete, because their written height targets are not met. Task 6 remains unauthorized and is not started. Nothing is pushed, merged or deployed.
 
 **Branch:** `feat/guided-entry-and-presentation`, taken from `14a5b16` on the unpublished `feat/reward-card-presentation`, which is preserved unchanged at that commit. No history was rewritten.
 
@@ -704,16 +704,16 @@ Condition uses four distinct states. **Implemented** means the behaviour exists 
 | Parent introduction | Verified, awaiting visual review | **This batch:** purpose, example, family steps and the setup action read as one composition on both layouts | `F001`; Visual & Ergonomic *Controlled scene system*, *Mobile-first* | EN/DE/RU at three configurations; flow to confirmed setup |
 | First-use setup | Implemented, presentation not revisited in this plan | **This batch:** language and age easy to scan, selected values unmistakable, save action easy to find, guidance kept separate from controls | `F001`; Visual & Ergonomic *Approved MVP view inventory* | Same three configurations; keyboard and focus |
 | Setup incomplete | Implemented | Should read as the same form in a different state, not a different screen | `F001` | Carried by the setup batch's checks |
-| Setup editing / settings | Implemented; **Task 5 not started** | Non-content height, and the change-effect wording sitting clearly with its control | `F001`; Task 5 | Before/after height measurement per Task 5 |
+| Setup editing / settings | Verified, awaiting visual review — at `c3af6df` | Done: the first-use form's surface and grouping, the effect sentences on their own lines, the enlarged-text sideways scroll. Open: Task 5's written height target, which is not met | `F001`; Task 5 | Recorded under the eighth authorization's outcome |
 | Setup complete handoff | Implemented, presentation not revisited | The summary pair and the two onward actions need the same surface language as the rest | `F001` | Three configurations once authorized |
 | Temporary mode | Implemented and verified under `F001` | Confirm the temporary state is legible without becoming alarming | `F001`; Visual & Ergonomic *parent surfaces stay restrained* | Three configurations once authorized |
 | Recovery | Implemented and verified under `F001` | Same restraint check; no warning-banner styling for a recoverable state | `F001` | Three configurations once authorized |
 | Discovery — category selector | Verified, awaiting visual review | None known. Compacted and its label clipping fixed at `c067eaa` | `F002`; Visual & Ergonomic *peer-choice group* | Done for this pass |
 | Discovery — three suggestions | Verified, awaiting visual review | The rest of Task 3: the measured height reduction it still owns, reconciled below | `F002`; Visual & Ergonomic *F002 exactly-three* | Per Task 3, once authorized |
 | Discovery — unavailable / bounded / conflict states | Implemented | Confirm each reads as a calm bounded state on the warm Discovery ground | `F002` | Three configurations once authorized |
-| Session opening / ready | Implemented and verified under `F003`; **Task 4 not started** | Non-content height, per Task 4 | `F003`; Task 4 | Before/after height measurement per Task 4 |
-| Session active | Implemented and verified under `F003`; **Task 4 not started** | Non-content height, per Task 4 | `F003`; Task 4 | Same |
-| Leave / abandonment confirmation | Implemented and verified under `F003` | Confirm the most consequential screen still reads as the calmest | `F003` | Three configurations once authorized |
+| Session opening / ready | Verified, awaiting visual review — at `c3af6df` | Done: warm surface, separated actions, the start step grouped, enlarged-text insets. Open: Task 4's written height target, which is not met | `F003`; Task 4 | Recorded under the eighth authorization's outcome |
+| Session active | Verified, awaiting visual review — at `c3af6df` | Same as ready | `F003`; Task 4 | Same |
+| Leave / abandonment confirmation | Verified, awaiting visual review — at `c3af6df` | Done: spacing, warm inset at the reading measure, one dominant choice while open, enlarged-text actions. Residual: *Weitermachen* breaks once at a `32px` root | `F003` | Same |
 | Reward Card | **Accepted** — human visual acceptance given 2026-09-22 | None. Do not change it | `F004` | None; keep stable |
 | Mission History | Implemented and verified under `F004` | Presentation not revisited in this plan | `F004` | Three configurations once authorized |
 | Monthly Goal | Implemented and verified under `F004` | Same | `F004` | Same |
@@ -853,6 +853,70 @@ Authorized on 2026-09-28 at HEAD `e576e13`, **recorded before implementation**. 
 
 **One fact recorded now rather than discovered later.** The settings view has no cancel control: **Save changes** keeps a change, and nothing on the view discards one. Adding a way to leave without saving would be a new control and a product decision, so this batch does not add one.
 
+### Ready, Active, the leave confirmation and settings — outcome, at `c3af6df`
+
+**Three files.** `src/styles.css`; `src/SetupFlow.tsx`, where each change-effect sentence is wrapped in its own element so it can be its own line; and `src/SetupFlow.test.tsx`, which gains assertions for that. No copy, type size, control, state, route, dependency, persistence or behaviour changed.
+
+**Before-state defects found by measuring the served build**, none visible from the code alone:
+
+1. **The primary action and the way out touched on a wide screen.** On Ready and on the running Mission the two buttons were inline siblings in ordinary flow, so at `1280x900` *Start mission* and *Back to suggestions*, and *Mission done* and *Leave mission*, sat against each other with no space, reading as one two-part control. The existing `align-self: flex-start` rules on them show a column was intended and never applied.
+2. **The leave confirmation broke apart at an enlarged text size.** At `320` CSS px with a `32px` root the page gutter and section padding took `72` px per side and the panel took `38` px more, leaving its actions a `95` px column: *Keep going* and *Leave mission* were `95` px wide and `430`–`721` px tall, one letter per line, and the question broke mid-word. The *Stay here* variant on a Mission that cannot be shown did the same.
+3. **Adult-involvement and safety guidance broke ordinary words in half** at the same configuration — *Erwac|hsene*, *sichere|n* — inside a `108` px text column.
+4. **Settings scrolled sideways by `14` px** at that configuration in all three languages. The plan had recorded this on the setup form for Task 5; the cause is each language control's own padding, radio and gap reaching `261` px of min-content in a narrower column.
+5. **In the Discovery conflict the confirmation sat against the first card** with about `2` px between them: the action row it replaces carries a `1.25rem` bottom margin and the panel carried none.
+6. **The confirmation doubled its own spacing**: the shared button margin sat on top of its group's gap, putting `40` px between the consequence and the choices and `36` px between the choices once they wrapped.
+
+**What changed.**
+
+| Surface | Change |
+| --- | --- |
+| Ready and Active | Discovery's warm ground and panel carried through `session-opening`, `session-ready` and `session-active`. The session view is now the column its action rules assumed, so each action takes its own line. A hairline — the one a Mission card puts above its own action — separates the Mission and its guidance from what follows: the Mission Break and the start actions on Ready, the time guide and the return actions on Active. |
+| Leave confirmation | The doubled spacing removed; a warm inset one step deeper than the page, kept to the Mission's `48ch` reading measure instead of running across a wide screen as a banner; the same distance from the set as the actions it replaces in the Discovery conflict. **While it is open, *Mission done* takes the secondary treatment**, so two equal green actions no longer compete and *Keep going* is the one dominant choice. *Mission done* stays in place, working, in the same focus order, and returns to primary when the question is answered. |
+| Settings | The first-use form's treatment extended to `setup-editing`: warm surface and parent note, choice groups held to their content, the heavier selected state, and room for the save action. Each change-effect sentence becomes its own line in the body ink rather than the tail of the grey help above it; the paragraph's text, and so each group's accessible description, is unchanged. |
+| Enlarged text only | Viewport ceilings on the shell's side padding, the section padding, the note insets, the confirmation's insets and its buttons' side padding, and on settings' choice insets and radio glyph. Each ceiling sits above its `rem` value at every viewport from `320` px up at ordinary text sizes, so it acts only when the reader enlarges text. The section's own padding is overridden rather than `--section-pad`, which the reset panel inherits. |
+
+**Measured on the production build**, identical by content hash to the commit — `index-BXsNV5Jn.css`, `index-DE8n8Wjt.js` — against the pre-change build of `df7b287`, whose `src/` is identical to `e576e13`. Chrome for Testing headless shell `149.0.7827.55` through Playwright `1.63`, English, German and Russian at `1280x900`, `390x780` and `320` CSS px with a `32px` root, walked through the ordinary flow: introduction, setup, Discovery, *Helping at Home*, the first Mission — `helping-03`, which carries both an adult-participation note and a safety note, reached by its own `catalogOrder` without pinning — then ready, start, active and the leave confirmation; the handoff's *Change setup* to settings; a real write failure injected in the page for the start and completion issue states; a clock fast-forward for zero; the stored Mission renamed and reloaded through real hydration for both Mission-unavailable states and the *Stay here* confirmation; and a second tab starting a Mission for the Discovery conflict. **`117` state-configuration-language combinations**, each compared with its before-state:
+
+| Check | Result |
+| --- | --- |
+| Rendered words and their order | Identical in all `117`, whitespace aside. The only structural difference is the settings effect sentence in its own element, same words in the same order |
+| Font size and line height | Unchanged on every text element in every combination |
+| Heading order | Unchanged |
+| Keyboard | Tab order and focus rings identical wherever measured; the confirmation still takes focus on its heading when opened, tabs *Keep going* then *Leave mission*, and returns focus to the control that opened it on Escape and on *Keep going*; the reset panel's *Cancel* still returns focus to its entry |
+| Clipping against every clipping ancestor, overlap | `0` in all `117` |
+| Page horizontal overflow | `0` on every authorized view. Settings `14 → 0` px at the enlarged configuration. The reset panel, outside this authorization, below |
+| Contrast, composited | minimum `5.3:1` before and after, zero failures |
+| Touch targets | minimum `52` px before and after; the tallest session control at the enlarged configuration `721 → 222` px, which is *Zurück zu den Vorschlägen* wrapping by word |
+| Ordinary sizes | At `1280x900` and `390x780` every shell, section and column position and width — `222` measurements — and every note and instruction reading width is identical to the pixel |
+
+Reading width at `320` px with a `32px` root: instruction and note boxes `174 → 246` px, note text `108 → 211` px, confirmation actions `95 → 206` px wide and `430`–`721 → 138` px tall.
+
+**Height, reported as context and not as the verdict.**
+
+| View | `1280x900` EN / DE / RU | `390x780` EN / DE / RU | `320` px, `32px` root EN / DE / RU |
+| --- | --- | --- | --- |
+| Ready | `906→1000`, `929→1024`, `933→1027` | `1070→1092`, `1117→1139`, `1144→1166` | `5706→3804`, `6620→4284`, `6638→4430` |
+| Active | `900→953`, `900→976`, `900→953` | `996→1019`, `1043→1066`, `1070→1093` | `5202→3542`, `5800→3815`, `6144→4004` |
+| Leave confirmation | `1058→1056`, `1081→1080`, `1058→1056` | `1212→1186`, `1259→1234`, `1286→1260` | `6645→3998`, `7482→4309`, `7668→4498` |
+| Settings | `1074→1123`, `1151→1175`, `1126→1175` | `1547→1596`, `1648→1697`, `1648→1672` | `6698→4814`, `7900→5803`, `7955→6088` |
+| Discovery conflict | `1871→1867`, `1962→1958`, `1985→1981` | `3636→3608`, `3820→3792`, `3943→3915` | `12394→12262`, `13965→13784`, `14868→14638` |
+
+At the enlarged configuration every authorized state is `23.5`–`49.9` % shorter, by legitimate reflow: wider columns, the same type size. The least is Russian settings, the most the *Stay here* confirmation. The confirmation is shorter everywhere. **Ready and Active grow at ordinary sizes** — on desktop by the second action line, on mobile by the hairline's separation — and settings grows by the effect sentences' own lines and the save action's room.
+
+**Tasks 4 and 5 are not claimed complete.** Both were written with a target that non-content height falls at `390x780` from `463`–`487` px on Ready, `374`–`397` px on Active and `725` px on settings. At `390x780` on this baseline it moved `298 → 302` px on Ready, `293 → 297` px on Active and `491 → 499` px on settings, so **that target is not met**. Those baselines were also taken on a Mission the plan did not record, by a measurement this pass could not reproduce — the same method gives `298` px on `helping-03` — so the figures are not comparable either. The spacing on Ready and Active at `390x780` was examined and found to be useful separation, which the judging criteria protect; the excessive spacing on the path was inside the confirmation, where it came out. Whether the height targets are superseded, as Task 3's were, is a decision recorded below and not made here.
+
+**Found and not fixed, because this authorization does not name them.**
+
+- **The reset panel scrolls the page sideways at `320` px with a `32px` root** when opened on settings: `39` / `124` / `127` px before, `3` / `88` / `91` px after in EN / DE / RU. The reduction is only the wider shell; the panel's own cause is unchanged. `.recovery-actions` is a grid with no named column minimum, so the panel is sized to its longest word. The same panel opens on every parent view that offers reset.
+- **First-use setup keeps the `14` px sideways scroll** at that configuration, and so do the incomplete-setup form, temporary mode and recovery: they share the settings form, and the correction is scoped to settings.
+- **The Reward Card keeps its cool surface**, so the running Mission's warm ground changes at the step after completion. The Reward Card is accepted and is not to be changed.
+
+**Residuals.** At the enlarged configuration the single German word *Weitermachen* is wider than its button and breaks once across two lines; fitting it would need insets that also change the ordinary `320` px layout, or smaller type. On a wide screen Ready and Active still read in a column on the left of a wide panel, which the specification permits and this batch did not recompose. The settings radio glyph stops growing at `19.2` px at an enlarged size, as the introduction's language controls already do, while its label keeps its size and the selected state keeps its rim and tint.
+
+**Gates**, run sequentially with complete output captured to files: relevant tests first — eight files, `250` passed — then `tsc --noEmit`, which failed once on the new assertion's unchecked index and was fixed and rerun clean, the full suite at **847 tests across 23 test files**, a clean production build, and `git diff --check` clean. The test count is unchanged because the new assertions extend the existing per-language editing test rather than adding one: each effect sentence is its own element, and each group's description paragraph reads exactly *help* plus *effect*. **The assertion was proven to bite**: with the markup reverted it failed in all three languages, and passed once restored. No test failed at any other point in this pass.
+
+**Limitations.** One engine, one build, no real device, no Safari or Firefox, no assistive technology, no CI. Human visual acceptance is not given and not recorded.
+
 
 ## Boundaries
 
@@ -867,9 +931,12 @@ Kept in the acceptance criteria throughout: English, German and Russian; accessi
 1. **Renewed implementation authorization for the remainder of Task 3 and for Task 6.** Tasks 1 and 2 are authorized above, bounded parts of Task 3 under the second to fifth authorizations, and Tasks 4 and 5 with the leave confirmation under the eighth. Nothing else may begin until its own authorization is recorded here. This is the gate.
 2. **Translation review of the proposed copy.** The strings above are proposed product copy. Whether they need review by a German and a Russian speaker before release is a release decision, not one this plan makes.
 3. **Instruction length**, recorded under Decision 3 as a separate content consideration for Mission Catalog and Safety. Not scheduled, not assumed, and not addressed by anything in this plan.
+4. **Tasks 4 and 5's height targets.** Not met at `390x780`, and taken on baselines this pass could not reproduce. Whether they are superseded, as Task 3's target was, or pursued further is the reviewer's decision.
+5. **A way to leave settings without saving.** The view has none. Adding one is a new control and a product decision, not presentation.
+6. **The reset panel's sideways scroll, and the setup form's on the other views that share it**, both at `320` px with a `32px` root. Both are diagnosed under the eighth authorization's outcome and need their own authorization.
 
 ## Definition of complete
 
-Tasks 1 and 2 are implemented, verified and recorded above and await human visual acceptance. Two bounded parts of Task 3 — the reproduced clipping defect and the narrow-screen spacing correction — are done and recorded above, together with the introduction's desktop composition and the flow step that explains the deliberate start. This plan stays active because the rest of Task 3 and Tasks 4 to 6 are neither authorized nor done.
+Tasks 1 and 2 are implemented, verified and recorded above and await human visual acceptance. Two bounded parts of Task 3 — the reproduced clipping defect and the narrow-screen spacing correction — are done and recorded above, together with the introduction's desktop composition and the flow step that explains the deliberate start. The presentation work on Ready, Active, the leave confirmation and settings is done and awaits human visual acceptance, while Tasks 4 and 5 stay open on their height targets. This plan stays active because the rest of Task 3, the decision on Tasks 4 and 5, and Task 6 are not done.
 
 This plan is complete when its authorized scope is implemented, each task's verification has actually been run and recorded truthfully here and in the changelog, and the diff is limited to that scope. It claims no MissionKid MVP completion, no deployment readiness, no CI result, no assistive-technology acceptance and no professional translation review. Human acceptance of anything built under it would be recorded separately, as the Reward Card follow-up's was.
