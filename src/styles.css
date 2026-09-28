@@ -1,4 +1,15 @@
+/* `--room` is how much horizontal room the reader's text size leaves. It is
+   exactly `1rem` on a 320px screen at a 16px text size, larger on every wider
+   screen or at a smaller text size, and it falls towards zero only when the
+   screen is narrow for the text: at 320px with a 32px text size it is 0. Insets
+   written as `clamp(floor, k * room, their own value)` are therefore identical
+   to their own value at every ordinary size, and give their width back to the
+   words only where the words need it. It reads the root size, so it responds
+   the same way to the browser's font setting and to a root size set on the
+   page. */
 :root {
+  --room: calc(10vw - 1rem);
+
   color: #20302d;
   background: #f4f6f1;
   font-family:
@@ -92,9 +103,11 @@ input {
    wording and its outlined red action, never an alarm surface. Its padding is
    the section's, with the same viewport ceiling the parent views' shell
    carries: at a 32px root the section's own `rem` padding left the reset
-   consequence a 92px column. */
+   consequence a 92px column. Its side padding follows `--room` down to 12px,
+   so the heading and the two choices keep whole words where they fit. */
 .reset-panel {
   padding: clamp(min(1.25rem, 6.25vw), 4vw, 2rem);
+  padding-inline: clamp(12px, calc(1.25 * var(--room)), var(--section-pad));
   border: 1px solid #e8dfcd;
   border-radius: 1.25rem;
   background: #fbf6ea;
@@ -684,7 +697,7 @@ input {
    keeps no inset at all. */
 .recovery-actions > .button,
 .recovery-actions__buttons .button {
-  padding-inline: min(1.2rem, 6vw);
+  padding-inline: clamp(12px, calc(1.2 * var(--room)), 1.2rem);
 }
 
 .recovery-actions__help {
@@ -1035,19 +1048,22 @@ input {
   background: rgb(255 253 248 / 94%);
 }
 
-/* At an enlarged text size the shell's `rem` insets stack: at a 32px root on a
-   320px screen the page gutter and the section's own padding took 72px from
-   each side, and every panel inside took more, until the leave confirmation's
-   actions were a column one letter wide and the adult-involvement note broke
-   ordinary words in half. Each ceiling is a share of the viewport, so it sits
-   above the `rem` value at every ordinary size from 320px up and changes
-   nothing there; it only stops the insets growing with the text. Scoped to the
-   views this plan has authorized for it: the Mission Session views, and every
-   parent view that shows the setup form or the reset panel. */
+/* At an enlarged text size the shell's `rem` insets stack. At 320px with a
+   32px text size the page gutter and the section's padding took 72px from each
+   side — 146px of a 320px screen on the Reward Card and History, before a
+   button's own inset took 81px more — so actions whose words need 97 to 240px
+   were given 91 to 165px and broke into five or six pieces. The gutter and the
+   section's side padding follow `--room`: identical at every ordinary size, and
+   down to 8px each where the screen is narrow for the text. Scoped to the
+   views this plan has authorized for it: the Mission Session views, the Reward
+   Card, History, and every parent view that shows the setup form or the reset
+   panel. */
 .app-shell:has(:is(
   [data-view='session-opening'],
   [data-view='session-ready'],
   [data-view='session-active'],
+  [data-view='session-result'],
+  [data-view='history'],
   [data-view='setup-first-use'],
   [data-view='setup-incomplete'],
   [data-view='setup-editing'],
@@ -1055,11 +1071,14 @@ input {
   [data-view='temporary-mode'],
   [data-view='recovery']
 )) :is(.app-shell__header, .app-shell__main) {
-  padding-inline: min(1rem, 5vw);
+  padding-inline: clamp(8px, var(--room), 1rem);
 }
 
 /* The section's own padding rather than `--section-pad`, which Discovery's
-   narrow-screen layout reads. */
+   narrow-screen layout reads. The top and bottom keep the ceiling they already
+   had; the Reward Card and History keep their own. The side padding is also
+   published as `--section-inline`, so a card inside can reclaim no more of it
+   than there is. */
 .app-shell:has(:is(
   [data-view='session-opening'],
   [data-view='session-ready'],
@@ -1072,6 +1091,45 @@ input {
   [data-view='recovery']
 )) .app-shell__main > section {
   padding: clamp(min(1.25rem, 6.25vw), 4vw, 2rem);
+}
+
+.app-shell:has(:is(
+  [data-view='session-opening'],
+  [data-view='session-ready'],
+  [data-view='session-active'],
+  [data-view='session-result'],
+  [data-view='history'],
+  [data-view='setup-first-use'],
+  [data-view='setup-incomplete'],
+  [data-view='setup-editing'],
+  [data-view='setup-complete-handoff'],
+  [data-view='temporary-mode'],
+  [data-view='recovery']
+)) .app-shell__main > section {
+  --section-inline: clamp(8px, calc(1.25 * var(--room)), var(--section-pad));
+
+  padding-inline: var(--section-inline);
+}
+
+/* An action's own side inset follows `--room` on the same views: `1.2rem` at
+   every ordinary size, and down to 12px where the screen is narrow for the
+   text, so a label such as *Завершить настройку* or *Найти другую миссию*
+   keeps whole words where they fit. The reset entry is a text link with no
+   inset and keeps none. */
+.app-shell:has(:is(
+  [data-view='session-opening'],
+  [data-view='session-ready'],
+  [data-view='session-active'],
+  [data-view='session-result'],
+  [data-view='history'],
+  [data-view='setup-first-use'],
+  [data-view='setup-incomplete'],
+  [data-view='setup-editing'],
+  [data-view='setup-complete-handoff'],
+  [data-view='temporary-mode'],
+  [data-view='recovery']
+)) .button:not(.button--reset-entry) {
+  padding-inline: clamp(12px, calc(1.2 * var(--room)), 1.2rem);
 }
 
 .mission-suggestions__set {
@@ -1950,7 +2008,7 @@ input {
 .mission-session__confirm {
   max-width: 48ch;
   margin-top: 1.25rem;
-  padding: 1.1rem min(1.2rem, 6vw);
+  padding: 1.1rem clamp(12px, calc(1.2 * var(--room)), 1.2rem);
   border: 1px solid #e8dfcd;
   border-radius: 1.25rem;
   background: #fbf6ea;
@@ -1995,7 +2053,7 @@ input {
    each label a column one letter wide at an enlarged text size. */
 .mission-session__confirm-actions .button {
   margin-top: 0;
-  padding-inline: min(1.2rem, 6vw);
+  padding-inline: clamp(12px, calc(1.2 * var(--room)), 1.2rem);
 }
 
 /* While the family is deciding whether to leave, that decision is the one
@@ -2070,7 +2128,7 @@ input {
   margin-top: 0.75rem;
   /* Padding is capped against the viewport as well as the root, so enlarging
      text to 200% cannot squeeze the content column at 320px. */
-  padding: min(1.35rem, 5vw) min(1.25rem, 4.5vw);
+  padding: min(1.35rem, 5vw) min(1.25rem, 4.5vw, var(--section-inline, 1.25rem));
   border: 1px solid #d8e1da;
   border-radius: 1.15rem;
   background: #edf7f1;
@@ -2084,7 +2142,9 @@ input {
    wide enough to give the padding up. */
 @media (max-width: 22rem) {
   .mission-result--recognition {
-    margin-inline: calc(-1 * min(1.25rem, 4.5vw));
+    /* Never more than the section's own side padding, which narrows when the
+       screen is narrow for the text, so the card cannot reach past the panel. */
+    margin-inline: calc(-1 * min(1.25rem, 4.5vw, var(--section-inline, 1.25rem)));
   }
 }
 
@@ -2213,10 +2273,12 @@ input {
   overflow-wrap: anywhere;
 }
 
+/* Its side padding follows `--room` down to 12px: at a 32px text size the
+   plain `rem` padding left the goal's own heading a 102px column. */
 .mission-history__goal {
   width: 100%;
   margin-top: 0.75rem;
-  padding: 1rem 1.1rem;
+  padding: 1rem clamp(12px, calc(1.1 * var(--room)), 1.1rem);
   border: 1px solid #d8e1da;
   border-radius: 1.25rem;
   background: rgb(255 255 255 / 92%);
