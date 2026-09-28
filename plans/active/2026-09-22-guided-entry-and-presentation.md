@@ -1,7 +1,7 @@
 # MissionKid Plan 05 — guided entry and the presentation pass
 
 **Date:** 2026-09-22
-**Status:** Specification amendments prepared and revalidated; the reviewer's product decisions are recorded below. **Tasks 1 and 2 are authorized and were executed together as one integrated batch**, and await human visual acceptance, which is not recorded. **Two bounded parts of Task 3 — the reproduced Discovery clipping defect and the narrow-screen spacing correction — are authorized and done, together with two bounded introduction improvements and the bounded Discovery visual direction; the rest of Task 3 is not.** The presentation work on Ready, Active, the leave confirmation and settings is authorized under the *Eighth authorization* and done at `c3af6df`, awaiting human visual acceptance; Under the *Ninth authorization*, recorded before implementation, Tasks 4 and 5's height targets are superseded rather than achieved, and the diagnosed enlarged-text overflow and the remaining consistency pass are done at `958a578` and `36c4b60`. **Tasks 1, 2, 4, 5 and 6 are implementation-verified and await human visual review; Task 3's bounded parts likewise, and its remaining height obligation was withdrawn on 2026-09-28.** No task is recorded complete, because human visual acceptance is outstanding for all of them. Nothing is pushed, merged or deployed.
+**Status:** Specification amendments prepared and revalidated; the reviewer's product decisions are recorded below. **Tasks 1 and 2 are authorized and were executed together as one integrated batch**, and await human visual acceptance, which is not recorded. **Two bounded parts of Task 3 — the reproduced Discovery clipping defect and the narrow-screen spacing correction — are authorized and done, together with two bounded introduction improvements and the bounded Discovery visual direction; the rest of Task 3 is not.** The presentation work on Ready, Active, the leave confirmation and settings is authorized under the *Eighth authorization* and done at `c3af6df`, awaiting human visual acceptance; Under the *Ninth authorization*, recorded before implementation, Tasks 4 and 5's height targets are superseded rather than achieved, and the diagnosed enlarged-text overflow and the remaining consistency pass are done at `958a578` and `36c4b60`. **Tasks 1, 2, 4, 5 and 6 are implementation-verified and await human visual review; Task 3's bounded parts likewise, and its remaining height obligation was withdrawn on 2026-09-28.** The enlarged-text readability correction authorized after the assistant review of the overview sheets is done at `b0319d1`. No task is recorded complete, because human visual acceptance is outstanding for all of them. Nothing is pushed, merged or deployed.
 
 **Branch:** `feat/guided-entry-and-presentation`, taken from `14a5b16` on the unpublished `feat/reward-card-presentation`, which is preserved unchanged at that commit. No history was rewritten.
 
@@ -1095,6 +1095,47 @@ Recorded on 2026-09-28 at HEAD `b0e17bf`, **before implementation**, after an **
 **Verification:** English, German and Russian with both the injected `32px` root and the browser's `32px` default-font setting, on the six surfaces; ordinary desktop and mobile presentation confirmed unchanged wherever the correction is unnecessary; proportionate checks and the required gates once, with complete failure output kept.
 
 **Still open and not touched:** the separate asset and product decisions — the remaining Mission stills, the introduction copy's translation review, instruction length, and a way to leave settings without saving. No unrelated redesign and no feature.
+
+### Tenth authorization — outcome, at `b0319d1`
+
+**One file, `src/styles.css`.** No markup, copy, font size, control, state or behaviour changed.
+
+**The cause, measured before code.** The examples were reproduced in the rendered application at `320` px under both the injected `32px` root and the browser's own `32px` setting, with every heading, label and action measured from the viewport inwards. **It was stacked insets, not word length.** Per side:
+
+| Surface | Page gutter + section padding | An action's own inset | Text column | Action content width |
+| --- | --- | --- | --- | --- |
+| Reward Card, History | `32` + `41` px | `40.4` px | `174` px | `91`–`93` px |
+| Setup, handoff, session views | `16` + `21` px | `40.4` px | `246` px | `165` px |
+| Leave confirmation, reset panel | `16` + `21` px, then the panel `20`–`21` px | `21.2` px | `204`–`206` px | `162`–`163` px |
+
+Each broken word was then measured unbroken in its own font. Of the `64` words broken across lines, `44` would have fitted a `246` px column and `15` more a `288` px one; only `5` could not fit even `288` px. The action words need `97` to `240` px — `272` px counting the text-style reset link — and were given `91` to `165` px. **Hyphenation was not the answer**: it can only choose where a word that does not fit breaks, and most of these words would have fitted.
+
+**The correction.** One measure, `--room: calc(10vw - 1rem)`, which is exactly `1rem` on a `320` px screen at a `16px` text size, larger on any wider screen or smaller text, and falls towards zero only where the screen is narrow for the text. It reads the root size, so it responds identically to the browser's setting and to an injected root, with no media query. The page gutter, the section's side padding, the leave confirmation's and reset panel's side insets, History's goal panel and every action's side inset on the six surfaces become `clamp(floor, k × room, their own value)` — **mathematically identical to their own value at every ordinary size** — with floors of `8` px for the page gutter and section, and `12` px for nested panels and action insets. The Reward Card's reclaim of the section's padding is bounded by that padding, so the card stays inside its panel; **its colours, surface, border, radius and identity are unchanged**, and so are History's.
+
+**Result, six surfaces × three languages at `320` px:**
+
+| | Browser `32px` setting | Injected `32px` root |
+| --- | --- | --- |
+| Words broken across lines | `64 → 6` | `62 → 6` |
+| Line boxes | `259 → 179` | `259 → 179` |
+| Text column | `174`/`246` → `286` px | the same |
+| Action content width | `91`–`165` → `256`–`258` px; in panels `162` → `232` px | the same |
+
+Worst cases, under the browser setting: *Найти другую миссию* `6 → 2` lines, *Завершить настройку* `4 → 2`, *Einrichtung abschließen* and *Zurücksetzen bestätigen* `4 → 2`, History's action `4 → 1`, and the Reward Card's and History's headings `4 → 2`.
+
+**The six remaining breaks are words wider than any column this screen can give them**, and keep safe wrapping: *Missionsverlauf* (History heading, `377` px of `286`), *abgeschlossen* (handoff heading, `366` of `286`), *Benutzeroberfläche* (setup legend, `336` of `286`), *MissionKid-Daten* (reset heading, `333` of `260`), *Tischkapitän* (session Mission title, `294` of `286`) and *получилось.* (Reward Card recognition, `287` of `284`).
+
+**Of the defects the review package listed**, three are resolved by this: *Weitermachen* now takes one line, *Missionsverlauf* on the handoff one line, and *Reset MissionKid data* breaks no word. The fourth, German compounds on the Discovery cards, is on a surface outside this authorization and is unchanged.
+
+**Verification.**
+
+- **Ordinary sizes unchanged:** all `186` desktop and mobile states in both harnesses — `102` and `84` — are identical to the current build in page height, container boxes and every text element's width. The introduction and Discovery, which this does not reach, are unchanged at enlarged text as well.
+- **Against the current build, `279` combinations** with the injected root: the same words in the same order, every font size and line height, heading order, keyboard order, focus rings and focus return unchanged; `0` clipping, `0` overlap, `0` overflow; minimum contrast `5.10:1` and minimum touch target `52` px, both unchanged. Under the browser setting, `21` parent states with `0` overflow and `0` clipping, and the six surfaces with `0` overflow.
+- **Focus indicators** still fit: the `8` px section padding holds the heading's ring, drawn `7` px outside it, and the card's own `8` px holds its Mission title's.
+- **Before and after, worst cases:** fourteen pairs captured at `2x` under the browser setting, with the root asserted `32px` before and after each capture, in `~/Desktop/MissionKid-Plan05-enlarged-text-readability/`.
+- **Gates**, run once and sequentially with complete output kept: relevant tests (`180` passed), `tsc --noEmit` clean, the full suite at **849 tests across 23 test files**, a clean production build byte-identical to the measured one, and `git diff --check` clean. No test failed. None was added: the change is the value of existing insets, and the invariant tests already pin the layout causes.
+
+**This is an assistant screenshot review, not human visual acceptance**, which remains outstanding. The separate asset and product decisions stay open.
 
 
 ## Boundaries
