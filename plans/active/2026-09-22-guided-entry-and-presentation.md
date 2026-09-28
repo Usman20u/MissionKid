@@ -1082,6 +1082,20 @@ Recorded from the reviewer's instruction preparing the final visual review. **No
 - **A way to leave settings without saving** remains a separate product decision.
 - **Hyphenation and every other detail stay as they are** until the visual review.
 
+### Tenth authorization — enlarged-text readability on narrow screens
+
+Recorded on 2026-09-28 at HEAD `b0e17bf`, **before implementation**, after an **assistant review of the six overview sheets and their README** — an assistant screenshot review, not human visual acceptance. The ordinary desktop and mobile direction is preserved. One focused readability issue remains before this plan closes: at `320` px with enlarged text, **zero horizontal overflow does not by itself establish comfortable reading**. The Russian setup action splits into four lines; the Reward Card's and History's actions fragment into many short pieces and their headings break repeatedly inside words; and the confirmation and reset panels show the same pressure.
+
+**Authorized:** a bounded enlarged-text layout correction on the setup form, the handoff, the session's leave confirmation, the reset panel, the Reward Card and History — **the Reward Card and History only where necessary, keeping their accepted colours and visual identity**; this does not authorize restyling them. Useful width is recovered through responsive gutters, nested spacing and action sizing where appropriate.
+
+**Method, before code:** reproduce each example in the rendered application and measure the viewport width, the cumulative outer and nested padding, the actual text-column width and the button content width, so the cause is established rather than hyphenation assumed to be the answer.
+
+**Preserved:** readable font sizes, complete wording, semantic order, focus indicators and touch targets; natural vertical scrolling. **Not used:** clipping, truncation, smaller text, unconditional `nowrap`, or manual line breaks in localized strings. Not every long word must stay unbroken: avoidable fragmentation is improved, and safe wrapping stays where a word genuinely cannot fit.
+
+**Verification:** English, German and Russian with both the injected `32px` root and the browser's `32px` default-font setting, on the six surfaces; ordinary desktop and mobile presentation confirmed unchanged wherever the correction is unnecessary; proportionate checks and the required gates once, with complete failure output kept.
+
+**Still open and not touched:** the separate asset and product decisions — the remaining Mission stills, the introduction copy's translation review, instruction length, and a way to leave settings without saving. No unrelated redesign and no feature.
+
 
 ## Boundaries
 
