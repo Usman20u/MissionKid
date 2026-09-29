@@ -1,7 +1,7 @@
 # MissionKid Plan 06 — whole-application visual design
 
 **Date:** 2026-09-29
-**Status:** Scope recorded before implementation. Nothing is implemented under this plan yet.
+**Status:** Scope recorded before implementation at `f68470a`; implemented and verified at `53d6a8d`, recorded under *Outcome*. Human visual acceptance is not given and not recorded, and the known visual gaps listed there remain, so this plan stays active.
 **Branch:** `feat/whole-application-visual-design`, taken from `9f53610`, the commit that closed Plan 05 on `feat/guided-entry-and-presentation`. That branch is preserved unchanged at its closure. No history was rewritten.
 
 ## Authorization basis
@@ -127,6 +127,67 @@ The one intended change to reading order is on the handoff: *Change setup* moves
 - **Gates** once, sequentially, with complete output kept: relevant tests, `tsc --noEmit`, the full suite, the production build, `git diff --check`. Tests change only where markup changes, and a stylesheet invariant is added only where a new layout layer needs one.
 - **Screenshots from the actual builds**, before and after, at `2x`, delivered with a short status.
 
+## Outcome, at `53d6a8d`
+
+**Six files.** `src/styles.css`; `src/AppShell.tsx`, which marks the parent area's line and groups the handoff's two onward actions; `src/SetupFlow.tsx`, which moves *Change setup* above the sentence that leads into them; `src/MissionReady.tsx`, which gives the Mission's meta line its category for the tag's light; `src/MissionSuggestionSet.tsx`, which puts the card's action on its own layer; and `src/SetupFlow.test.tsx`. No copy, catalog content, image, control, state, route, persistence, dependency or behaviour changed.
+
+### What changed
+
+| Rule | On the product |
+| --- | --- |
+| P1 — Ground and frame | The warm ground is the default, including the frame painted before mounting and the unexpected-error view. The Reward Card and History draw their accepted cool ground on the shell. Single-column views sit in a centred `42rem` frame; the introduction and Discovery keep the wide one. Unused panel width on a desktop: the parent forms `39` → `0` %, recovery `40` → `1` %, Ready `53` → `13` %, Active `48` → `13` %, the Reward Card `51` → `16` % |
+| P2 — Heading block | The wordmark at `1.3rem` and the weight of a name. *Parent area* becomes a small tag on every parent surface; child-facing views keep their line |
+| P3 — Mission presentation | Cards, the introduction's example and Ready show the Mission Category as a tag in its own light beside a legible duration — `11.8` px tracked capitals before. One guidance pattern everywhere a Mission is shown: a tinted panel, a mark down its edge and a sentence-case label. On Ready the Mission's title leads its block; on Active the instruction to leave the screen leads the view and the title keeps its size. Discovery's set of three is headed as the step: *Three Missions* goes from a `16.8` px label to a `23`–`30` px heading. The session's reading blocks share one measure |
+| P4 — Imagery frame | Stills and authored scenes share one window, inset in the card with its own corners and the same neutral inner edge. Behind the scenes, the window, the walls, the floors, the haze and the light are graded toward the warm ground with the category still lighting them, and the floor seam loses its weight. No still is filtered and no composition changes; engines without `color-mix` keep the previous colours |
+| P5 — Action layer | The card's hairline moves off the button onto the action's own layer, with room on both sides; `Another set` is centred under the set; on the handoff *Change setup* sits under the summary it changes and *MissionKid is ready for the next step* leads into *Find a Mission*, with *Mission history* beside it. Focus order is unchanged |
+| P6 — Room for enlarged text | The `--room` rule reaches the introduction, Discovery and the category controls, and every action's inset; the eight rules that had listed views one by one are replaced by the defaults |
+
+### Found during verification, and fixed
+
+1. **The larger wordmark made the header `64.95` px tall**, setting every view below it on a fractional pixel row. Found while measuring the Reward Card's position; the header is now a whole `66` px.
+2. **The handoff's lead-in sentence was hyphenated under the browser's `32px` setting**, splitting *bereit* and *nächsten*, which fit the line below whole: German went from `1` to `3` broken words, against this plan's own criterion. The sentence now keeps its words whole, and the count is `1` again.
+3. **The reset panel's consequence text used the browser's default line height** of about `1.2`, the densest paragraph any parent reads. It takes the `1.55` every other parent paragraph has. This predates this plan.
+
+Two choices were measured and changed: a `46rem` reading frame still left the parent forms and Ready visibly short of their panel, so it became `42rem`; and measures in `ch` let the session's blocks end on four different edges, so they share one measure in `rem`.
+
+### Verification
+
+Chrome for Testing headless shell `149.0.7827.55`, the same harness on two served builds — before: the build of `9f53610`, whose product source is `b0319d1`'s; after: the build of `53d6a8d`, byte-identical to the one measured. English, German and Russian, through the ordinary flow and real conditions — blocked storage, an unreadable snapshot, a refused write, a second tab, a renamed stored Mission.
+
+| Check | Result, before → after |
+| --- | --- |
+| Combinations | `260`: `24` states at `1280x900`, `390x780` and `320` px with an injected `32px` root, and `20` states under the browser's own `32px` setting, the root asserted `32px` before and after every capture |
+| Clipping against every clipping ancestor, page overflow, overlap | `0` → `0` everywhere |
+| Contrast, composited | minimum `5.10:1` → `5.10:1`, `0` failures |
+| Touch targets | minimum `52` px → `52` px, `104` px at the `32px` root |
+| Words | the same words in the same order in `248` of `260`; the `12` handoff combinations have the same words in the intended new order |
+| Headings, focus order, focus ring | headings identical in all `260`; focus order identical in the `192` combinations walked by keyboard — every configuration but the phone — with the `3px` ring on every stop |
+| Type size | no text element's computed size fell anywhere |
+| Words broken mid-word, injected `32px` root | `341` → `50`. The introduction `14` / `27` / `38` → `0` / `4` / `5` in EN / DE / RU; the category step `7` / `9` / `11` → `0` / `1` / `0`; Discovery's sets `7`–`10` / `13`–`20` / `15`–`23` → `0`–`2` / `2` / `0`–`1`. **No state rose.** Each of the `50` remaining is measured: `17` break at the word's own hyphen, such as *кого-нибудь*; `31` are wider than their column, such as the Russian heading's *приключения.*; `2` are *подтверждено.* on temporary mode, `220.5` px in a `220` px column, unchanged from before |
+| Words broken, browser `32px` setting | `486` → `279`, **no state rose**. The rest are chiefly the parent surfaces' accepted hyphenation, identical before and after |
+| Line boxes at the `32px` root | `5648` → `4614` |
+| Requests | none to another origin; no failed request or page error |
+
+- **The Reward Card's identity, element by element.** All `11` elements keep every computed colour, background, border, radius, shadow, type size, weight, line height, spacing and box size, in all nine configurations. On a phone, compared pixel by pixel in English, the card's image differs from before in `13` pixels, all in its rounded corners where the panel shows through at a new height, by one level; the card itself is identical. It moved: into the centred frame on a desktop, and down with the header.
+- **History's identity.** Every colour, surface, type size and spacing is identical; on a desktop the record is `606` px wide instead of `1054`, because the shared frame applies to it.
+- **Their cool ground** is visually identical wherever only the ground shows.
+- **The unexpected-error view** was shown through two probe builds of the before and after sources — never shipped, each differing from its product only by one thrown error in `ParentIntroduction.tsx`: cool ground to warm, a `42rem` frame, contrast `6.37:1`, no clipping or overflow.
+- **Gates**, once, sequentially, with complete output kept: relevant tests `420` passed, `tsc --noEmit` clean, the full suite at **850 tests across 23 test files**, a clean build byte-identical to the measured one, `git diff --check` clean. **One test was added**: the handoff's reading order and its unchanged focus order. It was proven to bite — with the previous order restored it fails, and it passes once the change is back. No other test failed at any point.
+
+### Limitations
+
+One engine against one build; no Safari, Firefox or real device, so the `color-mix` fallback and Safari's prefixed hyphenation are unverified; no assistive technology; no CI. The graded scenes and every other visual judgement here are the implementer's, not a content or human visual review. Human visual acceptance is not given and not recorded.
+
+### Known visual gaps remaining
+
+Stated so that this outcome is not read as completing the design.
+
+- **The imagery system is not complete.** `3` of `54` Missions have reviewed stills, and the introduction's example — the first Mission image a family sees — is still an authored scene. The need is recorded above.
+- **Ready and Active carry no image of the chosen Mission**, which the specification does not permit without an amendment.
+- **The reference's rounded display face, its header links and its subheading** are not reproduced: a font asset, navigation and copy respectively.
+- **Child-facing views repeat the product's name** as their area line directly under the wordmark. That line names the child-facing area, so changing it is a content decision rather than presentation.
+- **At an enlarged text size `31` words are wider than any column a `320` px screen gives them** and still break.
+
 ## Decisions for the reviewer
 
 1. **A Mission's image on Ready and Active** — a Visual & Ergonomic amendment, then revalidation.
@@ -135,4 +196,4 @@ The one intended change to reading order is on the handoff: *Change setup* moves
 
 ## Definition of complete
 
-Every improvement in the scope above implemented, the verification actually run and recorded here and in the changelog with its limitations, the diff limited to this scope, and screenshots from the actual builds delivered. Human visual acceptance, if given, is recorded separately. Completing this plan does not complete the imagery system, and no claim of full design completion is made while the gaps it names remain.
+Every improvement in the scope above implemented, the verification actually run and recorded here and in the changelog with its limitations, the diff limited to this scope, and screenshots from the actual builds delivered. Human visual acceptance, if given, is recorded separately, and **this plan stays active until the reviewer's visual judgement is recorded**, as Plan 05 did. Completing this plan does not complete the imagery system, and no claim of full design completion is made while the gaps it names remain.
