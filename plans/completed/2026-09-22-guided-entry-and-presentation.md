@@ -1,7 +1,9 @@
 # MissionKid Plan 05 — guided entry and the presentation pass
 
 **Date:** 2026-09-22
-**Status:** Specification amendments prepared and revalidated; the reviewer's product decisions are recorded below. **Tasks 1 and 2 are authorized and were executed together as one integrated batch**, and await human visual acceptance, which is not recorded. **Two bounded parts of Task 3 — the reproduced Discovery clipping defect and the narrow-screen spacing correction — are authorized and done, together with two bounded introduction improvements and the bounded Discovery visual direction; the rest of Task 3 is not.** The presentation work on Ready, Active, the leave confirmation and settings is authorized under the *Eighth authorization* and done at `c3af6df`, awaiting human visual acceptance; Under the *Ninth authorization*, recorded before implementation, Tasks 4 and 5's height targets are superseded rather than achieved, and the diagnosed enlarged-text overflow and the remaining consistency pass are done at `958a578` and `36c4b60`. **Tasks 1, 2, 4, 5 and 6 are implementation-verified and await human visual review; Task 3's bounded parts likewise, and its remaining height obligation was withdrawn on 2026-09-28.** The enlarged-text readability correction authorized after the assistant review of the overview sheets is done at `b0319d1`. No task is recorded complete, because human visual acceptance is outstanding for all of them. Nothing is pushed, merged or deployed.
+**Status:** **Completed and closed on 2026-09-29.** Every authorized task is implemented and verified, and the reviewer's **visual acceptance of the reviewed presentation** is recorded under *Human visual acceptance*, below. That acceptance is not product acceptance, cross-browser verification or release approval. Tasks 4 and 5's height targets and Task 3's remaining height obligation are **superseded, not achieved**, and stay recorded as such. The separate asset, content, translation and product decisions this plan named are **not** completed by its closure; they are listed under *Closure — carried forward, not completed*. Nothing is pushed, merged or deployed.
+
+*The status this line carried until 2026-09-28 — every task implementation-verified and awaiting human visual review — is preserved in the task-status table under the ninth authorization's outcome.*
 
 **Branch:** `feat/guided-entry-and-presentation`, taken from `14a5b16` on the unpublished `feat/reward-card-presentation`, which is preserved unchanged at that commit. No history was rewritten.
 
@@ -1148,16 +1150,67 @@ Kept in the acceptance criteria throughout: English, German and Russian; accessi
 
 ## Remaining decisions requiring approval
 
-1. **Renewed implementation authorization for the remainder of Task 3 and for Task 6.** Tasks 1 and 2 are authorized above, bounded parts of Task 3 under the second to fifth authorizations, and Tasks 4 and 5 with the leave confirmation under the eighth. Nothing else may begin until its own authorization is recorded here. This is the gate.
-2. **Translation review of the proposed copy.** The strings above are proposed product copy. Whether they need review by a German and a Russian speaker before release is a release decision, not one this plan makes.
-3. **Instruction length**, recorded under Decision 3 as a separate content consideration for Mission Catalog and Safety. Not scheduled, not assumed, and not addressed by anything in this plan.
+1. ~~**Renewed implementation authorization for the remainder of Task 3 and for Task 6.**~~ **Resolved on 2026-09-28:** Task 6 was carried out within the *Ninth authorization*, Authorization B, and Task 3's remaining height obligation was withdrawn — superseded, not achieved — under the review-handoff decisions.
+2. **Translation review of the proposed copy.** The strings above are proposed product copy. Whether they need review by a German and a Russian speaker before release is a release decision, not one this plan makes. **Still open at closure; carried forward.**
+3. **Instruction length**, recorded under Decision 3 as a separate content consideration for Mission Catalog and Safety. Not scheduled, not assumed, and not addressed by anything in this plan. **Still open at closure; carried forward.**
 4. ~~**Tasks 4 and 5's height targets.**~~ **Decided on 2026-09-28:** superseded, not achieved — the *Ninth authorization*, Decision 1.
-5. **A way to leave settings without saving.** The view has none. Adding one is a new control and a separate product decision, not presentation; the *Ninth authorization*, Decision 2, keeps it out of this plan's batches. **Still open.**
+5. **A way to leave settings without saving.** The view has none. Adding one is a new control and a separate product decision, not presentation; the *Ninth authorization*, Decision 2, keeps it out of this plan's batches. **Still open at closure; carried forward.**
 6. ~~**The reset panel's sideways scroll, and the setup form's on the other views that share it.**~~ **Authorized on 2026-09-28** under the *Ninth authorization*, Authorization A, and done.
 7. ~~**Whether the Reward Card and History take the warm ground.**~~ **Decided on 2026-09-28:** the accepted Reward Card is preserved, and a different surface colour is not on its own a defect. History's goal-panel spacing remains an observation for the visual review.
+8. **The remaining Mission imagery.** Reviewed stills exist for `3` of the `54` Missions. The other `51` need reviewed stills, or an accepted decision that the authored scenes are the product's presentation. This is asset and content work, not implementation, and **it is not completed by this plan's closure**. Carried forward.
 
 ## Definition of complete
 
 The implementation this plan has authorized is done and verified: Tasks 1 to 6, Task 3 in its bounded parts, each recorded above with the verification that actually ran. **This plan stays active** for one thing: human visual acceptance of all of it, which only the reviewer can record. A way to leave settings without saving remains a separate product decision outside this plan.
 
 This plan is complete when its authorized scope is implemented, each task's verification has actually been run and recorded truthfully here and in the changelog, and the diff is limited to that scope. It claims no MissionKid MVP completion, no deployment readiness, no CI result, no assistive-technology acceptance and no professional translation review. Human acceptance of anything built under it would be recorded separately, as the Reward Card follow-up's was.
+
+**Satisfied on 2026-09-29**, as recorded under *Closure*.
+
+## Human visual acceptance
+
+**Accepted — 2026-09-29.** The human reviewer explicitly accepted the visual presentation reviewed for this plan: the final visual review package of the build of `36c4b60`, and the enlarged-text readability correction at `b0319d1` that followed it. The acceptance was given at HEAD `673a1ed`, whose product source is that of `b0319d1`. This is the reviewer's own visual judgement, recorded here as the acceptance this plan was held open for.
+
+What it is and is not:
+
+- It is acceptance of **the reviewed visual presentation** of the surfaces this plan changed: the introduction, first-use and incomplete setup, the handoff, settings, Discovery with its category selector, Mission cards and stills, Ready, Active, the leave confirmation, temporary mode, recovery, the reset panel and the pre-mount frame, together with the unchanged Reward Card and History as reviewed for integration.
+- It is **not** product acceptance or MVP acceptance, **not** cross-browser or real-device verification, **not** assistive-technology acceptance, **not** a professional translation review, and **not** release or deployment approval.
+- It is **separate from the automated checks** recorded above, which remain exactly as recorded and are neither strengthened nor superseded by it. No limitation recorded above is retired by it: the browser evidence is still one engine, with no Safari, Firefox or real phone, no assistive technology and no CI.
+- It **completes no separate work.** The superseded height criteria stay superseded rather than achieved, and the asset, content, translation and product decisions listed below stay open.
+
+## Closure
+
+**Closed — 2026-09-29.**
+
+### Obligations reconciled
+
+| Item | Outcome at closure |
+| --- | --- |
+| Task 1 — the introduction | Implemented, verified, visually accepted |
+| Task 2 — introduction copy | Implemented, verified, visually accepted. The copy remains proposed product copy; its translation review is carried forward |
+| Task 3 — Discovery | Bounded parts implemented, verified and visually accepted: the clipping defect, the narrow-screen spacing, the visual direction, the stills and the category selector. **The original height target is superseded, not achieved**, and the remaining height obligation was withdrawn on 2026-09-28 |
+| Task 4 — Ready and Active | Implemented and verified against the six criteria of Decision 1, visually accepted. **Its height target is superseded, not achieved** |
+| Task 5 — settings | Implemented and verified against the same criteria, visually accepted. **Its height target is superseded, not achieved** |
+| Task 6 — consistency and full verification | Carried out within the *Ninth authorization*, Authorization B, verified, visually accepted |
+| Tenth authorization — enlarged-text readability | Implemented at `b0319d1`, verified, visually accepted |
+| Every authorization's verification | Run and recorded above and in the changelog, with its limitations and the unexplained test failures recorded as unexplained |
+
+### Checked at the closure head
+
+- **Gates, run sequentially with complete output kept.** `tsc --noEmit` clean; the full suite at **849 tests across 23 test files**, all passing; the production build clean, emitting the same content-hashed assets as the build left by the `b0319d1` gate run — `index-CKDH-RHL.css` and `index-A6sF6Rww.js`. `dist/` is ignored build output, so this is a statement about the build, not about a commit.
+- **Branch against `main`.** `43` commits and `33` files. Every changed file traces to this plan or to the inherited Reward Card follow-up: the specification amendments this plan carried, its source, tests, stills and records, and the Reward Card plan.
+- No product source changed after `b0319d1`: the commits since change records only.
+
+### Carried forward, not completed
+
+Recorded so that closing this plan cannot be read as completing them.
+
+- **The remaining Mission imagery** — `51` of `54` Missions have no reviewed still. Asset and content work.
+- **Translation review** of the proposed introduction copy in German and Russian — a release decision.
+- **Instruction length** — a Mission Catalog and Safety consideration.
+- **A way to leave settings without saving** — a product decision.
+- **Two observations for the content reviewer**: the *Tallest Tower* still's surface does not positively establish a floor, and a forearm in a plain sleeve is visible in the *Sock Friend* still.
+- **Known residuals**: at an enlarged text size the introduction and Discovery were outside the tenth authorization, and words still break there mid-word, German compounds on the Mission cards among them; six words remain wider than any column a `320` px screen gives them; Safari hyphenation, which relies on the prefixed property, is unverified.
+- **Limitations** as recorded throughout: one engine, no real device, no Safari or Firefox, no assistive technology, no CI, and the unexplained test failures recorded as unexplained.
+
+This plan moves to `plans/completed/` as historical evidence. Its superseded criteria, measurements, limitations and deferred decisions stand as written and are not reopened. Nothing was pushed, merged or deployed, and no branch was deleted.
