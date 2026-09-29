@@ -94,14 +94,17 @@ export function MissionCard({ mission, language, onChoose }: CardProps) {
             names its own Mission, and choosing twice resolves one session
             rather than relying on the press being hard to repeat. */}
         {onChoose ? (
-          <button
-            aria-describedby={titleId}
-            className="button button--primary mission-card__choose"
-            onClick={() => onChoose(mission.missionId)}
-            type="button"
-          >
-            {t('discovery.card.choose')}
-          </button>
+          // Presentational: the action's own layer, below a hairline.
+          <div className="mission-card__action">
+            <button
+              aria-describedby={titleId}
+              className="button button--primary mission-card__choose"
+              onClick={() => onChoose(mission.missionId)}
+              type="button"
+            >
+              {t('discovery.card.choose')}
+            </button>
+          </div>
         ) : null}
       </div>
     </article>

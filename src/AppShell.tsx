@@ -337,7 +337,13 @@ export function AppShell({
       </header>
       <main className="app-shell__main">
         <section aria-busy={busy} aria-labelledby={headingId} data-view={view}>
-          <p className="app-view__context">
+          <p
+            className={
+              content.context === 'area.parent'
+                ? 'app-view__context app-view__context--parent'
+                : 'app-view__context'
+            }
+          >
             {translateMessage(state.language, content.context)}
           </p>
           <h1
@@ -390,7 +396,8 @@ export function AppShell({
             )
           ) : null}
           {view === 'setup-complete-handoff' && !state.resetConfirm ? (
-            <>
+            // Grouped only so the two onward actions can share a row.
+            <div className="setup-complete__actions">
               <button
                 className="button button--primary"
                 onClick={() => dispatch({ type: 'discovery-opened' })}
@@ -398,7 +405,7 @@ export function AppShell({
               >
                 {t('discovery.action.open')}
               </button>
-              {/* Secondary, and deliberately below the one primary action: the
+              {/* Secondary, and deliberately after the one primary action: the
                   record is there to be reviewed, not to compete with finding a
                   Mission. */}
               <button
@@ -408,7 +415,7 @@ export function AppShell({
               >
                 {t('history.action.open')}
               </button>
-            </>
+            </div>
           ) : null}
           {state.status !== 'pending' &&
           !VIEWS_WITHOUT_RECOVERY_CONTROLS.includes(view) ? (

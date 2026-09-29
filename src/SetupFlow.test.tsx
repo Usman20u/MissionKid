@@ -327,6 +327,38 @@ describe('returning and editing setup', () => {
     expect(harness.setCalls).toEqual([]);
   });
 
+  // The handoff reads in two parts: what was saved, with the one control that
+  // changes it, then what comes next, leading into the one primary action. Only
+  // the reading order moved; the keyboard reaches the controls as it always did.
+  it('keeps the setup change with the summary and leads into the one primary action', () => {
+    const harness = createAdapterHarness(createCompletedSnapshot());
+    render(<App adapter={harness.adapter} />);
+
+    const summary = document.querySelector('.setup-summary')!;
+    const change = screen.getByRole('button', { name: 'Change setup' });
+    const next = screen.getByText('MissionKid is ready for the next step.');
+    const find = screen.getByRole('button', { name: 'Find a Mission' });
+    const history = screen.getByRole('button', { name: 'Mission history' });
+    const precedes = (first: Node, second: Node) =>
+      (first.compareDocumentPosition(second) & Node.DOCUMENT_POSITION_FOLLOWING) !== 0;
+
+    expect(precedes(summary, change)).toBe(true);
+    expect(precedes(change, next)).toBe(true);
+    expect(precedes(next, find)).toBe(true);
+    expect(precedes(find, history)).toBe(true);
+    expect(find.className).toContain('button--primary');
+    expect(change.className).toContain('button--secondary');
+    expect(history.className).toContain('button--secondary');
+
+    expect(screen.getAllByRole('button').map((button) => button.textContent)).toEqual([
+      'Change setup',
+      'Find a Mission',
+      'Mission history',
+      'Reset MissionKid data',
+    ]);
+    expect(harness.setCalls).toEqual([]);
+  });
+
   it('changes localized presentation while preserving profile and age identity', () => {
     const harness = createAdapterHarness(createCompletedSnapshot());
     render(<App adapter={harness.adapter} />);

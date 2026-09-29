@@ -59,14 +59,19 @@ export function SetupFlow({ adapter, createProfileId }: SetupFlowProps) {
             <dd>{ageBand}</dd>
           </div>
         </dl>
-        <p>{translateMessage(language, 'setup.complete.next')}</p>
+        {/* Directly beneath the summary it changes, and ahead of the sentence
+            that leads into the onward actions, so it is not read as the first
+            of them. Its place in the focus order is unchanged. */}
         <button
-          className="button button--secondary"
+          className="button button--secondary setup-complete__edit"
           onClick={() => dispatch({ type: 'setup-editing-started' })}
           type="button"
         >
           {translateMessage(language, 'setup.action.edit')}
         </button>
+        <p className="setup-complete__next">
+          {translateMessage(language, 'setup.complete.next')}
+        </p>
       </div>
     );
   }

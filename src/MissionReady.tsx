@@ -99,7 +99,12 @@ function ReadyMissionDetails({
 
   return (
     <>
-      <p className="mission-session__meta">
+      {/* The category's light for its tag, as on a Mission card. Presentation
+          only: the label carries the meaning. */}
+      <p
+        className="mission-session__meta"
+        data-category={session.missionCategoryAtSelection}
+      >
         <span className="mission-session__category">
           {t(MISSION_CATEGORY_LABEL_KEYS[session.missionCategoryAtSelection])}
         </span>
