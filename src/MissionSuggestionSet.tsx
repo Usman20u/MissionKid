@@ -11,7 +11,7 @@ import {
 } from './localization';
 import { MissionLeaveConfirmation } from './MissionLeaveConfirmation';
 import { MissionScene, MissionSceneDefs } from './MissionScene';
-import { resolveMissionImage } from './missionImages';
+import { resolveMissionImage, type MissionImageSurface } from './missionImages';
 import type { MissionSelectionIssue } from './appState';
 import { deriveSuggestionSet, type SuggestionContext } from './missionSuggestions';
 
@@ -19,6 +19,7 @@ type CardProps = Readonly<{
   mission: MissionRecord;
   language: SupportedLanguage;
   onChoose?: (missionId: string) => void;
+  surface?: MissionImageSurface;
 }>;
 
 // Presentation only: an article, not a control. Task 5 has no choice behaviour,
@@ -28,15 +29,16 @@ type CardProps = Readonly<{
 // component discovery uses, with `onChoose` absent. A second rendering of a
 // Mission would be a second place for reviewed content, adult-involvement
 // wording and safety guidance to drift from what a Mission card presents.
-export function MissionCard({ mission, language, onChoose }: CardProps) {
+export function MissionCard({ mission, language, onChoose, surface = 'discovery' }: CardProps) {
   const t = (key: MessageKey) => translateMessage(language, key);
   const content = mission.content[language];
   const adultLabelKey = MISSION_ADULT_LABEL_KEYS[mission.adultInvolvement];
   const minutes = Math.round(mission.durationSeconds / 60);
   const titleId = `mission-title-${mission.missionId}`;
-  // A reviewed still where one exists, the authored scene otherwise. Either way
-  // the window is decoration: every word the card means is in the text below.
-  const image = resolveMissionImage(mission.missionId);
+  // A reviewed still where one exists for this surface, the authored scene
+  // otherwise. Either way the window is decoration: every word the card means
+  // is in the text below.
+  const image = resolveMissionImage(mission.missionId, surface);
 
   return (
     <article

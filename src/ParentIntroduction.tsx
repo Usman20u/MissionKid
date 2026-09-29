@@ -125,7 +125,7 @@ export function ParentIntroduction({ catalog = MISSION_CATALOG }: ParentIntroduc
               {t('introduction.example.label')}
             </h2>
             <MissionSceneDefs />
-            <MissionCard language={language} mission={example} />
+            <MissionCard language={language} mission={example} surface="introduction" />
           </section>
         ) : null}
 

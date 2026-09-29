@@ -1,6 +1,7 @@
 import tallestTower from './assets/missions/creativity-02-tallest-tower.jpg';
 import sockFriend from './assets/missions/creativity-05-sock-friend.jpg';
 import kindMonster from './assets/missions/creativity-10-kind-monster.jpg';
+import tableSurprise from './assets/missions/helping-11-table-surprise.jpg';
 
 // Presentation only, keyed by the stable Mission identifier. This adds no field
 // to Mission catalog content, no persisted value and no snapshot data: the
@@ -26,9 +27,29 @@ const MISSION_IMAGES: Readonly<Record<string, MissionImage>> = {
   'creativity-10': { src: kindMonster, width: 1000, height: 666 },
 };
 
-export function resolveMissionImage(missionId: string): MissionImage | null {
-  return MISSION_IMAGES[missionId] ?? null;
+// The introduction's example alone. Discovery keeps this Mission's authored
+// scene, like the two peers it shares each of its sets with: a still here would
+// make one of three suggestions look richer, and always the one that had been
+// the example, which F001 says carries no preference into later discovery.
+const INTRODUCTION_IMAGES: Readonly<Record<string, MissionImage>> = {
+  'helping-11': { src: tableSurprise, width: 1000, height: 666 },
+};
+
+// Where a Mission card is presented. Only the introduction shows its one
+// example on its own; everywhere else a card is one of three peers.
+export type MissionImageSurface = 'discovery' | 'introduction';
+
+export function resolveMissionImage(
+  missionId: string,
+  surface: MissionImageSurface = 'discovery',
+): MissionImage | null {
+  return (
+    (surface === 'introduction' ? INTRODUCTION_IMAGES[missionId] : undefined) ??
+    MISSION_IMAGES[missionId] ??
+    null
+  );
 }
 
-// Exported for the tests that hold this map to its authorized scope.
+// Exported for the tests that hold these maps to their authorized scope.
 export const MISSION_IMAGE_IDS: readonly string[] = Object.keys(MISSION_IMAGES);
+export const INTRODUCTION_IMAGE_IDS: readonly string[] = Object.keys(INTRODUCTION_IMAGES);

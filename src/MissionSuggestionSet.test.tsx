@@ -12,7 +12,7 @@ import {
   type MessageKey,
   type SupportedLanguage,
 } from './localization';
-import { MISSION_IMAGE_IDS } from './missionImages';
+import { INTRODUCTION_IMAGE_IDS, MISSION_IMAGE_IDS } from './missionImages';
 import { MissionSuggestionSet } from './MissionSuggestionSet';
 import { deriveSuggestionSet, type SuggestionContext } from './missionSuggestions';
 
@@ -850,6 +850,52 @@ describe('reviewed Mission stills', () => {
     ]);
     // Ordered by their own catalogOrder, not by which of them has a picture.
     expect(result.missions.map((mission) => mission.catalogOrder)).toEqual([10, 30, 50]);
+  });
+
+  // The introduction's example has a still of its own, shown there and nowhere
+  // else. In Discovery it is one of three peers whose other two have authored
+  // scenes: a photograph beside them would make it the richer of three, and
+  // always the one that had been the example.
+  it('keeps the introduction still out of every Discovery set its Mission is in', () => {
+    expect([...INTRODUCTION_IMAGE_IDS]).toEqual(['helping-11']);
+    expect(MISSION_IMAGE_IDS).not.toContain('helping-11');
+
+    const reached: string[] = [];
+    for (const ageBand of AGE_BANDS) {
+      const ctx = context({ category: 'Helping at Home', ageBand });
+      let shown: string[] = [];
+
+      for (;;) {
+        const result = deriveSuggestionSet(MISSION_CATALOG, ctx, shown);
+        if (result.status !== 'complete') break;
+        const ids = result.missions.map((mission) => mission.missionId);
+
+        if (ids.includes('helping-11')) {
+          const { container, unmount } = render(
+            <MissionSuggestionSet
+              catalog={MISSION_CATALOG}
+              context={ctx}
+              onChoose={() => {}}
+              shown={shown}
+            />,
+          );
+          const missionCards = [...container.querySelectorAll('.mission-card')];
+          expect(missionCards).toHaveLength(3);
+          for (const card of missionCards) {
+            expect(card.querySelector('img')).toBeNull();
+            expect(card.querySelectorAll('.mission-scene .s-el').length).toBeGreaterThan(0);
+          }
+          reached.push(`${ageBand}:${ids.indexOf('helping-11') + 1}`);
+          unmount();
+        }
+
+        if (!result.anotherSetAvailable) break;
+        shown = [...shown, ...ids];
+      }
+    }
+
+    // One set per age band, at the position the ordering rule gives it.
+    expect(reached).toEqual(['4–6:2', '7–8:1', '9–10:1']);
   });
 });
 

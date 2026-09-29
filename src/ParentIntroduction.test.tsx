@@ -406,6 +406,39 @@ describe('F001 introduction example Mission', () => {
     expect(h.calls.some((call) => call.startsWith('write:'))).toBe(false);
   });
 
+  it.each([...SUPPORTED_LANGUAGES])(
+    'shows its reviewed still as decoration in %s, with every reviewed field still text',
+    (language) => {
+      const h = harness();
+      render(<App adapter={h.adapter} />);
+
+      if (language !== 'en') {
+        fireEvent.click(
+          screen.getByRole('radio', { name: t('en', `setup.language.${language}`) }),
+        );
+      }
+
+      const content = EXAMPLE!.content[language];
+      const card = screen.getByRole('article', { name: content.title });
+      const photo = card.querySelector('img');
+
+      // The still takes the scene's place in the same window.
+      expect(photo).not.toBeNull();
+      expect(card.querySelector('.mission-scene')).toBeNull();
+      expect(photo!.getAttribute('alt')).toBe('');
+      expect(photo!.getAttribute('aria-hidden')).toBe('true');
+      expect(photo!.getAttribute('width')).toBe('1000');
+      expect(photo!.getAttribute('height')).toBe('666');
+      expect(photo!.getAttribute('src')).not.toMatch(/^https?:/);
+      expect(screen.queryAllByRole('img')).toHaveLength(0);
+
+      // The instruction names an unbreakable cup; the text says so whatever
+      // the picture shows.
+      expect(within(card).getByText(content.instruction)).toBeTruthy();
+      expect(card.textContent).toContain(content.safetyNote);
+    },
+  );
+
   it('receives no preference in the first discovery set afterwards', () => {
     const h = harness();
     render(<App adapter={h.adapter} createProfileId={() => PROFILE_ID} />);
@@ -646,7 +679,12 @@ describe('F001 introduction presentation boundaries', () => {
     }
     expect(container.querySelector('input:not([type="radio"])')).toBeNull();
     expect(container.querySelector('form')).toBeNull();
-    expect(container.querySelector('img')).toBeNull();
+    // The one picture is the example Mission's decorative still, inside its
+    // card's image window. No other image appears anywhere on the view.
+    const images = [...container.querySelectorAll('img')];
+    expect(images).toHaveLength(1);
+    expect(images[0]!.closest('.introduction__example .mission-card__window')).not.toBeNull();
+    expect(images[0]!.getAttribute('alt')).toBe('');
     expect(screen.queryByRole('link')).toBeNull();
     expect(screen.queryByRole('img')).toBeNull();
   });
