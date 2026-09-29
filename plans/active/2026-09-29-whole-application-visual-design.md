@@ -1,7 +1,7 @@
 # MissionKid Plan 06 — whole-application visual design
 
 **Date:** 2026-09-29
-**Status:** Scope recorded before implementation at `f68470a`; implemented and verified at `53d6a8d`, recorded under *Outcome*. Human visual acceptance is not given and not recorded, and the known visual gaps listed there remain, so this plan stays active.
+**Status:** Scope recorded before implementation at `f68470a`; implemented and verified at `53d6a8d`, recorded under *Outcome*. **Implementation is paused, from 2026-09-29, while the reviewer visually reviews Plan 06**; human visual acceptance is not given and not recorded, and the known visual gaps listed under *Outcome* remain, so this plan stays active. Further imagery is a proposal pending review, not an approved obligation — see *Review hold and clarifications*.
 **Branch:** `feat/whole-application-visual-design`, taken from `9f53610`, the commit that closed Plan 05 on `feat/guided-entry-and-presentation`. That branch is preserved unchanged at its closure. No history was rewritten.
 
 ## Authorization basis
@@ -46,7 +46,7 @@ The build of `9f53610`, identical by content hash to the `b0319d1` gate build, i
 | --- | --- | --- |
 | G1 | **Single-column views sit on the left of a wide panel.** On a desktop every single-column view uses a `72rem` panel whose content stops well short of its right edge | Share of the panel's inner width left unused at `1280x900`: Ready `53` %, the Reward Card `51` %, Active `48` %, setup, settings, the handoff and temporary mode `39` %, recovery `40` %. Plan 05 recorded the Ready and Active case as a residual |
 | G2 | **The product's name is the quietest text on the page, and parent context is barely marked.** The wordmark is body size; child-facing views repeat it as their eyebrow; *Parent area* is small grey text | `16` px wordmark; the parent/child distinction the specification's *Purpose* asks for rests on one small line |
-| G3 | **Discovery's second step is under-signalled.** Once a category is chosen, the Missions are headed by a small uppercase label | *Three Missions* at `16.8` px, smaller than the category legend above it at `18` px |
+| G3 | **Discovery's second step is under-signalled.** Once a category is chosen, the Missions' `h2` is styled as a small uppercase label | *Three Missions* at `16.8` px, smaller than the category legend above it at `18` px |
 | G4 | **Mission card anatomy.** The action's hairline is drawn on the choose button's own top edge; `Another set` is meant to be centred and is not; duration, which the specification lists as comparison information, is an `11.8` px uppercase line; guidance labels are `11.5` px uppercase on cards and sentence case on Ready and Active — two patterns for one kind of information | Inspected on the served build; `justify-self: center` has no grid parent there |
 | G5 | **Two kinds of Mission image with no shared frame language.** `2` of the `33` reachable suggestion sets are photographic and `31` are authored scenes on a saturated category-pastel stage | Enumerated from the catalog and the ordering rule: no set mixes the two, but a family moving between categories moves between photographs and flat pastel stages whose windows share only their ratio |
 | G6 | **Ready and Active answer their first question weakly.** On Ready the Mission's title — the answer to *What is the Mission?* — is `24` px; on Active the instruction to leave the screen, which the specification puts first, is body text below the heading | Visual & Ergonomic *F003 — Ready Mission presentation*, *Mission Break transition and active presentation* |
@@ -76,7 +76,7 @@ The build of `9f53610`, identical by content hash to the `b0319d1` gate build, i
 | First-use and incomplete setup, settings, temporary mode | P1 reading frame; P2 parent tag | `F001`; *Setup presentation* |
 | Setup handoff | P1; P2; P5 — *Find a Mission* becomes the evident next step: *Change setup* stays with the summary it changes, and the sentence that MissionKid is ready leads into the primary action, with *Mission history* secondary beside it | `F001`; *Action hierarchy* |
 | Discovery — categories | P6 | `F002`; *F002 — Mission Category Selection presentation* |
-| Discovery — three Missions | G3: the set's heading becomes the step's heading; P3 and P4 on the cards; P5 | `F002` criteria `1`, `4`, `7`; *F002 — Exactly-three Mission suggestions* |
+| Discovery — three Missions | G3: the set's existing `h2` is restyled as the step's heading — presentation only; P3 and P4 on the cards; P5 | `F002` criteria `1`, `4`, `7`; *F002 — Exactly-three Mission suggestions* |
 | Ready | P1; P3 — the Mission's title leads its own block, with the card's tag, duration and guidance pattern | `F003` criteria `2`, `3`; *F003 — Ready Mission presentation* |
 | Active | P1; the instruction to leave the screen becomes the view's lead; P3 | `F003` criteria `5`–`7`; *Mission Break transition and active presentation* |
 | Leave confirmation | Inherits P1. No change of its own: it already carries the product's confirmation pattern | *Confirmed abandonment and completion presentation*; `F003` criterion `16` |
@@ -91,19 +91,21 @@ The one intended change to reading order is on the handoff: *Change setup* moves
 
 ## Not done, and why
 
-- **A Mission image on Ready or Active.** It would help recognition, but the specification permits scenes only in Discovery and on the introduction's example. It needs a Visual & Ergonomic amendment and revalidation first.
+- **A Mission image on Ready or Active.** It might help recognition, but the specification permits scenes only in Discovery and on the introduction's example, so it would need a Visual & Ergonomic amendment and revalidation first. It is recorded as a proposal for review only, not as planned work.
 - **Header links to History and Settings, a step indicator, new headings or subheadings.** Navigation or new copy.
 - **A logo, a brand mark, a web font.** A specification non-goal, and an asset review respectively.
 - **Replacing, redrawing or generating any Mission image.** The grade and the frame are presentation of the existing assets.
 - **Restyling the Reward Card or History.** Accepted; they keep their identity.
 
-## Mission imagery — the honest status and the asset need
+## Mission imagery — the honest status, and proposals for review
 
-**Three photographic stills do not complete the imagery system.** After this plan the two kinds of image will share one frame and one warm world; they will still be two kinds. Completing a photographic system needs `51` reviewed stills. The alternative is an accepted decision that the authored scenes are the product's presentation. Both are content and authorization decisions, not implementation.
+> **Reframed on 2026-09-29 at the reviewer's instruction.** Beyond the counts, everything in this section is a proposal pending review of the actual design and of the applicable content rules. None of it is an approved obligation: not `51` further photographs, not the eight groups below, and not a Mission image on Ready or Active. Earlier wording here described stills as *needed* and the groups as *delivery units*; it is replaced, and the change is recorded in the changelog.
 
-**A set must never mix a still with an authored scene.** A photograph beside two drawings would make one of three peers look richer, which the specification forbids. Enumerating every reachable set gives the Missions that must receive stills together:
+**Three photographic stills are not a photographic imagery system, and this plan does not claim one.** After this plan the two kinds of image share one frame and one warm light; they are still two kinds. Two directions are open and neither is decided: reviewed stills for the other `51` Missions, or an accepted decision that the authored scenes are the product's presentation. Both are content and authorization decisions, not implementation.
 
-| Delivery unit | Missions | What it completes |
+**An observation for that review, not a rule this plan sets.** A reachable set that mixed a still with an authored scene would engage the specification's requirement that the three suggestions stay visual peers: a photograph beside two drawings could make one of three look richer. Enumerating every reachable set shows which Missions share sets, and so which would have to be considered together if stills were extended:
+
+| Proposed group | Missions | Sets it would cover |
 | --- | --- | --- |
 | Helping at Home | `9`: `helping-03`, `-15`, `-10`, `-12`, `-14`, `-09`, `-11`, `-07`, `-13` | Every Helping at Home set, **and the introduction's example**, `helping-11`, which is the first Mission image every family sees and cannot take a still alone without mixing a Helping set |
 | Creativity, remainder | `9`: `creativity-11`, `-08`, `-01`, `-04`, `-13`, `-09`, `-12`, `-06`, `-14` | Every Creativity set, with the three existing stills |
@@ -114,9 +116,9 @@ The one intended change to reading order is on the handoff: *Change setup* moves
 | Movement, middle | `6`: `movement-16`, `-15`, `-12`, `-09`, `-11`, `-05` | Movement for `9–10` first, and the second sets for `4–6` and `7–8` |
 | Movement, last | `3`: `movement-13`, `-14`, `-17` | Movement's second set for `9–10` |
 
-**Twelve of the fifty-one are about a child's own body** — their authored scene's focal subject is a child figure: `movement-02`, `-05`, `-06`, `-10`, `-12`, `-14`, `-15`, `-16`, `-17`, `learning-02`, `-05` and `calm-08`. The specification forbids depicting a recognizable real child and photorealistic depictions of children, so a still for any of these needs a subject that is not the child — a floor line, a pair of feet, a cushion course — and each is a genuine design question for the content reviewer, not a commission to be filled. Five units contain at least one of them: Calm, Learning's first unit and all three Movement units. Helping at Home, Creativity's remainder and Learning's second unit contain none.
+**Twelve of the fifty-one are about a child's own body** — their authored scene's focal subject is a child figure: `movement-02`, `-05`, `-06`, `-10`, `-12`, `-14`, `-15`, `-16`, `-17`, `learning-02`, `-05` and `calm-08`. The specification forbids depicting a recognizable real child and photorealistic depictions of children, so a still for any of these would need a subject that is not the child — a floor line, a pair of feet, a cushion course — and each is a genuine design question for the content reviewer, not a commission to be filled. Five groups contain at least one of them: Calm, Learning's first group and all three Movement groups. Helping at Home, Creativity's remainder and Learning's second group contain none.
 
-**What each still must meet**, from the three already integrated: `3:2`, supplied at `1536x1024` and bundled at `1000x666`; no text, no recognizable person, no face; a plain surface with no housing, resource or household signal; only what the Mission's reviewed instruction describes; consistent with its reviewed safety note; inspected against both before integration, with the catalog never changed to fit an image.
+**What the three integrated stills met**, as a reference for that review rather than a specification: `3:2`, supplied at `1536x1024` and bundled at `1000x666`; no text, no recognizable person, no face; a plain surface with no housing, resource or household signal; only what the Mission's reviewed instruction describes; consistent with its reviewed safety note; inspected against both before integration, with the catalog never changed to fit an image.
 
 ## Verification
 
@@ -137,7 +139,7 @@ The one intended change to reading order is on the handoff: *Change setup* moves
 | --- | --- |
 | P1 — Ground and frame | The warm ground is the default, including the frame painted before mounting and the unexpected-error view. The Reward Card and History draw their accepted cool ground on the shell. Single-column views sit in a centred `42rem` frame; the introduction and Discovery keep the wide one. Unused panel width on a desktop: the parent forms `39` → `0` %, recovery `40` → `1` %, Ready `53` → `13` %, Active `48` → `13` %, the Reward Card `51` → `16` % |
 | P2 — Heading block | The wordmark at `1.3rem` and the weight of a name. *Parent area* becomes a small tag on every parent surface; child-facing views keep their line |
-| P3 — Mission presentation | Cards, the introduction's example and Ready show the Mission Category as a tag in its own light beside a legible duration — `11.8` px tracked capitals before. One guidance pattern everywhere a Mission is shown: a tinted panel, a mark down its edge and a sentence-case label. On Ready the Mission's title leads its block; on Active the instruction to leave the screen leads the view and the title keeps its size. Discovery's set of three is headed as the step: *Three Missions* goes from a `16.8` px label to a `23`–`30` px heading. The session's reading blocks share one measure |
+| P3 — Mission presentation | Cards, the introduction's example and Ready show the Mission Category as a tag in its own light beside a legible duration — `11.8` px tracked capitals before. One guidance pattern everywhere a Mission is shown: a tinted panel, a mark down its edge and a sentence-case label. On Ready the Mission's title leads its block; on Active the instruction to leave the screen leads the view and the title keeps its size. Discovery's existing `h2`, *Three Missions*, is restyled from `16.8` px uppercase to `23`–`30` px sentence case; its markup and heading level are unchanged, as *Review hold and clarifications* sets out. The session's reading blocks share one measure |
 | P4 — Imagery frame | Stills and authored scenes share one window, inset in the card with its own corners and the same neutral inner edge. Behind the scenes, the window, the walls, the floors, the haze and the light are graded toward the warm ground with the category still lighting them, and the floor seam loses its weight. No still is filtered and no composition changes; engines without `color-mix` keep the previous colours |
 | P5 — Action layer | The card's hairline moves off the button onto the action's own layer, with room on both sides; `Another set` is centred under the set; on the handoff *Change setup* sits under the summary it changes and *MissionKid is ready for the next step* leads into *Find a Mission*, with *Mission history* beside it. Focus order is unchanged |
 | P6 — Room for enlarged text | The `--room` rule reaches the introduction, Discovery and the category controls, and every action's inset; the eight rules that had listed views one by one are replaced by the defaults |
@@ -182,18 +184,56 @@ One engine against one build; no Safari, Firefox or real device, so the `color-m
 
 Stated so that this outcome is not read as completing the design.
 
-- **The imagery system is not complete.** `3` of `54` Missions have reviewed stills, and the introduction's example — the first Mission image a family sees — is still an authored scene. The need is recorded above.
-- **Ready and Active carry no image of the chosen Mission**, which the specification does not permit without an amendment.
+- **The Mission imagery is mixed in kind.** `3` of `54` Missions have reviewed stills, and the introduction's example — the first Mission image a family sees — is an authored scene. Whether and how to change that is a proposal pending review, recorded above; nothing about it is approved.
+- **Ready and Active carry no image of the chosen Mission.** The specification does not permit one without an amendment; adding one is a proposal for review only.
 - **The reference's rounded display face, its header links and its subheading** are not reproduced: a font asset, navigation and copy respectively.
 - **Child-facing views repeat the product's name** as their area line directly under the wordmark. That line names the child-facing area, so changing it is a content decision rather than presentation.
 - **At an enlarged text size `31` words are wider than any column a `320` px screen gives them** and still break.
 
+## Review hold and clarifications — 2026-09-29
+
+Recorded from the reviewer's instruction. **Implementation is paused while Plan 06 is visually reviewed**, and no product file changed for this section: it corrects the record only, from the committed diff and the measurements already taken.
+
+### 1. *Three Missions* did not become a semantic heading — it already was one
+
+The outcome said the set is *headed as the step* and goes *from a label to a heading*, while also reporting heading structure unchanged. Both are true only because the change was visual. Exactly:
+
+- **Markup: unchanged.** Before and after, the element is `<h2 class="mission-suggestions__title" id="mission-suggestions-heading" tabindex="-1">` rendering `discovery.suggestions.heading`. `53d6a8d` changes nothing in it: its diff of `MissionSuggestionSet.tsx` touches only the card's action.
+- **Heading outline: unchanged**, measured on both builds: `H1` *What kind of Mission?*, `H2` *Three Missions*, then an `H3` for each Mission. It remains the focus target after *Another set*.
+- **What changed is its CSS alone**, and the same rule restyles the unavailable state's `h2`:
+
+| Property | Before | After |
+| --- | --- | --- |
+| Font size | `1.05rem` — `16.8` px; `33.6` px at a `32px` root | `clamp(1.45rem, 1.1rem + 1.5vw, 1.85rem)` — `23.45` px on a phone, `29.6` px on a desktop, `46.4` px at a `32px` root |
+| Weight | `750` | `800` |
+| Colour | `#1d3630` | `#17493c` |
+| Case and tracking | `uppercase`, `0.02em` | as written, `-0.025em` |
+| Line height | browser default | `1.2` |
+
+The words *headed as the step* in the changelog and in the message of `53d6a8d`, and *a real heading* in the report of 2026-09-29, describe this visual change and nothing else.
+
+### 2. The handoff: reading order changed, Tab order did not
+
+| | Before (`9f53610`) | After (`53d6a8d`) |
+| --- | --- | --- |
+| **DOM order** | *Parent area*, `h1` *Setup complete*; then inside `.setup-complete`: the saved sentence, the summary, the sentence *MissionKid is ready for the next step.*, the *Change setup* button; then *Find a Mission* and *Mission history* as direct children of the form's fieldset; then *Reset MissionKid data* | The same, except that inside `.setup-complete` the *Change setup* button now precedes the sentence *MissionKid is ready for the next step.*, and *Find a Mission* and *Mission history* are wrapped, in the same order, in a new `div.setup-complete__actions` |
+| **Visual order, desktop** | Summary tiles side by side; the sentence; then three buttons each on its own line — *Change setup* outlined, *Find a Mission* filled, *Mission history* outlined; a hairline; the reset link | Summary tiles; *Change setup* directly beneath them; a hairline; the sentence, in bold; *Find a Mission* and *Mission history* side by side on one row; a hairline; the reset link |
+| **Visual order, phone** | Tiles stacked; the sentence; *Change setup*; *Find a Mission* at full width; *Mission history*; a hairline; the reset link | Tiles stacked; *Change setup*; a hairline; the sentence; *Find a Mission* at full width; *Mission history* on the next line; a hairline; the reset link |
+| **Keyboard (Tab) order** | *Change setup* → *Find a Mission* → *Mission history* → *Reset MissionKid data* | **Identical** |
+| **Reading order**, as a screen reader moves through it | … the summary, *MissionKid is ready for the next step.*, *Change setup*, *Find a Mission*, *Mission history*, *Reset MissionKid data* | … the summary, *Change setup*, *MissionKid is ready for the next step.*, *Find a Mission*, *Mission history*, *Reset MissionKid data* |
+
+The sentence is not focusable, so moving it changes the reading order and not the Tab order; the new wrapper reorders nothing. Evidence: the keyboard walk of both builds, and the test added at `53d6a8d`, which asserts both the new document order and the unchanged order of the four buttons. *Keyboard order unchanged* in the outcome and the report means Tab order; the reading order change is the one the scope named in advance under *Preserved exactly*.
+
+### 3. Further imagery is a proposal, not an obligation
+
+`51` further photographs, the eight groups of Missions that share suggestion sets, and a Mission image on Ready or Active are **proposals pending review of the actual design and of the applicable content rules**. None is approved, planned or owed by this plan. The imagery section, the known gaps and the decisions below are reworded accordingly.
+
 ## Decisions for the reviewer
 
-1. **A Mission's image on Ready and Active** — a Visual & Ergonomic amendment, then revalidation.
-2. **The remaining imagery** — `51` reviewed stills in the delivery units above, or a decision that the authored scenes are the presentation.
+1. **A Mission's image on Ready and Active** — a proposal only. It would need a Visual & Ergonomic amendment and revalidation before any work, and it is not approved.
+2. **The remaining imagery** — a proposal only: either further reviewed stills, considered in the groups above, or a decision that the authored scenes are the presentation. Neither is approved, and both depend on review of the actual design and of the applicable content rules.
 3. **Carried from Plan 05, still open:** translation review of the introduction copy; Mission instruction length; a way to leave settings without saving; the two still observations for the content reviewer.
 
 ## Definition of complete
 
-Every improvement in the scope above implemented, the verification actually run and recorded here and in the changelog with its limitations, the diff limited to this scope, and screenshots from the actual builds delivered. Human visual acceptance, if given, is recorded separately, and **this plan stays active until the reviewer's visual judgement is recorded**, as Plan 05 did. Completing this plan does not complete the imagery system, and no claim of full design completion is made while the gaps it names remain.
+Every improvement in the scope above implemented, the verification actually run and recorded here and in the changelog with its limitations, the diff limited to this scope, and screenshots from the actual builds delivered. Human visual acceptance, if given, is recorded separately, and **this plan stays active until the reviewer's visual judgement is recorded**, as Plan 05 did. This plan claims nothing about the imagery beyond the shared frame and grade it implemented; extending it is a proposal pending review. No claim of full design completion is made while the gaps it names remain.
