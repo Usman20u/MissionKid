@@ -1,7 +1,7 @@
 # MissionKid Plan 06 — whole-application visual design
 
 **Date:** 2026-09-29
-**Status:** Scope recorded before implementation at `f68470a`; implemented and verified at `53d6a8d`, recorded under *Outcome*. **Implementation is paused, from 2026-09-29, while the reviewer visually reviews Plan 06**; human visual acceptance is not given and not recorded, and the known visual gaps listed under *Outcome* remain, so this plan stays active. Further imagery is a proposal pending review, not an approved obligation — see *Review hold and clarifications*. **One bounded exception to the pause** is authorized on 2026-09-29: the `helping-11` image integration recorded under *Bounded image integration*, and nothing else.
+**Status:** Scope recorded before implementation at `f68470a`; implemented and verified at `53d6a8d`, recorded under *Outcome*. **Implementation is paused, from 2026-09-29, while the reviewer visually reviews Plan 06**; human visual acceptance is not given and not recorded, and the known visual gaps listed under *Outcome* remain, so this plan stays active. Further imagery is a proposal pending review, not an approved obligation — see *Review hold and clarifications*. **One bounded exception to the pause** is authorized on 2026-09-29: the `helping-11` image integration recorded under *Bounded image integration*, and nothing else — scope recorded at `cca58f0`, implemented and verified at `899ff79`. The pause otherwise stands.
 **Branch:** `feat/whole-application-visual-design`, taken from `9f53610`, the commit that closed Plan 05 on `feat/guided-entry-and-presentation`. That branch is preserved unchanged at its closure. No history was rewritten.
 
 ## Authorization basis
@@ -297,6 +297,42 @@ The still is shown on the introduction's example alone. In Discovery `helping-11
 - **Layout:** `0` clipping and page overflow; the example card's box and every text element's box unchanged; the same words in the same order; Discovery's three sets identical before and after.
 - **Gates** once, sequentially, with complete output kept: relevant tests, `tsc --noEmit`, the full suite, the production build, `git diff --check`.
 - **Screenshots from the actual builds**, before and after.
+
+### Outcome, at `899ff79`
+
+Scope recorded at `cca58f0`; implemented at `899ff79`. **Six files:** the still, `src/missionImages.ts`, `src/MissionSuggestionSet.tsx`, `src/ParentIntroduction.tsx` and the two test files. No stylesheet, copy, catalog content, control, state, route, persistence or dependency changed; the built stylesheet is byte-identical to before.
+
+- **The asset.** The supplied still resized to `1000x666` and encoded once as an sRGB JPEG, `110 kB` against the existing stills' `49`–`113 kB`; emitted by the build as `helping-11-table-surprise-DUIZmoaJ.jpg`.
+- **The code.** `INTRODUCTION_IMAGES` holds `helping-11` alone, beside the unchanged Discovery map. `resolveMissionImage` takes the surface, defaulting to Discovery; `MissionCard` passes it through with the same default, and the introduction names itself. Every other caller is unchanged and resolves exactly as before.
+- **Tests, `4` added and `1` narrowed.** Added: the example shows the still as decoration with its reviewed text, in English, German and Russian; and each of the three Discovery sets containing `helping-11` renders three authored scenes and no still, reached at positions `2`, `1` and `1`, with the introduction's map naming `helping-11` alone and the Discovery map not naming it. Each was proven to bite: with `helping-11` put into the Discovery map the Discovery test fails, and fails again at the rendered set with its id checks removed; with the introduction's surface removed the three introduction tests fail. **Narrowed:** the introduction's *no identifying data* test asserted that the view contained no `img` at all, written when it had none. It now asserts exactly one image, the example's decorative still inside its card's window, so any other picture on the view still fails it.
+
+### Verification, at `899ff79`
+
+Chrome for Testing headless shell `149.0.7827.55`, one harness on two served builds — before: the build of `cca58f0`, whose product source is `01fb0f7`'s; after: the build of `899ff79`, rebuilt from the commit and byte-identical to the one measured. The introduction, and the three Discovery sets reached through the ordinary flow from a first visit, in English, German and Russian at `1280x900`, `390x780` and `320` px with an injected `32px` root; the introduction also at `320` px under the browser's own `32px` setting, with the root asserted `32px` before and after every capture.
+
+| Check | Result |
+| --- | --- |
+| Combinations | `39` per build: `12` introduction, `27` Discovery |
+| The still | `complete`, `decode()` resolved, natural `1000x666`, served `200` from the same origin, requested once per visit; `alt=""`, `aria-hidden`, `object-fit: cover`, and its box equal to the window's in all `12`. No `img` role, and none in the example's accessibility tree |
+| Framing | The window is `3:2` in all `12` — `358x238.7` desktop, `330x220` mobile, `279x186` at a `32px` root. `0.1` % of the still's width is cropped, the rounding of `666`, and none of its height. Of the `153,337` pixels that make up the napkin, the spoon and the cup, **`0` fall outside the rounded window** in any configuration; the nearest object keeps `17.9` px from the window's edge at the smallest size |
+| Layout | Words, every text element's box and size, the example card's and window's boxes and the page height **identical before and after in all `39`**. `0` clipping, `0` page overflow |
+| Discovery | The three sets' markup **identical before and after in all `27`**: `helping-09`, `helping-11`, `helping-13` for `4–6` and `helping-11`, `helping-07`, `helping-13` for `7–8` and `9–10`, each with three authored scenes. The still is never requested by Discovery; the ordinary flow loads it once, on the introduction |
+| Requests | none to another origin; no failed request, page error or console error |
+
+**Two harness defects were found and corrected before these results**, stated so the numbers are not read as first-run results. The first check counted the introduction's request for the still against Discovery, because the ordinary flow passes through the introduction; and the category selector was measured before its transition settled, giving sub-pixel differences of up to `0.4` px in both directions on an unchanged stylesheet. Both were corrected in the harness, and every result above comes from the corrected run. An element capture also drops the browser's own `32px` setting, so that configuration is captured by viewport.
+
+**Gates**, once, sequentially, with complete output kept: relevant tests `1 failed | 184 passed`; `tsc --noEmit` clean; the full suite at **854 tests across 23 test files**, all passing; a clean build; `git diff --check` clean. **The one relevant-run failure is recorded, not explained away:** *presents exactly three distinct Missions in every approved context*, an existing test, exceeded vitest's `5000` ms limit at `5303` ms while five DOM test files ran in parallel. It is a timeout, not an assertion. Run alone it takes `1592`–`1818` ms on the unchanged source and `1637`–`1694` ms on this change; the same five-file command then passed on both, `181` and `185` tests. Not reproduced, and not attributed.
+
+**Screenshots** from both builds, at `2x`, in the local review folder `MissionKid-Plan06-helping-11-still`, with before-and-after sheets for every configuration.
+
+### Limitations and what remains
+
+- **One engine** against one build; no Safari, Firefox or real device; no assistive technology; no CI.
+- **The cup's material is an open content judgement**, recorded above for the content reviewer, and the inspection here is not a content review.
+- **The same Mission is pictured two ways**: a photograph on the introduction, its authored scene in Discovery. That is the deliberate cost of keeping Discovery's sets peers.
+- **The imagery is still mixed in kind across the product.** `3` of `54` Missions carry a still in Discovery, and the introduction's example now carries one of its own. This supersedes, for the introduction only, the first *Known visual gap* at `53d6a8d`.
+- At a `32px` root the example's German title and heading still break mid-word, *Tischüberra|schung* and *BEISPIELMISSIO|N*, as before: every text box is identical, so this is Plan 06's recorded residual and not a change.
+- **Human visual acceptance of the still and of Plan 06 is not given and not recorded.**
 
 ## Decisions for the reviewer
 
