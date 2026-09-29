@@ -1,7 +1,7 @@
 # MissionKid Plan 06 — whole-application visual design
 
 **Date:** 2026-09-29
-**Status:** Scope recorded before implementation at `f68470a`; implemented and verified at `53d6a8d`, recorded under *Outcome*. **Implementation is paused, from 2026-09-29, while the reviewer visually reviews Plan 06**; human visual acceptance is not given and not recorded, and the known visual gaps listed under *Outcome* remain, so this plan stays active. Further imagery is a proposal pending review, not an approved obligation — see *Review hold and clarifications*.
+**Status:** Scope recorded before implementation at `f68470a`; implemented and verified at `53d6a8d`, recorded under *Outcome*. **Implementation is paused, from 2026-09-29, while the reviewer visually reviews Plan 06**; human visual acceptance is not given and not recorded, and the known visual gaps listed under *Outcome* remain, so this plan stays active. Further imagery is a proposal pending review, not an approved obligation — see *Review hold and clarifications*. **One bounded exception to the pause** is authorized on 2026-09-29: the `helping-11` image integration recorded under *Bounded image integration*, and nothing else.
 **Branch:** `feat/whole-application-visual-design`, taken from `9f53610`, the commit that closed Plan 05 on `feat/guided-entry-and-presentation`. That branch is preserved unchanged at its closure. No history was rewritten.
 
 ## Authorization basis
@@ -94,7 +94,7 @@ The one intended change to reading order is on the handoff: *Change setup* moves
 - **A Mission image on Ready or Active.** It might help recognition, but the specification permits scenes only in Discovery and on the introduction's example, so it would need a Visual & Ergonomic amendment and revalidation first. It is recorded as a proposal for review only, not as planned work.
 - **Header links to History and Settings, a step indicator, new headings or subheadings.** Navigation or new copy.
 - **A logo, a brand mark, a web font.** A specification non-goal, and an asset review respectively.
-- **Replacing, redrawing or generating any Mission image.** The grade and the frame are presentation of the existing assets.
+- **Replacing, redrawing or generating any Mission image.** The grade and the frame are presentation of the existing assets. *Amended on 2026-09-29:* except `helping-11`'s image on the introduction's example, under *Bounded image integration*. No image in Discovery changes.
 - **Restyling the Reward Card or History.** Accepted; they keep their identity.
 
 ## Mission imagery — the honest status, and proposals for review
@@ -228,11 +228,82 @@ The sentence is not focusable, so moving it changes the reading order and not th
 
 `51` further photographs, the eight groups of Missions that share suggestion sets, and a Mission image on Ready or Active are **proposals pending review of the actual design and of the applicable content rules**. None is approved, planned or owed by this plan. The imagery section, the known gaps and the decisions below are reworded accordingly.
 
+## Bounded image integration — `helping-11`, *The Table Surprise*
+
+**Authorized on 2026-09-29** by the reviewer's instruction: one bounded image integration for `helping-11`, using one supplied candidate still, after inspecting it against the Mission's reviewed instruction, its safety note and the imagery rules. It lifts the review hold for this integration alone. It preserves Plan 06's layout and every Mission's content, eligibility, ordering and behaviour, replaces no other Mission image, and **records no human acceptance of the image or of Plan 06**. Excluded: pushing, merging and deployment.
+
+Scope recorded here before any product file changed.
+
+### Content inspection, before integration
+
+The candidate is a `1536x1024` PNG, `3:2`, the ratio and size the three integrated stills were supplied at. It was inspected whole and at magnification on the cup, its rim and foot, and the spoon. The reviewed instruction is *"Choose one person at home and make a special place for them at the table. Fold a napkin or piece of paper into a simple shape and put it at their place. Set their spoon and an empty, unbreakable cup beside the shape. Look at the place you made just for them."*; the safety note is *"Use items you are allowed to move and can carry easily. Choose a place you can reach with both feet on the floor."*
+
+| Clause | Finding |
+| --- | --- |
+| Only what the instruction describes | A napkin folded once into a triangle — a simple shape — with a spoon and a cup beside it. No plate, food, drink, knife, fork, candle, name card or decoration |
+| An empty cup | Passed: the dry floor of the cup's interior is visible |
+| An unbreakable cup | **Not contradicted, and not established** — below |
+| The safety note | Consistent: three small, light things on a plain surface, with no height, stool or chair in frame |
+| Nothing sharp, hot or unsafe made attractive | A round-bowled teaspoon; no blade, steam or liquid |
+| No text or mark | Passed, on every object, including the spoon |
+| No person, child or face; no implied photo or video capture | Passed |
+| Housing, resources, family structure; globally recognizable | A plain surface with no interior, furniture or décor; a paper napkin, a cup and a spoon |
+
+**The cup, stated exactly.** Cues toward a molded, unbreakable cup: the inside has the same matte finish as the outside, where a ceramic mug is ordinarily glazed inside; the rim is an even, rounded bead; the foot is a stepped stacking ring in the same colour and finish down to the table, with no bare clay ring; the handle keeps one even section; there is no speckle, glaze pooling or crazing. Against: a mug with a handle is the archetypal ceramic form, matte sage stoneware looks much like this, and nothing in the frame positively establishes plastic — no seam, flex or translucency. At card size the fine cues shrink and it reads as a matte green mug. **Verdict: consistent with the instruction and not a conflict, but it does not unmistakably read as unbreakable plastic.** This is not the rejected mitten case, where the still showed a different object from the one instructed: here the object is the instructed one and only its material is open. It is recorded for the content reviewer, like the *Tallest Tower* floor and the *Sock Friend* sleeve, rather than decided here. The reviewed text stays the authority, and every language's card says *unbreakable*. **The catalog is not changed to fit the image.**
+
+### Where `helping-11` appears
+
+- **The introduction** — the one example, alone, rendered by the shared `MissionCard` with no choose action.
+- **Discovery, Helping at Home** — enumerated with the production ordering code, `33` reachable sets in all, none of which mixes a still with an authored scene today. `helping-11` is in exactly three:
+
+| Age band | Set | Missions, in order |
+| --- | --- | --- |
+| `4–6` | second | `helping-09`, **`helping-11`**, `helping-13` |
+| `7–8` | third | **`helping-11`**, `helping-07`, `helping-13` |
+| `9–10` | second | **`helping-11`**, `helping-07`, `helping-13` |
+
+### The rules that apply
+
+1. **Visual & Ergonomic, *F002 — Exactly-three Mission suggestions*:** the three scenes are peers, and *"Scene richness, hero-object emphasis, color, or composition must not make one suggestion look recommended, better, easier, or more valuable."*
+2. **`F001`, *The example Mission*:** the example *"must not be preselected, promoted, pinned, reordered, or given any preference in later discovery. After setup, it is an ordinary catalog Mission with no memory of having been the example."*
+3. **How this project has held rule 1 for stills**, in Plan 05: a set's three Missions are improved together, so none is made to look recommended; its one mixed pass was recorded as a cost and then resolved. This plan's imagery section records that `helping-11` cannot take a still alone in Discovery without mixing a Helping set.
+
+The existing image map is keyed by Mission and feeds both surfaces, so adding `helping-11` to it would put one photograph beside two authored scenes in all three sets above — the richer image always on the Mission that was the example. That engages rule 1 directly and rule 2 in substance. **Neither is bypassed, and no other Mission's image is replaced to avoid it.**
+
+### Decision: the introduction's example only
+
+The still is shown on the introduction's example alone. In Discovery `helping-11` keeps its authored scene, exactly like its peers, so no reachable set mixes a still with an authored scene, and the Mission carries nothing from having been the example. The introduction shows one card and no set, so there is nothing for the peer rule to compare there; and the Visual & Ergonomic Specification already authorizes that one example's image under the scene system, which may be implemented as *"lightweight raster assets, or controlled static rendered imagery"*. **No specification is amended**, so no revalidation is required.
+
+**The cost, stated:** the same Mission is pictured differently on the two surfaces — a photograph as the example, its authored scene in Discovery. Showing the still in Discovery too is a separate decision for the reviewer — on rule 1 itself, or through stills for the Helping at Home Missions that share its sets, considered together — and is not taken here.
+
+### Scope
+
+| Item | What changes | Trace |
+| --- | --- | --- |
+| Asset | The supplied still, bundled at `1000x666` like the three existing stills, as an sRGB JPEG in `src/assets/missions/`, emitted by the existing build as a fingerprinted local file. Nothing is fetched from another origin or generated at runtime | Visual & Ergonomic *Implementation neutrality*; Technical Architecture, bundled static assets |
+| `src/missionImages.ts` | A separate entry for the introduction's example, so Discovery's map, and the test that holds it to the three authorized Missions, stay exactly as they are | *Controlled Mission Mini-World scene system*, the introduction clause |
+| `src/MissionSuggestionSet.tsx`, `src/ParentIntroduction.tsx` | `MissionCard` is told which surface it presents on, defaulting to Discovery; the introduction names itself. The one shared card is kept, so reviewed text still has one rendering | `F001` criteria `15`, `18`; Visual & Ergonomic *Parent introduction presentation*, criterion `24` |
+| Tests | The example shows the still as decoration — `alt=""`, `aria-hidden`, intrinsic size, a local source — with every reviewed field as text; each of the three Discovery sets above renders `helping-11`'s authored scene and no still; the introduction's entry names `helping-11` alone | As above, and `F002` criteria `1`, `4`, `7` |
+
+**Framing.** The window is `3:2` at every width and so is the still, so `object-fit: cover` removes at most the rounding of `666` — under one source pixel. The napkin, the spoon and the cup keep a clear margin inside the window's rounded corners. Measured on the build, not assumed.
+
+**Preserved exactly:** Plan 06's layout, including the example card's size, which the window's `aspect-ratio` already reserves; every Mission's content, eligibility, ordering and behaviour; the example's reviewed content, safety note and non-selectability; and Discovery's rendering of every set.
+
+### Verification intent
+
+- **Two served builds**, before and after, with the same harness: the introduction, and the three Discovery sets above reached through the ordinary flow, in English, German and Russian at `1280x900`, `390x780` and `320` px with an injected `32px` root, and the introduction under the browser's own `32px` setting.
+- **The image:** requested once from the same origin, served `200`, `complete`, `decode()` resolved, natural size `1000x666`; rendered at `3:2`; decorative, with no `img` role exposed.
+- **Framing:** the share of the still cropped away at each configuration, and each object's margin inside the window.
+- **Layout:** `0` clipping and page overflow; the example card's box and every text element's box unchanged; the same words in the same order; Discovery's three sets identical before and after.
+- **Gates** once, sequentially, with complete output kept: relevant tests, `tsc --noEmit`, the full suite, the production build, `git diff --check`.
+- **Screenshots from the actual builds**, before and after.
+
 ## Decisions for the reviewer
 
 1. **A Mission's image on Ready and Active** — a proposal only. It would need a Visual & Ergonomic amendment and revalidation before any work, and it is not approved.
 2. **The remaining imagery** — a proposal only: either further reviewed stills, considered in the groups above, or a decision that the authored scenes are the presentation. Neither is approved, and both depend on review of the actual design and of the applicable content rules.
 3. **Carried from Plan 05, still open:** translation review of the introduction copy; Mission instruction length; a way to leave settings without saving; the two still observations for the content reviewer.
+4. **The `helping-11` still** — whether its cup reads clearly enough as unbreakable, recorded under *Bounded image integration* for the content reviewer; and whether the still should also appear in Discovery, which the peer rule and `F001`'s example rule make a decision of its own rather than a consequence of this integration.
 
 ## Definition of complete
 
