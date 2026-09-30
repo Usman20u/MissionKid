@@ -1,8 +1,8 @@
 # MissionKid Plan 06 — whole-application visual design
 
 **Date:** 2026-09-29
-**Status:** Scope recorded before implementation at `f68470a`; implemented and verified at `53d6a8d`, recorded under *Outcome*. **Implementation is paused, from 2026-09-29, while the reviewer visually reviews Plan 06**; human visual acceptance is not given and not recorded, and the known visual gaps listed under *Outcome* remain, so this plan stays active. Further imagery is a proposal pending review, not an approved obligation — see *Review hold and clarifications*. **One bounded exception to the pause** is authorized on 2026-09-29: the `helping-11` image integration recorded under *Bounded image integration*, and nothing else — scope recorded at `cca58f0`, implemented and verified at `899ff79`. The pause otherwise stands.
-**Branch:** `feat/whole-application-visual-design`, taken from `9f53610`, the commit that closed Plan 05 on `feat/guided-entry-and-presentation`. That branch is preserved unchanged at its closure. No history was rewritten.
+**Status:** Scope recorded before implementation at `f68470a`; implemented and verified at `53d6a8d`, recorded under *Outcome*. **Implementation is paused, from 2026-09-29, while the reviewer visually reviews Plan 06**; human visual acceptance is not given and not recorded, and the known visual gaps listed under *Outcome* remain, so this plan stays active. Further imagery is a proposal pending review, not an approved obligation — see *Review hold and clarifications*. **One bounded exception to the pause** is authorized on 2026-09-29: the `helping-11` image integration recorded under *Bounded image integration*, and nothing else — scope recorded at `cca58f0`, implemented and verified at `899ff79`. **On 2026-09-30 the reviewer authorized a complete visual redesign against a newly supplied reference**, recorded under *Reference redesign — 2026-09-30*. It ends the pause for that scope, carries this plan's first specification amendments, and is **in progress**; human visual acceptance is still not given and not recorded.
+**Branch:** `feat/whole-application-visual-design`, taken from `9f53610`, the commit that closed Plan 05 on `feat/guided-entry-and-presentation`. That branch is preserved unchanged at its closure. The reference redesign continues on `feat/reference-visual-redesign`, taken from `2e81cec`, the head of `feat/whole-application-visual-design`, which is preserved unchanged. No history was rewritten.
 
 ## Authorization basis
 
@@ -334,13 +334,120 @@ Chrome for Testing headless shell `149.0.7827.55`, one harness on two served bui
 - At a `32px` root the example's German title and heading still break mid-word, *Tischüberra|schung* and *BEISPIELMISSIO|N*, as before: every text box is identical, so this is Plan 06's recorded residual and not a change.
 - **Human visual acceptance of the still and of Plan 06 is not given and not recorded.**
 
+## Reference redesign — 2026-09-30
+
+Recorded before any product file changed.
+
+### Authorization
+
+**Authorized on 2026-09-30** by the reviewer's instruction: a complete visual redesign of MissionKid using a newly supplied concept board as the primary design reference, delivered as one integrated implementation. It is explicit authorization to replace the previous visual presentation throughout the application, **including the previously accepted Reward Card and History styling**; the earlier visual acceptances remain historical records, not requirements to keep the old appearance. The instruction asks for the reference's visual character — warm ivory and cream grounds, deep forest-green text and primary actions, expressive serif headings with readable sans-serif body text, soft sage recognition surfaces, restrained category accents, natural photographic imagery with soft daylight and tactile materials, rounded surfaces and subtle shadows, clear hierarchy and prominent primary actions — with appropriately licensed, locally served fonts covering English, German and Russian; the introduction's hero and three-step explanation adapted inside the root-only application; the category image-and-label treatment; Mission images on Ready and Active that represent the actual Mission without crowding out the task; the reference's recognition hierarchy and sage treatment on the Reward Card, with any image and progress indicator reflecting real data; and presentation requirements updated explicitly where the reference supersedes the old design.
+
+It lifts the review hold for this scope. It does not record human visual acceptance, and it excludes pushing, a pull request, merging, deployment and any destructive reset.
+
+**Not taken from the reference**, as instructed: its labels, phone frames, status bars and captions; any baked-in picture text. Also not taken, because the specifications forbid them or they would be decorative controls: the tagline *Real activities. Brighter days.* (an outcome claim), the *54 reviewed Missions* band (a count), a second forward action such as *See how it works*, header links, a menu button and a header language menu, which have no implemented destination beyond what the views already offer. The rubber boots and the ball are not used either: no Mission assumes outdoor access and no Movement Mission uses a ball, so both would imply equipment the Missions do not require.
+
+### What this supersedes in this plan
+
+The one-to-three-improvements bound under *How the work is bounded*; *No specification amendment is made*; *A logo, a brand mark, a web font* and *Restyling the Reward Card or History* under *Not done, and why*; and the Reward Card's element-by-element identity check. The rows above stay as the record of what `53d6a8d` did. The wordmark stays text — no logo or brand mark is made.
+
+### Specification amendments
+
+| Document | Change | Reason |
+| --- | --- | --- |
+| [`visual-and-ergonomic.md`](../../docs/specs/visual-and-ergonomic.md) | Inventory rows for Mission Category Selection, Ready, the Reward Card and the Monthly Goal. *Parent introduction presentation*: a hero composition with the example as the principal image, one decorative image per flow step, a compact language control; the reading order and the single action unchanged. *Mission Category Selection*: one decorative image per category under one shared treatment. *Ready* and *active*: the Mission's own image as support, never leading or displacing text, guidance or the action. *Reward Card*: the completed Mission's own image while it resolves. *Monthly Goal*: a calm bar that mirrors `X / 20` exactly. *Scene system*: where a Mission's own image may appear outside Discovery. A new *Bounded product imagery* section: five category and three step images and their content rules. *Typography*: a serif display face and a sans-serif body face, locally served with complete Latin and Cyrillic coverage. *Colour*: the approved direction. *Visual consistency*: shared stylesheet values are not a token catalog. *Ergonomic review method* and criterion `20`: an authorized, recorded redesign is not bounded to one to three improvements. Criteria `25`–`27`. The illustration non-goal names the bounded set | The reference supersedes the scene system's single authorized use outside Discovery, the absence of category, step and session imagery, and the one-to-three bound |
+| [`technical-architecture.md`](../../docs/specs/technical/technical-architecture.md) | *Performance boundary*: the bounded presentation assets — locally served fonts and static images — are part of what the static application ships, each measured in the production build | Fonts are a new asset kind; Plan 06 recorded that a font would need this review |
+
+**Not changed:** `business-context.md`, `global-spec.md`, `functional-map.md`, `roadmap.md`, `user-stories.md`, `mission-catalog-and-safety.md`, `data-and-state-model.md` and `F001`–`F004`. No behaviour, state, data, Mission content, eligibility, ordering, lifecycle, persistence or recovery outcome changes, and no navigation is added. `F004`'s Reward Card content list is a minimum the image and bar only reinforce; its History entry list is unchanged and History gets no Mission image.
+
+### Revalidation
+
+**User Story / traceability validation — passed.** All `14` stories, `P1`–`P8` and `C1`–`C6`, are unchanged, unique and keep their owners. No story is added, because no behaviour is: the introduction and its imagery serve `P8`, the setup and settings surfaces `P1`/`P2` (`F001`); the category images, cards and *Another set* `P3`/`P4`/`C1` (`F002`); the session views and their images `P5` and `C2`–`C4` (`F003`); the Reward Card, History and the Monthly Goal bar `P6`/`P7` and `C5`/`C6` (`F004`). Every change in the scope below traces to `F001`–`F004` through the amended Visual & Ergonomic Specification. Nothing traces to nothing.
+
+**Focused Full Specification Audit — passed, no blockers.** Scope: the two amended documents and every clause that could conflict with them.
+
+| Check | Result |
+| --- | --- |
+| Peer rules | Passed. The five category images share one treatment; the three suggestion cards keep one treatment and the same image kind within every reachable set; no image gains a badge, rank or promotion |
+| The example gains nothing in Discovery | Passed. `helping-11` keeps its authored scene in Discovery and in its session views, which show the image its card showed; `F001` and `F002` are unchanged |
+| Session images | Passed. Only the session's own Mission, only on Ready, active and its Reward Card; static; decorative; after the title in reading order; never displacing guidance or the action. The active view's first line stays the instruction to leave the screen |
+| Monthly Goal | Passed. The bar mirrors the displayed count, caps at `20 / 20`, never animates, and the text stays the value; no second prompt or figure. History remains a plain record with no image |
+| Imagery content | Passed. No text, people, faces or children; no equipment, purchase, outdoor or household implication; no unsafe action; each image checked against the Missions it represents before integration |
+| Anti-manipulation | Passed. No count, rating, tagline, urgency, streak, reveal or second forward action enters; no header link or menu is added |
+| Accessibility baseline | Passed by construction and re-measured after implementation: every image decorative, text authoritative, focus order unchanged, targets at `52` px or more, contrast measured on the rendered page, enlarged text supported |
+| Localization | Passed. Every face covers the three languages; images carry no text; no layout assumes string length |
+| Technical boundary | Passed. Root-only SPA, no route, no dependency, no request to another origin; fonts and images are bundled static assets, measured |
+| Mission Catalog and Safety | Passed. No content, eligibility or approval changes; images are judged against the reviewed text, never the reverse |
+| Reference integrity | Passed. Every relative link in the repository's Markdown resolves |
+
+**Blockers: none. Unresolved contradictions: none.**
+
+### Renewed implementation authorization
+
+Recorded on 2026-09-30 from the same instruction, which authorizes the amendments above and their implementation together and asks that routine design choices proceed without further approval. The revalidation above passed before any product file changed. **Authorized:** the redesign scoped below, as one integrated implementation. **Still excluded:** pushing, a pull request, merging, deployment, branch deletion, and recording human visual acceptance.
+
+### Scope
+
+**Shared system, replacing the previous stylesheet rather than layering over it.** One set of shared values — colour, type, radius, spacing, elevation — defined once and used by every view; one family of components — the view sheet and its heading block, buttons, choice cards, notices, the Mission card and Mission picture, the guidance pattern, the calm progress bar, the confirmation panel. The enlarged-text rules that measured defects produced — `--room`, the named zero minimums on every clipping layout layer, the category group's definite sizing — carry over, and their stylesheet invariant tests are kept or rewritten to encode the same cause in the new layout.
+
+| Surface | What changes | Trace |
+| --- | --- | --- |
+| Shell | Ivory ground; a text wordmark in the new face; cream view sheets with soft elevation; a wide sheet for the introduction and Discovery, a reading sheet for the rest; the error view in the same sheet | Visual & Ergonomic *Purpose*, *Mobile-first* |
+| Introduction | Hero: purpose and serif title beside the example card as the principal image; the three flow steps each with a step image; the parent note and the one action; the language choice as a compact labelled control at the top. Reading order and the single action unchanged | `F001` `13`–`18`; criterion `24`; *Bounded product imagery* |
+| Setup, settings, temporary mode, handoff | Parent sheet; choice cards for language and age group; sage parent note; notices; the handoff's summary tiles and actions | `F001`; *Setup presentation* |
+| Discovery categories | Image-and-label category controls: one row per category on a phone, five equal tiles where there is room; selection shown by ring, check and the word *Selected* | `F002`; *Mission Category Selection* |
+| Discovery Missions and states | Three equal cards — picture, category tag and duration, title, instruction, guidance, the choose action on its own layer; *Another set*, the bounded and unavailable states, the conflict and its confirmation; the exits as quiet links | `F002` `1`, `4`, `6`, `7`; *Exactly-three* |
+| Ready | The Mission's picture beside or above its block; title, tag and duration, instruction, guidance, the Mission Break panel, *Start mission* dominant | `F003` `2`, `3`; amended *Ready* |
+| Active and leave confirmation | The instruction to leave the screen leads; a smaller picture beside the Mission reminder; calm timer guidance; *Mission done* dominant; the confirmation panel | `F003` `5`–`7`, `16`; amended *active* |
+| Reward Card | Serif title; a sage recognition panel — *You did it.*, the Mission's picture, title, category tag, completion date, the Monthly Goal with a bar that mirrors the count — and the next step below it | `F004` `3`; amended *Reward Card*, *Monthly Goal* |
+| History | Sage goal panel with the same bar; plain entry rows; the calm empty state; the route back | `F004` `4`, `5`; *Mission History* |
+| Recovery, reset, unavailable and error states | Parent notices and the reset confirmation in the same component family | *Loading, empty, unavailable, error, and recovery* |
+
+**Fonts — the size, licence and maintenance review.**
+
+| Face | Source and licence | Shipped |
+| --- | --- | --- |
+| Source Serif 4 Display Bold — headings | Adobe release `4.005R`, `SourceSerif4Display-Bold.ttf.woff2`. SIL OFL 1.1 **with the Reserved Font Name *Source***, so it ships byte-for-byte unmodified | `86,392` bytes; maps every character in the three dictionaries and the catalog |
+| Inter — body and interface | Release `4.1`, `InterVariable.woff2`. SIL OFL 1.1 with **no** reserved name, so subsetting is permitted | Instanced to weight `400`–`800` and optical size `14`–`32`, subset into Latin (`49,880` bytes) and Cyrillic (`20,608` bytes) files loaded by `unicode-range`, name and licence records kept |
+
+Both licence texts are committed beside the files. Maintenance is a file swap: no package, no build step, no request to a font service. `font-display: swap` over a system fallback, so no text is hidden while a face loads.
+
+**Imagery.** The four reviewed stills are reused where they already apply. **Eight new decorative images** under *Bounded product imagery* — five category images and three step images — are authored as **controlled static rendered imagery**: rendered offline from authored three-dimensional scene descriptions in the same headless Chromium used for verification, with the `three` library as authoring tooling only, outside the repository. No image is generated by AI, taken from stock, or cut from the reference. Planned content, each to be inspected against the Missions it represents before integration:
+
+| Image | Content | Why it is truthful |
+| --- | --- | --- |
+| Movement | A faceless wooden figure mid-jump on a clear floor | Movement Missions use the body on a clear floor; none uses equipment |
+| Creativity | A sheet of paper with a simple crayon drawing and two crayons | Paper and pencils or crayons are the materials most Creativity Missions name |
+| Helping at Home | A neat stack of folded cloth napkins | *Napkin Fold Five*, *The Table Surprise*, *Table Captain* |
+| Learning | A low book ramp, a round thing rolling down it and small paper markers | *Roll It Down*, approved for every age band with no adult requirement |
+| Calm | A folded blanket and a rolled cloth on the floor | *The Heavy Blanket*, *The Tight Roll* |
+| Step 1 | Three equal paper cards side by side | Choosing one of three |
+| Step 2 | A tablet set face down beside a small real-world activity | Leaving the screen to do the Mission; it controls no device |
+| Step 3 | A card with a drawn check mark | Marking the Mission done |
+
+**The remaining authored scenes** — `51` in Discovery — get one coherent treatment rather than new photographs: the same window, a warm printed ground, softened category light and a shared edge, so a set of three scenes reads as one kind of picture. No set mixes a still with an authored scene; the session views show the image the chosen card showed.
+
+**Copy.** None is planned. Existing wording serves every element above; any string that proves necessary is added in all three languages and identified as newly authored, without claiming professional review.
+
+### Preserved exactly
+
+Every reviewed Mission title, instruction, adult-involvement note and safety note, complete and visible as text; every translation; eligibility and deterministic ordering; exactly three equal peers; the session lifecycle, timer, completion identity and exactly-once effects; History, the Monthly Goal count and its cap; persistence, hydration, recovery, temporary mode and stored data; first-use eligibility and returning-user routing; heading structure, focus order and management, the visible focus ring, touch targets of `52` px or more, reduced motion.
+
+### Verification intent
+
+- **Walk the real journey on the served production build**: introduction → setup → category → Mission → Ready → Active → completion → History → settings, in English, German and Russian, desktop `1280x900` and phone `390x780`.
+- **Every state**, including the handoff, temporary mode, recovery, both reset panels, the conflict, the Mission-unavailable and bounded states, the start issue, the leave confirmation, the goal-complete Reward Card, History empty and filled, at those sizes and at `320` px with a `32px` root, plus the browser's own `32px` setting on representative views.
+- **Direct checks**: `0` clipping against every clipping ancestor, `0` page overflow and overlap; composited contrast at `4.5:1`, or `3:1` for large text; targets at `52` px or more; every image decoded, local, decorative, framed without cutting its subject; fonts loaded from the same origin; the same words in the same order as before, and every reviewed instruction and note present in full; the heading outline and focus order unchanged; the focus ring on every stop; no request to another origin.
+- **Against the reference**: a side-by-side judgement of typography, composition, imagery and hierarchy on the rendered result, recorded with its differences.
+- **Gates** once, sequentially, with complete output kept: relevant tests, `tsc --noEmit`, the full suite, the production build, `git diff --check`.
+- **Delivery**: one concise desktop and mobile review package of the main journey with enlarged-text evidence, and the current implementation served at the usual local development address from this repository.
+
 ## Decisions for the reviewer
 
-1. **A Mission's image on Ready and Active** — a proposal only. It would need a Visual & Ergonomic amendment and revalidation before any work, and it is not approved.
-2. **The remaining imagery** — a proposal only: either further reviewed stills, considered in the groups above, or a decision that the authored scenes are the presentation. Neither is approved, and both depend on review of the actual design and of the applicable content rules.
+1. **A Mission's image on Ready and Active** — *authorized on 2026-09-30* and amended into the Visual & Ergonomic Specification under *Reference redesign — 2026-09-30*; no longer open.
+2. **The remaining imagery** — still open: either further reviewed stills, considered in the groups above, or a decision that the authored scenes are the presentation. The redesign gives the authored scenes one coherent treatment and does not decide this.
 3. **Carried from Plan 05, still open:** translation review of the introduction copy; Mission instruction length; a way to leave settings without saving; the two still observations for the content reviewer.
 4. **The `helping-11` still** — whether its cup reads clearly enough as unbreakable, recorded under *Bounded image integration* for the content reviewer; and whether the still should also appear in Discovery, which the peer rule and `F001`'s example rule make a decision of its own rather than a consequence of this integration.
 
 ## Definition of complete
 
-Every improvement in the scope above implemented, the verification actually run and recorded here and in the changelog with its limitations, the diff limited to this scope, and screenshots from the actual builds delivered. Human visual acceptance, if given, is recorded separately, and **this plan stays active until the reviewer's visual judgement is recorded**, as Plan 05 did. This plan claims nothing about the imagery beyond the shared frame and grade it implemented; extending it is a proposal pending review. No claim of full design completion is made while the gaps it names remain.
+Every improvement in the scope above implemented, the verification actually run and recorded here and in the changelog with its limitations, the diff limited to this scope, and screenshots from the actual builds delivered. *Amended on 2026-09-30:* the same holds for the scope of *Reference redesign — 2026-09-30*, whose outcome is recorded in its own section. Human visual acceptance, if given, is recorded separately, and **this plan stays active until the reviewer's visual judgement is recorded**, as Plan 05 did. This plan claims nothing about the imagery beyond the shared frame and grade it implemented; extending it is a proposal pending review. No claim of full design completion is made while the gaps it names remain.

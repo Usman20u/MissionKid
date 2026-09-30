@@ -430,7 +430,7 @@ The responsive approach is mobile-first, with a clear single primary action and 
 
 The MVP should remain a small static application:
 
-- ship only required application code and the controlled catalog/localization content;
+- ship only required application code, the controlled catalog/localization content, and the bounded presentation assets the Visual & Ergonomic Specification authorizes — locally served font files and static images, each served from the application's own origin and measured in the production build;
 - avoid large general-purpose dependencies when browser or small local logic is sufficient;
 - perform catalog filtering and derived-state calculations locally;
 - keep persisted records minimal and avoid duplicate view data;

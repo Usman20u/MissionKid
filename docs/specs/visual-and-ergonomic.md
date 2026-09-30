@@ -126,20 +126,20 @@ The inventory below describes presentation responsibilities only. It does not cr
 | Parent introduction (`F001`) | What MissionKid is for, one example of a Mission, and the short flow the family will follow | Continue to the approved setup step | Supported language choice; that setup is brief, account-free, and asks for no identifying child data | Parent decides suitability; the example is an example, not a suggestion | A second forward action, a choosable Mission, discovery, marketing claims, testimonials, ratings, or account creation |
 | Initial setup (`F001`) | Supported language and one required age band | Complete the approved setup and continue | English default, brief explanation of age context | Parent responsibility and privacy-minimal setup | Accounts, identity fields, tutorial slides, permissions, personalization |
 | Approved language/age context changes (`F001`) | Current value and effect of the proposed change | Confirm the approved change | Consequences for future discovery; unchanged existing sessions/progress | Parent judgment remains authoritative | New profile management or unrelated settings |
-| Mission Category Selection (`F002`) | The five canonical Mission Categories as one peer choice group | Select one category | Current approved context where useful | No category implies greater safety, value, or achievement | Rankings, trends, premium treatment, one favored category |
+| Mission Category Selection (`F002`) | The five canonical Mission Categories as one peer choice group, each with its visible label and one decorative category image of equal treatment | Select one category | Current approved context where useful | No category implies greater safety, value, or achievement | Rankings, trends, premium treatment, one favored category |
 | Incomplete-setup discovery gate (`F001`/ `F002`) | The required age context is missing or invalid | Return to the approved age-context step | Preserve any other valid setup choice; English remains the fallback | Parent-guided setup remains private | Mission suggestions, inferred age, or a false continuation |
 | Initial discovery loading (`F002`) | The selected context and calm loading status | No invented action while a valid request is pending | Safe return or retry only when the owning behavior provides it | No partial or unreviewed content | Fake progress, auto-loading feed, placeholder Missions presented as real |
 | Exactly-three suggestions (`F002`) | Three equally prominent, comparable Mission options | Select one of the current three Missions | Bounded `Another set` when available; context needed to compare | Required adult involvement and concise safety guidance on each relevant option | Popularity, ratings, swipe-feed behavior, a visually recommended winner |
 | Selection transition / `selected` (`F002`/ `F003`) | The chosen Mission remains identifiable while the transition resolves | No additional family decision | Calm pending or retry feedback if needed | Preserve the chosen Mission and its safety meaning | A second start action, duplicate selection, unrelated navigation |
-| Ready Mission (`F003`) | Mission title, action, Mission Category, what is needed, approximate duration, and away-from-screen expectation | **Start mission** | Return to the current suggestions without starting | Full applicable adult-involvement and safety guidance | Timer movement, recommendations, reward content, extra setup |
+| Ready Mission (`F003`) | Mission title, action, Mission Category, what is needed, approximate duration, and away-from-screen expectation, with the chosen Mission's own image as support | **Start mission** | Return to the current suggestions without starting | Full applicable adult-involvement and safety guidance | Timer movement, recommendations, reward content, extra setup |
 | Mission Break transition and active Mission (`F003`) | Leave-the-screen instruction and the current Mission reminder | **Mission done** when the family returns | Calm approximate timer guidance; explicit leave-without-completion path | Applicable adult-involvement and safety guidance remains readable | Mini-games, recommendations, achievements, scores, repeated prompts |
 | Existing-active-session conflict (`F003`) | The current active Mission and the need to resolve it first | Return to the active Mission | Explicitly confirmed abandonment before another Mission can be selected | Preserve the current Mission and its consequences | A second Mission Session or hidden abandonment |
 | Restored ready, active, or completed result (`F003`/ `F004`) | The same truthful Mission state or completed result | The same action available for that restored state | Calm recovery context only where needed | Preserve applicable safety and recorded completion truth | Restarted timer, duplicate completion, or newly earned recognition |
 | Completion pending (`F003`) | Completion is being confirmed, not yet claimed | Retry only if the approved operation is unconfirmed | Preserve the active Mission context | No fabricated success or progress | Reward Card, celebratory feedback, or goal increase before confirmation |
-| Reward Card (`F003`/ `F004`) | Brief positive recognition of the completed Mission | A short approved next step back to the core flow or away from the screen | Mission/category identity, completion context, Monthly Goal progress | Parent-controlled reward meaning at goal completion | Random reveal, currency, prize value, pressure to start another Mission |
+| Reward Card (`F003`/ `F004`) | Brief positive recognition of the completed Mission, with that Mission's own image where it still resolves | A short approved next step back to the core flow or away from the screen | Mission/category identity, completion context, Monthly Goal progress | Parent-controlled reward meaning at goal completion | Random reveal, currency, prize value, pressure to start another Mission |
 | Mission History (`F004`) | Newest-first completed Mission records | Review the private record | Minimal title, category, and localized completion context | Parent-oriented private context | Social-feed styling, analytics dashboard, likes, sharing, rankings |
 | Empty Mission History (`F004`) | Completed Missions will appear here | Approved route back to Mission Category Selection | No fabricated examples | Calm parent/family context | Empty-state gamification or pressure |
-| Monthly Goal (`F004`) | Current progress as `X / 20 missions` | No new action is invented by this specification | Current-period context and one approved goal-complete message | Any real-life reward is optional and parent-controlled | Countdown pressure, streaks, overachievement score, reward marketplace |
+| Monthly Goal (`F004`) | Current progress as `X / 20 missions`, which a calm bar may mirror | No new action is invented by this specification | Current-period context and one approved goal-complete message | Any real-life reward is optional and parent-controlled | Countdown pressure, streaks, overachievement score, reward marketplace |
 | Confirmation (`F003` or Technical recovery) | The action and its meaningful consequence | The safe continuation choice or the explicitly requested destructive action, according to the owning specification | A clear alternative | Parent-facing consequence where appropriate | Guilt, fear, hidden exit, ambiguous labels |
 | Error or recovery state | What could not be completed and the safe next step | Approved retry, return, or confirmed reset | Consequence detail appropriate to parent or child | No child blame; safety and data truth preserved | Raw exceptions, internal identifiers, fabricated progress or Missions |
 
@@ -159,6 +159,9 @@ The introduction is the first thing a parent sees, and its job is comprehension,
 - The account of the flow is short enough to read before deciding. It must not become an onboarding carousel, a tutorial sequence, a feature tour, or a surface the family has to page through.
 - The view must not claim outcomes, quote families, show ratings, counts, badges, or adoption figures, or use urgency, scarcity, or persuasion patterns. MissionKid introduces itself by showing what it does.
 - On a narrow screen the single-column reading order is what MissionKid is for, the example, the short flow, then the one action.
+- Where there is room, the view may open as a hero: what MissionKid is for beside the example Mission, which serves as the view's principal image. The reading order above is unchanged, and the one forward action is not repeated to reach it sooner.
+- Each step of the short account of the flow may carry one decorative image from the *Bounded product imagery* below. The step's words carry its meaning.
+- The supported language choice may be a compact control at the top of the view, provided it stays a visible, labelled choice of the three supported languages.
 
 ### Setup presentation
 
@@ -192,6 +195,7 @@ They form one bounded peer-choice group.
 - Longer German and Russian labels must wrap or expand without clipping or changing relative importance.
 - Selection state must be distinguishable without color alone.
 - The group must remain easy to scan and operate on a narrow screen.
+- Each Mission Category may carry one decorative category image from the *Bounded product imagery* below, with its label always visible beside or beneath it. The five images share one treatment — framing, size, light, material, and colour richness — so that no category looks premium, easier, or more valuable than another.
 
 This specification adds no category and changes no category behavior.
 
@@ -237,6 +241,8 @@ The Mission title and short instruction establish the reading hierarchy. Mission
 
 No recommendation, reward preview, extra tutorial, or unnecessary intermediate choice belongs between ready and the approved start action.
 
+Ready may show the chosen Mission's own image — the same reviewed still or authored scene its Mission card shows — to support recognizing the Mission. The image is decoration to assistive technology and does not lead the reading hierarchy: the title and instruction remain the dominant content, and the image never displaces the adult-involvement or safety guidance or the start action.
+
 ## F003 — Mission Break transition and active presentation
 
 Mission Break is the brief transition from passive screen use to the selected real-life Mission. It is part of the approved ready-to-active experience, not another lifecycle state, activity, or reward.
@@ -254,6 +260,8 @@ The timer is supporting information, not a score, deadline, proof, or visual cen
 The active presentation must work when ignored. It must not require interaction during the Mission or add recommendations, mini-games, achievements, points, live scores, unrelated navigation, animated distractions, or repeated return prompts.
 
 The approved leave-without-completion path remains discoverable but visually secondary. Ordinary page hiding, closing, or leaving is not presented as confirmed abandonment.
+
+The active presentation may show a smaller reminder of the same Mission image beside the Mission identity. The instruction to leave the screen stays first, and the image is static and carries no meaning of its own.
 
 ## F003/F004 — Restored and conflicting-session presentation
 
@@ -293,6 +301,8 @@ Recognition should be warm but brief. It must not use concealed or random reveal
 
 The Reward Card must not pressure the family to begin another Mission. It must provide the approved short next step back to the core flow or away from the screen, and preserving completion must not depend on further interaction.
 
+The Reward Card may show the completed Mission's own image — the same still or authored scene that represented it in Discovery — only while the catalog still resolves that Mission; a completion whose reviewed content is unavailable shows no image rather than a substitute. Its Monthly Goal progress may be reinforced by the calm bar described under *Monthly Goal presentation*.
+
 ## F004 — Mission History presentation
 
 Mission History is a calm, private record.
@@ -316,6 +326,7 @@ The fixed target is `20 completed Missions` in the current local monthly period.
 - A refresh may restore the same completed result and deterministic prompt identity without presenting it as a new achievement.
 - A new local calendar month presents `0 / 20 missions` while prior completed Missions remain available in History.
 - The one approved goal-complete message may be positive but must clearly keep any real-life reward optional, parent-controlled, and parent-approved.
+- A visual bar may reinforce the text wherever the goal is shown. Its filled share equals the displayed count over the target, so it fills exactly at `20 / 20` and never beyond; it does not animate, adds no colour-only meaning and no second figure, and the text `X / 20 missions` remains present and remains the value assistive technology reads.
 
 This presentation does not add a reward picker, prize entitlement, purchase path, marketplace, fulfillment flow, or verification step.
 
@@ -382,8 +393,10 @@ Literal translation is not required. Mission Catalog and Safety owns meaning equ
 
 ## Typography principles
 
-No final font family is selected here.
+This document does not fix a font family; the active plan records the faces chosen and their licence and size review.
 
+- Headings may use an expressive serif display face and body text a readable sans-serif face.
+- Every face is served from the application's own origin, covers English, German, and Russian completely — Latin and Cyrillic letters, punctuation, and numerals — under a licence that permits bundling it, and falls back to a readable system face if it does not load.
 - Use a readable hierarchy that makes location, Mission instruction, safety context, and action labels easy to distinguish.
 - Child-facing Mission instructions require strong legibility and comfortable reading density.
 - Decorative lettering must not carry important instructions, safety, errors, or consequences.
@@ -394,7 +407,7 @@ No final font family is selected here.
 
 ## Color principles
 
-No final palette or exact color token is selected here.
+No final palette or exact color token is selected here. The approved direction is warm ivory and cream grounds, deep forest-green text and primary actions, soft sage recognition surfaces, and restrained category accents.
 
 - Text, controls, focus, notices, and essential boundaries require adequate contrast.
 - No status, category, action, safety meaning, or error may depend on color alone.
@@ -420,7 +433,13 @@ Mission Discovery may present each Mission through a controlled scene: one small
 
 This authorizes one bounded scene system for child-facing Mission presentation. It does not authorize an open illustration library, and it changes no `F001`–`F004` behavior, Mission eligibility rule, or Mission content requirement.
 
-The `F001` parent introduction may present its one non-selectable example Mission through this same scene system, under every limit in this section. That is the only authorized use outside Mission Discovery. It authorizes no scene on any other parent-oriented, utility, confirmation, or recovery surface, and no scene anywhere else in the flow.
+Outside Mission Discovery, a Mission's own image — the scene or reviewed still that represents it in Discovery — is authorized in exactly these places, under every limit in this section:
+
+- the `F001` parent introduction's one non-selectable example Mission;
+- the chosen Mission on Ready and on the active Mission, as the `F003` sections above describe; and
+- the completed Mission on its own Reward Card.
+
+On a session surface the image is always that session's own Mission, never a different or substitute Mission. This authorizes no Mission image on Mission History or on any parent-oriented, utility, confirmation, or recovery surface, and none anywhere else in the flow.
 
 ### Scene authority limits
 
@@ -471,6 +490,19 @@ The scene system may be implemented with SVG, CSS, lightweight raster assets, or
 Any controlled presentation metadata the scene system needs, such as a scene composition keyed by the stable Mission identifier, belongs to the presentation layer. It adds no field to Mission catalog content, no persisted value, and no snapshot data. [Mission Catalog and Safety](mission-catalog-and-safety.md) keeps the hero object or focal action as a human-reviewed content and presentation handoff; if a genuine machine-readable requirement ever arises, the owning technical specifications introduce it.
 
 No specific rendering technology is a permanent product requirement, and a runtime three-dimensional engine is not mandated. Runtime AI-generated imagery is not permitted: Mission scenes are controlled, reviewed, bundled product content in the same sense as Mission text. Asset weight remains subject to the Technical Architecture's minimal static-application constraints, and any new dependency still requires a documented need and the privacy, accessibility, size, and maintenance review that specification requires.
+
+## Bounded product imagery
+
+Besides Mission images, MissionKid may present one small, fixed set of decorative product images: one image for each of the five Mission Categories, and one for each of the three steps in the parent introduction's account of the flow. Nothing else is authorized by this section.
+
+- Each is a controlled, reviewed, static asset bundled with the application and served from its own origin. None is generated at runtime, fetched from another origin, or cut from a reference picture.
+- None carries text, letters, numerals, logos, brand marks, or pictured interface elements.
+- None shows a person, a face, or a child. A stylized, faceless figure may stand for movement, as the scene system's figures do.
+- Each shows only ordinary, safe, globally recognizable things that the Missions or the step it represents actually involve. None implies equipment, a purchase, outdoor access, a garden, a large home, favourable weather, or a household type that the Missions do not require.
+- None depicts or makes attractive an unsafe or excluded action.
+- The five category images share one treatment, as *F002 — Mission Category Selection presentation* requires, and the three step images share one treatment with each other.
+- Each is decoration to assistive technology. No meaning, label, state, or availability depends on an image loading or being perceived.
+- They use the same light, material, and colour language as the Mission images. They are not a general illustration library, marketing artwork, or a second scene system.
 
 ## Motion and feedback
 
@@ -541,7 +573,9 @@ The MVP should use a small coherent family of presentation patterns for:
 - loading and unavailable states; and
 - error and recovery surfaces.
 
-Consistency means the same kind of information has recognizable hierarchy and consequence across views. It does not authorize a component library, token catalog, general illustration system, or full design system. The bounded Mission Mini-World scene system is authorized separately above and is not a general illustration system.
+Consistency means the same kind of information has recognizable hierarchy and consequence across views. It does not authorize a component library, token catalog, general illustration system, or full design system. The bounded Mission Mini-World scene system and the bounded product imagery are authorized separately above and are not a general illustration system.
+
+Shared presentation values — colour, type, radius, spacing, and elevation — may be defined once in the stylesheet and reused by every view. That is how this consistency is kept; it is not a design-token catalog, a component library, or a design system.
 
 ## Anti-manipulation visual rules
 
@@ -583,6 +617,8 @@ For every approved MVP view or state that is implemented, reviewers ask the foll
 
 After a review, prefer one to three targeted improvements. The checklist is not permission for a broad redesign or behavior change.
 
+A whole-application visual redesign against a supplied reference is not an ergonomic-review outcome, and it is not bounded to one to three improvements, when it is explicitly authorized and recorded in the repository plan system, as the reference redesign of 2026-09-30 is. Such a redesign changes presentation only, it stays inside every other rule of this specification, and every view it changes still receives this review.
+
 ## Source-of-truth boundaries
 
 - Business Context owns the real problem and business framing.
@@ -618,11 +654,14 @@ If presentation would require new behavior, a new state, a new data fact, a chan
 17. Critical controls and content support semantic clarity, keyboard use, visible focus, adequate contrast, comfortable touch, reduced motion, screen-reader-safe timer updates, and larger text.
 18. No visual pattern introduces an infinite feed, autoplay, fake scarcity, streak pressure, social proof, public comparison, random reward, urgent countdown manipulation, or pressure to continue.
 19. No presentation rule changes the `F001`–`F004` behavior, Technical Specification mechanics, or Mission Catalog and Safety eligibility rules.
-20. An ergonomic review results in one to three targeted improvements rather than a generic redesign.
+20. An ergonomic review results in one to three targeted improvements rather than a generic redesign. An explicitly authorized and recorded visual redesign against a supplied reference is not an ergonomic-review outcome and is judged by the other criteria.
 21. Child-facing Mission scenes, where used, remain one bounded controlled system in which approved text stays authoritative, required adult-involvement and safety guidance stay visible as text, no critical meaning depends on the scene, and no scene depicts or makes attractive an action the Mission does not instruct.
 22. Scene category atmosphere, object-local color, and single hero-object emphasis describe the Mission action only and never convey rank, recommendation, popularity, or relative value among the three equally weighted suggestions.
 23. Mission scenes preserve the accessibility baseline, reduced-motion behavior, localization resilience, and mobile performance requirements without mandating a specific rendering technology, a runtime three-dimensional engine, or runtime AI-generated imagery.
 24. The parent introduction explains what MissionKid is for, shows at most one non-selectable example Mission with its required adult-involvement wording and safety guidance intact, offers the supported language choice and exactly one dominant forward action into setup, and uses no marketing, testimonial, rating, urgency, persuasion, or onboarding-carousel pattern.
+25. Outside Mission Discovery, a Mission's own image appears only on the introduction's example, on Ready and the active Mission for that session's own Mission, and on that completion's Reward Card; it is always decoration, and it never displaces required text, guidance, or the primary action.
+26. The bounded product imagery is exactly five category images and three flow-step images; each is local, static, free of text and people, decorative to assistive technology, and implies no equipment or setting the Missions do not require, and the five category images share one treatment.
+27. Wherever a Monthly Goal bar appears, its filled share equals the displayed count over the target, it caps with the count, it does not animate, and the text `X / 20 missions` remains present.
 
 ## Explicit non-goals
 
@@ -631,7 +670,7 @@ This specification does not define or authorize:
 - an exact final palette or color tokens;
 - an exact final font family or typography tokens;
 - a logo or brand identity;
-- an open or general-purpose illustration library, a broad decorative illustration system, arbitrary marketing artwork, or asset-heavy illustration bloat; the bounded Mission Mini-World scene system above, including its scene grammar, reusable scene primitives, Mission-specific compositions, and controlled presentation metadata, is authorized and is not such a library;
+- an open or general-purpose illustration library, a broad decorative illustration system, arbitrary marketing artwork, or asset-heavy illustration bloat; the bounded Mission Mini-World scene system above, including its scene grammar, reusable scene primitives, Mission-specific compositions, and controlled presentation metadata, and the eight images of the bounded product imagery are authorized and are not such a library;
 - a complete design system;
 - detailed design tokens;
 - a component-library choice;
