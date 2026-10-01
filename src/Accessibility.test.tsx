@@ -149,7 +149,7 @@ describe('F001 semantic structure', () => {
     click('Reset MissionKid data');
     click('Confirm reset');
 
-    expect(screen.getByRole('heading', { level: 1, name: 'Small missions. Real-world adventures.' })).toBeTruthy();
+    expect(screen.getByRole('heading', { level: 1, name: 'Small missions. Real\u2011world adventures.' })).toBeTruthy();
   });
 });
 
@@ -210,7 +210,7 @@ describe('F001 deliberate focus movement', () => {
     click('Reset MissionKid data');
     click('Confirm reset');
 
-    const heading = screen.getByRole('heading', { level: 1, name: 'Small missions. Real-world adventures.' });
+    const heading = screen.getByRole('heading', { level: 1, name: 'Small missions. Real\u2011world adventures.' });
     expect(document.activeElement).toBe(heading);
     // Focus could not have stayed on the control that was pressed: it belongs
     // to a different context now, and the introduction does not carry it.

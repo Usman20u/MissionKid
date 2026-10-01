@@ -31,7 +31,7 @@ const shellScenarios: ShellScenario[] = [
       saveStatus: 'idle',
     },
     view: 'introduction',
-    title: 'Small missions. Real-world adventures.',
+    title: 'Small missions. Real\u2011world adventures.',
   },
   {
     name: 'fresh setup',
@@ -135,7 +135,7 @@ describe('application shell', () => {
     render(<App />);
 
     expect(
-      screen.getByRole('region', { name: 'Small missions. Real-world adventures.' }),
+      screen.getByRole('region', { name: 'Small missions. Real\u2011world adventures.' }),
     ).toBeTruthy();
   });
 

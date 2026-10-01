@@ -1,5 +1,3 @@
-import type { ReactNode } from 'react';
-
 import {
   selectConflictSession,
   selectDiscoveryCycle,
@@ -21,71 +19,15 @@ import {
   persistenceAdapter,
   type PersistenceAdapter,
 } from './persistence';
-import { MISSION_CATEGORIES, type MissionCategory } from './catalog';
+import { MISSION_CATEGORIES } from './catalog';
 import {
   MISSION_CATEGORY_LABEL_KEYS,
   translateMessage,
   type MessageKey,
 } from './localization';
+import { HistoryMark, SetupMark } from './Marks';
 import { MissionSuggestionSet } from './MissionSuggestionSet';
-
-// A structural cue for each category so meaning never rests on colour alone.
-// The visible label stays authoritative; these are decorative.
-const CATEGORY_GLYPHS: Readonly<Record<MissionCategory, ReactNode>> = {
-  Movement: (
-    <>
-      <path d="M4 17c3-6 6-9 9-9s5 2 7 5" />
-      <path d="M4 12c2.5-4.5 5-7 7.5-7" opacity="0.55" />
-      <circle cx="19" cy="7" r="2" />
-    </>
-  ),
-  Creativity: (
-    <>
-      <circle cx="9" cy="8.5" r="4.5" />
-      <path d="M14.5 5h6l-3 6z" />
-      <rect x="10.5" y="13.5" width="8" height="7.5" rx="1.4" />
-    </>
-  ),
-  'Helping at Home': (
-    <>
-      <path d="M4 11 12 4l8 7" />
-      <path d="M6.5 10v9h11v-9" />
-      <path d="M10 19v-5h4v5" />
-    </>
-  ),
-  Learning: (
-    <>
-      <circle cx="11" cy="11" r="6" />
-      <path d="m15.5 15.5 4 4" />
-      <path d="M11 8v6M8 11h6" opacity="0.55" />
-    </>
-  ),
-  Calm: (
-    <>
-      <path d="M3 15c3-2 6-2 9 0s6 2 9 0" />
-      <path d="M3 19c3-2 6-2 9 0s6 2 9 0" opacity="0.55" />
-      <circle cx="12" cy="7" r="3" />
-    </>
-  ),
-};
-
-function CategoryGlyph({ category }: Readonly<{ category: MissionCategory }>) {
-  return (
-    <svg
-      aria-hidden="true"
-      className="mission-world__glyph"
-      focusable="false"
-      fill="none"
-      stroke="currentColor"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth="1.6"
-      viewBox="0 0 24 24"
-    >
-      {CATEGORY_GLYPHS[category]}
-    </svg>
-  );
-}
+import { CATEGORY_IMAGES } from './productImagery';
 
 // The five canonical Mission Categories as one bounded peer-choice group. This
 // view derives and exposes the discovery cycle; it renders no Mission.
@@ -188,8 +130,17 @@ export function MissionCategorySelection({
                 type="radio"
                 value={category}
               />
-              <span className="mission-world__frame" aria-hidden="true" />
-              <CategoryGlyph category={category} />
+              {/* One of five images with one shared treatment. Decorative:
+                  the label beside it is the choice's name and its meaning. */}
+              <img
+                alt=""
+                aria-hidden="true"
+                className="mission-world__image"
+                decoding="async"
+                height={CATEGORY_IMAGES[category].height}
+                src={CATEGORY_IMAGES[category].src}
+                width={CATEGORY_IMAGES[category].width}
+              />
               <span className="mission-world__label">
                 {t(MISSION_CATEGORY_LABEL_KEYS[category])}
               </span>
@@ -263,17 +214,19 @@ export function MissionCategorySelection({
           Leaving for either ends the discovery cycle, as `F002` requires. */}
       <div className="mission-discovery__exits">
         <button
-          className="button button--secondary"
+          className="button button--secondary button--quiet"
           onClick={() => dispatch({ type: 'history-opened' })}
           type="button"
         >
+          <HistoryMark />
           {t('history.action.open')}
         </button>
         <button
-          className="button button--secondary"
+          className="button button--secondary button--quiet"
           onClick={() => dispatch({ type: 'setup-editing-started' })}
           type="button"
         >
+          <SetupMark />
           {t('setup.action.edit')}
         </button>
       </div>

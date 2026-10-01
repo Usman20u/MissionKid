@@ -27,6 +27,8 @@ import {
   type MonthlyGoalProgress,
 } from './missionProgress';
 import { leaveMissionResult } from './missionSession';
+import { MissionPicture } from './MissionPicture';
+import { MonthlyGoalBar } from './MonthlyGoalBar';
 import {
   persistenceAdapter,
   type CompletedMissionSession,
@@ -138,38 +140,62 @@ function MissionResultCard({
     // completion: the boundary's display-failure fallback keeps the plain class
     // so a failed display cannot be mistaken for recognition.
     <div className="mission-result mission-result--recognition">
-      <p className="mission-result__recognition">{t('result.recognition')}</p>
-      <h2 className="mission-result__mission" ref={missionRef} tabIndex={-1}>
-        {title}
-      </h2>
-      <p className="mission-result__meta">
-        <span className="mission-result__category">
-          {t(MISSION_CATEGORY_LABEL_KEYS[session.missionCategoryAtSelection])}
-        </span>
-        <span className="mission-result__completed">
-          {t('result.completedOn')}{' '}
-          {completionContext(session.completedAt, state.language)}
-        </span>
-      </p>
-      <section className="mission-result__goal" aria-labelledby="result-goal-heading">
-        <h3 className="mission-result__goal-heading" id="result-goal-heading">
-          {t('result.goal.heading')}
-        </h3>
-        <p className="mission-result__goal-period">{periodLabel}</p>
-        <p className="mission-result__goal-progress">
-          {t('result.goal.progress')
-            .replace('{done}', String(progress.displayedCount))
-            .replace('{target}', String(progress.target))}
-        </p>
-        {/* The one encouraging message, and only for the completion that
-            actually reached the target. It invites a reward the parent chooses
-            and approves; MissionKid neither delivers nor promises one. */}
-        {progress.goalCompletingSessionId === session.sessionId ? (
-          <p className="mission-result__goal-complete">
-            {t('result.goal.complete').replace('{period}', periodLabel)}
-          </p>
+      {/* The recognition itself, on one sage panel: the acknowledgement, the
+          Mission's own picture, what was completed and when, and this month's
+          goal. The one next step sits below it, outside the recognition. */}
+      <div className="mission-result__panel">
+        <p className="mission-result__recognition">{t('result.recognition')}</p>
+        {/* The picture the family chose this Mission from, shown only while
+            the catalog still resolves the Mission it completed: an unavailable
+            Mission gets no image rather than a stand-in. */}
+        {mission ? (
+          <MissionPicture
+            category={session.missionCategoryAtSelection}
+            className="mission-result__picture mission-picture"
+            missionId={session.missionId}
+            withSceneDefs
+          />
         ) : null}
-      </section>
+        <h2 className="mission-result__mission" ref={missionRef} tabIndex={-1}>
+          {title}
+        </h2>
+        <p
+          className="mission-result__meta"
+          data-category={session.missionCategoryAtSelection}
+        >
+          <span className="mission-result__category">
+            {t(MISSION_CATEGORY_LABEL_KEYS[session.missionCategoryAtSelection])}
+          </span>
+          <span className="mission-result__completed">
+            {t('result.completedOn')}{' '}
+            {completionContext(session.completedAt, state.language)}
+          </span>
+        </p>
+        <section className="mission-result__goal" aria-labelledby="result-goal-heading">
+          <h3 className="mission-result__goal-heading" id="result-goal-heading">
+            {t('result.goal.heading')}
+          </h3>
+          <p className="mission-result__goal-period">{periodLabel}</p>
+          <MonthlyGoalBar
+            displayedCount={progress.displayedCount}
+            target={progress.target}
+          />
+          <p className="mission-result__goal-progress">
+            {t('result.goal.progress')
+              .replace('{done}', String(progress.displayedCount))
+              .replace('{target}', String(progress.target))}
+          </p>
+          {/* The one encouraging message, and only for the completion that
+              actually reached the target. It invites a reward the parent
+              chooses and approves; MissionKid neither delivers nor promises
+              one. */}
+          {progress.goalCompletingSessionId === session.sessionId ? (
+            <p className="mission-result__goal-complete">
+              {t('result.goal.complete').replace('{period}', periodLabel)}
+            </p>
+          ) : null}
+        </section>
+      </div>
       {issue?.operation === 'result' ? (
         <p
           className="mission-result__issue"

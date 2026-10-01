@@ -10,6 +10,7 @@ import {
   completionPeriodLabel,
   deriveMonthlyGoal,
 } from './missionProgress';
+import { resolveMissionImage } from './missionImages';
 import { MissionResult } from './MissionResult';
 import {
   MISSIONKID_STORAGE_KEY,
@@ -678,5 +679,73 @@ describe('a Reward Card that cannot be displayed', () => {
     // reaches; the card's own recovery is.
     expect(screen.queryByText(t('error.unexpected.title'))).toBeNull();
     expect(screen.getByRole('button', { name: t('session.action.retry') })).toBeTruthy();
+  });
+});
+
+describe("the Reward Card's picture and Monthly Goal bar", () => {
+  function renderResultFor(missionId: string, completed = 1) {
+    const mission = MISSION_CATALOG.find((record) => record.missionId === missionId);
+    const records = Array.from({ length: completed }, (_unused, index) => ({
+      ...completedRecord(index),
+      missionId,
+      missionCategoryAtSelection: mission?.category ?? 'Movement',
+    }));
+    const h = harness(
+      storedSnapshot({
+        currentResultSessionId: records[0]!.sessionId,
+        completedSessions: records,
+      }),
+    );
+    render(<App adapter={h.adapter} now={() => DONE_AT} />);
+    return h;
+  }
+
+  it('shows the authored scene of the completed Mission as decoration', () => {
+    renderResultFor('movement-02');
+
+    const picture = document.querySelector('.mission-result__panel .mission-result__picture')!;
+    expect(picture).not.toBeNull();
+    expect(picture.querySelector('img')).toBeNull();
+    expect(picture.querySelector('svg.mission-scene')!.getAttribute('aria-hidden')).toBe('true');
+    expect(screen.queryAllByRole('img')).toHaveLength(0);
+    // The words still say what was completed.
+    expect(screen.getByRole('heading', { level: 2 }).textContent).toBe(MISSION.content.en.title);
+  });
+
+  it('shows the reviewed still the family chose the Mission from', () => {
+    renderResultFor('creativity-02');
+
+    const photo = document.querySelector('.mission-result__picture img')!;
+    expect(photo.getAttribute('src')).toBe(resolveMissionImage('creativity-02')!.src);
+    expect(photo.getAttribute('alt')).toBe('');
+    expect(photo.getAttribute('aria-hidden')).toBe('true');
+    expect(photo.getAttribute('width')).toBe('1000');
+    expect(photo.getAttribute('src')).not.toMatch(/^https?:/);
+  });
+
+  it('pictures nothing for a completion the catalog no longer resolves', () => {
+    renderResultFor('movement-99');
+
+    expect(screen.getByRole('heading', { level: 2 }).textContent).toBe(
+      t('result.missionUnavailable'),
+    );
+    expect(document.querySelector('.mission-result__picture')).toBeNull();
+    expect(document.querySelector('.mission-result img, .mission-result svg.mission-scene')).toBeNull();
+  });
+
+  it.each([
+    [1, '5%'],
+    [7, '35%'],
+    [20, '100%'],
+    [25, '100%'],
+  ])('fills the bar to exactly %i of the target, and no further', (count, width) => {
+    renderResultFor('movement-02', count);
+
+    const bar = document.querySelector('.mission-result__goal .goal-bar')!;
+    expect(bar.getAttribute('aria-hidden')).toBe('true');
+    expect((bar.querySelector('.goal-bar__fill') as HTMLElement).style.width).toBe(width);
+    // The words remain the value; the bar only mirrors them.
+    expect(screen.getByText(progressText(Math.min(count, MONTHLY_GOAL_TARGET)))).toBeTruthy();
+    expect(document.querySelector('progress, meter, [role="progressbar"]')).toBeNull();
   });
 });

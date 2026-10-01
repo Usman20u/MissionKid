@@ -11,6 +11,7 @@ import {
 } from './localization';
 import { MissionSceneDefs } from './MissionScene';
 import { MissionCard } from './MissionSuggestionSet';
+import { FLOW_STEP_IMAGES } from './productImagery';
 
 const LANGUAGE_NAME_KEYS: Readonly<Record<SupportedLanguage, MessageKey>> = {
   en: 'setup.language.en',
@@ -134,9 +135,24 @@ export function ParentIntroduction({ catalog = MISSION_CATALOG }: ParentIntroduc
             <h2 className="introduction__heading" id={flowHeadingId}>
               {t('introduction.flow.heading')}
             </h2>
-            <ol className="introduction__steps">
-              {FLOW_STEP_KEYS.map((key) => (
-                <li key={key}>{t(key)}</li>
+            {/* The list role is stated because the numbers are drawn by the
+                stylesheet: an unstyled marker is what some engines use to keep
+                a list a list. Each step's picture is decoration; its words are
+                the step. */}
+            <ol className="introduction__steps" role="list">
+              {FLOW_STEP_KEYS.map((key, index) => (
+                <li className="introduction__step" key={key}>
+                  <img
+                    alt=""
+                    aria-hidden="true"
+                    className="introduction__step-image"
+                    decoding="async"
+                    height={FLOW_STEP_IMAGES[index]!.height}
+                    src={FLOW_STEP_IMAGES[index]!.src}
+                    width={FLOW_STEP_IMAGES[index]!.width}
+                  />
+                  <span className="introduction__step-text">{t(key)}</span>
+                </li>
               ))}
             </ol>
           </section>

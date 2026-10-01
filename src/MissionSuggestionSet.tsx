@@ -10,8 +10,10 @@ import {
   type SupportedLanguage,
 } from './localization';
 import { MissionLeaveConfirmation } from './MissionLeaveConfirmation';
-import { MissionScene, MissionSceneDefs } from './MissionScene';
-import { resolveMissionImage, type MissionImageSurface } from './missionImages';
+import { DurationMark } from './Marks';
+import { MissionPicture } from './MissionPicture';
+import { MissionSceneDefs } from './MissionScene';
+import type { MissionImageSurface } from './missionImages';
 import type { MissionSelectionIssue } from './appState';
 import { deriveSuggestionSet, type SuggestionContext } from './missionSuggestions';
 
@@ -35,10 +37,6 @@ export function MissionCard({ mission, language, onChoose, surface = 'discovery'
   const adultLabelKey = MISSION_ADULT_LABEL_KEYS[mission.adultInvolvement];
   const minutes = Math.round(mission.durationSeconds / 60);
   const titleId = `mission-title-${mission.missionId}`;
-  // A reviewed still where one exists for this surface, the authored scene
-  // otherwise. Either way the window is decoration: every word the card means
-  // is in the text below.
-  const image = resolveMissionImage(mission.missionId, surface);
 
   return (
     <article
@@ -46,30 +44,22 @@ export function MissionCard({ mission, language, onChoose, surface = 'discovery'
       className="mission-card"
       data-category={mission.category}
     >
-      <div className="mission-card__window">
-        {image ? (
-          // Decorative, and carried by its own intrinsic size so the card
-          // reserves the space before the file arrives. If it never arrives the
-          // window keeps its category wash and the Mission still reads in full.
-          <img
-            alt=""
-            aria-hidden="true"
-            className="mission-card__photo"
-            decoding="async"
-            height={image.height}
-            src={image.src}
-            width={image.width}
-          />
-        ) : (
-          <MissionScene category={mission.category} missionId={mission.missionId} />
-        )}
-      </div>
+      {/* A reviewed still where one exists for this surface, the authored
+          scene otherwise. Either way the window is decoration: every word the
+          card means is in the text below. */}
+      <MissionPicture
+        category={mission.category}
+        className="mission-card__window mission-picture"
+        missionId={mission.missionId}
+        surface={surface}
+      />
       <div className="mission-card__content">
         <p className="mission-card__meta">
           <span className="mission-card__category">
             {t(MISSION_CATEGORY_LABEL_KEYS[mission.category])}
           </span>
           <span className="mission-card__duration">
+            <DurationMark />
             {t('discovery.card.about')} {minutes} {t('discovery.card.minutes')}
           </span>
         </p>

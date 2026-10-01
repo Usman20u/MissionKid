@@ -22,7 +22,8 @@ const englishMessages = {
   'app.brand': 'MissionKid',
   'area.parent': 'Parent area',
   'view.pending.title': 'Preparing MissionKid',
-  'view.introduction.title': 'Small missions. Real-world adventures.',
+  // A non-breaking hyphen, so the headline never breaks inside *Real-world*.
+  'view.introduction.title': 'Small missions. Real\u2011world adventures.',
   'view.setupFirstUse.title': 'Parent setup',
   'view.setupIncomplete.title': 'Parent setup needs attention',
   'view.setupEditing.title': 'Setup settings',

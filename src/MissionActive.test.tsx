@@ -8,6 +8,7 @@ import {
 import { MISSION_CATALOG } from './catalogContent';
 import { translateMessage, type MessageKey, type SupportedLanguage } from './localization';
 import { MissionActive } from './MissionActive';
+import { resolveMissionImage } from './missionImages';
 import type { ActiveMissionSession } from './persistence';
 
 const PROFILE_ID = 'profile-1';
@@ -418,5 +419,40 @@ describe('the running Mission presentation', () => {
 
     expect(container.querySelector('.mission-session')).toBeNull();
     expect(vi.getTimerCount()).toBe(0);
+  });
+});
+
+describe("the running Mission's reminder picture", () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it('pictures the Mission that is running, after the instruction to leave the screen', () => {
+    const { clocks } = movableClocks(STARTED_AT + 60_000);
+    const { container } = renderActive(activeSession('creativity-02'), clocks);
+
+    const away = container.querySelector('.mission-session__away')!;
+    const picture = container.querySelector('.mission-session__reminder .mission-session__thumb')!;
+    expect(away.compareDocumentPosition(picture) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    const photo = picture.querySelector('img')!;
+    expect(photo.getAttribute('src')).toBe(resolveMissionImage('creativity-02')!.src);
+    expect(photo.getAttribute('alt')).toBe('');
+    expect(photo.getAttribute('aria-hidden')).toBe('true');
+    expect(screen.queryAllByRole('img')).toHaveLength(0);
+  });
+
+  it('pictures nothing for a Mission that cannot safely continue', () => {
+    const { clocks } = movableClocks(STARTED_AT + 60_000);
+    const { container } = renderActive(
+      activeSession('creativity-02', { missionId: 'movement-99' }),
+      clocks,
+    );
+
+    expect(screen.getByText(t('session.active.missionUnavailable'))).toBeTruthy();
+    expect(container.querySelector('.mission-session__thumb')).toBeNull();
   });
 });

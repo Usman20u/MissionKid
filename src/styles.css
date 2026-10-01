@@ -1,3 +1,47 @@
+/* MissionKid presentation.
+
+   One set of shared values and one family of components for every view: warm
+   ivory grounds, cream sheets, deep forest-green ink and actions, soft sage
+   recognition, restrained category accents, an expressive serif for headings
+   and a readable sans-serif for everything read or pressed.
+
+   The rules earlier measurements produced are carried over and marked where
+   they apply: `--room`, the named zero minimums on every clipping layout
+   layer, the category group's definite sizing and the enlarged-text
+   hyphenation of the parent surfaces. */
+
+/* Faces, served from the application's own origin. Source Serif 4 Display
+   ships exactly as Adobe released it, because its licence reserves the name;
+   Inter is subset to the Latin and Cyrillic its licence lets it be cut to.
+   Both cover every character English, German and Russian use here. */
+@font-face {
+  font-family: 'Source Serif 4 Display';
+  src: url('./assets/fonts/SourceSerif4Display-Bold.ttf.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Inter;
+  src: url('./assets/fonts/inter-latin.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: Inter;
+  src: url('./assets/fonts/inter-cyrillic.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+
 /* `--room` is how much horizontal room the reader's text size leaves. It is
    exactly `1rem` on a 320px screen at a 16px text size, larger on every wider
    screen or at a smaller text size, and it falls towards zero only when the
@@ -10,14 +54,70 @@
 :root {
   --room: calc(10vw - 1rem);
 
-  color: #20302d;
-  background: #f7f2e6;
-  font-family:
-    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
-    "Segoe UI", sans-serif;
+  /* Grounds and surfaces */
+  --ivory: #f5efe5;
+  --cream: #fbf8f2;
+  --paper: #fffdf9;
+  --sand: #f0e9dd;
+  --sand-deep: #e7ddcc;
+  --line: #e5dbca;
+  --line-strong: #d3c5ad;
+
+  /* Ink and actions */
+  --forest-900: #16392d;
+  --forest-800: #1d4637;
+  --forest-700: #245b45;
+  --forest-600: #2f6b53;
+  --ink: #26332e;
+  --ink-muted: #56645d;
+
+  /* Recognition */
+  --sage-50: #f0f4ec;
+  --sage-100: #e3eadb;
+  --sage-200: #d1dcc4;
+  --sage-600: #5b8467;
+
+  /* Guidance, notices and the one destructive colour */
+  --adult-bg: #e7efe4;
+  --adult-mark: #2f6b53;
+  --adult-ink: #1f4035;
+  --safety-bg: #f6ead6;
+  --safety-mark: #a66c27;
+  --safety-ink: #4d3718;
+  --notice-bg: #fbefe1;
+  --notice-mark: #b4650c;
+  --notice-ink: #45311a;
+  --danger: #9a3a22;
+  --focus: #b4650c;
+
+  /* Shape and depth */
+  --radius-sheet: 1.75rem;
+  --radius-card: 1.25rem;
+  --radius-inner: 0.9rem;
+  --radius-control: 0.85rem;
+  --shadow-sheet: 0 1px 2px rgb(64 46 20 / 5%), 0 1.5rem 3.5rem rgb(64 46 20 / 9%);
+  --shadow-card: 0 1px 2px rgb(64 46 20 / 6%), 0 0.8rem 1.8rem rgb(64 46 20 / 8%);
+
+  /* Type */
+  --font-serif: 'Source Serif 4 Display', 'Iowan Old Style', Georgia, 'Times New Roman', serif;
+  --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  color: var(--ink);
+  background: var(--ivory);
+  font-family: var(--font-sans);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
 }
+
+/* The five Mission Categories' restrained accents, for their tags, and the
+   hue that lights their authored scenes. Each label always carries the
+   meaning; these only reinforce it. */
+[data-category='Movement'] { --world-hue: 24; --cat-bg: #f6ded2; --cat-ink: #7a3a1f; }
+[data-category='Creativity'] { --world-hue: 286; --cat-bg: #ebe1f0; --cat-ink: #563a74; }
+[data-category='Helping at Home'] { --world-hue: 152; --cat-bg: #dfe9d9; --cat-ink: #2c553a; }
+[data-category='Learning'] { --world-hue: 208; --cat-bg: #dce8f1; --cat-ink: #23506e; }
+[data-category='Calm'] { --world-hue: 178; --cat-bg: #d9ebe8; --cat-ink: #22574f; }
 
 * {
   box-sizing: border-box;
@@ -30,18 +130,16 @@ body,
   min-height: 100%;
 }
 
-/* The warm ground is the product's own, so it is the default rather than a
-   list of views that opt into it: the frame painted before the application
-   mounts, every view, and the unexpected-error view that renders outside the
-   shell all carry it. The accepted Reward Card and History keep their cool
-   ground, set on the shell below. */
+/* The ground is warm ivory with daylight from above, and it is the product's
+   own, so the frame painted before the application mounts and the unexpected
+   error view carry it too. */
 body {
   min-height: 100vh;
   margin: 0;
   overflow-wrap: break-word;
   background:
-    radial-gradient(circle at 50% 0%, #f1e8d6 0, transparent 34rem),
-    #f7f2e6;
+    radial-gradient(90rem 40rem at 50% -12rem, #fcf8f1 0, transparent 70%),
+    var(--ivory);
 }
 
 button,
@@ -49,311 +147,350 @@ input {
   font: inherit;
 }
 
+img,
+svg {
+  max-width: 100%;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+/* ---------- Shell ---------- */
+
 .app-shell {
   min-height: 100vh;
 }
 
-/* The accepted Reward Card and History keep the cool ground they were accepted
-   on — the same gradient, drawn by the shell instead of the page — and so does
-   the canvas behind them. A different ground is their identity, not a gap. */
-:root:has([data-view='session-result'], [data-view='history']) {
-  background: #f4f6f1;
-}
-
-.app-shell:has(:is([data-view='session-result'], [data-view='history'])) {
-  background:
-    radial-gradient(circle at 50% 0%, #e4eee7 0, transparent 28rem),
-    #f4f6f1;
-}
-
-/* The page gutter follows `--room`, as the tenth authorization of Plan 05
-   introduced it: `1rem` at every ordinary size, and down to 8px only where the
-   screen is narrow for the reader's text. It now reaches every view, the
-   introduction and Discovery included, which were the two it had not. */
+/* The page gutter follows `--room`: `1rem` at every ordinary phone size, and
+   down to 8px only where the screen is narrow for the reader's text. */
 .app-shell__header,
 .app-shell__main {
-  width: min(100%, 72rem);
+  width: min(100%, 80rem);
   margin: 0 auto;
   padding-right: clamp(8px, var(--room), 1rem);
   padding-left: clamp(8px, var(--room), 1rem);
 }
 
+@media (min-width: 48rem) {
+  .app-shell__header,
+  .app-shell__main {
+    padding-inline: 2rem;
+  }
+}
+
+/* The product's name, as a text wordmark in the product's green. No mark and
+   no logo. It stays in the same place on every view. */
 .app-shell__header {
-  padding-top: 1.25rem;
-  padding-bottom: 1.25rem;
+  display: flex;
+  min-height: 4.5rem;
+  align-items: center;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
 }
 
-.app-shell__brand,
-.app-view__context,
-.app-view__title {
-  margin: 0;
-}
-
-/* The product's name, in the product's green and at the weight of a name
-   rather than of a caption. Text in the existing face: no mark, no logo. It
-   stays in the same place on every view, so it never moves between steps. Its
-   line height keeps the header a whole number of pixels at the default text
-   size: `1.2` made it 64.95px and set every view below it on a fractional
-   pixel row. */
 .app-shell__brand {
-  color: #17493c;
-  font-size: 1.3rem;
+  margin: 0;
+  color: var(--forest-900);
+  font-size: 1.5rem;
   font-weight: 800;
   line-height: 1.25;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.035em;
 }
 
 .app-shell__main {
-  padding-top: 1.25rem;
+  padding-top: 0.25rem;
   padding-bottom: 3rem;
 }
 
-/* Every view is one panel on the ground. Views with two or three columns — the
-   introduction and Discovery — use the whole frame; every other view is a
-   single reading column, and on a wide screen it is held to a frame its
-   content can use and centred, instead of running along the left of a panel
-   that is half empty. Order and hierarchy are unchanged; only the frame fits.
+/* The unexpected-error view renders outside the shell, with no header above
+   it, so it keeps the header's distance from the top itself. */
+#root > .app-shell__main {
+  padding-top: 1.5rem;
+}
+
+/* Every view is one cream sheet on the ivory ground. The introduction and
+   Discovery take the whole frame; single-column views keep a reading frame,
+   centred. The sheet is a size container, so its layouts answer to the width
+   the text actually has — at an enlarged text size a narrow sheet keeps one
+   column whatever the screen.
 
    Its side padding follows `--room`, down to 8px where the screen is narrow
    for the text, and is published as `--section-inline` so a card inside can
-   reclaim no more of it than there is. Its top and bottom carry a viewport
-   ceiling for the same reason. At every ordinary size both are exactly
-   `--section-pad`. */
+   reclaim no more of it than there is. */
 .app-shell__main > section {
-  --section-pad: clamp(1.25rem, 4vw, 2rem);
+  --section-pad: clamp(1.25rem, 4vw, 3rem);
   --section-inline: clamp(8px, calc(1.25 * var(--room)), var(--section-pad));
 
-  max-width: 42rem;
+  container: view / inline-size;
+  max-width: 46rem;
   margin-inline: auto;
-  padding: clamp(min(1.25rem, 6.25vw), 4vw, 2rem) var(--section-inline);
-  border: 1px solid #ece2cf;
-  border-radius: 1.25rem;
-  background: rgb(255 253 248 / 94%);
-  box-shadow: 0 1.25rem 3rem rgb(32 48 45 / 8%);
+  padding: clamp(min(1.25rem, 6.25vw), 4vw, 2.75rem) var(--section-inline);
+  border: 1px solid rgb(255 255 255 / 60%);
+  border-radius: var(--radius-sheet);
+  background: var(--cream);
+  box-shadow: var(--shadow-sheet);
 }
 
 .app-shell__main > section:is([data-view='introduction'], [data-view='discovery-categories']) {
   max-width: none;
 }
 
-/* The accepted Reward Card and History keep their own panel — white on the cool
-   ground, with its cool edge — and their own top and bottom padding. */
-.app-shell__main > section:is([data-view='session-result'], [data-view='history']) {
-  padding-block: var(--section-pad);
-  border-color: #d8e1da;
-  background: rgb(255 255 255 / 92%);
+.app-shell__main > section:is([data-view='session-opening'], [data-view='session-ready'], [data-view='session-active']) {
+  max-width: 64rem;
 }
 
-/* The product's other confirmation, so it takes the leave confirmation's
-   form: an inset one step deeper than the warm page rather than a second
-   floating card, with a calm edge. What makes it the destructive one is its
-   wording and its outlined red action, never an alarm surface. Its padding is
-   the section's, with the same viewport ceiling the parent views' shell
-   carries: at a 32px root the section's own `rem` padding left the reset
-   consequence a 92px column. Its side padding follows `--room` down to 12px,
-   so the heading and the two choices keep whole words where they fit. */
-.reset-panel {
-  padding: clamp(min(1.25rem, 6.25vw), 4vw, 2rem);
-  padding-inline: clamp(12px, calc(1.25 * var(--room)), var(--section-pad));
-  border: 1px solid #e8dfcd;
-  border-radius: 1.25rem;
-  background: #fbf6ea;
+.app-shell__main > section[data-view='session-result'] {
+  max-width: 40rem;
 }
 
+/* Where am I: a small tracked line on child-facing views, and on parent
+   surfaces the same words as a tag, so a parent surface is recognisable before
+   a word of it is read. */
 .app-view__context {
-  margin-bottom: 0.5rem;
-  color: #4c625c;
-  font-size: 0.9rem;
-  font-weight: 650;
-}
-
-/* A parent surface says so at a glance: the same words, carried as a small
-   tag rather than a caption, so setup, settings and recovery are recognisable
-   as the parent's before a word of them is read. Child-facing views keep their
-   plain line. */
-.app-view__context--parent {
-  width: fit-content;
-  max-width: 100%;
-  padding: 0.2rem 0.7rem;
-  border: 1px solid #e3d5ba;
-  border-radius: 999px;
-  background: #f6eddc;
-  color: #5b4422;
-}
-
-/* Every heading the product moves focus to shows the same indicator. The
-   abandonment confirmation and the restored Reward Card are included
-   deliberately: both are focus targets that were falling back to the browser's
-   thin default ring while every other target showed this one, and the
-   confirmation is the most consequential screen in the flow. */
-.app-view__title:focus-visible,
-.mission-result__mission:focus-visible,
-.mission-suggestions__title:focus-visible,
-.mission-session__confirm-title:focus-visible,
-.reset-panel__title:focus-visible {
-  outline: 3px solid #b4650c;
-  outline-offset: 4px;
-}
-
-.app-view__title {
-  max-width: 18ch;
-  font-size: clamp(1.75rem, 7vw, 2.5rem);
-  line-height: 1.15;
-  letter-spacing: -0.035em;
-}
-
-/* F001 first-use introduction.
-   One reading column: what MissionKid is for, the one example, the short flow,
-   then the single forward action. The language switch sits above all of it so a
-   parent who cannot read the current language reaches it without reading the
-   view. */
-.introduction {
-  margin-top: 1.5rem;
-}
-
-/* The title here is a sentence rather than a label, so the 18ch measure the
-   other views use would break it into four lines. */
-[data-view='introduction'] .app-view__title {
-  max-width: 24ch;
-}
-
-.introduction__languages {
-  margin-top: 0;
-}
-
-/* Quieter than a setup choice, because it is one: a switch, not a step. */
-.introduction__languages legend {
-  color: #4c625c;
-  font-size: 0.95rem;
-  font-weight: 700;
-}
-
-/* The purpose of the product, given the weight of a lead rather than of body
-   copy: it is the first thing the page says once the language switch above it
-   has done its job. */
-.introduction__lead {
-  max-width: 52ch;
-  margin: 1.5rem 0 0;
-  color: #344742;
-  font-size: 1.2rem;
-  line-height: 1.55;
-  letter-spacing: -0.005em;
-}
-
-/* A label for a part of the introduction rather than a step: the example and
-   the family's steps are two halves of one explanation, so neither is headed
-   as loudly as the step Discovery's set of three opens. */
-.introduction__heading {
   margin: 0 0 0.85rem;
-  color: #1d3630;
-  font-size: 1.05rem;
-  font-weight: 750;
-  letter-spacing: 0.02em;
+  color: var(--forest-600);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  line-height: 1.4;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
 }
 
-/* Two columns where there is room for both, one where there is not. The
-   threshold is the content's own measure rather than a device width: both
-   bases are in `rem`, so a reader who enlarges text runs out of room for two
-   columns and gets one, at any viewport width. Nothing is reordered — the flex
-   line wraps, so the example still precedes the flow and the one action. */
-.introduction__columns {
-  display: flex;
-  flex-wrap: wrap;
-  /* Each column takes the height its own content needs. Stretching the
-     guidance to match the example card was tried and reverted: matching the
-     bottoms opened a gap between the explanation and the action that follows
-     it, which detached the two. Columns of unequal height are the honest
-     result of unequal content. */
-  align-items: flex-start;
-  gap: 2rem 2.5rem;
-  margin-top: 2rem;
+.app-view__context--parent {
+  width: fit-content;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  padding: 0.3rem 0.8rem;
+  border-radius: 999px;
+  background: var(--sage-100);
+  color: var(--forest-800);
+  font-size: 0.875rem;
+  letter-spacing: 0.01em;
+  text-transform: none;
 }
 
-/* The example keeps a Mission card's measure and does not stretch to fill a
-   wide column; the guidance beside it takes the room that is left. */
-.introduction__example {
-  min-width: 0;
-  flex: 0 1 24rem;
-}
-
-/* What the family does, what setup involves and the one action are one block,
-   on the same quiet warm panel Discovery gives its set of three. Without it the
-   column read as three stacked items above a large empty area on a wide
-   screen. Nothing is reordered: this is the same document order the narrow
-   layout reads top to bottom. */
-.introduction__guidance {
-  display: flex;
-  min-width: 0;
-  flex: 1 1 26rem;
-  flex-direction: column;
-}
-
-/* The panel is given only where the column can afford it. The threshold is in
-   `rem`, so it is the content's own measure rather than a device width: a
-   reader who enlarges text gets the plain column back automatically. Measured
-   at a 32px root, the panel's inset narrowed the text column enough to add
-   about a sixth to the page's height, which is not a trade worth making for a
-   surface that is already one column there. */
-@media (min-width: 24rem) {
-  .introduction__guidance {
-    /* The inset still carries a ceiling measured against its own column, for
-       the same reason the Mission card's note does. */
-    padding: 1.05rem min(1.35rem, 7%) 1.5rem;
-    border: 1px solid #ece2cf;
-    border-radius: 1.25rem;
-    background:
-      radial-gradient(120% 90% at 50% 0%, #fdfaf3 0, #f7f1e4 100%);
-  }
-
-  /* The action follows the note it belongs to, at the ordinary gap every action
-     on this surface uses. It is not stretched across the panel. */
-  .introduction__guidance .button {
-    align-self: flex-start;
-  }
-
-  .introduction__guidance .introduction__flow {
-    margin-bottom: 0.25rem;
-  }
-}
-
-/* On a wide layout, held to roughly the width one of Discovery's three columns
-   gives a card, so the example carries a Mission card's prominence rather than
-   the page's. */
-.introduction__example .mission-card {
-  max-width: 24rem;
-}
-
-/* Below the width where Discovery gives its own Mission cards the panel's full
-   measure, the example takes the same one. A Mission card's padding is defined
-   in `rem`, so inside the panel's padding as well there is almost no text
-   column left at a large root size, and the reviewed instruction and safety
-   note become unreadable. This is the width a Mission card is presented at. */
-@media (max-width: 55.99rem) {
-  .introduction__example .mission-card {
-    max-width: none;
-    margin-inline: calc(-1 * var(--section-inline));
-  }
-}
-
-.introduction__steps {
-  max-width: 62ch;
+/* Display type answers to the reader's text size and to the screen: every
+   ordinary size is untouched, but where the screen is narrow for an enlarged
+   root the preferred size is capped against the viewport, so a heading stays
+   clearly larger than the text under it without breaking its words. At 320px
+   with a 32px root the cap is what applies. */
+.app-view__title {
+  max-width: 20ch;
   margin: 0;
-  padding-left: 1.4rem;
-  color: #3d514c;
-  line-height: 1.6;
+  color: var(--forest-900);
+  font-family: var(--font-serif);
+  font-size: clamp(min(2rem, 11vw), min(1.45rem + 2.4vw, 12.5vw), 3rem);
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -0.012em;
+  text-wrap: balance;
 }
 
-/* The family's three steps are the substance of this block, so their numbers
-   are given the product's own green rather than the browser's default grey. */
-.introduction__steps ::marker {
-  color: #2f6b58;
-  font-weight: 750;
+/* Every heading the product moves focus to shows the same indicator. */
+:is(
+  .app-view__title,
+  .mission-result__mission,
+  .mission-suggestions__title,
+  .mission-session__confirm-title,
+  .reset-panel__title,
+  .mission-history__goal-heading
+):focus-visible {
+  border-radius: 4px;
+  outline: 3px solid var(--focus);
+  outline-offset: 4px;
 }
 
-.introduction__steps li + li {
-  margin-top: 0.5rem;
+/* Presentational: exists only for the native disabled cascade. */
+.recovery-controls {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
 }
+
+.recovery-controls > p[role='status'] {
+  margin: 1rem 0 0;
+  color: var(--ink-muted);
+}
+
+/* Available to assistive technology, absent from the layout. Not display:none
+   and not hidden, either of which would remove it from the accessibility tree
+   and silence the announcement it exists to make. */
+.a11y-only {
+  position: absolute;
+  overflow: hidden;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ---------- Actions ---------- */
+
+/* A label that grows — a longer translation, or the reader's own larger text
+   setting — wraps inside the button rather than pushing it past the width it
+   was given. The side inset follows `--room`, so an enlarged label keeps whole
+   words where they fit. */
+.button {
+  max-width: 100%;
+  min-height: 3.25rem;
+  margin-top: 1.5rem;
+  padding: 0.8rem clamp(12px, calc(1.5 * var(--room)), 1.5rem);
+  border: 2px solid transparent;
+  border-radius: var(--radius-control);
+  cursor: pointer;
+  font-size: 1.0625rem;
+  font-weight: 650;
+  line-height: 1.3;
+  transition:
+    background-color 140ms ease,
+    border-color 140ms ease,
+    box-shadow 140ms ease;
+}
+
+.button:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+}
+
+.button--primary {
+  width: 100%;
+  background: var(--forest-700);
+  color: #fff;
+  box-shadow:
+    0 1px 1px rgb(18 48 36 / 20%),
+    0 0.6rem 1.3rem rgb(36 91 69 / 22%);
+}
+
+@media (hover: hover) {
+  .button--primary:hover:not(:disabled) {
+    background: #1c4b38;
+  }
+}
+
+.button--primary:disabled {
+  background: #dbe0da;
+  color: #4a5751;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+.button--secondary {
+  border-color: #b9c7bc;
+  background: var(--paper);
+  color: var(--forest-800);
+}
+
+@media (hover: hover) {
+  .button--secondary:hover:not(:disabled) {
+    border-color: var(--forest-600);
+  }
+}
+
+/* Lower still: a way out that is always there and never competes. */
+.button--quiet {
+  min-height: 3.25rem;
+  border-color: transparent;
+  background: none;
+  color: var(--forest-800);
+  font-weight: 600;
+}
+
+@media (hover: hover) {
+  .button--quiet:hover:not(:disabled) {
+    border-color: transparent;
+    background: var(--sand);
+  }
+}
+
+.button--destructive {
+  border-color: #c07a61;
+  background: var(--paper);
+  color: var(--danger);
+}
+
+@media (hover: hover) {
+  .button--destructive:hover:not(:disabled) {
+    border-color: var(--danger);
+  }
+}
+
+/* The entry to a reset: a plain text link, separated from routine actions. */
+.button--reset-entry {
+  padding-inline: 0;
+  border: 0;
+  background: none;
+  color: var(--danger);
+  font-weight: 600;
+  text-align: left;
+  text-decoration: underline;
+  text-underline-offset: 0.25rem;
+}
+
+@media (min-width: 34rem) {
+  .button--primary {
+    width: auto;
+    min-width: 13rem;
+  }
+}
+
+/* Small decorative marks sit on the text's own line. */
+.duration-mark,
+.exit-mark {
+  width: 1.2em;
+  height: 1.2em;
+  flex: none;
+  margin-right: 0.4em;
+  vertical-align: -0.24em;
+}
+
+/* ---------- Notices ---------- */
+
+/* Something could not be completed, or is only temporary: one calm notice,
+   never an alarm. A mark down its edge, the product's amber, plain words. */
+.save-feedback,
+.discovery-gate,
+.mission-suggestions__issue,
+.mission-session__issue,
+.setup-form > p[role='status'] {
+  position: relative;
+  max-width: 40rem;
+  margin: 1.25rem 0 0;
+  padding: 0.85rem min(1rem, 5vw) 0.9rem calc(min(0.7rem, 2.5vw) + 3px + min(0.8rem, 3vw));
+  border-radius: 0.9rem;
+  background: var(--notice-bg);
+  color: var(--notice-ink);
+  line-height: 1.55;
+}
+
+.save-feedback::before,
+.discovery-gate::before,
+.mission-suggestions__issue::before,
+.mission-session__issue::before,
+.setup-form > p[role='status']::before {
+  position: absolute;
+  top: 0.8rem;
+  bottom: 0.8rem;
+  left: min(0.7rem, 2.5vw);
+  width: 3px;
+  border-radius: 2px;
+  background: var(--notice-mark);
+  content: '';
+}
+
+/* The incomplete-setup gate is guidance for the parent rather than a problem. */
+.discovery-gate {
+  background: var(--sage-50);
+  color: var(--forest-900);
+}
+
+.discovery-gate::before {
+  background: var(--forest-600);
+}
+
+/* ---------- Parent surfaces: setup, settings, temporary mode, handoff ---------- */
 
 .setup-form,
 .setup-complete {
@@ -362,16 +499,16 @@ input {
 
 .setup-form__introduction,
 .setup-complete__body {
-  max-width: 62ch;
+  max-width: 40rem;
   margin: 0;
-  color: #445752;
-  font-size: 1.05rem;
+  color: var(--ink-muted);
+  font-size: 1.0625rem;
   line-height: 1.6;
 }
 
 .choice-group {
   min-width: 0;
-  margin: 2rem 0 0;
+  margin: 1.9rem 0 0;
   padding: 0;
   border: 0;
 }
@@ -382,132 +519,213 @@ input {
    count as breakable when the width is measured, so the legend wraps instead. */
 .choice-group legend {
   padding: 0;
+  color: var(--forest-900);
   font-size: 1.125rem;
-  font-weight: 750;
+  font-weight: 700;
   overflow-wrap: anywhere;
 }
 
 .choice-group__help,
 .choice-group__required {
-  max-width: 64ch;
-  color: #536660;
+  max-width: 40rem;
+  color: var(--ink-muted);
   line-height: 1.55;
 }
 
 .choice-group__help {
-  margin: 0.45rem 0 1rem;
+  margin: 0.4rem 0 0.9rem;
 }
 
 .choice-group__required {
   margin: 0.75rem 0 0;
-  font-size: 0.925rem;
-  font-weight: 650;
+  font-size: 0.9375rem;
+  font-weight: 600;
 }
 
+/* What saving a change will do is what a parent opens settings to learn, so it
+   is its own line in the body ink. */
+.choice-group__effect {
+  display: block;
+  margin-top: 0.5rem;
+  color: var(--ink);
+}
+
+/* A named minimum, as on the Mission card: a `1fr` column's automatic minimum
+   is its widest control, which at a 32px root pushed the setup form 14px past
+   a 320px screen. */
 .choice-grid {
   display: grid;
-  /* A named minimum, as on the Mission card: a `1fr` column's automatic
-     minimum is its widest control, which at a 32px root pushed the setup form
-     14px past a 320px screen. */
   grid-template-columns: minmax(0, 1fr);
   gap: 0.75rem;
 }
 
-/* The side inset, gap and radio carry viewport ceilings, which sit above their
-   `rem` values at every ordinary size from 320px up and change nothing there.
-   At an enlarged text size they stop growing, so the language names fit their
-   column at full size instead of widening the page; the label stays the
-   touch target at its full height. Every state of the setup form shares this:
-   first use, incomplete setup, settings and temporary mode. */
+/* One choice card. The side inset, gap and radio carry viewport ceilings, which
+   sit above their `rem` values at every ordinary size from 320px up. At an
+   enlarged text size they stop growing, so the names fit their column at full
+   size instead of widening the page. The label stays the touch target. */
 .choice {
   display: flex;
-  min-height: 3.35rem;
+  min-height: 3.5rem;
   align-items: center;
   gap: min(0.75rem, 3.75vw);
-  padding: 0.8rem min(1rem, 5vw);
-  border: 2px solid #7d968d;
-  border-radius: 0.8rem;
-  background: #fff;
-  color: #233b35;
+  padding: 0.85rem min(1.1rem, 5vw);
+  border: 1.5px solid var(--line-strong);
+  border-radius: var(--radius-control);
+  background: var(--paper);
+  box-shadow: 0 1px 2px rgb(64 46 20 / 5%);
+  color: var(--ink);
   cursor: pointer;
-  font-weight: 700;
+  font-weight: 650;
   line-height: 1.35;
   transition:
-    border-color 120ms ease,
-    background-color 120ms ease,
-    box-shadow 120ms ease;
+    border-color 140ms ease,
+    background-color 140ms ease,
+    box-shadow 140ms ease;
 }
 
-.choice:hover {
-  border-color: #5f8377;
+@media (hover: hover) {
+  .choice:hover {
+    border-color: #9fb3a4;
+  }
 }
 
+/* Selected: a heavier rim, a sage fill and the radio's own mark, so it is never
+   signalled by colour alone. */
 .choice:has(input:checked) {
-  border-color: #1d6654;
-  background: #edf7f1;
-  box-shadow: inset 0 0 0 1px #1d6654;
+  border-color: var(--forest-700);
+  background: var(--sage-50);
+  box-shadow:
+    inset 0 0 0 1.5px var(--forest-700),
+    0 0.45rem 1rem rgb(36 91 69 / 12%);
 }
 
 .choice input {
-  width: min(1.2rem, 6vw);
-  height: min(1.2rem, 6vw);
+  width: min(1.25rem, 6vw);
+  height: min(1.25rem, 6vw);
   flex: 0 0 auto;
   margin: 0;
-  accent-color: #1d6654;
+  accent-color: var(--forest-700);
 }
 
 .choice:has(input:focus-visible) {
-  outline: 3px solid #b4650c;
+  outline: 3px solid var(--focus);
   outline-offset: 2px;
 }
 
-/* Three short language names side by side where there is room, wrapping to a
-   column when there is not. */
+/* The age groups read as numbers, so they take the heading face. */
+.choice-grid--ages .choice span {
+  color: var(--forest-900);
+  font-family: var(--font-serif);
+  font-size: 1.4rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+@media (min-width: 34rem) {
+  .choice-grid--languages,
+  .choice-grid--ages {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.setup-form .choice-grid--languages {
+  max-width: 40rem;
+}
+
+.setup-form .choice-grid--ages {
+  max-width: 30rem;
+}
+
+/* The compact language switch on the introduction: one segmented control of
+   three names. Each segment is a whole label, so it stays the touch target at
+   full height, and the radio inside it stays a real, focusable radio: only its
+   drawing is replaced. The chosen language is filled and carries a check, so it
+   is never marked by colour alone. The gaps are in `rem`: a percentage gap
+   resolves to nothing while a shrink-to-fit box is measured, and the names then
+   wrapped onto a second row. */
 .choice-grid--inline {
   display: flex;
+  width: fit-content;
+  max-width: 100%;
   flex-wrap: wrap;
-  gap: min(0.6rem, 5%);
+  gap: 0.25rem;
+  padding: 0.25rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 1.75rem;
+  background: var(--paper);
 }
 
-/* Stacked one per row at narrow widths, where the padding, the gap and the
-   radio would otherwise take more of the row than the language name and force
-   it to break across lines. Each ceiling is measured against the row, so the
-   control is unchanged at ordinary sizes; the label itself keeps its size and
-   remains the touch target. */
 .choice--inline {
+  position: relative;
   min-width: 0;
-  padding: 0.7rem min(0.9rem, 5%);
+  min-height: 3.25rem;
   flex: 0 1 auto;
-  gap: min(0.55rem, 3%);
-  font-size: 0.95rem;
+  gap: 0.4rem;
+  padding: 0.5rem min(1.05rem, 4.5vw);
+  border: 0;
+  border-radius: 1.5rem;
+  background: transparent;
+  box-shadow: none;
+  font-size: 0.9375rem;
+  font-weight: 600;
 }
 
-/* The glyph stops growing where the row runs out of room for the name beside
-   it. It is a state indicator, not text, and the label around it stays the
-   touch target at its full height. `1.2rem` at the default root size is where
-   it already sits, so nothing changes until the reader enlarges text. */
+@media (hover: hover) {
+  .choice--inline:hover {
+    background: var(--sand);
+  }
+}
+
 .choice--inline input {
-  width: min(1.2rem, 19.2px);
-  height: min(1.2rem, 19.2px);
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  opacity: 0;
+  pointer-events: none;
 }
 
-/* The name is one word and is kept on one line: the padding, the gap and the
-   glyph above give it the room it needs, so nothing has to be broken. The
-   label may shrink to the row, and `min-content` keeps that shrinking from
-   cutting into the word itself. */
+.choice--inline:has(input:checked) {
+  background: var(--forest-700);
+  box-shadow: none;
+  color: #fff;
+}
+
+.choice--inline:has(input:checked) span::before {
+  margin-right: 0.4rem;
+  content: '✓';
+  content: '✓' / '';
+}
+
+/* The name is one word and is kept on one line. */
 .choice--inline span {
   min-width: min-content;
 }
 
+/* The parent's context — responsibility, privacy, what setup involves — on one
+   calm sand panel, marked by a small shield so it reads as the parent's. */
 .parent-note {
-  max-width: 64ch;
-  margin-top: 2rem;
-  padding: 1rem 1.1rem;
-  border-left: 4px solid #4d7d6d;
-  border-radius: 0 0.75rem 0.75rem 0;
-  background: #f1f7f3;
-  color: #3d514c;
+  position: relative;
+  max-width: 40rem;
+  margin-top: 1.9rem;
+  padding: 1rem min(1.1rem, 5.5vw) 1.05rem calc(min(1.1rem, 5.5vw) + min(2rem, 9vw));
+  border-radius: 1rem;
+  background: var(--sand);
+  color: var(--ink);
   line-height: 1.55;
+}
+
+.parent-note::before {
+  position: absolute;
+  top: 1.05rem;
+  left: min(1.1rem, 5.5vw);
+  width: min(1.3rem, 6vw);
+  height: min(1.3rem, 6vw);
+  background: var(--forest-600);
+  content: '';
+  -webkit-mask: var(--shield) center / contain no-repeat;
+  mask: var(--shield) center / contain no-repeat;
+  --shield: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='black' stroke-width='2' stroke-linejoin='round' d='M12 3 5 6v5.5c0 4.2 2.9 7.9 7 9.5 4.1-1.6 7-5.3 7-9.5V6z'/%3E%3Cpath fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' d='m9 12 2.2 2.2L15.5 10'/%3E%3C/svg%3E");
 }
 
 .parent-note p {
@@ -515,124 +733,74 @@ input {
 }
 
 .parent-note p + p {
-  margin-top: 0.6rem;
+  margin-top: 0.55rem;
 }
 
-.save-feedback {
-  max-width: 64ch;
-  margin: 1.25rem 0 0;
-  padding: 0.9rem 1rem;
-  border: 1px solid #be704f;
-  border-radius: 0.75rem;
-  background: #fff4ef;
-  color: #71361f;
-  line-height: 1.5;
+/* In temporary mode the setup applies to this page only: a state of its own. */
+.setup-form > p[role='status'] {
+  margin-top: 1.25rem;
 }
 
-.button {
-  /* A label that grows — a longer translation, or the reader's own larger text
-     setting — wraps inside the button rather than pushing it past the width it
-     was given. Without this the secondary actions, which have no width of their
-     own, ran off a narrow screen at an enlarged text size. */
-  max-width: 100%;
-  min-height: 3.25rem;
-  margin-top: 1.5rem;
-  /* The side inset follows `--room`: `1.2rem` at every ordinary size, and
-     down to 12px where the screen is narrow for the text, so a label such as
-     *Завершить настройку* or *Найти другую миссию* keeps whole words where
-     they fit. The reset entry, a text link, keeps no inset at all. */
-  padding: 0.8rem clamp(12px, calc(1.2 * var(--room)), 1.2rem);
-  border: 2px solid transparent;
-  border-radius: 0.8rem;
-  cursor: pointer;
-  font-weight: 750;
-  line-height: 1.3;
+/* The save action closes the form, so it has room of its own. */
+.setup-form > .button--primary {
+  margin-top: 2rem;
 }
 
-.button:focus-visible {
-  outline: 3px solid #b4650c;
-  outline-offset: 3px;
-}
-
-.button--primary {
-  width: 100%;
-  background: #195d4c;
-  color: #fff;
-  box-shadow: 0 0.55rem 1.2rem rgb(25 93 76 / 18%);
-}
-
-.button--primary:hover:not(:disabled) {
-  background: #124c3e;
-}
-
-.button--primary:disabled {
-  background: #d8dfdb;
-  color: #4c5955;
-  box-shadow: none;
-  cursor: not-allowed;
-}
-
-.button--secondary {
-  border-color: #6b857d;
-  background: #fff;
-  color: #174c40;
-}
-
+/* The handoff reads in two parts: what was saved, with the one control that
+   changes it directly beneath it; then what comes next, where the sentence
+   that MissionKid is ready leads into the one primary action. */
 .setup-summary {
   display: grid;
   max-width: 40rem;
+  grid-template-columns: minmax(0, 1fr);
   gap: 0.75rem;
-  margin: 1.5rem 0;
+  margin: 1.4rem 0 0;
 }
 
-/* The saved pair, as the same warm inset the product's confirmations use. */
+@media (min-width: 34rem) {
+  .setup-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 .setup-summary div {
-  padding: 1rem;
-  border: 1px solid #e8dfcd;
-  border-radius: 0.75rem;
-  background: #fbf6ea;
+  padding: 1rem 1.15rem 1.05rem;
+  border-radius: 1rem;
+  background: var(--sage-100);
 }
 
 .setup-summary dt {
-  color: #5a6d67;
-  font-size: 0.85rem;
-  font-weight: 650;
+  color: var(--ink-muted);
+  font-size: 0.875rem;
+  font-weight: 600;
 }
 
 .setup-summary dd {
-  margin: 0.25rem 0 0;
-  font-size: 1.05rem;
-  font-weight: 750;
-}
-
-/* The handoff reads in two parts. First what was saved, with the one control
-   that changes it directly beneath it: *Change setup* acts on the summary, not
-   on what comes next, so it no longer stands first in a column of three
-   buttons with the main action second. Then what comes next: the sentence that
-   MissionKid is ready leads into *Find a Mission*, the one primary action,
-   with *Mission history* secondary beside it. Focus order is unchanged. */
-.setup-complete .setup-summary {
-  margin-bottom: 1rem;
+  margin: 0.2rem 0 0;
+  color: var(--forest-900);
+  font-family: var(--font-serif);
+  font-size: min(1.6rem, 11vw);
+  font-weight: 700;
+  line-height: 1.2;
 }
 
 .setup-complete__edit {
-  margin-top: 0;
+  margin-top: 0.9rem;
 }
 
 .setup-complete__next {
-  max-width: 62ch;
-  margin: 1.75rem 0 0;
-  padding-top: 1.25rem;
-  border-top: 1px solid #ece2cf;
-  color: #23423a;
-  font-size: 1.05rem;
+  max-width: 40rem;
+  margin: 1.9rem 0 0;
+  padding-top: 1.35rem;
+  border-top: 1px solid var(--line);
+  color: var(--forest-900);
+  font-size: 1.125rem;
   font-weight: 650;
-  line-height: 1.55;
+  line-height: 1.5;
 }
 
 /* The two onward actions share a row where there is room and wrap where there
-   is not, with the gap owning the space between them: as inline siblings a
-   wide screen once set them against each other with no space at all. */
+   is not, with the gap owning the space between them. */
 .setup-complete__actions {
   display: flex;
   flex-wrap: wrap;
@@ -645,140 +813,19 @@ input {
   margin-top: 0;
 }
 
-/* Recovery is a recoverable state with a safe next step, so its explanation
-   takes the calm notice the product uses wherever something could not be
-   completed, rather than the warning box temporary mode keeps for the risk of
-   losing what is on the page. It stays unmistakably not a success. */
-[data-view='recovery'] .save-feedback {
-  border: 0;
-  border-left: 3px solid #b4650c;
-  border-radius: 0.5rem;
-  background: #fdf5ec;
-  color: #23423a;
-}
-
-/* The setup form in every state it appears in: first use, incomplete setup,
-   settings and temporary mode. The choices are short, and stretching three of
-   them across the full width of a wide panel left a small label adrift in a
-   large box and made the group slower to scan, not faster. Each group is held
-   to the width its own content needs. */
-.setup-form .choice-grid--languages {
-  max-width: 40rem;
-}
-
-.setup-form .choice-grid--ages {
-  max-width: 27rem;
-}
-
-/* The selected value carries the same weight it carries in Discovery: a heavier
-   rim and a slight lift on top of the native radio's own filled mark, so it is
-   never signalled by colour alone. */
-.setup-form .choice:has(input:checked) {
-  border-color: #17493c;
-  box-shadow:
-    inset 0 0 0 2px #17493c,
-    0 0.5rem 1.1rem rgb(23 73 60 / 12%);
-  transform: translateY(-2px);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .setup-form .choice:has(input:checked) {
-    transform: none;
-  }
-}
-
-/* The save action closes the form, so it is given room of its own rather than
-   sitting immediately under the guidance it follows. */
-.setup-form > .button--primary {
-  margin-top: 2rem;
-}
-
-/* The parent's guidance carries the same warm tint on every parent surface, so
-   the note does not read as the one cool element on a warm page. It stays
-   clearly separated from the controls above it by its own panel, its left mark
-   and its tint. Its side inset takes the same viewport ceiling as the choices,
-   so the parent's responsibility and privacy sentences keep a readable measure
-   at an enlarged text size. */
-[data-view='introduction'] .parent-note,
-.setup-form .parent-note {
-  border-left-color: #a8752f;
-  background: #f8efdf;
-  color: #4f3a1b;
-}
-
-.setup-form .parent-note {
-  padding-inline: min(1.1rem, 5.5vw);
-}
-
-/* What saving a change will do is what a parent opens this view to learn, so
-   it is its own line in the body ink rather than the tail of the help above
-   it. The words, their size and their place in the group's description are
-   unchanged. */
-.choice-group__effect {
-  display: block;
-  margin-top: 0.5rem;
-  color: #33483f;
-}
-
-/* In temporary mode, the sentence saying the setup now applies to this page
-   only. It follows the parent's note directly, where it read as that note's
-   last line; it is a state of its own, so it takes the calm notice the
-   product uses for a step that did not become durable. */
-.setup-form > p[role='status'] {
-  max-width: 64ch;
-  margin: 1.25rem 0 0;
-  padding: 0.8rem 1rem;
-  border-left: 3px solid #b4650c;
-  border-radius: 0.5rem;
-  background: #fdf5ec;
-  color: #23423a;
-  line-height: 1.5;
-}
-
-@media (min-width: 34rem) {
-  .choice-grid--languages,
-  .choice-grid--ages,
-  .setup-summary {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
-  .setup-summary {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .button--primary {
-    width: auto;
-    min-width: 13rem;
-  }
-
-  .recovery-actions > .button {
-    justify-self: start;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .choice {
-    transition: none;
-  }
-}
-.recovery-controls {
-  border: 0;
-  padding: 0;
-  margin: 0;
-  min-width: 0;
-}
+/* ---------- Recovery and reset ---------- */
 
 /* The column names its minimum. Without it a grid column is as wide as its
    widest item, so at a 32px root the reset panel, the retry action and its
    help were each sized to their longest word and scrolled the page sideways by
    up to 127px. */
 .recovery-actions {
-  margin-top: 1.5rem;
-  padding-top: 1rem;
-  border-top: 1px solid #e3d7c1;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: 1rem;
+  margin-top: 2rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--line);
 }
 
 /* Grid gap owns recovery spacing; the shared button margin would double it. */
@@ -786,146 +833,380 @@ input {
   margin-top: 0;
 }
 
-/* The same side-inset ceiling as the leave confirmation's actions, so an
-   enlarged label keeps the width it needs. The reset entry is a text link and
-   keeps no inset at all. */
 .recovery-actions > .button,
 .recovery-actions__buttons .button {
-  padding-inline: clamp(12px, calc(1.2 * var(--room)), 1.2rem);
+  padding-inline: clamp(12px, calc(1.2 * var(--room)), 1.4rem);
+}
+
+@media (min-width: 34rem) {
+  .recovery-actions > .button {
+    justify-self: start;
+  }
 }
 
 .recovery-actions__help {
-  max-width: 64ch;
+  max-width: 40rem;
   margin: 0;
-  color: #536660;
+  color: var(--ink-muted);
   line-height: 1.55;
 }
 
-/* Reset is separated from routine recovery rather than promoted next to it.
-   When it is the only recovery action the container rule already separates it. */
+/* Reset is separated from routine recovery rather than promoted next to it. */
 .recovery-actions__reset:not(:first-child) {
   padding-top: 1rem;
-  border-top: 1px solid #e3d7c1;
+  border-top: 1px solid var(--line);
 }
 
-/* The consequence of a reset is the text this panel exists to carry, and it was
-   the one parent consequence set at the browser's default line height — denser
-   than every other paragraph a parent reads. It takes theirs. */
-.reset-panel p {
-  max-width: 64ch;
-  line-height: 1.55;
+/* The product's other confirmation, in the confirmation's own form: a warm
+   inset with a calm edge. What makes it the destructive one is its wording and
+   its outlined action, never an alarm surface. Its insets follow `--room`. */
+.reset-panel {
+  padding: clamp(min(1.25rem, 6.25vw), 4vw, 1.75rem);
+  padding-inline: clamp(12px, calc(1.25 * var(--room)), 1.75rem);
+  border: 1px solid #ebd2c3;
+  border-radius: var(--radius-card);
+  background: #fcf3eb;
 }
 
 .reset-panel__title {
-  margin: 0 0 0.75rem;
-  font-size: 1.25rem;
-  line-height: 1.25;
+  margin: 0 0 0.6rem;
+  color: var(--forest-900);
+  font-family: var(--font-serif);
+  font-size: min(1.5rem, 10.5vw);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.reset-panel p {
+  max-width: 40rem;
+  margin: 0;
+  line-height: 1.6;
 }
 
 .recovery-actions__buttons {
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: 0.75rem;
+  margin-top: 1.1rem;
 }
 
-.button--reset-entry {
-  padding-inline: 0;
-  border: 0;
-  background: none;
-  color: #8b2828;
-  text-align: left;
-  text-decoration: underline;
-  text-underline-offset: 0.25rem;
+/* Recovery explains something that could not be used; it is calm, and it is
+   unmistakably not a success. */
+[data-view='temporary-mode'] .save-feedback {
+  background: #fbeadf;
+  color: #5a2c17;
 }
 
-.button--destructive {
-  background: #fff;
-  color: #8b2828;
-  border: 2px solid #8b2828;
+[data-view='temporary-mode'] .save-feedback::before {
+  background: var(--danger);
 }
 
-/* F002 discovery doorway.
-   Five equal portals: identical box, spacing, type scale and affordance. Only
-   the decorative frame and glyph differ, and category meaning always rests on
-   the visible label rather than colour or icon recognition. */
-.mission-discovery {
+/* ---------- Introduction ---------- */
+
+.introduction {
   margin-top: 1.5rem;
+}
+
+/* The title is a sentence here, the product's first words. */
+[data-view='introduction'] .app-view__title {
+  max-width: none;
+  font-size: clamp(min(2.35rem, 11vw), min(1.5rem + 3vw, 12.5vw), 3.4rem);
+  line-height: 1.03;
+  letter-spacing: -0.018em;
+}
+
+.introduction__languages {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+/* Quieter than a setup choice, because it is one: a switch, not a step. */
+.introduction__languages legend {
+  margin-bottom: 0.45rem;
+  padding: 0;
+  color: var(--ink-muted);
+  font-size: 0.875rem;
+  font-weight: 650;
+}
+
+.introduction__lead {
+  max-width: 34rem;
+  margin: 1.4rem 0 0;
+  color: var(--ink);
+  font-size: clamp(1.125rem, 1rem + 0.4vw, 1.3rem);
+  line-height: 1.55;
+}
+
+.introduction__columns {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 2.25rem;
+  margin-top: 2rem;
+}
+
+.introduction__example,
+.introduction__guidance {
+  min-width: 0;
+}
+
+.introduction__guidance {
+  display: flex;
+  flex-direction: column;
+}
+
+.introduction__guidance > .button {
+  align-self: flex-start;
+}
+
+/* A label for the example rather than a step: it says, before anything else,
+   that this card is an example. */
+.introduction__example > .introduction__heading {
+  width: fit-content;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  margin: 0 0 0.8rem;
+  padding: 0.3rem 0.8rem;
+  border-radius: 999px;
+  background: var(--sand);
+  color: var(--forest-700);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.introduction__flow > .introduction__heading {
+  margin: 0 0 1.1rem;
+  color: var(--forest-900);
+  font-family: var(--font-serif);
+  font-size: clamp(min(1.5rem, 9.5vw), min(1.25rem + 0.9vw, 10.5vw), 1.9rem);
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+/* The family's three steps, each with its picture and its number. The numbers
+   are drawn here, so the list keeps its role explicitly in the markup. */
+.introduction__steps {
+  display: grid;
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  counter-reset: flow-step;
+  list-style: none;
+}
+
+.introduction__step {
+  display: grid;
+  grid-template-columns: clamp(min(3.75rem, 14vw), 22%, 4.5rem) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(10px, calc(1 * var(--room)), 1.1rem);
+  counter-increment: flow-step;
+}
+
+.introduction__step-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  border-radius: 1rem;
+  box-shadow: 0 1px 2px rgb(64 46 20 / 8%), 0 0.4rem 0.9rem rgb(64 46 20 / 8%);
+  object-fit: cover;
+}
+
+.introduction__step-text {
+  color: var(--ink);
+  font-size: 1.0625rem;
+  line-height: 1.5;
+}
+
+.introduction__step-text::before {
+  margin-right: 0.35rem;
+  color: var(--forest-700);
+  font-family: var(--font-serif);
+  font-size: 1.3rem;
+  font-weight: 700;
+  line-height: 1;
+  content: counter(flow-step) '.';
+  content: counter(flow-step) '.' / '';
+}
+
+[data-view='introduction'] .parent-note {
+  margin-top: 1.75rem;
+}
+
+[data-view='introduction'] .introduction__guidance > .button {
+  margin-top: 1.75rem;
+}
+
+/* A hero where there is room for one: what MissionKid is for beside the
+   example, which is the view's picture. The document order — the purpose, the
+   example, the short flow, the parent's note, then the one action — is exactly
+   the phone's; only the placement changes. The one action follows the steps
+   directly, so it is in view on an ordinary desktop screen, and the parent's
+   note sits under it as its small print; the note holds no control, so the
+   keyboard order is the document's. The wrappers step aside so their children
+   can take the grid's places, and none of them carries meaning of its own. */
+@media (min-width: 64rem) {
+  .app-shell__main > section[data-view='introduction'] {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+    grid-template-rows: auto auto auto auto auto auto 1fr;
+    grid-template-areas:
+      'context lang'
+      'title example'
+      'lead example'
+      'flow example'
+      'action example'
+      'note example'
+      '. example';
+    align-items: start;
+    column-gap: clamp(2.5rem, 5vw, 5rem);
+    padding: 2.5rem 3rem 3rem;
+  }
+
+  [data-view='introduction'] :is(.recovery-controls, .introduction, .introduction__columns, .introduction__guidance) {
+    display: contents;
+  }
+
+  [data-view='introduction'] > .app-view__context {
+    grid-area: context;
+    align-self: center;
+    margin: 0;
+  }
+
+  [data-view='introduction'] > .app-view__title {
+    grid-area: title;
+    margin-top: 1rem;
+  }
+
+  [data-view='introduction'] .introduction__languages {
+    display: flex;
+    grid-area: lang;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-self: end;
+  }
+
+  /* A floated legend is laid out as an ordinary block, so it can sit above its
+     control on the right instead of in the fieldset's border. */
+  [data-view='introduction'] .introduction__languages legend {
+    float: left;
+    width: 100%;
+    text-align: right;
+  }
+
+  [data-view='introduction'] .introduction__lead {
+    grid-area: lead;
+  }
+
+  [data-view='introduction'] .introduction__example {
+    grid-area: example;
+    margin-top: 1.25rem;
+  }
+
+  [data-view='introduction'] .introduction__flow {
+    grid-area: flow;
+    margin-top: 2.25rem;
+  }
+
+  [data-view='introduction'] .parent-note {
+    grid-area: note;
+    margin-top: 1.25rem;
+  }
+
+  [data-view='introduction'] .introduction__guidance > .button {
+    grid-area: action;
+    justify-self: start;
+    margin-top: 1.5rem;
+  }
+
+  [data-view='introduction'] .introduction__steps {
+    gap: 0.85rem;
+  }
+}
+
+/* ---------- Discovery ---------- */
+
+.mission-discovery {
+  margin-top: 1.25rem;
 }
 
 .mission-discovery__context {
   display: flex;
+  width: fit-content;
+  max-width: 100%;
   flex-wrap: wrap;
   gap: 0.4rem;
   margin: 0;
-  color: #4c625c;
+  padding: 0.3rem 0.8rem;
+  border-radius: 999px;
+  background: var(--sand);
+  color: var(--forest-800);
   font-weight: 700;
 }
 
 .mission-discovery__context span {
-  color: #5a6d67;
-  font-weight: 650;
+  color: var(--ink-muted);
+  font-weight: 600;
 }
 
-/* One bounded peer-choice group. The controls size to their own label and wrap
-   by available width, so the row structure is decided by the viewport and the
-   translated label rather than by a fixed column count. */
+.mission-discovery > .choice-group {
+  margin-top: 1.5rem;
+}
+
+.mission-discovery > .choice-group > legend {
+  font-size: 1.2rem;
+}
+
+/* One bounded peer-choice group of five equal controls. Each track is
+   definite — never sized from a label or from which control is selected — so
+   the group cannot rewrap or reorder the moment a category is chosen. */
 .mission-worlds {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.6rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.75rem;
 }
 
+@container view (min-width: 30em) {
+  .mission-worlds {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@container view (min-width: 52em) {
+  .mission-worlds {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 1rem;
+  }
+}
+
+/* A row: the category's picture beside its label, on a quiet sand surface. */
 .mission-world {
   position: relative;
-  display: flex;
-  /* A comfortable minimum width, not a column count: how many controls share a
-     row is left to the viewport. The basis is deliberately independent of the
-     label and of the selected cue, because sizing the row from content made the
-     group rewrap and reorder the moment a category was chosen. */
+  display: grid;
   min-width: 0;
-  min-height: 3.25rem;
-  flex: 1 1 9rem;
-  /* The selected cue drops to its own line rather than squeezing the label out
-     of the control, which is what clipped the labels at enlarged text. */
-  flex-wrap: wrap;
+  min-height: 5.75rem;
+  grid-template-columns: clamp(4.5rem, 34%, 8.5rem) minmax(0, 1fr);
+  grid-template-rows: 1fr auto auto 1fr;
+  grid-template-areas:
+    'image .'
+    'image label'
+    'image state'
+    'image .';
   align-items: center;
-  /* The side inset and the gap follow `--room`: unchanged at every ordinary
-     size, and giving their width to the label where the screen is narrow for
-     the reader's text, which broke *Bewegung* and *Kreativität* mid-word. */
-  gap: 0.35rem clamp(6px, calc(0.65 * var(--room)), 0.65rem);
-  padding: 0.6rem clamp(8px, calc(0.85 * var(--room)), 0.85rem);
-  border: 2px solid #7d968d;
-  border-radius: 1rem;
-  background:
-    radial-gradient(
-      120% 140% at 12% 0%,
-      hsl(var(--world-hue) 44% 96%) 0,
-      #fff 62%
-    );
-  color: #1f3630;
+  column-gap: clamp(8px, var(--room), 1rem);
+  padding: 0.5rem clamp(8px, var(--room), 1rem) 0.5rem 0.5rem;
+  border: 1.5px solid transparent;
+  border-radius: 1.15rem;
+  background: var(--sand);
+  color: var(--forest-900);
   cursor: pointer;
-  isolation: isolate;
-  overflow: hidden;
   transition:
     border-color 140ms ease,
-    box-shadow 140ms ease,
-    transform 140ms ease;
-}
-
-/* Portal aperture: a soft interior light and rim that give depth without
-   animation or extra assets. Decorative only. */
-.mission-world__frame {
-  position: absolute;
-  z-index: -1;
-  border-radius: inherit;
-  inset: 0;
-  background:
-    radial-gradient(
-      70% 90% at 88% 108%,
-      hsl(var(--world-hue) 52% 88% / 65%) 0,
-      transparent 70%
-    );
-  box-shadow: inset 0 0 0 1px hsl(var(--world-hue) 32% 84%);
+    background-color 140ms ease,
+    box-shadow 140ms ease;
 }
 
 .mission-world__input {
@@ -938,208 +1219,380 @@ input {
   pointer-events: none;
 }
 
-/* Decorative, so it stops growing where the label needs the room: `1.75rem` at
-   every ordinary size, as before. */
-.mission-world__glyph {
-  width: min(1.75rem, 9vw);
-  height: min(1.75rem, 9vw);
-  flex: none;
-  color: hsl(var(--world-hue) 42% 32%);
+.mission-world__image {
+  display: block;
+  width: 100%;
+  height: auto;
+  grid-area: image;
+  aspect-ratio: 4 / 3;
+  border-radius: 0.85rem;
+  object-fit: cover;
 }
 
 /* Free to shrink and wrap, so a long translation grows the control instead of
-   being cut off by it. The basis stays `auto` rather than `0`: a zero basis
-   squeezes the label into a narrow column at large text sizes, which measured
-   nearly twice the section height at a 32px root. */
+   being cut off by it. */
 .mission-world__label {
   min-width: 0;
-  flex: 1 1 auto;
-  font-size: 1rem;
-  font-weight: 750;
-  line-height: 1.3;
-  letter-spacing: -0.01em;
+  grid-area: label;
+  font-size: 1.125rem;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.012em;
 }
 
-/* Sized by its own content. The former fixed reservation was wider than the
-   whole control at enlarged text, which is what pushed the label out of it. */
+/* Sized by its own content, never reserved: a fixed reservation was once wider
+   than the whole control at enlarged text. `anywhere` lets the cue shrink below
+   its longest word, so the control is never overflowed. */
 .mission-world__state {
   display: flex;
   min-width: 0;
-  flex: 0 1 auto;
+  grid-area: state;
   flex-wrap: wrap;
   align-items: center;
   gap: 0.35rem;
-  color: #17493c;
-  font-size: 0.85rem;
+  color: var(--forest-700);
+  font-size: 0.875rem;
   font-weight: 700;
-  /* At very large text the cue is wider than the whole control. `anywhere` is
-     deliberate over `break-word`: it also lets the cue shrink below its longest
-     word, so the control is never overflowed rather than merely re-broken. */
   overflow-wrap: anywhere;
+}
+
+.mission-world__state:not(:empty) {
+  margin-top: 0.3rem;
 }
 
 .mission-world__check {
   display: grid;
-  width: 1.4rem;
-  height: 1.4rem;
+  width: 1.35rem;
+  height: 1.35rem;
   flex: 0 0 auto;
   border-radius: 50%;
-  background: #17493c;
+  background: var(--forest-700);
   color: #fff;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   place-items: center;
 }
 
-.mission-world:hover {
-  border-color: #5f8377;
+@media (hover: hover) {
+  .mission-world:hover {
+    border-color: var(--line-strong);
+    background: var(--sand-deep);
+  }
 }
 
-/* Selected state carries a mark, a text cue, a heavier rim and depth, so it is
-   never signalled by colour alone. */
+/* Selected: a forest rim, a sage surface, the check and the word *Selected*,
+   so it is never signalled by colour alone. */
 .mission-world:has(input:checked) {
-  border-color: #17493c;
+  border-color: var(--forest-700);
+  background: var(--sage-50);
   box-shadow:
-    inset 0 0 0 2px #17493c,
-    0 0.75rem 1.6rem rgb(23 73 60 / 16%);
-  transform: translateY(-2px);
+    inset 0 0 0 1.5px var(--forest-700),
+    0 0.6rem 1.4rem rgb(36 91 69 / 14%);
 }
 
 .mission-world:has(input:focus-visible) {
-  outline: 3px solid #b4650c;
+  outline: 3px solid var(--focus);
   outline-offset: 3px;
 }
 
-/* One atmosphere per Mission Category, shared by the doorway portal and the
-   Mission scenes inside it: the category is the world, a Mission is a place in
-   it. Category meaning never rests on this hue — the label always carries it. */
-[data-category='Movement'] { --world-hue: 24; }
-[data-category='Creativity'] { --world-hue: 286; }
-[data-category='Helping at Home'] { --world-hue: 152; }
-[data-category='Learning'] { --world-hue: 208; }
-[data-category='Calm'] { --world-hue: 178; }
-
-.mission-discovery__status {
-  max-width: 64ch;
-  margin: 1.25rem 0 0;
-  padding: 0.9rem 1rem;
-  border: 1px dashed #b3c7bf;
-  border-radius: 0.75rem;
-  color: #445752;
-  line-height: 1.55;
-}
-
-/* Parent-facing gate: calm and plain, deliberately not the child treatment. */
-.discovery-gate {
-  max-width: 64ch;
-  margin: 1.25rem 0 0;
-  padding: 0.95rem 1.1rem;
-  border-left: 4px solid #4d7d6d;
-  border-radius: 0 0.75rem 0.75rem 0;
-  background: #f1f7f3;
-  color: #3d514c;
-  line-height: 1.55;
-}
-
-/* Wider viewports give the group more room, so the same controls become a
-   little more generous. They stay one wrapping row of peers rather than
-   becoming a second kind of control. */
-@media (min-width: 56rem) {
+/* Where the sheet is narrow for the reader's text — an enlarged root on a
+   phone — the picture moves above the label, in a wider, shorter window, so
+   the label keeps the full width and its words stay whole. The threshold is in
+   the sheet's own `em`, so it answers to the text size, not the device. */
+@container view (max-width: 15em) {
   .mission-world {
-    min-height: 3.75rem;
-    padding: 0.7rem 1rem;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto auto;
+    grid-template-areas:
+      'image'
+      'label'
+      'state';
+    align-items: start;
+    padding: 0.5rem 0.5rem 0.8rem;
   }
 
-  .mission-world__glyph {
-    width: 2.1rem;
-    height: 2.1rem;
+  /* Shorter than the tiles' 4:3 and held toward the top, so the picture's
+     subject — the figure's raised hands, the cup's rim — stays inside it. */
+  .mission-world__image {
+    aspect-ratio: 2 / 1;
+    object-position: 50% 30%;
+  }
+
+  .mission-world__label {
+    padding: 0.6rem 0.35rem 0;
+  }
+
+  .mission-world__state {
+    padding-inline: 0.35rem;
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
+/* Where there is room for five, each becomes a tile: its picture above its
+   label, all five one size. */
+@container view (min-width: 52em) {
   .mission-world {
-    transition: none;
+    min-height: 0;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto 1fr;
+    grid-template-areas:
+      'image'
+      'label'
+      'state';
+    align-items: start;
+    padding: 0.5rem 0.5rem 0.95rem;
+    text-align: center;
   }
 
-  .mission-world:has(input:checked) {
-    transform: none;
+  .mission-world__label {
+    padding: 0.8rem 0.25rem 0;
+  }
+
+  .mission-world__state {
+    justify-content: center;
   }
 }
 
-/* F002 Mission suggestions.
-   Three equal peers, each opening on a scene window: a small place drawn from
-   the Mission's real action, with atmosphere behind, a plane in the middle and a
-   subject in front. All copy sits on a calm surface below, so depth never
-   competes with comprehension. The cards are articles, not controls. */
-/* A warm, quiet ground. It carries the Missions and stays out of the way of
-   the text on them: one soft wash, no pattern, no edge that competes with a
-   card. */
+/* The three Missions: the step the family is on once a category is chosen. */
 .mission-suggestions,
 .mission-unavailable {
-  margin-top: 2rem;
-  padding: 1.5rem 1.15rem 1.35rem;
-  border: 1px solid #ece2cf;
-  border-radius: 1.35rem;
-  background:
-    radial-gradient(120% 90% at 50% 0%, #fdfaf3 0, #f7f1e4 100%);
+  margin-top: 2.5rem;
 }
 
-/* Choosing one of three Missions is the step the family is on once a category
-   is chosen, so its heading is the step's heading: larger than the category
-   legend above it rather than a small label beneath it, in the product's
-   green, and in sentence case so a long German or Russian heading still reads
-   at a glance. The words are unchanged. */
 .mission-suggestions__title,
 .mission-unavailable__title {
-  margin: 0 0 1.15rem;
-  color: #17493c;
-  font-size: clamp(1.45rem, 1.1rem + 1.5vw, 1.85rem);
-  font-weight: 800;
-  line-height: 1.2;
-  letter-spacing: -0.025em;
+  margin: 0 0 1.25rem;
+  color: var(--forest-900);
+  font-family: var(--font-serif);
+  font-size: clamp(min(1.6rem, 10vw), min(1.25rem + 1.3vw, 11vw), 2.2rem);
+  font-weight: 700;
+  line-height: 1.12;
+}
+
+.mission-unavailable__body {
+  max-width: 40rem;
+  margin: 0;
+  color: var(--ink-muted);
+  line-height: 1.6;
 }
 
 .mission-suggestions__set {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 1.15rem;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.25rem;
 }
 
-/* A choice that did not become a Mission Session. Calm, one sentence, and the
-   same surface language as the rest of Discovery: nothing here is a warning
-   banner, because nothing was lost and nothing was the child's doing. */
+/* Equal weight means equal presence: three columns of one height, whose
+   choose actions share a line. */
+@container view (min-width: 52em) {
+  .mission-suggestions__set {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: stretch;
+    gap: 1.5rem;
+  }
+}
+
 .mission-suggestions__issue {
-  max-width: 48ch;
-  margin: 0 0 1.15rem;
-  padding: 0.8rem 1rem;
-  border-left: 3px solid hsl(var(--world-hue) 30% 62%);
-  border-radius: 0.5rem;
-  background: hsl(var(--world-hue) 40% 97%);
-  color: #23423a;
-  font-size: 0.95rem;
+  margin: 0 0 1.25rem;
+}
+
+.mission-suggestions__choices {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.mission-suggestions__conflict-actions,
+.mission-session__confirm-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.mission-suggestions__conflict-actions {
+  margin: 0 0 1.5rem;
+}
+
+.mission-suggestions__conflict-actions .button {
+  margin-top: 0;
+}
+
+/* Secondary to choosing one of the three: centred under the set at the width
+   of its own words, and never competing with a Mission. */
+.mission-suggestions__another {
+  display: block;
+  margin: 1.75rem auto 0;
+  padding-inline: clamp(12px, calc(2 * var(--room)), 2rem);
+  border-radius: 999px;
+}
+
+/* Running out of full sets is a fact about the catalog, not a failure. */
+.mission-suggestions__bounded {
+  max-width: 40rem;
+  margin: 1.5rem auto 0;
+  color: var(--ink-muted);
+  line-height: 1.55;
+  text-align: center;
+}
+
+/* The two secondary ways out of discovery, together at the end and outside
+   the Mission cards. */
+.mission-discovery__exits {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.25rem 1rem;
+  margin-top: 2.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+}
+
+.mission-discovery__exits .button {
+  margin-top: 0;
+}
+
+/* ---------- The Mission card ---------- */
+
+/* A grid column's automatic minimum is its min-content width, so without a
+   named minimum the card's single column was sized to the longest unbreakable
+   word in the reviewed instruction and then cut off by `overflow: hidden`. At a
+   32px root that removed reviewed text from the right of every line, and
+   nothing about the page reported it. Naming the minimum lets the column take
+   the width the card actually has, so the text wraps instead of being cut. */
+.mission-card {
+  display: grid;
+  overflow: hidden;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto 1fr;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  background: var(--paper);
+  box-shadow: var(--shadow-card);
+}
+
+/* The window is set into the card like a print. The inset is a ceiling
+   against the card, so it gives nothing away at an enlarged text size. */
+.mission-card__window {
+  margin: min(0.75rem, 3.5%) min(0.75rem, 3.5%) 0;
+}
+
+/* A column, so the choose action can be pushed to the foot of a card taller
+   than its own text. Its children stretch to the column, so none is sized to
+   its longest word. The inset is a ceiling measured against the card. */
+.mission-card__content {
+  position: relative;
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 1rem min(1.25rem, 6%) 1.25rem;
+}
+
+/* What the family compares before reading an instruction: which category, and
+   roughly how long. */
+.mission-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 0.8rem;
+  margin: 0;
+}
+
+/* The Mission Category as a small tag in its own restrained accent, wherever a
+   Mission is shown. The label carries the meaning. */
+:is(.mission-card__category, .mission-session__category, .mission-result__category, .mission-history__entry-category) {
+  padding: 0.2rem 0.65rem;
+  border-radius: 999px;
+  background: var(--cat-bg, var(--sand));
+  color: var(--cat-ink, var(--forest-800));
+  font-size: 0.8125rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+:is(.mission-card__duration, .mission-session__duration) {
+  color: var(--ink-muted);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.mission-card__title {
+  margin: 0.1rem 0 0;
+  color: var(--forest-900);
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.mission-card__instruction {
+  margin: 0;
+  color: var(--ink);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+/* Required adult and safety guidance: one pattern wherever a Mission is shown,
+   always visible and never behind disclosure — a tinted panel, a mark down its
+   edge and a label in sentence case. The left padding exists only to clear the
+   mark, so both come from one inset; the insets carry viewport ceilings, so an
+   enlarged text size gives the words the width rather than the padding. */
+:is(.mission-card__note, .mission-session__note) {
+  --note-inset: min(0.7rem, 2.5vw);
+  --note-mark: 3px;
+  --note-gap: min(0.75rem, 3vw);
+
+  position: relative;
+  margin: 0;
+  padding: 0.75rem min(0.95rem, 5vw) 0.8rem calc(var(--note-inset) + var(--note-mark) + var(--note-gap));
+  border-radius: 0.8rem;
+  font-size: 0.9375rem;
   line-height: 1.5;
 }
 
-.mission-suggestions__issue--unconfirmed {
-  border-left-color: #b4650c;
-  background: #fdf5ec;
+:is(.mission-card__note-mark, .mission-session__note-mark) {
+  position: absolute;
+  top: 0.75rem;
+  bottom: 0.75rem;
+  left: var(--note-inset);
+  width: var(--note-mark);
+  border-radius: 2px;
 }
 
-/* The one action on a card, on its own layer: it sits last, after everything
-   the family needs to judge the Mission, below a hairline with room on both
-   sides of it. The hairline used to be drawn on the button's own top edge,
-   where it read as a pale stripe across the green rather than as a divider.
-   The layer is pushed to the foot of the card, so the actions sit on one line
-   across the set however long an individual instruction runs. */
+:is(.mission-card__note-label, .mission-session__note-label) {
+  display: block;
+  margin-bottom: 0.15rem;
+  font-weight: 700;
+}
+
+:is(.mission-card__note--adult, .mission-session__note--adult) {
+  background: var(--adult-bg);
+  color: var(--adult-ink);
+}
+
+:is(.mission-card__note--adult, .mission-session__note--adult) :is(.mission-card__note-mark, .mission-session__note-mark) {
+  background: var(--adult-mark);
+}
+
+:is(.mission-card__note--safety, .mission-session__note--safety) {
+  background: var(--safety-bg);
+  color: var(--safety-ink);
+}
+
+:is(.mission-card__note--safety, .mission-session__note--safety) :is(.mission-card__note-mark, .mission-session__note-mark) {
+  background: var(--safety-mark);
+}
+
+/* The one action on a card, on its own layer below a hairline, pushed to the
+   foot so the actions sit on one line across the set. */
 .mission-card__action {
   margin-top: auto;
   padding-top: 1rem;
-  border-top: 1px solid #ece2cf;
+  border-top: 1px solid var(--line);
 }
 
-/* Where the card is only as tall as its own text — on a phone — the push above
-   is zero, so the space above the hairline comes from here. */
 .mission-card__content > :has(+ .mission-card__action) {
-  margin-bottom: 0.45rem;
+  margin-bottom: 0.4rem;
 }
 
 .mission-card__choose {
@@ -1147,112 +1600,55 @@ input {
   margin-top: 0;
 }
 
-/* Secondary to choosing one of the three above: it sits after them, centred
-   under the set at the width of its own words, and never competes with a
-   Mission. It is a block with automatic side margins because it has no grid
-   parent to centre it: `justify-self` did nothing here. */
-.mission-suggestions__another {
-  display: block;
-  margin: 1.6rem auto 0;
-  padding-inline: clamp(12px, calc(2 * var(--room)), 2rem);
-  border-color: #cdbfa4;
-  border-radius: 999px;
-  background: none;
-  color: #3c5a4a;
-  font-weight: 700;
-}
+/* Between a phone and three columns — a tablet — a card lays its picture
+   beside its words, so the three stay a short, comparable list instead of
+   three tall pictures. Each keeps the same order and the same parts. */
+@container view (min-width: 36em) and (max-width: 51.99em) {
+  .mission-suggestions .mission-card {
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    grid-template-rows: auto;
+    align-items: start;
+  }
 
-/* Running out of full sets is a fact about the catalog, not a failure, so it
-   reads as a calm sentence rather than a warning. */
-.mission-suggestions__bounded {
-  max-width: 48ch;
-  margin: 1.35rem 0 0;
-  color: hsl(var(--world-hue) 20% 34%);
-  font-size: 0.95rem;
-  line-height: 1.5;
-}
-
-@media (max-width: 55.99rem) {
-  .mission-suggestions,
-  .mission-unavailable {
-    margin-inline: calc(-1 * var(--section-inline));
-    padding-inline: 0;
-    border: 0;
-    border-radius: 0;
-    background: none;
+  .mission-suggestions .mission-card__window {
+    margin: 0.75rem 0 0.75rem 0.75rem;
   }
 }
 
-.mission-card {
-  display: grid;
-  overflow: hidden;
-  border: 1px solid #e8dfcd;
-  border-radius: 1.35rem;
-  background: #fffdf8;
-  box-shadow:
-    0 0.15rem 0.4rem rgb(74 58 33 / 6%),
-    0 1rem 2.25rem rgb(74 58 33 / 9%);
-  grid-template-rows: auto 1fr;
-  /* A grid column's automatic minimum is its min-content width, so without a
-     named minimum the card's single column was sized to the longest unbreakable
-     word in the reviewed instruction and then cut off by the `overflow: hidden`
-     above. At a 32px root that removed reviewed instruction, adult-involvement
-     and safety text from the right of every line, and nothing about the page
-     reported it: the clipping happens inside the card, so `scrollWidth` stayed
-     at zero overflow. Naming the minimum lets the column take the width the
-     card actually has, so the text wraps instead of being cut. */
-  grid-template-columns: minmax(0, 1fr);
+/* On the introduction the example is the view's picture, one card on its own. */
+.introduction__example .mission-card__title {
+  font-size: 1.5rem;
 }
 
-/* The window. A reviewed still and an authored scene sit in the same one: set
-   into the card like a print, with its own rounded corners and the same
-   neutral inner edge, so the two kinds of image share a frame even where they
-   do not share a technique. The inset is a ceiling against the card, so it
-   gives nothing away at an enlarged text size.
+/* ---------- The Mission picture ---------- */
 
-   Behind an authored scene the category still lights the air, as the scene
-   system requires, but graded toward the product's warm ground rather than
-   washing the window in a saturated pastel: the scenes stand in the same warm
-   light as the photographs. A still covers this entirely and is never
-   filtered. The plain category light comes first so an engine without
-   `color-mix` keeps the window it had. */
-.mission-card__window {
+/* One window for every Mission image — a reviewed still or an authored scene —
+   on cards, Ready, the running Mission and the Reward Card: the same ratio,
+   corners and edge. Behind an authored scene the category lights the air, as
+   the scene system requires, graded toward the warm ground so scenes stand in
+   the same daylight as the stills; a still covers it and is never filtered.
+   The plain category light comes first for an engine without `color-mix`. */
+.mission-picture {
   position: relative;
   overflow: hidden;
-  /* Matches the scene's visible frame so nothing is letterboxed or cropped at
-     any width. Taller than the drawing stage on purpose: the Mission image is
-     the card's entry point and earns the height. */
   aspect-ratio: 3 / 2;
-  margin: min(0.75rem, 3.5%) min(0.75rem, 3.5%) 0;
-  border-radius: 0.75rem;
+  border-radius: var(--radius-inner);
+  background:
+    radial-gradient(130% 85% at 50% 4%, hsl(var(--world-hue) 62% 95%) 0, hsl(var(--world-hue) 46% 89%) 52%, hsl(var(--world-hue) 40% 83%) 100%);
   background:
     radial-gradient(
       130% 85% at 50% 4%,
-      hsl(var(--world-hue) 62% 95%) 0,
-      hsl(var(--world-hue) 46% 89%) 52%,
-      hsl(var(--world-hue) 40% 83%) 100%
-    );
-  background:
-    radial-gradient(
-      130% 85% at 50% 4%,
-      color-mix(in oklab, hsl(var(--world-hue) 62% 95%) 40%, #fdf8ef) 0,
-      color-mix(in oklab, hsl(var(--world-hue) 46% 89%) 50%, #f0e6d4) 52%,
-      color-mix(in oklab, hsl(var(--world-hue) 40% 83%) 50%, #e3d5bc) 100%
+      color-mix(in oklab, hsl(var(--world-hue) 62% 95%) 22%, #fbf5ea) 0,
+      color-mix(in oklab, hsl(var(--world-hue) 46% 89%) 24%, #efe4d1) 52%,
+      color-mix(in oklab, hsl(var(--world-hue) 40% 83%) 24%, #e2d3b8) 100%
     );
 }
 
-/* One edge for every image: a hairline and a soft fall of light from the top,
-   neutral rather than tinted by the category, so a photograph is not washed in
-   a colour it was not taken in. */
-.mission-card__window::after {
-  position: absolute;
-  border-radius: inherit;
-  box-shadow:
-    inset 0 0 0 1px rgb(74 58 33 / 10%),
-    inset 0 0.8rem 1.6rem rgb(74 58 33 / 8%);
-  content: '';
-  inset: 0;
-  pointer-events: none;
+.mission-picture__photo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .mission-scene {
@@ -1261,20 +1657,52 @@ input {
   height: 100%;
 }
 
-/* A reviewed still fills the same window the authored scene does. The window
-   already reserves its height through `aspect-ratio`, and the stills share that
-   ratio, so `cover` scales without cropping anything out of them. */
-.mission-card__photo {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+/* One edge for every image, neutral rather than tinted by the category. */
+.mission-picture::after {
+  position: absolute;
+  border-radius: inherit;
+  box-shadow:
+    inset 0 0 0 1px rgb(74 58 33 / 10%),
+    inset 0 0.8rem 1.6rem rgb(74 58 33 / 6%);
+  content: '';
+  inset: 0;
+  pointer-events: none;
 }
+
+/* The authored scenes' shared print: window light from the upper left and a
+   soft settling at the foot, so a set of three scenes reads as one kind of
+   picture in the same room as the photographs. Stills are never touched. */
+.mission-picture:has(> .mission-scene)::before {
+  position: absolute;
+  z-index: 1;
+  background:
+    radial-gradient(90% 70% at 16% 0%, rgb(255 250 240 / 38%) 0, transparent 60%),
+    linear-gradient(180deg, transparent 62%, rgb(92 66 34 / 10%) 100%);
+  content: '';
+  inset: 0;
+  pointer-events: none;
+}
+
+.mission-scene-defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
+/* ---------- The authored scene grammar ----------
+   Carried over from the scene system: the stage elements, their local
+   materials, the lighting language and the single focal subject. What changes
+   is the room they stand in. Walls, floors, haze, light and shadow are graded
+   toward the plaster, pale wood and warm daylight of the photographs and the
+   product imagery, with the category's own light kept as a restrained share of
+   the air and the planes, as the scene system requires. No composition
+   changes. */
 
 /* --- Scene grammar. Silhouettes inherit the category atmosphere; depth comes
    from layered planes, contact shadows and light falloff rather than motion. --- */
 .s-el {
-  color: hsl(var(--world-hue) 52% 27%);
+  color: hsl(var(--world-hue) 30% 30%);
+  color: color-mix(in oklab, hsl(var(--world-hue) 45% 28%) 35%, #5b4834);
 }
 
 /* The line where the floor meets the wall is a seam in the room, not a rule
@@ -1290,16 +1718,17 @@ input {
    fill comes first for an engine without `color-mix`. */
 .s-back {
   fill: hsl(var(--world-hue) 30% 84%);
-  fill: color-mix(in oklab, hsl(var(--world-hue) 30% 84%) 50%, #ebe0cc);
+  fill: color-mix(in oklab, hsl(var(--world-hue) 30% 84%) 20%, #ece2d1);
 }
 
 .s-plane {
   fill: hsl(var(--world-hue) 32% 72%);
-  fill: color-mix(in oklab, hsl(var(--world-hue) 32% 72%) 50%, #cfbb9a);
+  fill: color-mix(in oklab, hsl(var(--world-hue) 32% 72%) 18%, #d8bf9b);
 }
 
 .s-water {
   fill: hsl(var(--world-hue) 42% 66%);
+  fill: color-mix(in oklab, hsl(var(--world-hue) 42% 66%) 30%, #9dbfcb);
 }
 
 /* Paper keeps its own material everywhere; only the light on it is categorical. */
@@ -1329,7 +1758,7 @@ input {
 }
 
 .s-lo {
-  fill: #06231c;
+  fill: #2e2011;
   opacity: 0.16;
 }
 
@@ -1346,13 +1775,13 @@ input {
 .s-seam {
   fill: none;
   opacity: 0.22;
-  stroke: #06231c;
+  stroke: #2e2011;
   stroke-width: 1.5;
 }
 
 /* Contact shadows are soft and sit under the subject, never behind it. */
 .s-cast {
-  fill: #06231c;
+  fill: #2e2011;
   filter: url(#mk-soft);
   opacity: 0.31;
 }
@@ -1360,27 +1789,8 @@ input {
 /* Distance haze: the far edge of a plane fades into the atmosphere. */
 .s-haze {
   fill: hsl(var(--world-hue) 46% 88%);
-  fill: color-mix(in oklab, hsl(var(--world-hue) 46% 88%) 50%, #f3e9d6);
+  fill: color-mix(in oklab, hsl(var(--world-hue) 46% 88%) 25%, #f4ebdb);
   opacity: 0.42;
-}
-
-/* Available to assistive technology, absent from the layout. Not display:none
-   and not hidden, either of which would remove it from the accessibility tree
-   and silence the announcement it exists to make. */
-.a11y-only {
-  position: absolute;
-  overflow: hidden;
-  width: 1px;
-  height: 1px;
-  margin: 0;
-  clip-path: inset(50%);
-  white-space: nowrap;
-}
-
-.mission-scene-defs {
-  position: absolute;
-  width: 0;
-  height: 0;
 }
 
 /* Limbs read as strokes, not fills. */
@@ -1392,7 +1802,7 @@ input {
 }
 
 .s-shadow {
-  fill: hsl(var(--world-hue) 45% 24%);
+  fill: #3b2a18;
   opacity: 0.2;
 }
 
@@ -1440,13 +1850,13 @@ input {
 /* Light is daylight first and category second. */
 .s-light {
   fill: hsl(var(--world-hue) 90% 98%);
-  fill: color-mix(in oklab, hsl(var(--world-hue) 90% 98%) 40%, #fffaf0);
+  fill: color-mix(in oklab, hsl(var(--world-hue) 90% 98%) 20%, #fffaf0);
   opacity: 0.72;
 }
 
 .s-glow {
   fill: hsl(var(--world-hue) 90% 98%);
-  fill: color-mix(in oklab, hsl(var(--world-hue) 90% 98%) 40%, #fffaf0);
+  fill: color-mix(in oklab, hsl(var(--world-hue) 90% 98%) 20%, #fffaf0);
   opacity: 0.55;
 }
 
@@ -1625,7 +2035,7 @@ input {
 .s-el--softThings,
 .s-el--pebble,
 .s-el--handReach {
-  filter: drop-shadow(0 2px 2.5px hsl(var(--world-hue) 45% 22% / 26%));
+  filter: drop-shadow(0 2px 2.5px rgb(58 40 20 / 26%));
 }
 
 /* --- Focal subject. Exactly one element per scene is what the Mission is
@@ -1634,7 +2044,7 @@ input {
    badge, no scale change and no motion: the other elements are not dimmed, so
    this reads as depth rather than as a recommendation. --- */
 .s-el[data-focal] {
-  filter: drop-shadow(0 3px 4px hsl(var(--world-hue) 45% 20% / 34%));
+  filter: drop-shadow(0 3px 4px rgb(52 36 18 / 34%));
 }
 
 .s-el[data-focal] .s-cast {
@@ -1654,662 +2064,457 @@ input {
   stroke-width: 2.4;
 }
 
-.mission-card__content {
-  position: relative;
-  /* A column, so the choose action can be pushed to the bottom of a card that
-     is taller than its own text. Its children are block-level and stretch to
-     the column, so none of them is sized to its longest word — the failure the
-     card's own named grid minimum fixes one layer up. */
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-  /* `rem` padding keeps its proportion to the text at ordinary sizes and
-     overwhelms the column at large ones: at a 32px root these two sides took
-     73.6px of a 252px card. The percentage is a ceiling measured against the
-     card, so it changes nothing at ordinary sizes and stops the padding
-     eating the reading width at large ones. */
-  padding: 0.9rem min(1.15rem, 6%) 1.2rem;
-  gap: 0.55rem;
-  background: linear-gradient(180deg, #fffdf8 0, #fffdf8 58%, #fbf6ea 100%);
-}
+/* ---------- The Mission Session: Ready and the running Mission ---------- */
 
-/* What the family compares across the three before reading an instruction:
-   which world the Mission belongs to, and roughly how long it takes. */
-.mission-card__meta {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.35rem 0.75rem;
-  margin: 0;
-}
-
-/* The Mission Category as a small tag in its own light, wherever a Mission is
-   shown. The label carries the meaning; the colour only reinforces it. Sentence
-   case rather than tracked capitals, which read slowly in German and Russian. */
-.mission-card__category,
-.mission-session__category {
-  padding: 0.15rem 0.6rem;
-  border-radius: 999px;
-  background: hsl(var(--world-hue) 42% 93%);
-  color: hsl(var(--world-hue) 32% 28%);
-  font-weight: 750;
-  letter-spacing: 0.01em;
-}
-
-.mission-card__category {
-  font-size: 0.8rem;
-}
-
-/* Comparison information, so it is set to be read rather than glimpsed: it was
-   an 11.8px line of tracked capitals. */
-.mission-card__duration {
-  color: #4c625c;
-  font-size: 0.9rem;
-  font-weight: 650;
-}
-
-/* Primary. */
-.mission-card__title {
-  margin: 0;
-  color: #1c3a2f;
-  font-size: 1.45rem;
-  font-weight: 780;
-  line-height: 1.18;
-  letter-spacing: -0.025em;
-}
-
-/* Secondary: readable, deliberately lighter than the title, at a comfortable
-   measure rather than the full card width on a wide screen. */
-.mission-card__instruction {
-  max-width: 42ch;
-  margin: 0;
-  color: #435c4f;
-  font-size: 0.985rem;
-  line-height: 1.62;
-}
-
-/* Required adult and safety content: its own material layer, always visible,
-   never behind disclosure, and calm rather than alarming. One pattern wherever
-   a Mission is shown — a card, the introduction's example, Ready and Active —
-   so the same kind of guidance is recognisable as the same thing on every
-   step: a tinted panel, a mark down its edge, and a label in sentence case.
-   The cards used to label it in small tracked capitals with a dot while the
-   session views used a bar and sentence case.
-
-   The left padding exists only to clear the mark, so both are derived from one
-   inset and cannot drift apart. The insets carry viewport ceilings, so an
-   enlarged text size gives the words the width rather than the padding. */
-:is(.mission-card__note, .mission-session__note) {
-  --note-inset: min(0.7rem, 2.5vw);
-  --note-mark: 3px;
-  --note-gap: min(0.75rem, 3vw);
-
-  position: relative;
-  padding: 0.75rem min(0.9rem, 5vw) 0.8rem
-    calc(var(--note-inset) + var(--note-mark) + var(--note-gap));
-  border-radius: 0.7rem;
-  line-height: 1.5;
-}
-
-:is(.mission-card__note-mark, .mission-session__note-mark) {
-  position: absolute;
-  top: 0.75rem;
-  bottom: 0.75rem;
-  left: var(--note-inset);
-  width: var(--note-mark);
-  border-radius: 2px;
-}
-
-:is(.mission-card__note-label, .mission-session__note-label) {
-  display: block;
-  margin-bottom: 0.15rem;
-  font-weight: 800;
-  letter-spacing: 0.005em;
-}
-
-:is(.mission-card__note--adult, .mission-session__note--adult) {
-  background: #eef4ee;
-  color: #22423a;
-}
-
-:is(.mission-card__note--adult, .mission-session__note--adult)
-  :is(.mission-card__note-mark, .mission-session__note-mark) {
-  background: #2f6b58;
-}
-
-:is(.mission-card__note--safety, .mission-session__note--safety) {
-  background: #f8efdf;
-  color: #4f3a1b;
-}
-
-:is(.mission-card__note--safety, .mission-session__note--safety)
-  :is(.mission-card__note-mark, .mission-session__note-mark) {
-  background: #a8752f;
-}
-
-/* On a card the guidance is set a step smaller than on Ready and Active, where
-   it is read once more before starting; the label is the text's own size. */
-.mission-card__note {
-  margin: 0.35rem 0 0;
-  font-size: 0.9rem;
-}
-
-.mission-unavailable__body {
-  max-width: 64ch;
-  margin: 0;
-  color: #445752;
-  line-height: 1.6;
-}
-
-@media (min-width: 56rem) {
-  .mission-suggestions,
-  .mission-unavailable {
-    padding: 1.85rem 1.6rem 1.75rem;
-  }
-
-  .mission-suggestions__set {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 1.35rem;
-    /* Equal weight means equal presence: the three cards share a height and
-       their choose actions sit on one line, so no card looks like the short
-       easy one or the long demanding one. */
-    align-items: stretch;
-  }
-
-}
-
-/* --- The one current Mission Session. Task 2 shows only which Mission it is
-   and whether it has started; the ready screen's own content and its start
-   action are a later step, so nothing here is a control the family could
-   mistake for starting the Mission. */
-/* A column, so each action takes its own line. Its buttons are inline boxes,
-   and as siblings in ordinary flow a wide screen set the primary action and the
-   way out against one another with no space between them, reading as one
-   two-part control. Every other child stretches to the column as a block would,
-   and none of them has a bottom margin, so no spacing changes. */
+/* A column, so each action takes its own line and keeps its own width. Every
+   reading block shares one measure, in `rem`, so blocks set at different sizes
+   end on one edge. */
 .mission-session {
-  /* One measure for every reading block of the Mission, in `rem` rather than
-     `ch`, so blocks set at different sizes end on one edge instead of four. */
-  --session-measure: 34rem;
+  --session-measure: 36rem;
 
   display: flex;
   flex-direction: column;
   margin-top: 1.5rem;
 }
 
-/* Flex items do not collapse margins with their container, so the first child
-   gives up its own, as it did when that margin collapsed into this one. */
 .mission-session > :first-child {
   margin-top: 0;
 }
 
-/* Every action keeps its own width rather than stretching across the column;
-   the primary action's full width on a phone is its own rule. */
 .mission-session > .button {
   align-self: flex-start;
 }
 
-/* The Mission's own title leads its block: it answers *What is the Mission?*,
-   so it takes the presence and the green a Mission card gives its title, one
-   step larger. It was the smallest heading on the view. At an enlarged text
-   size it keeps exactly the size it had. */
+/* The Mission's own title leads its block: it answers *What is the Mission?*.
+   At an enlarged text size it keeps the size it has. */
 .mission-session__mission {
-  max-width: 24ch;
+  max-width: 22ch;
   margin: 0;
-  color: #1c3a2f;
-  font-size: clamp(1.5rem, 1rem + 3vw, 1.9rem);
-  font-weight: 800;
-  line-height: 1.18;
-  letter-spacing: -0.025em;
+  color: var(--forest-900);
+  font-family: var(--font-serif);
+  font-size: clamp(min(1.75rem, 10.5vw), min(1.3rem + 1.7vw, 11.5vw), 2.5rem);
+  font-weight: 700;
+  line-height: 1.1;
+  text-wrap: balance;
+}
+
+.mission-session__picture {
+  width: 100%;
+  margin-top: 1.1rem;
 }
 
 .mission-session__state {
   max-width: var(--session-measure);
-  margin: 0.6rem 0 0;
-  color: #445752;
+  margin: 0.75rem 0 0;
+  color: var(--ink-muted);
   line-height: 1.6;
 }
 
-/* The same pair the Mission card shows — the category's tag and the duration —
-   resolved here from the session's own immutable facts so a later setup edit
-   or catalog release cannot rewrite them. The tag keeps this line's size. */
+/* The same pair a Mission card shows — the category's tag and the duration —
+   from the session's own immutable facts. */
 .mission-session__meta {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.35rem 0.75rem;
-  margin: 0.6rem 0 0;
-  color: #4c625c;
-  font-size: 0.95rem;
-  font-weight: 650;
+  gap: 0.4rem 0.8rem;
+  margin: 1.1rem 0 0;
 }
 
-.mission-session__duration {
-  font-weight: 650;
-}
-
-/* The reading frame is wider than the column these views used to keep to, so
-   the Mission reads at a fuller but still comfortable measure. */
 .mission-session__instruction {
   max-width: var(--session-measure);
-  margin: 0.75rem 0 0;
-  color: #23423a;
-  font-size: 1.05rem;
+  margin: 0.85rem 0 0;
+  color: var(--ink);
+  font-size: 1.125rem;
   line-height: 1.6;
 }
 
-/* Required adult and safety content, close enough to the Mission action to read
-   as part of it, in the one guidance pattern every Mission view shares. Here
-   it keeps the size and line height it had. */
 .mission-session__note {
   max-width: var(--session-measure);
   margin: 0.85rem 0 0;
-  font-size: 0.95rem;
+  font-size: 1rem;
   line-height: 1.55;
 }
 
-/* Mission Break: the brief step towards the real-life Mission. It is calm
-   supporting text, not a banner and not a second decision. It opens the part
-   of the view that is about starting, so the same hairline a Mission card puts
-   above its own action separates it from the Mission and its guidance; without
-   it, the step read as one more paragraph of the instruction. */
+/* Mission Break: the brief step towards the real-life Mission, on its own calm
+   sage panel so it reads as the part of the view about starting. */
 .mission-session__break {
   max-width: var(--session-measure);
   margin: 1.35rem 0 0;
-  padding-top: 1.1rem;
-  border-top: 1px solid #ece2cf;
-  color: #23423a;
+  padding: 0.95rem min(1.1rem, 5vw);
+  border-radius: 1rem;
+  background: var(--sage-100);
+  color: var(--forest-900);
   line-height: 1.6;
 }
 
 .mission-session__break-lead {
-  font-weight: 800;
+  font-weight: 700;
 }
 
-/* What the family should be doing is the first thing the running Mission says,
-   because leaving the screen is what the specification puts first. It is the
-   view's lead, in the product's green, rather than one more line of body text
-   under the heading. At an enlarged text size it keeps the size it had. */
-.mission-session__away {
-  max-width: var(--session-measure);
-  margin: 0;
-  color: #17493c;
-  font-size: clamp(1.05rem, 0.6rem + 2.5vw, 1.4rem);
-  font-weight: 750;
-  line-height: 1.45;
+/* The one dominant action of the ready Mission, after everything the family
+   needs in order to decide. */
+.mission-session__start {
+  margin-top: 1.5rem;
 }
 
-/* On the running Mission the title is the reminder rather than the headline:
-   the lead above it is what the family should act on, so the title keeps the
-   size it had. */
-.mission-session__away + .mission-session__mission {
+/* The approved way out: discoverable, secondary, never competing. */
+.mission-session__exit {
   margin-top: 1rem;
-  font-size: 1.5rem;
 }
 
-/* Supporting information, never the centrepiece: quiet, still, and the same
-   calm surface as the rest of the Mission. It has no urgency colour, no motion,
-   no alarm and no overtime, and it does not grow louder as it approaches zero. */
+/* Where there is room, the picture stands beside the Mission: the text column
+   keeps the reading order the phone has, and the picture spans its height. */
+@container view (min-width: 40em) {
+  .mission-session--ready {
+    display: grid;
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+    align-content: start;
+    column-gap: clamp(2rem, 4vw, 3rem);
+  }
+
+  .mission-session--ready > * {
+    grid-column: 2;
+  }
+
+  .mission-session--ready > .mission-session__picture {
+    position: sticky;
+    top: 1.5rem;
+    align-self: start;
+    margin-top: 0.35rem;
+    grid-column: 1;
+    grid-row: 1 / span 12;
+  }
+
+  .mission-session--ready > .button {
+    justify-self: start;
+  }
+}
+
+/* The running Mission leads with what the family should do: leave the screen.
+   It is the view's lead, in the heading face. */
+.mission-session__away {
+  max-width: 28ch;
+  margin: 0;
+  color: var(--forest-900);
+  font-family: var(--font-serif);
+  font-size: clamp(min(1.5rem, 10vw), min(1.15rem + 1.5vw, 11vw), 2.15rem);
+  font-weight: 700;
+  line-height: 1.2;
+  text-wrap: balance;
+}
+
+/* The Mission reminder: which Mission is running, beside a smaller copy of its
+   picture, on its own card. */
+.mission-session__reminder {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem clamp(1rem, 3vw, 1.75rem);
+  margin-top: 1.5rem;
+  padding: clamp(12px, calc(1.2 * var(--room)), 1.35rem);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  background: var(--paper);
+  box-shadow: var(--shadow-card);
+}
+
+.mission-session__thumb {
+  width: min(100%, 15rem);
+}
+
+.mission-session__reminder-text {
+  min-width: 0;
+}
+
+.mission-session__reminder .mission-session__mission {
+  font-size: clamp(min(1.4rem, 10vw), min(1.15rem + 1vw, 10.5vw), 1.75rem);
+}
+
+.mission-session__reminder .mission-session__instruction {
+  font-size: 1.0625rem;
+}
+
+@container view (min-width: 40em) {
+  .mission-session__reminder {
+    grid-template-columns: minmax(0, 14rem) minmax(0, 1fr);
+    align-items: start;
+  }
+
+  .mission-session__thumb {
+    width: 100%;
+  }
+}
+
+/* Supporting information, never the centrepiece: a quiet pill with no urgency
+   colour, no motion and no alarm, which does not grow louder near zero. */
 .mission-session__guidance {
   max-width: var(--session-measure);
-  margin: 1.1rem 0 0;
-  color: #5a6d67;
-  font-size: 0.95rem;
-  line-height: 1.55;
-}
-
-.mission-session__guidance + .mission-session__guidance {
-  margin-top: 0.3rem;
-}
-
-/* The running Mission is grouped the same way as the ready one: the Mission and
-   its guidance above the hairline, the time guide and what the family does on
-   return below it. */
-:is(.mission-session__instruction, .mission-session__note) + .mission-session__guidance {
-  margin-top: 1.35rem;
-  padding-top: 1.1rem;
-  border-top: 1px solid #ece2cf;
-}
-
-/* The one dominant action of the ready Mission. It sits last, after everything
-   the family needs in order to decide, and nothing else on the view competes
-   with it. */
-.mission-session__start {
-  margin-top: 1.35rem;
-}
-
-/* A transition that did not complete. It uses the same calm surface as the
-   discovery notice: nothing was lost and nothing was the child's doing. */
-.mission-session__issue {
-  max-width: var(--session-measure);
-  margin: 1.15rem 0 0;
-  padding: 0.8rem 1rem;
-  border-left: 3px solid #b4650c;
-  border-radius: 0.5rem;
-  background: #fdf5ec;
-  color: #23423a;
-  font-size: 0.95rem;
+  margin: 1.35rem 0 0;
+  color: var(--ink-muted);
+  font-size: 1rem;
   line-height: 1.5;
 }
 
-/* The approved leave-without-completion path. It stays discoverable and stays
-   secondary: it sits after the Mission and its guidance, carries no emphasis of
-   its own, and never competes with the dominant action of its view. */
-.mission-session__exit {
-  margin-top: 1.25rem;
-  align-self: flex-start;
+.mission-session__guidance--time {
+  width: fit-content;
+  padding: 0.6rem 1rem;
+  border-radius: 999px;
+  background: var(--sand);
+  color: var(--forest-900);
+  font-weight: 600;
 }
 
-/* The confirmation leaving an active Mission requires. It uses the same calm,
-   restrained surface as the other confirmation in the product: the consequence
-   is stated plainly, staying comes first and reads as the easy choice, and
-   leaving is explicit and visually separated. Nothing here hurries the family. */
-/* It is an inset on the warm surface, one step deeper than the page, and it
-   keeps the Mission's own reading measure rather than running across a wide
-   screen as a banner with its question in one corner. */
+.mission-session__guidance + .mission-session__guidance {
+  margin-top: 0.4rem;
+}
+
+/* What the family came back to do: the one dominant action, before the way out. */
+.mission-session__done {
+  margin-top: 1.5rem;
+}
+
+.mission-session__issue {
+  max-width: var(--session-measure);
+}
+
+/* The confirmation leaving an active Mission requires: a warm inset with a calm
+   edge, at the Mission's reading measure. The consequence is plain, staying
+   comes first as the easy choice, and leaving is explicit and separated. */
 .mission-session__confirm {
-  max-width: 48ch;
+  max-width: 36rem;
   margin-top: 1.25rem;
-  padding: 1.1rem clamp(12px, calc(1.2 * var(--room)), 1.2rem);
-  border: 1px solid #e8dfcd;
-  border-radius: 1.25rem;
-  background: #fbf6ea;
+  padding: 1.25rem clamp(12px, calc(1.2 * var(--room)), 1.5rem);
+  border: 1px solid #e7d2bd;
+  border-radius: var(--radius-card);
+  background: #fbf2e6;
 }
 
 .mission-session__confirm-title {
   margin: 0 0 0.35rem;
-  font-size: 1.05rem;
-  font-weight: 800;
+  color: var(--forest-900);
+  font-family: var(--font-serif);
+  font-size: min(1.5rem, 10.5vw);
+  font-weight: 700;
+  line-height: 1.2;
 }
 
 .mission-session__confirm p {
-  max-width: 48ch;
+  max-width: 36rem;
   margin: 0;
-  color: #4c625c;
+  color: var(--ink);
   line-height: 1.55;
 }
 
-.mission-session__confirm-actions,
-.mission-suggestions__conflict-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-  margin-top: 1rem;
-}
-
-.mission-suggestions__conflict-actions {
-  margin-bottom: 1.25rem;
+/* The group's gap owns the spacing between the two choices. Their side insets
+   follow `--room`, which is what kept each label from becoming a column one
+   letter wide at an enlarged text size. */
+.mission-session__confirm-actions .button {
+  margin-top: 0;
+  padding-inline: clamp(12px, calc(1.2 * var(--room)), 1.4rem);
 }
 
 /* In the Discovery conflict the confirmation takes the place of the two
-   actions above, so it keeps their distance from the set below rather than
-   sitting against the first card. */
+   actions, so it keeps their distance from the set below. */
 .mission-suggestions .mission-session__confirm {
-  margin-bottom: 1.25rem;
-}
-
-/* The group's gap owns the spacing between the two choices. The shared button
-   margin sat on top of it, putting 40px between the consequence and the
-   choices it asks about, and 36px between the choices once they wrapped. The
-   side insets take the same viewport ceiling as the panel, which is what kept
-   each label a column one letter wide at an enlarged text size. */
-.mission-session__confirm-actions .button {
-  margin-top: 0;
-  padding-inline: clamp(12px, calc(1.2 * var(--room)), 1.2rem);
+  margin: 0 0 1.5rem;
 }
 
 /* While the family is deciding whether to leave, that decision is the one
-   question on the view, and staying is its easy choice. **Mission done** is
-   still there and still works, in the same place and the same focus order; it
-   steps back to the secondary treatment until the question is answered, so
-   two equal green actions no longer compete for the one answer. */
+   question on the view. **Mission done** stays in place and in the focus
+   order; it steps back to the secondary treatment until the question is
+   answered, so two equal green actions never compete for one answer. */
 .mission-session:has(> .mission-session__confirm) > .mission-session__done,
 .mission-session:has(> .mission-session__confirm) > .mission-session__done:hover {
-  border-color: #6b857d;
-  background: #fff;
-  color: #174c40;
+  border-color: #b9c7bc;
+  background: var(--paper);
   box-shadow: none;
+  color: var(--forest-800);
 }
 
-/* The suggestion set's choices as one group, so an unresolved existing session
-   can withhold choosing through the native disabled cascade without changing
-   the layout or hiding any Mission the family is reading. */
-.mission-suggestions__choices {
-  margin: 0;
-  padding: 0;
-  border: 0;
+/* ---------- The Reward Card ---------- */
+
+/* Short, calm recognition of one completed Mission: nothing to reveal, open or
+   wait for, and no motion. Centred, as recognition is. */
+[data-view='session-result'] > :is(.app-view__context, .app-view__title) {
+  margin-inline: auto;
+  text-align: center;
 }
 
-/* The one dominant action of the running Mission: what the family came back to
-   do. It sits before the way out, which stays secondary below it. */
-.mission-session__done {
-  margin-top: 1.25rem;
-  align-self: flex-start;
-}
-
-/* F004 Reward Card.
-   Short, calm recognition of one completed Mission. It is quiet by design: no
-   reveal, no motion, no rarity, nothing to wait for and nothing to open. */
 .mission-result {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: stretch;
+  margin-top: 1.25rem;
 }
 
-/* A flex item is at least as wide as its longest unbreakable word, and the
-   document's `break-word` does not lower that intrinsic floor — so one long word
-   (a German compound, a Russian verb) made the card wider than the column it sits
-   in once the reader enlarged their text. `anywhere` does lower it, which lets
-   such a word break inside the card instead of widening it. Ordinary text is
-   unaffected: a break happens only where the alternative is overflow. */
-.mission-result > * {
+/* A flex item is at least as wide as its longest unbreakable word, so one long
+   word once made the card wider than its column at an enlarged text size.
+   `anywhere` lowers that floor; ordinary text is unaffected. */
+.mission-result > *,
+.mission-result__panel > * {
   overflow-wrap: anywhere;
 }
 
-/* The successful Reward Card is the one surface in the flow that says a real
-   Mission was finished, and the review that follows implementation found it was
-   not readable as an object at all: it had no background, border, radius or
-   depth, so the only framed thing on the screen was the Monthly Goal block
-   inside it. It now sits on its own calm surface, tinted rather than white so it
-   reads as a distinct card against the near-white view panel instead of a second
-   white box nested in the first.
-
-   The modifier is what carries it. `MissionResultBoundary` renders its
-   display-failure fallback with the plain `mission-result` class, and a failed
-   display must not look like recognition, so only the card that shows a real
-   completion is given this treatment.
-
-   No `overflow` is clipped here: the Mission title is a focus target whose ring
-   is drawn 4px outside it, and hiding overflow would cut that ring off. */
-.mission-result--recognition {
-  /* Wide enough for the longest reviewed title, bounded so the card stays a card
-     on a desktop width rather than stretching into a band. */
-  max-width: 32rem;
-  /* Clears the view heading's focus ring, which the recognition line used to
-     clear on its own. */
-  margin-top: 0.75rem;
-  /* Padding is capped against the viewport as well as the root, so enlarging
-     text to 200% cannot squeeze the content column at 320px. */
-  padding: min(1.35rem, 5vw) min(1.25rem, 4.5vw, var(--section-inline, 1.25rem));
-  border: 1px solid #d8e1da;
-  border-radius: 1.15rem;
-  background: #edf7f1;
-  box-shadow: 0 0.5rem 1.25rem rgb(32 48 45 / 6%);
-}
-
-/* Where the text column is genuinely tight — a 320px phone, or any narrow
-   screen whose reader has enlarged text — the card reclaims exactly as much of
-   the view panel's own padding as its padding adds back, so the tint widens the
-   card instead of narrowing the words inside it. Everywhere else the column is
-   wide enough to give the padding up. */
-@media (max-width: 22rem) {
-  .mission-result--recognition {
-    /* Never more than the section's own side padding, which narrows when the
-       screen is narrow for the text, so the card cannot reach past the panel. */
-    margin-inline: calc(-1 * min(1.25rem, 4.5vw, var(--section-inline, 1.25rem)));
-  }
-}
-
-/* Recognition leads the card. The Mission title stays large, bold and directly
-   beneath it, so what was completed is still unmistakable. */
-.mission-result--recognition .mission-result__recognition {
-  margin-top: 0;
-  color: #174c40;
-  font-size: 1.45rem;
-}
-
-.mission-result--recognition .mission-result__mission {
-  font-size: 1.3rem;
-}
-
-/* Progress stays supporting information. Inside the card it needs no second
-   frame of its own; a hairline is enough to separate it from the recognition
-   above, and dropping the panel keeps one less box on the screen. */
-.mission-result--recognition .mission-result__goal {
-  margin-top: 1.1rem;
-  padding: 0.9rem 0 0;
-  border: 0;
-  border-top: 1px solid #d8e1da;
-  border-radius: 0;
-  background: none;
+/* The recognition panel, in sage. Its insets follow `--room`. No overflow is
+   clipped: the Mission title is a focus target whose ring is drawn outside it. */
+.mission-result__panel {
+  padding: clamp(14px, calc(1.5 * var(--room)), 1.75rem);
+  border-radius: 1.5rem;
+  background: var(--sage-100);
 }
 
 .mission-result__recognition {
-  max-width: 48ch;
-  /* Clear of the view heading above it, which takes focus on entry and shows a
-     focus ring there. */
-  margin: 0.75rem 0 0;
-  color: #23423a;
-  font-size: 1.15rem;
-  font-weight: 800;
-  line-height: 1.5;
+  margin: 0.15rem 0 1.1rem;
+  color: var(--forest-900);
+  font-family: var(--font-serif);
+  font-size: clamp(min(2.1rem, 11vw), min(1.6rem + 2vw, 12.5vw), 2.85rem);
+  font-weight: 700;
+  line-height: 1.08;
+  text-align: center;
+}
+
+.mission-result__picture {
+  width: 100%;
+  max-width: 30rem;
+  margin: 0 auto;
 }
 
 .mission-result__mission {
-  margin: 0.6rem 0 0;
-  font-size: 1.35rem;
-  font-weight: 800;
+  margin: 1.15rem 0 0;
+  color: var(--forest-900);
+  font-size: 1.5rem;
+  font-weight: 700;
   line-height: 1.25;
+  letter-spacing: -0.015em;
 }
 
 .mission-result__meta {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.35rem 1rem;
-  margin: 0.5rem 0 0;
-  color: #4c625c;
-  font-size: 0.95rem;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.6rem;
+  margin: 0.65rem 0 0;
 }
 
-.mission-result__category {
-  font-weight: 700;
+/* On the sage panel the tag keeps its own ground, so a sage accent such as
+   Helping at Home's stays visible against it. */
+.mission-result__panel .mission-result__category {
+  background: var(--paper);
+  box-shadow: inset 0 0 0 1px rgb(36 91 69 / 14%);
 }
 
-/* Progress is information, not a score: the same calm surface as the rest, with
-   no bar to fill, no streak and no comparison. */
+.mission-result__completed {
+  color: var(--ink-muted);
+}
+
+/* This month's goal: a hairline, the heading, the month, the bar and the count. */
 .mission-result__goal {
-  width: 100%;
-  margin-top: 1.4rem;
-  padding: 1rem 1.1rem;
-  border: 1px solid #d8e1da;
-  border-radius: 1.25rem;
-  background: rgb(255 255 255 / 92%);
+  margin-top: 1.35rem;
+  padding-top: 1.15rem;
+  border-top: 1px solid rgb(36 91 69 / 16%);
 }
 
 .mission-result__goal-heading {
   margin: 0;
-  font-size: 0.95rem;
-  font-weight: 800;
-}
-
-.mission-result__goal-progress {
-  margin: 0.3rem 0 0;
-  font-size: 1.1rem;
+  color: var(--forest-900);
+  font-size: 1.125rem;
   font-weight: 700;
 }
 
+.mission-result__goal-period {
+  margin: 0.2rem 0 0;
+  color: var(--ink-muted);
+}
+
+.mission-result__goal-progress {
+  margin: 0.55rem 0 0;
+  color: var(--forest-900);
+  font-weight: 650;
+}
+
+/* The one goal-complete message: warm, and plainly about a reward the parent
+   chooses. */
 .mission-result__goal-complete {
-  max-width: 48ch;
-  margin: 0.7rem 0 0;
-  color: #4c625c;
+  margin: 0.9rem 0 0;
+  padding: 0.85rem min(1rem, 5vw);
+  border-radius: 0.9rem;
+  background: rgb(255 255 255 / 62%);
+  color: var(--forest-900);
   line-height: 1.55;
 }
 
-.mission-result__issue {
-  max-width: 48ch;
-  margin: 1rem 0 0;
-  color: #8b2828;
-  line-height: 1.55;
-}
-
+.mission-result__issue,
 .mission-result__state {
-  max-width: 48ch;
-  margin: 0;
+  max-width: 40rem;
+  margin: 1rem 0 0;
   line-height: 1.6;
 }
 
-.mission-result .button {
-  margin-top: 1.5rem;
+.mission-result__issue {
+  color: var(--danger);
 }
 
-/* Which month the progress belongs to, named from the completion's own stored
-   period so a card restored later never calls an earlier month "this month". */
-.mission-result__goal-period {
-  margin: 0.15rem 0 0;
-  color: #4c625c;
-  font-size: 0.95rem;
+.mission-result__state {
+  margin-top: 0;
 }
 
-/* The private record: a calm list, not a feed and not a dashboard. Entries are
-   scannable rows with no avatar, no reaction, no rank and no chart. */
+.mission-result > .button {
+  width: 100%;
+  margin-top: 1.25rem;
+}
+
+/* The display-failure fallback keeps the plain class and its own actions. */
+.mission-result:not(.mission-result--recognition) > .button {
+  width: auto;
+  align-self: flex-start;
+}
+
+/* ---------- Mission History ---------- */
+
+/* The private record: a calm list, not a feed and not a dashboard. */
 .mission-history {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
   width: 100%;
+  flex-direction: column;
+  align-items: stretch;
+  margin-top: 1.25rem;
 }
 
-/* As on the Reward Card, one long compound word must break inside the surface
-   rather than widen the column it sits in at enlarged text. */
+/* As on the Reward Card, one long word breaks inside the surface rather than
+   widening the column at an enlarged text size. */
 .mission-history > * {
   overflow-wrap: anywhere;
 }
 
-/* Its side padding follows `--room` down to 12px: at a 32px text size the
-   plain `rem` padding left the goal's own heading a 102px column. */
+/* The same goal pattern the Reward Card uses, in the same sage. Its insets
+   follow `--room`. */
 .mission-history__goal {
-  width: 100%;
-  margin-top: 0.75rem;
-  padding: 1rem clamp(12px, calc(1.1 * var(--room)), 1.1rem);
-  border: 1px solid #d8e1da;
-  border-radius: 1.25rem;
-  background: rgb(255 255 255 / 92%);
+  padding: 1.15rem clamp(12px, calc(1.2 * var(--room)), 1.4rem) 1.25rem;
+  border-radius: var(--radius-card);
+  background: var(--sage-100);
 }
 
 .mission-history__goal-heading {
   margin: 0;
-  font-size: 0.95rem;
-  font-weight: 800;
-}
-
-.mission-history__goal-period,
-.mission-history__goal-progress {
-  margin: 0.3rem 0 0;
-}
-
-.mission-history__goal-period {
-  color: #4c625c;
-  font-size: 0.95rem;
-}
-
-.mission-history__goal-progress {
-  font-size: 1.1rem;
+  color: var(--forest-900);
+  font-size: 1.125rem;
   font-weight: 700;
 }
 
+.mission-history__goal-period {
+  margin: 0.2rem 0 0;
+  color: var(--ink-muted);
+}
+
+.mission-history__goal-progress {
+  margin: 0.55rem 0 0;
+  color: var(--forest-900);
+  font-weight: 650;
+}
+
 .mission-history__entries {
-  width: 100%;
-  margin: 1.1rem 0 0;
+  display: grid;
+  gap: 0.6rem;
+  margin: 1.5rem 0 0;
   padding: 0;
   list-style: none;
 }
@@ -2317,17 +2522,16 @@ input {
 .mission-history__entry {
   display: flex;
   flex-direction: column;
-  gap: 0.2rem;
-  padding: 0.75rem 0;
-  border-top: 1px solid #e4ebe6;
-}
-
-.mission-history__entry:first-child {
-  border-top: 0;
+  gap: 0.4rem;
+  padding: 0.9rem clamp(12px, var(--room), 1.15rem);
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  background: var(--paper);
 }
 
 .mission-history__entry-title {
-  font-size: 1.05rem;
+  color: var(--forest-900);
+  font-size: 1.0625rem;
   font-weight: 700;
   line-height: 1.3;
 }
@@ -2335,80 +2539,88 @@ input {
 .mission-history__entry-meta {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.2rem 1rem;
-  color: #4c625c;
-  font-size: 0.95rem;
-}
-
-.mission-history__entry-category {
-  font-weight: 700;
+  align-items: center;
+  gap: 0.35rem 0.9rem;
+  color: var(--ink-muted);
+  font-size: 0.9375rem;
 }
 
 .mission-history__empty,
 .mission-history__state {
-  max-width: 48ch;
-  margin: 1.1rem 0 0;
-  line-height: 1.55;
+  max-width: 40rem;
+  margin: 1.5rem 0 0;
+  line-height: 1.6;
+}
+
+.mission-history__empty {
+  padding: 1.1rem clamp(12px, var(--room), 1.25rem);
+  border: 1.5px dashed var(--line-strong);
+  border-radius: 1rem;
+  color: var(--ink-muted);
 }
 
 .mission-history__state {
-  color: #8b2828;
+  color: var(--danger);
 }
 
-.mission-history .button {
-  margin-top: 1.4rem;
+.mission-history > .button {
+  align-self: flex-start;
 }
 
-/* The two secondary ways out of discovery, wrapping rather than shrinking below
-   the minimum target size on a narrow screen. */
-.mission-discovery__exits {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.6rem;
-  margin-top: 1.5rem;
+/* ---------- The Monthly Goal bar ---------- */
+
+/* It mirrors the count beside it and nothing else: no motion, no colour-only
+   meaning, and a share that stops at the target. */
+.goal-bar {
+  overflow: hidden;
+  height: 0.7rem;
+  margin-top: 0.7rem;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 70%);
+  box-shadow: inset 0 0 0 1px rgb(36 91 69 / 12%);
 }
 
-/* On a narrow screen the suggestion set gives its width to the cards, which
-   carry their own edges. Its text has no edge of its own, so the set's heading,
-   its notice, the bounded sentence and the whole unavailable state keep the
-   section's own inset instead of running flush against the panel. Controls and
-   the leave confirmation carry their own edges, as the cards do, and keep the
-   full width: inset as well, the confirmation was narrower than its own
-   actions at a 32px root and pushed the page sideways. Last in the file, after
-   every rule whose margin it adjusts. */
-@media (max-width: 55.99rem) {
-  .mission-suggestions__title,
-  .mission-suggestions__issue,
-  .mission-suggestions__bounded,
-  .mission-unavailable__title,
-  .mission-unavailable__body {
-    margin-inline: var(--section-inline);
-  }
+.goal-bar__fill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--sage-600);
 }
 
-/* At an enlarged text size on a narrow screen some words are wider than any
-   column the screen can give them — at a 32px root, German *zurücksetzen* or
-   *wiederherstellen* in the reset panel — and they have to break somewhere.
-   Automatic hyphenation breaks them at a syllable, following the page's own
-   language, rather than at whichever letter reached the edge. The threshold is
-   the reader's text size against the viewport, so it applies only when text is
-   enlarged: at a 16px default it would need a viewport under 240px, below the
-   320px floor. An engine without hyphenation for a language keeps the plain
-   break it had before. Scoped to the parent surfaces this batch authorizes. */
-@media (max-width: 15rem) {
-  .setup-form,
-  .setup-complete,
-  .save-feedback,
-  .recovery-actions {
+/* ---------- Enlarged text ---------- */
+
+/* Where the sheet is narrow for the reader's text — an enlarged text size on a
+   phone — some words are wider than any column the screen can give them, and
+   they have to break somewhere. Automatic hyphenation breaks them at a
+   syllable, following the page's own language, rather than at whichever letter
+   reached the edge. Only words of ten letters or more are hyphenated, with at
+   least six letters before a break and four after, so short words stay whole
+   and the product's own name never splits as *Missi-onKid*.
+
+   The threshold is the sheet's width in its own `em`, so it answers to the
+   reader's text size however it was set — the browser's setting or a root size
+   on the page — and never applies at an ordinary size. An engine without
+   hyphenation for a language keeps the plain break. */
+@container view (max-width: 14em) {
+  :is(.app-view__context, .app-view__title, .recovery-controls) {
     -webkit-hyphens: auto;
     hyphens: auto;
+    hyphenate-limit-chars: 10 6 4;
   }
 
-  /* The short sentence that leads into the handoff's actions is set larger
-     than the text around it, and hyphenation split words there that fit the
-     next line whole — *be-reit*, *näch-sten*. It keeps its words whole. */
+  /* The sentence that leads into the handoff's actions keeps its words whole. */
   .setup-complete__next {
     -webkit-hyphens: manual;
     hyphens: manual;
+  }
+}
+
+/* ---------- Reduced motion ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .button,
+  .choice,
+  .mission-world {
+    transition: none;
   }
 }

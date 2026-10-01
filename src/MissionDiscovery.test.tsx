@@ -821,7 +821,20 @@ describe('category selection and the discovery cycle', () => {
       expect(input.getAttribute('type')).toBe('radio');
       expect(input.getAttribute('name')).toBe('discovery-category');
     }
-    expect(container.querySelector('textarea, select, form, video, audio, img')).toBeNull();
+    expect(container.querySelector('textarea, select, form, video, audio')).toBeNull();
+    // The only pictures are decoration the specification authorizes: one
+    // image per Mission Category inside its label, and a Mission's reviewed
+    // still inside its card's window. None is exposed as an image, none is
+    // fetched from elsewhere, and nothing here can take or upload a picture.
+    for (const image of Array.from(container.querySelectorAll('img'))) {
+      expect(
+        image.closest('.mission-world') ?? image.closest('.mission-card__window'),
+      ).not.toBeNull();
+      expect(image.getAttribute('alt')).toBe('');
+      expect(image.getAttribute('aria-hidden')).toBe('true');
+      expect(image.getAttribute('src')).not.toMatch(/^https?:/);
+    }
+    expect(screen.queryAllByRole('img')).toHaveLength(0);
     expect(
       screen.queryByText(
         /chat|message|share|invite|friend|follow|like|leaderboard|rank|score|streak|buy|pay|price|premium|subscribe|upgrade|block|lock screen|photo|upload|prove/i,
@@ -1011,9 +1024,42 @@ describe('discovery accessibility', () => {
   });
 });
 
-// The category group wraps, so its row structure is a layout property. jsdom has
-// no layout engine and cannot assert it by rendering: these are stylesheet
-// invariants that encode the cause of two defects measured on the served build.
+describe('the Mission Category images', () => {
+  it('gives every category one image of one shared treatment, as decoration', () => {
+    renderShell(inDiscovery());
+
+    const images = MISSION_CATEGORIES.map(
+      (category) => radioFor(category).closest('label')!.querySelector('img')!,
+    );
+    expect(images.every(Boolean)).toBe(true);
+    expect(new Set(images.map((image) => image.getAttribute('src'))).size).toBe(5);
+    for (const image of images) {
+      expect(image.getAttribute('alt')).toBe('');
+      expect(image.getAttribute('aria-hidden')).toBe('true');
+      // One size for all five: no category is pictured larger or richer.
+      expect(image.getAttribute('width')).toBe('800');
+      expect(image.getAttribute('height')).toBe('600');
+      expect(image.getAttribute('src')).not.toMatch(/^https?:/);
+    }
+    // Each control is named by its label alone; no image is exposed.
+    expect(screen.queryAllByRole('img')).toHaveLength(0);
+    expect(screen.getAllByRole('radio').map((radio) => radio.getAttribute('aria-hidden'))).not.toContain('true');
+  });
+
+  it('keeps the same five images whichever category is chosen', () => {
+    renderShell(inDiscovery());
+    const before = [...document.querySelectorAll('.mission-world img')].map((image) => image.getAttribute('src'));
+
+    fireEvent.click(radioFor('Calm'));
+
+    const after = [...document.querySelectorAll('.mission-world img')].map((image) => image.getAttribute('src'));
+    expect(after).toEqual(before);
+  });
+});
+
+// The category group's row structure is a layout property. jsdom has no layout
+// engine and cannot assert it by rendering: these are stylesheet invariants
+// that encode the cause of two defects measured on the served build.
 //
 // 1. A fixed reservation on the selected-state cue was wider than the whole
 //    control at a 32px root, which pushed the label out of a control that clips
@@ -1023,6 +1069,10 @@ describe('discovery accessibility', () => {
 //    moment a category was chosen, because the selected control alone gains the
 //    cue. Measured on desktop: one row became two in English and German and
 //    three in Russian, with controls changing places.
+//
+// The group is now a grid. The second cause cannot recur as long as every track
+// the group ever uses is definite — never sized from a label or from which
+// control is selected — and every control may shrink below its content.
 describe('Mission category group layout invariants', () => {
   const stylesheet = readFileSync('src/styles.css', 'utf8');
   const rules = [...stylesheet.matchAll(/([^{}]+)\{([^{}]*)\}/g)].map((match) => ({
@@ -1032,19 +1082,26 @@ describe('Mission category group layout invariants', () => {
   const ruleFor = (selector: string) =>
     rules.filter((rule) => rule.selector === selector);
 
-  it('sizes a control from a definite basis rather than from its content', () => {
+  it('sizes the group from definite tracks rather than from its controls', () => {
+    const group = ruleFor('.mission-worlds');
+    expect(group.length).toBeGreaterThan(0);
+    expect(group[0]!.body).toMatch(/display:\s*grid/);
+
+    // Every layout the group takes, at every width, names its column minimum
+    // and never sizes a track from content.
+    const tracks = group
+      .map((rule) => /grid-template-columns:\s*([^;]+);/.exec(rule.body)?.[1]?.trim())
+      .filter((value): value is string => value !== undefined);
+    expect(tracks.length).toBeGreaterThan(0);
+    for (const value of tracks) {
+      expect(value).toMatch(/minmax\(\s*0\s*,/);
+      expect(value).not.toMatch(/\bauto\b|content|\bfit-content\b/);
+    }
+
+    // Without this, a grid item's automatic minimum is its min-content width,
+    // which would restore the content dependency the tracks just removed.
     const [control] = ruleFor('.mission-world');
     expect(control).toBeDefined();
-
-    // A definite basis, so the line break cannot depend on the label or on
-    // whether this control is the selected one.
-    const flex = /flex:\s*([^;]+);/.exec(control!.body)?.[1]?.trim();
-    expect(flex).toBeDefined();
-    expect(flex).not.toMatch(/\bauto\b|\bcontent\b/);
-    expect(flex).toMatch(/\d/);
-
-    // Without this, a flex item's automatic minimum is its min-content width,
-    // which would restore the content dependency the basis just removed.
     expect(control!.body).toMatch(/min-width:\s*0/);
   });
 

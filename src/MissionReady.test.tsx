@@ -3,6 +3,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { App } from './App';
+import { resolveMissionImage } from './missionImages';
 import {
   appStateReducer,
   isStartOutcomeUnknown,
@@ -1112,5 +1113,45 @@ describe('what settles an unknown start outcome', () => {
         expect(state.sessionIssue).toEqual({ operation, outcome });
       }
     }
+  });
+});
+
+describe("the chosen Mission's picture on Ready", () => {
+  it('follows the title as decoration, in the authored scene its card showed', () => {
+    const { container } = renderReady('movement-02');
+
+    const title = screen.getByRole('heading', { level: 2 });
+    const picture = container.querySelector('.mission-session__picture')!;
+    expect(picture).not.toBeNull();
+    expect(title.compareDocumentPosition(picture) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(picture.querySelector('svg.mission-scene')!.getAttribute('aria-hidden')).toBe('true');
+    expect(picture.querySelector('img')).toBeNull();
+    expect(screen.queryAllByRole('img')).toHaveLength(0);
+  });
+
+  it('shows the reviewed still its card showed', () => {
+    const { container } = renderReady('creativity-02');
+
+    const photo = container.querySelector('.mission-session__picture img')!;
+    expect(photo.getAttribute('src')).toBe(resolveMissionImage('creativity-02')!.src);
+    expect(photo.getAttribute('alt')).toBe('');
+    expect(photo.getAttribute('aria-hidden')).toBe('true');
+  });
+
+  it('keeps the introduction example in the scene Discovery shows for it', () => {
+    const { container } = renderReady('helping-11');
+
+    const picture = container.querySelector('.mission-session__picture')!;
+    expect(picture.querySelector('img')).toBeNull();
+    expect(picture.querySelector('svg.mission-scene')).not.toBeNull();
+  });
+
+  it('pictures nothing that cannot be started', () => {
+    const { container } = renderReady('movement-02', 'en', { missionId: 'movement-99' });
+
+    expect(
+      screen.getByText(translateMessage('en', 'session.ready.missionUnavailable')),
+    ).toBeTruthy();
+    expect(container.querySelector('.mission-session__picture')).toBeNull();
   });
 });

@@ -679,12 +679,21 @@ describe('F001 introduction presentation boundaries', () => {
     }
     expect(container.querySelector('input:not([type="radio"])')).toBeNull();
     expect(container.querySelector('form')).toBeNull();
-    // The one picture is the example Mission's decorative still, inside its
-    // card's image window. No other image appears anywhere on the view.
+    // The pictures are exactly the decoration the specification authorizes:
+    // the example Mission's still inside its card's image window, and one image
+    // for each of the three steps of the flow. Nothing else is pictured, and
+    // none of them is exposed as an image or fetched from elsewhere.
     const images = [...container.querySelectorAll('img')];
-    expect(images).toHaveLength(1);
+    expect(images).toHaveLength(4);
     expect(images[0]!.closest('.introduction__example .mission-card__window')).not.toBeNull();
-    expect(images[0]!.getAttribute('alt')).toBe('');
+    const stepImages = images.slice(1);
+    expect(stepImages.map((image) => image.closest('.introduction__steps > li'))).not.toContain(null);
+    expect(new Set(stepImages.map((image) => image.closest('li')))).toHaveProperty('size', 3);
+    for (const image of images) {
+      expect(image.getAttribute('alt')).toBe('');
+      expect(image.getAttribute('aria-hidden')).toBe('true');
+      expect(image.getAttribute('src')).not.toMatch(/^https?:/);
+    }
     expect(screen.queryByRole('link')).toBeNull();
     expect(screen.queryByRole('img')).toBeNull();
   });

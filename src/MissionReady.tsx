@@ -30,6 +30,8 @@ import {
   type PersistenceAdapter,
   type ReadyMissionSession,
 } from './persistence';
+import { MissionPicture } from './MissionPicture';
+import { DurationMark } from './Marks';
 
 // Each transition fails into its own truth, so each has its own wording.
 // Reaching `ready` writes no `startedAt`, so its messages may say the Mission
@@ -109,6 +111,7 @@ function ReadyMissionDetails({
           {t(MISSION_CATEGORY_LABEL_KEYS[session.missionCategoryAtSelection])}
         </span>
         <span className="mission-session__duration">
+          <DurationMark />
           {t('discovery.card.about')} {minutes} {t('discovery.card.minutes')}
         </span>
       </p>
@@ -298,7 +301,7 @@ export function MissionReady({
   }
 
   return (
-    <div className="mission-session">
+    <div className="mission-session mission-session--ready">
       {mission ? (
         <h2 className="mission-session__mission">
           {mission.content[state.language].title}
@@ -310,6 +313,19 @@ export function MissionReady({
           {t('session.ready.missionUnavailable')}
         </p>
       )}
+      {/* The Mission's own picture, the one its card showed, as support for
+          recognising it. It follows the title, so the title still answers
+          *What is the Mission?* first, and it is decoration to assistive
+          technology. Only a ready session whose Mission still resolves has
+          one: nothing is pictured that cannot be started. */}
+      {session.state === 'ready' && mission ? (
+        <MissionPicture
+          category={session.missionCategoryAtSelection}
+          className="mission-session__picture mission-picture"
+          missionId={session.missionId}
+          withSceneDefs
+        />
+      ) : null}
       {session.state === 'ready' && mission ? (
         <ReadyMissionDetails
           language={state.language}

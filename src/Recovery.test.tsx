@@ -81,7 +81,7 @@ describe('F001 recovery and reset', () => {
     click('Retry browser storage');
     // The retry re-resolves the arrival context, and working storage holding
     // nothing is the no-stored-context row: the introduction, not a bare form.
-    expect(screen.getByRole('heading', { name: 'Small missions. Real-world adventures.' })).toBeTruthy();
+    expect(screen.getByRole('heading', { name: 'Small missions. Real\u2011world adventures.' })).toBeTruthy();
     continueToSetup();
     expect(screen.getByRole('heading', { name: 'Parent setup' })).toBeTruthy();
     expect((screen.getByRole('button', { name: 'Complete setup' }) as HTMLButtonElement).disabled).toBe(true);
@@ -135,7 +135,7 @@ describe('F001 recovery and reset', () => {
     expect(document.documentElement.lang).toBe('en');
     // A previously stored context that ceased to exist is the same row a first
     // visit is, so the parent reaches the introduction rather than a bare form.
-    expect(screen.getByRole('heading', { name: 'Small missions. Real-world adventures.' })).toBeTruthy();
+    expect(screen.getByRole('heading', { name: 'Small missions. Real\u2011world adventures.' })).toBeTruthy();
     continueToSetup();
     expect(screen.getByRole('heading', { name: 'Parent setup' })).toBeTruthy();
     expect((screen.getByRole('button', { name: 'Complete setup' }) as HTMLButtonElement).disabled).toBe(true);
@@ -156,7 +156,7 @@ describe('F001 recovery and reset', () => {
     else expect(h.values.has(MISSIONKID_STORAGE_KEY)).toBe(false);
     h.faults.read = false;
     click('Retry browser storage');
-    expect(screen.getByRole('heading', { name: fault === 'afterRemove' ? 'Small missions. Real-world adventures.' : 'Setup complete' })).toBeTruthy();
+    expect(screen.getByRole('heading', { name: fault === 'afterRemove' ? 'Small missions. Real\u2011world adventures.' : 'Setup complete' })).toBeTruthy();
   });
 
   it('retains last validated authority when reset and subsequent reads fail', () => {
@@ -220,7 +220,7 @@ describe('F001 recovery and reset', () => {
     expect(h.values.get(MISSIONKID_STORAGE_KEY)).toBe(raw);
     click('Confirm reset');
     expect(h.values.has(MISSIONKID_STORAGE_KEY)).toBe(false);
-    expect(screen.getByRole('heading', { name: 'Small missions. Real-world adventures.' })).toBeTruthy();
+    expect(screen.getByRole('heading', { name: 'Small missions. Real\u2011world adventures.' })).toBeTruthy();
   });
 
   it.each(['en', 'de', 'ru'] as const)('localizes temporary and failed reset recovery in %s without forbidden inputs or later views', (language) => {
