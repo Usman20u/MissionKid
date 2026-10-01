@@ -158,8 +158,11 @@ The introduction is the first thing a parent sees, and its job is comprehension,
 - Any required adult-involvement wording and safety guidance on the example stays visible as text at the prominence it would have on a Mission card. Neither is shortened, softened, delayed, or hidden because this view is an introduction.
 - The account of the flow is short enough to read before deciding. It must not become an onboarding carousel, a tutorial sequence, a feature tour, or a surface the family has to page through.
 - The view must not claim outcomes, quote families, show ratings, counts, badges, or adoption figures, or use urgency, scarcity, or persuasion patterns. MissionKid introduces itself by showing what it does.
-- On a narrow screen the single-column reading order is what MissionKid is for, the example, the short flow, then the one action.
-- Where there is room, the view may open as a hero: what MissionKid is for beside the example Mission, which serves as the view's principal image. The reading order above is unchanged, and the one forward action is not repeated to reach it sooner.
+- On a narrow screen the single-column reading order is what MissionKid is for, the parent's context, the one action, then the short flow and the example. The parent's context comes directly before the action it describes, so a parent reads what setup involves before acting, and the longer account follows for a parent who wants it.
+- The parent's context — that setup is brief, needs no account and asks for no identifying child data, and that the parent decides whether an activity suits their child — stays readable text at the size of the view's other text. It is never collapsed, hover-only, or set as small print.
+- Where there is room, the view opens as a hero: what MissionKid is for, the parent's context and the one action grouped on one side, and the introduction's decorative hero image from the *Bounded product imagery* below as the view's principal picture on the other. The three steps of the short flow follow beneath it as one row, and the example Mission follows them as its complete Mission card. The reading order is the narrow screen's, and the one forward action is rendered once and never repeated.
+- No text is set on a picture without a plain surface behind it that keeps its contrast whatever the picture shows, and no picture carries text, a control, or the parent's context.
+- On a narrow screen no picture comes before the headline, the lead, the parent's context, or the one action. A picture shows its whole subject: it may be scaled or framed, never cropped through what it pictures.
 - Each step of the short account of the flow may carry one decorative image from the *Bounded product imagery* below. The step's words carry its meaning.
 - The supported language choice may be a compact control at the top of the view, provided it stays a visible, labelled choice of the three supported languages.
 
@@ -493,14 +496,16 @@ No specific rendering technology is a permanent product requirement, and a runti
 
 ## Bounded product imagery
 
-Besides Mission images, MissionKid may present one small, fixed set of decorative product images: one image for each of the five Mission Categories, and one for each of the three steps in the parent introduction's account of the flow. Nothing else is authorized by this section.
+Besides Mission images, MissionKid may present one small, fixed set of decorative product images: one image for each of the five Mission Categories, one for each of the three steps in the parent introduction's account of the flow, and one hero image for the parent introduction. Nothing else is authorized by this section.
 
-- Each is a controlled, reviewed, static asset bundled with the application and served from its own origin. None is generated at runtime, fetched from another origin, or cut from a reference picture.
+- Each is a controlled, reviewed, static asset bundled with the application and served from its own origin. None is generated at runtime, fetched from another origin, or cut from a reference picture. An image made offline with an image-generation tool is admissible only as such an asset: it is inspected against this section before integration, recorded as generated, and never presented as a photograph of a real family or a record of a real activity.
 - None carries text, letters, numerals, logos, brand marks, or pictured interface elements.
-- None shows a person, a face, or a child. A stylized, faceless figure may stand for movement, as the scene system's figures do.
-- Each shows only ordinary, safe, globally recognizable things that the Missions or the step it represents actually involve. None implies equipment, a purchase, outdoor access, a garden, a large home, favourable weather, or a household type that the Missions do not require.
+- None shows a person or a child, or a photographed or realistic face. A stylized, faceless figure may stand for movement, as the scene system's figures do, and a pictured drawing — a crayon monster on a sheet of paper — may have the drawn face a child would give it: it is a drawing, not a person.
+- Each shows only ordinary, safe, globally recognizable things. A category image may be a quiet metaphor for its category rather than a picture of one Mission — footprints for moving, a few blocks for making, paper shapes for wondering, a folded cloth for calm — and the hero and step images show the kind of real-world making the Missions involve rather than any one Mission.
+- No image is an instruction, a list of materials, or a condition. No Mission's requirements are read from it; the Mission text alone says what is needed. None shows a purchase or a brand, a large home, a garden, a household type, or a landscape, weather, or place a family would have to reach; a metaphor may rest on a natural surface, such as footprints pressed into sand, without picturing where it is.
 - None depicts or makes attractive an unsafe or excluded action.
 - The five category images share one treatment, as *F002 — Mission Category Selection presentation* requires, and the three step images share one treatment with each other.
+- The hero image appears only on the parent introduction. It never appears on a session surface, never stands in for a Mission's own image, and never represents a particular Mission.
 - Each is decoration to assistive technology. No meaning, label, state, or availability depends on an image loading or being perceived.
 - They use the same light, material, and colour language as the Mission images. They are not a general illustration library, marketing artwork, or a second scene system.
 
@@ -660,7 +665,7 @@ If presentation would require new behavior, a new state, a new data fact, a chan
 23. Mission scenes preserve the accessibility baseline, reduced-motion behavior, localization resilience, and mobile performance requirements without mandating a specific rendering technology, a runtime three-dimensional engine, or runtime AI-generated imagery.
 24. The parent introduction explains what MissionKid is for, shows at most one non-selectable example Mission with its required adult-involvement wording and safety guidance intact, offers the supported language choice and exactly one dominant forward action into setup, and uses no marketing, testimonial, rating, urgency, persuasion, or onboarding-carousel pattern.
 25. Outside Mission Discovery, a Mission's own image appears only on the introduction's example, on Ready and the active Mission for that session's own Mission, and on that completion's Reward Card; it is always decoration, and it never displaces required text, guidance, or the primary action.
-26. The bounded product imagery is exactly five category images and three flow-step images; each is local, static, free of text and people, decorative to assistive technology, and implies no equipment or setting the Missions do not require, and the five category images share one treatment.
+26. The bounded product imagery is exactly five category images, three flow-step images and one introduction hero image; each is local, static, reviewed, free of text and people, decorative to assistive technology, and never read as a Mission requirement; the five category images share one treatment; and the hero image appears only on the introduction.
 27. Wherever a Monthly Goal bar appears, its filled share equals the displayed count over the target, it caps with the count, it does not animate, and the text `X / 20 missions` remains present.
 
 ## Explicit non-goals
@@ -670,7 +675,7 @@ This specification does not define or authorize:
 - an exact final palette or color tokens;
 - an exact final font family or typography tokens;
 - a logo or brand identity;
-- an open or general-purpose illustration library, a broad decorative illustration system, arbitrary marketing artwork, or asset-heavy illustration bloat; the bounded Mission Mini-World scene system above, including its scene grammar, reusable scene primitives, Mission-specific compositions, and controlled presentation metadata, and the eight images of the bounded product imagery are authorized and are not such a library;
+- an open or general-purpose illustration library, a broad decorative illustration system, arbitrary marketing artwork, or asset-heavy illustration bloat; the bounded Mission Mini-World scene system above, including its scene grammar, reusable scene primitives, Mission-specific compositions, and controlled presentation metadata, and the nine images of the bounded product imagery are authorized and are not such a library;
 - a complete design system;
 - detailed design tokens;
 - a component-library choice;
