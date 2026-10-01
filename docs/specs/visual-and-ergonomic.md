@@ -433,11 +433,11 @@ Mission Discovery may present each Mission through a controlled scene: one small
 
 This authorizes one bounded scene system for child-facing Mission presentation. It does not authorize an open illustration library, and it changes no `F001`–`F004` behavior, Mission eligibility rule, or Mission content requirement.
 
-Outside Mission Discovery, a Mission's own image — the scene or reviewed still that represents it in Discovery — is authorized in exactly these places, under every limit in this section:
+Outside Mission Discovery, a Mission's own image — its authored scene or a reviewed still of that Mission — is authorized in exactly these places, under every limit in this section:
 
-- the `F001` parent introduction's one non-selectable example Mission;
-- the chosen Mission on Ready and on the active Mission, as the `F003` sections above describe; and
-- the completed Mission on its own Reward Card.
+- the `F001` parent introduction's one non-selectable example Mission, which may show a reviewed still of its own;
+- the chosen Mission on Ready and on the active Mission, showing the image its Mission card showed in Discovery, as the `F003` sections above describe; and
+- the completed Mission on its own Reward Card, showing the image that represented it in Discovery.
 
 On a session surface the image is always that session's own Mission, never a different or substitute Mission. This authorizes no Mission image on Mission History or on any parent-oriented, utility, confirmation, or recovery surface, and none anywhere else in the flow.
 

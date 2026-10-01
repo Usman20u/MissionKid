@@ -1,7 +1,7 @@
 # MissionKid Plan 06 — whole-application visual design
 
 **Date:** 2026-09-29
-**Status:** Scope recorded before implementation at `f68470a`; implemented and verified at `53d6a8d`, recorded under *Outcome*. **Implementation is paused, from 2026-09-29, while the reviewer visually reviews Plan 06**; human visual acceptance is not given and not recorded, and the known visual gaps listed under *Outcome* remain, so this plan stays active. Further imagery is a proposal pending review, not an approved obligation — see *Review hold and clarifications*. **One bounded exception to the pause** is authorized on 2026-09-29: the `helping-11` image integration recorded under *Bounded image integration*, and nothing else — scope recorded at `cca58f0`, implemented and verified at `899ff79`. **On 2026-09-30 the reviewer authorized a complete visual redesign against a newly supplied reference**, recorded under *Reference redesign — 2026-09-30*. It ends the pause for that scope, carries this plan's first specification amendments, and is **in progress**; human visual acceptance is still not given and not recorded.
+**Status:** Scope recorded before implementation at `f68470a`; implemented and verified at `53d6a8d`, recorded under *Outcome*. **Implementation is paused, from 2026-09-29, while the reviewer visually reviews Plan 06**; human visual acceptance is not given and not recorded, and the known visual gaps listed under *Outcome* remain, so this plan stays active. Further imagery is a proposal pending review, not an approved obligation — see *Review hold and clarifications*. **One bounded exception to the pause** is authorized on 2026-09-29: the `helping-11` image integration recorded under *Bounded image integration*, and nothing else — scope recorded at `cca58f0`, implemented and verified at `899ff79`. **On 2026-09-30 the reviewer authorized a complete visual redesign against a newly supplied reference**, recorded under *Reference redesign — 2026-09-30*. It ends the pause for that scope and carries this plan's first specification amendments, recorded at `6f56054`; it is **implemented and verified at `d8bad52`**. Human visual acceptance is not given and not recorded, so this plan stays active.
 **Branch:** `feat/whole-application-visual-design`, taken from `9f53610`, the commit that closed Plan 05 on `feat/guided-entry-and-presentation`. That branch is preserved unchanged at its closure. The reference redesign continues on `feat/reference-visual-redesign`, taken from `2e81cec`, the head of `feat/whole-application-visual-design`, which is preserved unchanged. No history was rewritten.
 
 ## Authorization basis
@@ -440,6 +440,80 @@ Every reviewed Mission title, instruction, adult-involvement note and safety not
 - **Against the reference**: a side-by-side judgement of typography, composition, imagery and hierarchy on the rendered result, recorded with its differences.
 - **Gates** once, sequentially, with complete output kept: relevant tests, `tsc --noEmit`, the full suite, the production build, `git diff --check`.
 - **Delivery**: one concise desktop and mobile review package of the main journey with enlarged-text evidence, and the current implementation served at the usual local development address from this repository.
+
+### Outcome, at `d8bad52`
+
+**What changed — `35` files.** The stylesheet is replaced rather than layered over: one set of shared values and one component family, with every class it styles used by a component and no rule left for a removed one. Four small presentation modules are added — `MissionPicture.tsx`, the one rendering of a Mission's image; `Marks.tsx`, three decorative icons; `MonthlyGoalBar.tsx`; `productImagery.ts`, the bounded imagery map. `ParentIntroduction`, `MissionDiscovery`, `MissionSuggestionSet`, `MissionReady`, `MissionActive`, `MissionResult` and `MissionHistory` gain the pictures, bar and marks; the category glyphs they replace are removed. Fonts, licences and eight images are added under `src/assets/`. No behaviour, state, data, route, persistence, catalog content, dependency or translation changed.
+
+| Surface | As built |
+| --- | --- |
+| Shell | Ivory ground with daylight from above; a text wordmark in Inter; cream sheets with soft elevation — the full frame for the introduction and Discovery, `64rem` for the session views, `40rem` for the Reward Card, `46rem` for the rest; the error view in the same sheet on the same ground |
+| Introduction | A hero where there is room (`64rem` and wider): the serif headline, the lead, the three steps with their images and the one action in one column, with the parent's note as small print under the action; the example card as the view's picture in the other; the language choice as a labelled segmented control at the top right. The document order — purpose, example, flow, note, action — is the phone's and the keyboard's; the action is not repeated |
+| Setup, settings, temporary mode, handoff | Choice cards with the radio's own mark and a sage fill; age groups in the heading face; a sand parent note marked by a shield; the handoff's saved pair as sage tiles |
+| Discovery | Category rows of picture and label on a phone, five equal tiles from `52em` of sheet width, the picture above a full-width label where the sheet is narrow for enlarged text; selection by ring, check and *Selected*. Three equal cards, side by side from `52em`, picture beside text between `36em` and `52em`; *Another set* as a centred pill; the exits as quiet buttons with marks |
+| Ready | The title, then the Mission's own picture — beside the Mission from `40em` — tag, duration, instruction, guidance, the Mission Break on a sage panel, *Start mission* |
+| Active | The instruction to leave the screen as the lead; a reminder card with a smaller picture, the title, instruction and guidance; the time guide as a quiet pill; *Mission done*; the leave confirmation in the warm inset |
+| Reward Card | The reference's hierarchy on one sage panel: *You did it.*, the completed Mission's picture, title, category tag, completion date, the Monthly Goal with its bar; the next step below the panel |
+| History | The same goal pattern and bar; entries as plain rows; the calm empty state |
+| Recovery, reset, notices | One notice pattern — a mark down its edge, plain words; the reset confirmation as a warm inset with *Cancel* first |
+
+**Fonts.** As reviewed in the scope, with two final sizes: the Inter subsets are `49,136` and `20,560` bytes, not the `49,880` and `20,608` recorded there, because the final subset drops an unused stylistic set and keeps every name record, the licence among them. Source Serif 4 Display Bold is the release file, unchanged (`sha256 fa4c418d…`). The licence texts are Adobe's and Inter's own; trailing spaces were removed for the repository's whitespace check, and their words are unchanged.
+
+**Imagery — the eight renders.** Authored as three-dimensional scene descriptions and rendered in Chromium `149` with `three` `0.180` as authoring tooling outside the repository: `192` accumulated frames each, sampling a window light over its area, a sky dome for soft occlusion, a thin-lens depth of field and sub-pixel offsets; procedural wood, plaster, paper, wax and knit textures; an AgX tone curve. One grade, identical for all eight, then JPEG at `800x600` for the categories and `480x480` for the steps: `15`–`31` kB each, `170` kB together. No AI generation, stock or reference pixels.
+
+Inspected before integration, as the three stills and the `helping-11` still were:
+
+| Image | What it shows | Finding |
+| --- | --- | --- |
+| Movement | A faceless wooden figure mid-jump on a clear wooden floor | No equipment. A stylized figure, not a person or a child; whether it reads as *a toy is needed* is a judgement for the content reviewer |
+| Creativity | A sheet with a crayon sun, rainbow, flower and cloud; two crayons | Paper and crayons, as most Creativity Missions name. No letters or marks |
+| Helping at Home | One set place: a triangle-folded napkin with a stitched hem, a plate, a tumbler and a wooden spoon | *Table Captain*, *The Table Surprise*, *Napkin Fold Five*. **Changed from the scope's folded-napkin stack**, which could not be rendered as believable cloth; the plate and tumbler are matte, but, as with the earlier cup, nothing establishes that they are unbreakable |
+| Learning | A book leaning on a lying book as a low ramp, a spool on it, a cork and two folded paper markers | *Roll It Down*: low, on the floor, nothing heavy |
+| Calm | One knitted blanket folded on a wooden floor | *The Heavy Blanket*. **The scope's rolled cloth is not included**: one object read more calmly |
+| Step 1 | Three equal cards with a wave, a spiral and a row of dots | Choosing one of three; no card is raised, marked or promoted |
+| Step 2 | A tablet face down at the edge; a small tower of kraft boxes and a cup | Leaving the screen for a real activity; no logo, nothing implies control of the device |
+| Step 3 | A sage card with a drawn check mark and a pencil | Marking the Mission done; no text |
+
+Every image: no text, letters, numerals, logos or interface; no person, face or child; a plain wooden surface and plaster wall; nothing hot, sharp in use, high or breakable made attractive.
+
+**A wording correction to the amendment at `6f56054`.** Its scene-system paragraph described a Mission's image outside Discovery as *the scene or reviewed still that represents it in Discovery*, which would have excluded the introduction example's own still, authorized and integrated at `899ff79`. It now names the image each place shows: the example may show a reviewed still of its own; Ready, the active Mission and the Reward Card show the image the Mission had in Discovery. That is what was authorized and what is built; no behaviour or scope changes, so no revalidation is needed.
+
+**Copy.** None added or edited. One typographic change: the English headline's hyphen is a non-breaking hyphen (`U+2011`) — the same word, read the same way, which keeps *Real-world* whole on one line. Both faces carry the character. The eight test lines that pin the English headline follow it.
+
+**Enlarged text, decided during verification.** Display type keeps its size at every ordinary width and is capped against the viewport only where an enlarged root meets a narrow screen, so headings stay larger than the text under them without breaking words. The parent surfaces' enlarged-text hyphenation now covers every view and answers to the sheet's own `em`, so an injected root triggers it as the browser setting does; it hyphenates only words of ten letters or more, with six before a break and four after — the product's name cannot split.
+
+**Found during verification, and fixed.** **The introduction's one action had moved below the fold**: measured on a `1280x900` desktop, its bottom edge sat at `1043` / `1100` / `1159` px in EN / DE / RU, where the before build had it at `899` / `878` / `899`. On a desktop it now follows the steps directly, with the parent's note beneath it as small print — a visual placement only, since the note holds no control — and a little more of the width goes to the text column, so the Russian headline takes two lines: `826` / `858` / `858` px. The language pills wrapped onto two rows under a percentage gap; the headline broke inside *Real-world*; the stacked enlarged-text category picture cut the figure's head off; the German *BEISPIELMISSION* label overflowed a `320` px screen by `8` px at a `32px` root; *Missi-onKid* was hyphenated inside a German sentence; the authored scenes' green-lit rooms did not match the warm imagery; the error view touched the top of the screen.
+
+### Verification, at `d8bad52`
+
+Chrome for Testing headless shell `149.0.7827.55`; the same harness on two served builds — before: `2e81cec`, byte-identical to Plan 06's measured build (`index-CqcP9HA8.css`, `index-0TkZ_AYm.js`); after: the build of `d8bad52` (`index-CLxxm1sE.css`, `sha256 f5458112…`), identical to the one measured.
+
+| Check | Result |
+| --- | --- |
+| Combinations | `257` per build: `26` states in English, German and Russian — recovery and its reset panel in English only, because a snapshot that cannot be read carries no trusted language — at `1280x900`, `390x780` and `320` px with an injected `32px` root, and `13` of them under the browser's own `32px` setting with the root asserted before and after every capture |
+| States | Introduction; setup, with and without an age; handoff; settings; categories; a set of stills; a set of authored scenes; *Another set*; no further set; Ready; Active; the leave confirmation; the Reward Card; the twentieth completion; History; empty History; temporary mode, before and after its setup; recovery; the reset confirmation; incomplete setup; a Mission chosen in a second tab, and leaving it; a start that could not be carried out; a running Mission renamed in storage |
+| Clipping against every clipping ancestor, page overflow, overlap | `0`, `0`, `0` |
+| Contrast, composited | minimum `5.05:1`, `0` below `4.5:1` or `3:1` for large text |
+| Targets | minimum `52` px |
+| Images | `429` rendered, every one decoded, same-origin, `alt=""` and `aria-hidden` |
+| Faces | both loaded in all `257` |
+| Words and headings | **identical to the before build in all `257`**, word for word and in order |
+| Keyboard | `100` walks with Tab alone — desktop and `32px` root, English and Russian, every state: Tab order **identical** to the before build in all `100`; `340` stops, each with the `3px` ring and in view |
+| Words broken across lines at `320` px, `32px` root | before: `121` cut mid-word — `7` / `103` / `11` in EN / DE / RU; after: **`0` cut**; `118` break at a syllable with the engine's hyphen, `7` / `100` / `11`, each verified against the engine's own hyphenation points; `23` at their own hyphen in both builds |
+| Under the browser's `32px` setting | `0` cut in both builds; `52` syllable breaks in both, the parent surfaces' existing hyphenation |
+| Requests and errors | none to another origin; no failed request, page error or console error in any of the `257` |
+| The error view | through a probe build of the after source that throws once in the introduction, never shipped: the warm ground, the serif title, `0` clipping or overflow, contrast `5.92:1`, at all three sizes |
+
+**Gates**, once, sequentially, with complete output kept: relevant tests `415` passed across `11` files; `tsc --noEmit` clean; the full suite at **`873` tests across `23` files**; the production build, byte-identical to the measured one; `git diff --check` clean, new files included. **Tests: `19` added**, each proven to bite — with the bar's share made inexact, the Reward Card picturing an unresolved Mission, Ready using the introduction's still, Active picturing another Mission, one category image a different size, the category tracks sized from content, a step image or a category image exposed to assistive technology, the tests fail, and they pass once the change is restored. **Changed with the same intent:** Discovery's and the introduction's *no image* assertions now allow exactly the authorized decorative images and nothing else; the category-group invariant encodes its two measured defects for the grid.
+
+**Against the reference.** Typography, palette, surfaces, component shapes and hierarchy follow it closely: the serif headline and forest green on ivory, the image-and-label category rows, three photographic cards where stills exist, the sage recognition panel with *You did it.*, the picture, title, tag, date, goal and bar. It differs where the product or its rules differ: no tagline, counts, header links, menu or second forward action; the action follows the steps, as the introduction's reading order requires; the hero picture is the real example Mission rather than an atmospheric still life. **The imagery is the largest remaining difference**: the board's photographs are richer and more saturated than the controlled renders, the renders read as renders, and `51` Missions show authored scenes, which the shared grade brings into the same room without making them photographs.
+
+### Limitations
+
+- One engine against one build; no Safari, Firefox or real device; no assistive technology; no CI. Container queries, `:has()`, `color-mix`, `text-wrap` and `hyphenate-limit-chars` are modern features: an engine without container queries keeps the single-column layouts, one without `color-mix` the plain category colours.
+- The eight renders, the scene grade and every visual judgement here are the implementer's, not a content or human visual review. The figure, the plate and the tumbler are recorded above for the content reviewer.
+- Mid-word cuts at enlarged text are `0` in this matrix; words that no hyphenation point can save would still break, and Safari's hyphenation is unverified.
+- **Human visual acceptance is not given and not recorded.**
 
 ## Decisions for the reviewer
 
