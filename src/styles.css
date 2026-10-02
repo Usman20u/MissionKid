@@ -158,15 +158,23 @@ p {
 
 /* ---------- Shell ---------- */
 
+/* The page fills the window's height, so a short view ends at the foot of the
+   window instead of part-way down it; a longer one scrolls as usual. */
 .app-shell {
+  display: flex;
   min-height: 100vh;
+  min-height: 100dvh;
+  flex-direction: column;
 }
 
-/* The page gutter follows `--room`: `1rem` at every ordinary phone size, and
-   down to 8px only where the screen is narrow for the reader's text. */
+/* The page uses the window's width: one shell across it, up to a generous
+   ceiling, shared by the wordmark and every view. The gutter follows `--room`
+   on a phone — `1rem` at every ordinary phone size, down to 8px only where the
+   screen is narrow for the reader's text — and grows modestly with the window
+   above it. */
 .app-shell__header,
 .app-shell__main {
-  width: min(100%, 80rem);
+  width: min(100%, 120rem);
   margin: 0 auto;
   padding-right: clamp(8px, var(--room), 1rem);
   padding-left: clamp(8px, var(--room), 1rem);
@@ -175,7 +183,7 @@ p {
 @media (min-width: 48rem) {
   .app-shell__header,
   .app-shell__main {
-    padding-inline: 2rem;
+    padding-inline: clamp(1.5rem, 2.5vw, 3rem);
   }
 }
 
@@ -199,19 +207,26 @@ p {
 }
 
 .app-shell__main {
+  display: flex;
+  flex: 1 0 auto;
+  flex-direction: column;
   padding-top: 0.25rem;
   padding-bottom: 3rem;
 }
 
 /* The unexpected-error view renders outside the shell, with no header above
-   it, so it keeps the header's distance from the top itself. */
+   it, so it keeps the header's distance from the top itself, and fills the
+   window's height on its own. */
 #root > .app-shell__main {
+  min-height: 100vh;
+  min-height: 100dvh;
   padding-top: 1.5rem;
 }
 
-/* Every view is one cream sheet on the ivory ground. The introduction and
-   Discovery take the whole frame; single-column views keep a reading frame,
-   centred. The sheet is a size container, so its layouts answer to the width
+/* Every view is one cream sheet on the ivory ground, across the whole shell,
+   so every view shares one outer edge, and it reaches the foot of the window.
+   Inside it, text keeps a readable measure and the extra width goes to
+   columns. The sheet is a size container, so its layouts answer to the width
    the text actually has — at an enlarged text size a narrow sheet keeps one
    column whatever the screen.
 
@@ -223,8 +238,7 @@ p {
   --section-inline: clamp(8px, calc(1.25 * var(--room)), var(--section-pad));
 
   container: view / inline-size;
-  max-width: 46rem;
-  margin-inline: auto;
+  flex: 1 0 auto;
   padding: clamp(min(1.25rem, 6.25vw), 4vw, 2.75rem) var(--section-inline);
   border: 1px solid rgb(255 255 255 / 60%);
   border-radius: var(--radius-sheet);
@@ -232,16 +246,11 @@ p {
   box-shadow: var(--shadow-sheet);
 }
 
-.app-shell__main > section:is([data-view='introduction'], [data-view='discovery-categories']) {
-  max-width: none;
-}
-
-.app-shell__main > section:is([data-view='session-opening'], [data-view='session-ready'], [data-view='session-active']) {
-  max-width: 64rem;
-}
-
-.app-shell__main > section[data-view='session-result'] {
-  max-width: 40rem;
+/* The introduction is always taller than the window. Its hero shares spare
+   height between the rows around its words, so it keeps its own height
+   instead of growing to the window's. */
+.app-shell__main > section[data-view='introduction'] {
+  flex-grow: 0;
 }
 
 /* Where am I: a small tracked line on child-facing views, and on parent
@@ -2218,13 +2227,15 @@ p {
 }
 
 /* Where there is room, the picture stands beside the Mission: the text column
-   keeps the reading order the phone has, and the picture spans its height. */
+   keeps the reading order the phone has, and the picture spans its height.
+   Both columns share the width until each reaches its own measure, so on a
+   wide window the picture stops growing and the text keeps a readable line. */
 @container view (min-width: 40em) {
   .mission-session--ready {
     display: grid;
-    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+    grid-template-columns: minmax(0, 44rem) minmax(0, 40rem);
     align-content: start;
-    column-gap: clamp(2rem, 4vw, 3rem);
+    column-gap: clamp(2rem, 4vw, 3.5rem);
   }
 
   .mission-session--ready > * {
@@ -2640,6 +2651,139 @@ p {
   height: 100%;
   border-radius: inherit;
   background: var(--sage-600);
+}
+
+/* ---------- The wider window ---------- */
+
+/* On a wide window the hero gives its picture more of the width, framed at its
+   own 3:2 so the whole scene shows, with the words beside it. */
+@media (min-width: 100rem) {
+  .app-shell__main > section[data-view='introduction'] {
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  }
+
+  [data-view='introduction'] .introduction__hero {
+    aspect-ratio: 3 / 2;
+  }
+}
+
+/* The example keeps its picture beside its words at a reading width rather
+   than stretching across the window. */
+.introduction__example .mission-card {
+  max-width: 72rem;
+}
+
+/* Setup and settings: the two choices side by side once each has room for its
+   own row of options, then the parent's note and the action beneath both. The
+   order is the form's own, and every block keeps its measure. */
+@container view (min-width: 60em) {
+  .setup-form {
+    display: grid;
+    max-width: 84rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: clamp(2.5rem, 4vw, 4rem);
+    align-items: start;
+  }
+
+  .setup-form > * {
+    grid-column: 1 / -1;
+  }
+
+  .setup-form > .choice-group {
+    grid-column: auto;
+  }
+
+  .setup-form > .button {
+    justify-self: start;
+  }
+}
+
+/* The running Mission's reminder keeps the width of its picture and its words
+   instead of stretching across the sheet. */
+.mission-session__reminder {
+  max-width: 52rem;
+}
+
+/* The Reward Card: on a wide sheet its recognition spans the panel, and the
+   completed Mission's picture stands beside its title, date and goal. Centred,
+   as recognition is, at a width that keeps every line readable. A completion
+   whose picture does not resolve keeps the single column. */
+@container view (min-width: 56em) {
+  .mission-result {
+    width: 100%;
+    max-width: 68rem;
+    margin-inline: auto;
+  }
+
+  /* The last row is flexible, so the picture's height is taken up below the
+     details instead of being shared out between them. */
+  .mission-result__panel:has(> .mission-result__picture) {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    grid-template-rows: auto auto auto auto 1fr;
+    column-gap: clamp(2rem, 4vw, 3.5rem);
+    align-items: start;
+    padding: clamp(1.75rem, 3vw, 2.5rem);
+  }
+
+  .mission-result__panel:has(> .mission-result__picture) > * {
+    grid-column: 2;
+  }
+
+  .mission-result__panel:has(> .mission-result__picture) > .mission-result__recognition {
+    grid-column: 1 / -1;
+  }
+
+  .mission-result__panel:has(> .mission-result__picture) > .mission-result__picture {
+    max-width: none;
+    margin: 0;
+    grid-column: 1;
+    grid-row: 2 / -1;
+  }
+
+  .mission-result__panel:has(> .mission-result__picture) > .mission-result__mission {
+    margin-top: 0;
+  }
+
+  .mission-result > .button {
+    width: auto;
+    min-width: min(100%, 22rem);
+    align-self: center;
+  }
+}
+
+/* History: on a wide sheet the month's goal stands beside the list of
+   completed Missions, and the way back follows the list. */
+@container view (min-width: 56em) {
+  .mission-history:has(> .mission-history__goal) {
+    display: grid;
+    max-width: 76rem;
+    grid-template-columns: minmax(0, 26rem) minmax(0, 44rem);
+    column-gap: clamp(2rem, 4vw, 3.5rem);
+    align-items: start;
+  }
+
+  .mission-history:has(> .mission-history__goal) > * {
+    grid-column: 2;
+  }
+
+  .mission-history:has(> .mission-history__goal) > .mission-history__goal {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+  }
+
+  .mission-history:has(> .mission-history__goal) > :is(.mission-history__entries, .mission-history__empty) {
+    margin-top: 0;
+  }
+
+  .mission-history:has(> .mission-history__goal) > .button {
+    justify-self: start;
+  }
+}
+
+/* The reset confirmation keeps the width of its words. */
+.reset-panel {
+  max-width: 46rem;
 }
 
 /* ---------- Enlarged text ---------- */
