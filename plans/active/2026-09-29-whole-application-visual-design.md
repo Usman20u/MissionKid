@@ -1,7 +1,7 @@
 # MissionKid Plan 06 — whole-application visual design
 
 **Date:** 2026-09-29
-**Status:** Scope recorded before implementation at `f68470a`; implemented and verified at `53d6a8d`, recorded under *Outcome*. **Implementation is paused, from 2026-09-29, while the reviewer visually reviews Plan 06**; human visual acceptance is not given and not recorded, and the known visual gaps listed under *Outcome* remain, so this plan stays active. Further imagery is a proposal pending review, not an approved obligation — see *Review hold and clarifications*. **One bounded exception to the pause** is authorized on 2026-09-29: the `helping-11` image integration recorded under *Bounded image integration*, and nothing else — scope recorded at `cca58f0`, implemented and verified at `899ff79`. **On 2026-09-30 the reviewer authorized a complete visual redesign against a newly supplied reference**, recorded under *Reference redesign — 2026-09-30*. It ends the pause for that scope and carries this plan's first specification amendments, recorded at `6f56054`; it is **implemented and verified at `d8bad52`**. **On 2026-10-01 the reviewer authorized one further batch**: a supplied package of nine images that finishes the introduction's hero and replaces the category and step images, recorded under *Visual asset package — 2026-10-01* with its specification amendments before code at `0758e36`; it is **implemented and verified at `f30afbd`**, its verification interrupted once and completed, as recorded there. **On 2026-10-02 the reviewer authorized a bounded pre-release verification batch** on the current design, recorded under *Pre-release verification — 2026-10-02*: Chrome `154` and Firefox `157` pass on the unchanged build, actual Safari awaits the reviewer's setting, and a real-phone check is prepared; it is not release approval. Human visual acceptance is not given and not recorded, so this plan stays active.
+**Status:** Scope recorded before implementation at `f68470a`; implemented and verified at `53d6a8d`, recorded under *Outcome*. **Implementation is paused, from 2026-09-29, while the reviewer visually reviews Plan 06**; human visual acceptance is not given and not recorded, and the known visual gaps listed under *Outcome* remain, so this plan stays active. Further imagery is a proposal pending review, not an approved obligation — see *Review hold and clarifications*. **One bounded exception to the pause** is authorized on 2026-09-29: the `helping-11` image integration recorded under *Bounded image integration*, and nothing else — scope recorded at `cca58f0`, implemented and verified at `899ff79`. **On 2026-09-30 the reviewer authorized a complete visual redesign against a newly supplied reference**, recorded under *Reference redesign — 2026-09-30*. It ends the pause for that scope and carries this plan's first specification amendments, recorded at `6f56054`; it is **implemented and verified at `d8bad52`**. **On 2026-10-01 the reviewer authorized one further batch**: a supplied package of nine images that finishes the introduction's hero and replaces the category and step images, recorded under *Visual asset package — 2026-10-01* with its specification amendments before code at `0758e36`; it is **implemented and verified at `f30afbd`**, its verification interrupted once and completed, as recorded there. **On 2026-10-02 the reviewer authorized a bounded pre-release verification batch** on the current design, recorded under *Pre-release verification — 2026-10-02*: actual Safari demonstrated two defects, fixed at `e7f2119`; Safari, Chrome `154`, Firefox `157` and Chrome for Testing `149` pass on the fixed build, and a real-phone check is prepared; it is not release approval. Human visual acceptance is not given and not recorded, so this plan stays active.
 **Branch:** `feat/whole-application-visual-design`, taken from `9f53610`, the commit that closed Plan 05 on `feat/guided-entry-and-presentation`. That branch is preserved unchanged at its closure. The reference redesign continues on `feat/reference-visual-redesign`, taken from `2e81cec`, the head of `feat/whole-application-visual-design`, which is preserved unchanged. No history was rewritten.
 
 ## Authorization basis
@@ -700,7 +700,9 @@ Recorded before any check ran, on `feat/reference-visual-redesign` at `ba3b06e`.
 
 Every test browser uses an isolated profile, so the reviewer's own saved MissionKid data is never read or changed. Elapsed time is simulated by moving a running Mission's stored start time in that isolated profile, not by changing the product. A fix is made only for a defect a check demonstrates, inside the owning specifications, and is followed by the relevant regression checks and the project gates. Evidence is kept in a Desktop review folder after each short batch.
 
-### Outcome — no product change
+### First pass, at `f30afbd` — Chrome and Firefox, no product change
+
+*Recorded at `de77ec2`, before actual Safari could run. Safari then demonstrated two defects, fixed at `e7f2119` and recorded under* Actual Safari, two fixes *below; every engine was measured again on the fixed build.*
 
 **No defect was demonstrated, so no product file changed:** `git diff f30afbd` is empty for `src`, `index.html` and the build configuration, and every browser was served the build measured at `f30afbd` (`index-pX2JJh1x.css`). The project gates recorded at `f30afbd` therefore still describe the code, and were not rerun.
 
@@ -742,17 +744,64 @@ Each passing browser ran the same scenario `12` times — English, German and Ru
 
 **Real phone — prepared, not done.** No phone is available to the implementer, and no device testing is claimed. This Mac's Wi-Fi address is `192.168.0.64` (`en0`); the macOS firewall is off. `npx vite preview --host 192.168.0.64 --port 4173 --strictPort` was run for a few seconds, served the measured build at `http://192.168.0.64:4173/` on that interface only, and was stopped. The reviewer's five-minute checklist, with how to stop the preview and remove the phone's test data, is in the review folder.
 
-### Release readiness, at `f30afbd`
+### Release readiness, at `f30afbd` — superseded below
 
 - **Launch blockers found by this batch:** none in the product.
 - **Still needs the reviewer:** actual Safari, once *Allow remote automation* is on; the real-phone check; human visual acceptance.
 - **Open decisions that matter for launch:** translation review of the German and Russian introduction copy (open since Plan 05); Mission instruction length; a way to leave settings without saving; the content reviewer's image questions — the *Tallest Tower* surface, the forearm in *Sock Friend*, the `helping-11` cup, the Movement footprints in sand, and the nine AI-generated images inspected only by the implementer; the remaining Mission imagery; whether to add an icon.
-- **Toward publication:** the branch is `58` commits ahead of `main` and has never been pushed. Publishing needs the reviewer's visual acceptance to close this plan, a separate authorization to push and open a pull request to `main`, and an approved release plan for a static HTTPS host, which no specification or plan has chosen yet.
+- **Toward publication:** the branch is `59` commits ahead of `main` — first recorded as `58`, a count taken before this record's own commit — and has never been pushed. Publishing needs the reviewer's visual acceptance to close this plan, a separate authorization to push and open a pull request to `main`, and an approved release plan for a static HTTPS host, which no specification or plan has chosen yet.
 
-### Limitations
+### Limitations of the first pass — superseded below
 
 - Safari is not covered at all; Safari's hyphenation and its handling of `:has()`, container queries and the image mask remain unverified.
 - Headless engines on one Intel Mac; no Windows, Linux, Android or iOS browser; no assistive technology; no CI.
+- Elapsed time was simulated by moving a stored start time, not waited out; a real wait across sleep and wake is on the phone checklist.
+- **Human visual acceptance is not given and not recorded, and this is not release approval.**
+
+### Actual Safari, two fixes — at `e7f2119`
+
+Recorded on 2026-10-02, after the reviewer turned on Safari's *Allow remote automation*. Actual Safari `26.6.1` ran through `safaridriver` in its own automation windows, which are isolated from the reviewer's browsing data. Three Safari differences from the other harness drivers: WebDriver gives no access to the console or the network, so requests were read from the page's own performance records; Safari captures only what is on screen, so every view was captured at its top and at its foot; and Safari's plain Tab skips buttons unless a macOS keyboard preference is changed, so the keyboard walks used Option-Tab, as a Safari keyboard user does. Safari has no text-size setting reachable through WebDriver, so its enlarged text is the injected `32px` root only.
+
+**Defect 1 — the page's language label lagged behind its words.** After a reload with Russian stored, Safari showed the Russian handoff for up to a fifth of a second while the document still said `lang="en"`; the check that a reload keeps the language failed. *Cause, established:* `src/App.tsx` set the document's language in an ordinary effect, which runs after the browser paints, so every load with German or Russian stored — in every engine — first painted the right words under the wrong language. *Fix:* a layout effect, which runs before the paint. *Evidence:* the same reload probe, `50` ms sampling, before the fix a painted Russian page labelled `en`; after it, across six reloads in Russian and German, `en` only while the page is still empty.
+
+**Defect 2 — Safari hyphenated short words and could split the product's name.** At `320` px with a `32px` root Safari broke *Missi-on*, *ваше-му*, *Cate-gory*. *Cause, established:* Safari does not read `hyphenate-limit-chars`, so the recorded rule — only words of ten letters or more, six letters before a break and four after, so the product's name never splits — did not apply there; a controlled test in Safari with the app's font and rule hyphenated *MissionKid* in German and English. *Fix:* Safari's own limits, `-webkit-hyphenate-limit-before: 6` and `-webkit-hyphenate-limit-after: 4`, in the same rule. Chrome `154`, Chrome for Testing `149` and Firefox `157` report both properties unsupported and keep `hyphenate-limit-chars`. *Evidence:* the same test never hyphenates *MissionKid*, *Mission*, *Category* or *вашему* after the fix; in the app Safari now breaks only long words at syllables — *BEISPIELMIS-SION*, *Tischüber-raschung*, *Alters-gruppe*, *Geburts-datum*, *способно-стей* — and *по-прежнему* at its own hyphen, inspected in Safari's own rendering.
+
+**Not defects:**
+
+- Safari's `innerText` joins the desktop introduction's headline and the language label beside it into one token (*adventures.Interface*); with that token split, Safari's words equal Chromium's in all three languages. It is how Safari serialises text across grid areas, not what it shows.
+- The measurement classified Safari's syllable breaks as cuts before the fix, because its probe for an engine's hyphenation points finds none in Safari; every Safari break was inspected in Safari's rendering instead.
+- One Safari run stopped when an automated click on the handoff's *Find a Mission* produced no navigation, with the pointer over the button. Ten targeted repeats in Safari, with and without the reload and the scroll that preceded it, all moved on; the cause is not established. The run was repeated and passed; the stopped run is kept with the evidence.
+
+**Re-verified on the fixed build** — `index-DN2vkv4g.js`, byte-identical to the build with the first fix only, and `index-QBoeaL8C.css`, which adds only the two Safari properties. Every engine ran the scenario again; all results below are from this build.
+
+| Check | Safari `26.6.1` | Chrome `154` | Firefox `157` | Chrome for Testing `149` |
+| --- | --- | --- | --- | --- |
+| Runs — sizes × languages | `9` — desktop, `390` px, `320` px with a `32px` root | `12` — and the browser's own `32px` text size | `12` | `12` |
+| Behaviour checks | `207` / `207` | `276` / `276` | `276` / `276` | `276` / `276` |
+| Clipping, page overflow, overlap | `0`, `0`, `0` | `0`, `0`, `0` | `0`, `0`, `0` | `0`, `0`, `0` |
+| Minimum contrast, minimum target | `5.05:1`, `52` px | `5.05:1`, `52` px | `5.05:1`, `52` px | `5.05:1`, `52` px |
+| Images decoded, local, decorative; faces loaded | all; all views | all; all views | all; all views | all; all views |
+| Words cut mid-word | `0` | `0` | `0` | `0` |
+| Keyboard stops with the ring, in view, page focused | `156` | `234` | `234` | `234` |
+| Words and Tab order against Chrome for Testing | identical, apart from the one joined token; Tab order identical in `54` walks | identical in `144` views and `81` walks | identical in `144` views and `81` walks | — |
+| Requests to another origin | `0`, from the page's own records | `0` | `0` | `0` |
+
+The only console entries recorded are Chrome's `404` for `/favicon.ico` — Safari's console is not observable — and every `404` the preview server answered, in all four engines, was that file. Chrome for Testing's earlier `257`-combination matrix at `f30afbd` is reused for the states this scenario does not reach — recovery, temporary mode, the conflict and the bounded states — because the changes since are a stylesheet addition that Chromium ignores and the moment the language attribute is set.
+
+**Gates** on `e7f2119`, once, sequentially, with complete output kept in the review folder: `tsc --noEmit` clean; the relevant tests, `189` across `6` files; the full suite, **`873` tests across `23` files**; the production build, identical to the one measured; `git diff --check` clean. **No test added:** the language fix changes when the attribute is set, which jsdom cannot observe — the existing tests that check the attribute after every language change pass — and the hyphenation fix is a stylesheet value with no behaviour; the browser probes above are the evidence.
+
+### Release readiness, at `e7f2119`
+
+- **Launch blockers found by this batch:** none remaining. The two Safari defects are fixed and re-verified.
+- **Still needs the reviewer:** the real-phone check, including iPhone Safari and Android Chrome, which desktop engines do not represent; human visual acceptance. *Allow remote automation* can be turned off again in Safari's Developer settings.
+- **Open decisions that matter for launch:** translation review of the German and Russian introduction copy (open since Plan 05); Mission instruction length; a way to leave settings without saving; the content reviewer's image questions — the *Tallest Tower* surface, the forearm in *Sock Friend*, the `helping-11` cup, the Movement footprints in sand, and the nine AI-generated images inspected only by the implementer; the remaining Mission imagery; whether to add an icon.
+- **Toward publication:** the branch is `61` commits ahead of `main` and has never been pushed. Publishing needs the reviewer's visual acceptance to close this plan, a separate authorization to push and open a pull request to `main`, and an approved release plan for a static HTTPS host, which no specification or plan has chosen yet.
+
+### Limitations
+
+- Desktop engines on one Intel Mac, three of them headless; Safari at a `390` px window is desktop Safari, not iPhone Safari. No Windows, Linux, Android or iOS browser; no assistive technology; no CI.
+- Safari's console and network are not observable through WebDriver; its requests come from the page's own records, and an error would have shown as a failed check.
+- Safari's enlarged text is the injected root only; Safari's own zoom and minimum font size were not exercised.
 - Elapsed time was simulated by moving a stored start time, not waited out; a real wait across sleep and wake is on the phone checklist.
 - **Human visual acceptance is not given and not recorded, and this is not release approval.**
 
