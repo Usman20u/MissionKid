@@ -11,7 +11,7 @@ import {
 } from './localization';
 import { MissionSceneDefs } from './MissionScene';
 import { MissionCard } from './MissionSuggestionSet';
-import { FLOW_STEP_IMAGES } from './productImagery';
+import { FLOW_STEP_IMAGES, INTRODUCTION_HERO_IMAGE } from './productImagery';
 
 const LANGUAGE_NAME_KEYS: Readonly<Record<SupportedLanguage, MessageKey>> = {
   en: 'setup.language.en',
@@ -63,9 +63,10 @@ type ParentIntroductionProps = Readonly<{
   catalog?: readonly unknown[];
 }>;
 
-// The F001 first-use introduction. It explains what MissionKid is for, shows
-// one non-selectable example, gives the short account of the flow, and offers
-// one forward action into the unchanged setup form.
+// The F001 first-use introduction. It explains what MissionKid is for, says
+// what setup involves, offers one forward action into the unchanged setup
+// form, and then gives the short account of the flow and one non-selectable
+// example.
 //
 // Nothing here writes. The language choice applies to the interface and to the
 // example's reviewed content at once, carries into setup within the visit, and
@@ -106,77 +107,89 @@ export function ParentIntroduction({ catalog = MISSION_CATALOG }: ParentIntroduc
 
       <p className="introduction__lead">{t('introduction.lead')}</p>
 
-      {/* Two columns where there is room for both, one where there is not. The
-          wrapper exists for that placement alone: the reading order inside it
-          is the order the specification requires on a narrow screen — the
-          example, the short flow, then the one action — and it is the same
-          order in both layouts, because nothing here is reordered visually. */}
-      <div className="introduction__columns">
-        {/* One example, unmistakably an example: its own heading says so, and
-            the card carries no choose action and no selection affordance, so it
-            cannot be taken for one of the three equally weighted suggestions
-            F002 presents later. Its reviewed content, including the safety
-            note, is rendered by the same card discovery renders. */}
-        {example ? (
-          <section
-            aria-labelledby={exampleHeadingId}
-            className="introduction__example"
-          >
-            <h2 className="introduction__heading" id={exampleHeadingId}>
-              {t('introduction.example.label')}
-            </h2>
-            <MissionSceneDefs />
-            <MissionCard language={language} mission={example} surface="introduction" />
-          </section>
-        ) : null}
+      {/* What the one action leads to, in the setup step's own approved
+          wording rather than a second version of it, read directly before the
+          action it describes. Ordinary text at the view's size. */}
+      <aside className="parent-note introduction__note">
+        <p>{t('introduction.setup.brief')}</p>
+        <p>{t('setup.privacy')}</p>
+        <p>{t('setup.parentResponsibility')}</p>
+      </aside>
 
-        <div className="introduction__guidance">
-          <section aria-labelledby={flowHeadingId} className="introduction__flow">
-            <h2 className="introduction__heading" id={flowHeadingId}>
-              {t('introduction.flow.heading')}
-            </h2>
-            {/* The list role is stated because the numbers are drawn by the
-                stylesheet: an unstyled marker is what some engines use to keep
-                a list a list. Each step's picture is decoration; its words are
-                the step. */}
-            <ol className="introduction__steps" role="list">
-              {FLOW_STEP_KEYS.map((key, index) => (
-                <li className="introduction__step" key={key}>
-                  <img
-                    alt=""
-                    aria-hidden="true"
-                    className="introduction__step-image"
-                    decoding="async"
-                    height={FLOW_STEP_IMAGES[index]!.height}
-                    src={FLOW_STEP_IMAGES[index]!.src}
-                    width={FLOW_STEP_IMAGES[index]!.width}
-                  />
-                  <span className="introduction__step-text">{t(key)}</span>
-                </li>
-              ))}
-            </ol>
-          </section>
+      {/* The one forward action, rendered once. Where there is room it stands
+          in the hero beside the picture; it is never duplicated, pinned or
+          floated over anything. */}
+      <button
+        className="button button--primary introduction__action"
+        onClick={() => dispatch({ type: 'introduction-continued' })}
+        type="button"
+      >
+        {t('introduction.action.setup')}
+      </button>
 
-          {/* What the one action leads to, in the setup step's own approved
-              wording rather than a second version of it. */}
-          <aside className="parent-note">
-            <p>{t('introduction.setup.brief')}</p>
-            <p>{t('setup.privacy')}</p>
-            <p>{t('setup.parentResponsibility')}</p>
-          </aside>
+      {/* The hero picture: decoration that stands for no Mission and says
+          nothing the words do not. It follows the action, so on a phone it
+          never comes before the task; where there is room it is the view's
+          principal picture. The first thing painted, so it is not deferred. */}
+      <img
+        alt=""
+        aria-hidden="true"
+        className="introduction__hero"
+        decoding="async"
+        fetchPriority="high"
+        height={INTRODUCTION_HERO_IMAGE.height}
+        sizes={INTRODUCTION_HERO_IMAGE.sizes}
+        src={INTRODUCTION_HERO_IMAGE.src}
+        srcSet={INTRODUCTION_HERO_IMAGE.srcSet}
+        width={INTRODUCTION_HERO_IMAGE.width}
+      />
 
-          {/* The one forward action, rendered once. It moves between layouts
-              with the column it belongs to; it is never duplicated, pinned or
-              floated over anything. */}
-          <button
-            className="button button--primary"
-            onClick={() => dispatch({ type: 'introduction-continued' })}
-            type="button"
-          >
-            {t('introduction.action.setup')}
-          </button>
-        </div>
-      </div>
+      <section aria-labelledby={flowHeadingId} className="introduction__flow">
+        <h2 className="introduction__heading" id={flowHeadingId}>
+          {t('introduction.flow.heading')}
+        </h2>
+        {/* The list role is stated because the numbers are drawn by the
+            stylesheet: an unstyled marker is what some engines use to keep a
+            list a list. Each step's picture is decoration; its words are the
+            step. Below the hero, so the pictures load as they are reached. */}
+        <ol className="introduction__steps" role="list">
+          {FLOW_STEP_KEYS.map((key, index) => (
+            <li className="introduction__step" key={key}>
+              <img
+                alt=""
+                aria-hidden="true"
+                className="introduction__step-image"
+                decoding="async"
+                height={FLOW_STEP_IMAGES[index]!.height}
+                loading="lazy"
+                sizes={FLOW_STEP_IMAGES[index]!.sizes}
+                src={FLOW_STEP_IMAGES[index]!.src}
+                srcSet={FLOW_STEP_IMAGES[index]!.srcSet}
+                width={FLOW_STEP_IMAGES[index]!.width}
+              />
+              <span className="introduction__step-text">{t(key)}</span>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      {/* One example, unmistakably an example: its own heading says so, and
+          the card carries no choose action and no selection affordance, so it
+          cannot be taken for one of the three equally weighted suggestions
+          F002 presents later. Its reviewed content, including the safety note,
+          is rendered complete by the same card discovery renders. */}
+      {example ? (
+        <section
+          aria-labelledby={exampleHeadingId}
+          className="introduction__example"
+        >
+          <h2 className="introduction__heading" id={exampleHeadingId}>
+            {t('introduction.example.label')}
+          </h2>
+          <MissionSceneDefs />
+          <MissionCard language={language} mission={example} surface="introduction" />
+        </section>
+      ) : null}
     </div>
   );
 }

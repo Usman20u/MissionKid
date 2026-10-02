@@ -138,7 +138,9 @@ export function MissionCategorySelection({
                 className="mission-world__image"
                 decoding="async"
                 height={CATEGORY_IMAGES[category].height}
+                sizes={CATEGORY_IMAGES[category].sizes}
                 src={CATEGORY_IMAGES[category].src}
+                srcSet={CATEGORY_IMAGES[category].srcSet}
                 width={CATEGORY_IMAGES[category].width}
               />
               <span className="mission-world__label">

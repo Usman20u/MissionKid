@@ -650,20 +650,22 @@ describe('F001 introduction presentation boundaries', () => {
     const headings = screen.getAllByRole('heading');
     expect(headings.map((heading) => [heading.tagName, heading.textContent])).toEqual([
       ['H1', t('en', 'view.introduction.title')],
+      ['H2', t('en', 'introduction.flow.heading')],
       ['H2', t('en', 'introduction.example.label')],
       ['H3', EXAMPLE!.content.en.title],
-      ['H2', t('en', 'introduction.flow.heading')],
     ]);
 
-    // What MissionKid is for, the example, the short flow, then the one action.
+    // What MissionKid is for, the parent's context, the one action, then the
+    // short flow and the example.
     const order = [...container.querySelectorAll(
-      '.introduction__lead, .introduction__example, .introduction__flow, .button--primary',
+      '.introduction__lead, .parent-note, .button--primary, .introduction__flow, .introduction__example',
     )].map((element) => element.className.split(' ')[0]);
     expect(order).toEqual([
       'introduction__lead',
-      'introduction__example',
-      'introduction__flow',
+      'parent-note',
       'button',
+      'introduction__flow',
+      'introduction__example',
     ]);
 
     // Nothing overrides the tab order with a positive index.
@@ -680,13 +682,19 @@ describe('F001 introduction presentation boundaries', () => {
     expect(container.querySelector('input:not([type="radio"])')).toBeNull();
     expect(container.querySelector('form')).toBeNull();
     // The pictures are exactly the decoration the specification authorizes:
-    // the example Mission's still inside its card's image window, and one image
-    // for each of the three steps of the flow. Nothing else is pictured, and
-    // none of them is exposed as an image or fetched from elsewhere.
+    // the introduction's hero after the one action, one image for each of the
+    // three steps of the flow, and the example Mission's still inside its
+    // card's image window. Nothing else is pictured, and none of them is
+    // exposed as an image or fetched from elsewhere.
     const images = [...container.querySelectorAll('img')];
-    expect(images).toHaveLength(4);
-    expect(images[0]!.closest('.introduction__example .mission-card__window')).not.toBeNull();
-    const stepImages = images.slice(1);
+    expect(images).toHaveLength(5);
+    expect(images[0]!.classList.contains('introduction__hero')).toBe(true);
+    expect(
+      screen.getByRole('button', { name: t('en', 'introduction.action.setup') })
+        .compareDocumentPosition(images[0]!) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+    expect(images[4]!.closest('.introduction__example .mission-card__window')).not.toBeNull();
+    const stepImages = images.slice(1, 4);
     expect(stepImages.map((image) => image.closest('.introduction__steps > li'))).not.toContain(null);
     expect(new Set(stepImages.map((image) => image.closest('li')))).toHaveProperty('size', 3);
     for (const image of images) {

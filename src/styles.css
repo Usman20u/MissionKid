@@ -939,42 +939,34 @@ p {
   line-height: 1.55;
 }
 
-.introduction__columns {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 2.25rem;
+/* The parent's context, directly before the one action it describes, at the
+   size of the view's other text. */
+.introduction__note {
+  max-width: 34rem;
+  margin-top: 1.5rem;
+}
+
+.introduction__action {
+  margin-top: 1.5rem;
+}
+
+/* The hero picture. On a phone it follows the action, framed a little
+   narrower than its own 3:2 and held to its right edge, where the tower, the
+   drawing and the crayons are: the frame gives up some of the quiet wall on
+   the left, never the subject. */
+.introduction__hero {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
   margin-top: 2rem;
+  border-radius: var(--radius-card);
+  object-fit: cover;
+  object-position: 100% 50%;
 }
 
-.introduction__example,
-.introduction__guidance {
-  min-width: 0;
-}
-
-.introduction__guidance {
-  display: flex;
-  flex-direction: column;
-}
-
-.introduction__guidance > .button {
-  align-self: flex-start;
-}
-
-/* A label for the example rather than a step: it says, before anything else,
-   that this card is an example. */
-.introduction__example > .introduction__heading {
-  width: fit-content;
-  max-width: 100%;
-  overflow-wrap: anywhere;
-  margin: 0 0 0.8rem;
-  padding: 0.3rem 0.8rem;
-  border-radius: 999px;
-  background: var(--sand);
-  color: var(--forest-700);
-  font-size: 0.8125rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+.introduction__flow {
+  margin-top: 2.5rem;
 }
 
 .introduction__flow > .introduction__heading {
@@ -987,7 +979,9 @@ p {
 }
 
 /* The family's three steps, each with its picture and its number. The numbers
-   are drawn here, so the list keeps its role explicitly in the markup. */
+   are drawn here, so the list keeps its role explicitly in the markup. On a
+   phone each picture sits beside its words at its own 3:2, so all three cards
+   of the first step stay in it. */
 .introduction__steps {
   display: grid;
   gap: 1rem;
@@ -999,7 +993,7 @@ p {
 
 .introduction__step {
   display: grid;
-  grid-template-columns: clamp(min(3.75rem, 14vw), 22%, 4.5rem) minmax(0, 1fr);
+  grid-template-columns: clamp(min(5.5rem, 26vw), 34%, 8.5rem) minmax(0, 1fr);
   align-items: center;
   gap: clamp(10px, calc(1 * var(--room)), 1.1rem);
   counter-increment: flow-step;
@@ -1009,8 +1003,8 @@ p {
   display: block;
   width: 100%;
   height: auto;
-  aspect-ratio: 1;
-  border-radius: 1rem;
+  aspect-ratio: 3 / 2;
+  border-radius: var(--radius-inner);
   box-shadow: 0 1px 2px rgb(64 46 20 / 8%), 0 0.4rem 0.9rem rgb(64 46 20 / 8%);
   object-fit: cover;
 }
@@ -1032,41 +1026,97 @@ p {
   content: counter(flow-step) '.' / '';
 }
 
-[data-view='introduction'] .parent-note {
-  margin-top: 1.75rem;
+.introduction__example {
+  margin-top: 2.5rem;
 }
 
-[data-view='introduction'] .introduction__guidance > .button {
-  margin-top: 1.75rem;
+/* A label for the example rather than a step: it says, before anything else,
+   that this card is an example. */
+.introduction__example > .introduction__heading {
+  width: fit-content;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  margin: 0 0 0.8rem;
+  padding: 0.3rem 0.8rem;
+  border-radius: 999px;
+  background: var(--sand);
+  color: var(--forest-700);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
-/* A hero where there is room for one: what MissionKid is for beside the
-   example, which is the view's picture. The document order — the purpose, the
-   example, the short flow, the parent's note, then the one action — is exactly
-   the phone's; only the placement changes. The one action follows the steps
-   directly, so it is in view on an ordinary desktop screen, and the parent's
-   note sits under it as its small print; the note holds no control, so the
-   keyboard order is the document's. The wrappers step aside so their children
-   can take the grid's places, and none of them carries meaning of its own. */
+/* Where the sheet is narrow for the reader's text, each step's picture moves
+   above its words at full width, so the words keep the whole line. */
+@container view (max-width: 15em) {
+  .introduction__step {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+  }
+}
+
+/* With room for three, the steps become one row: each picture above its
+   words, all three one size. */
+@container view (min-width: 40em) {
+  .introduction__steps {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(1.25rem, 2.5vw, 2rem);
+  }
+
+  .introduction__step {
+    grid-template-columns: minmax(0, 1fr);
+    align-content: start;
+    align-items: start;
+    gap: 0.85rem;
+  }
+}
+
+/* With room beside it, the example lays its picture beside its words, the
+   same parts in the same order. */
+@container view (min-width: 36em) {
+  .introduction__example .mission-card {
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+    grid-template-rows: auto;
+    align-items: center;
+  }
+
+  .introduction__example .mission-card__window {
+    margin: 0.75rem 0 0.75rem 0.75rem;
+  }
+}
+
+/* A hero where there is room for one: the headline, the lead, the parent's
+   context and the one action on the left, beside the hero picture. The steps
+   follow as one row, then the example. The document order is the phone's and
+   so is the keyboard's; the wrappers step aside so their children can take the
+   grid's places, and none of them carries meaning of its own.
+
+   The picture has a column of its own, so no word ever sits on it. Its quiet
+   left edge fades into the sheet instead of ending at a frame, and the two
+   flexible rows around the words share whatever height the picture has beyond
+   them, so the words stand in the middle of it. */
 @media (min-width: 64rem) {
   .app-shell__main > section[data-view='introduction'] {
     display: grid;
-    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
-    grid-template-rows: auto auto auto auto auto auto 1fr;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: auto 1fr auto auto auto auto 1fr auto auto;
     grid-template-areas:
       'context lang'
-      'title example'
-      'lead example'
-      'flow example'
-      'action example'
-      'note example'
-      '. example';
+      '. hero'
+      'title hero'
+      'lead hero'
+      'note hero'
+      'action hero'
+      '. hero'
+      'flow flow'
+      'example example';
     align-items: start;
     column-gap: clamp(2.5rem, 5vw, 5rem);
     padding: 2.5rem 3rem 3rem;
   }
 
-  [data-view='introduction'] :is(.recovery-controls, .introduction, .introduction__columns, .introduction__guidance) {
+  [data-view='introduction'] :is(.recovery-controls, .introduction) {
     display: contents;
   }
 
@@ -1078,7 +1128,7 @@ p {
 
   [data-view='introduction'] > .app-view__title {
     grid-area: title;
-    margin-top: 1rem;
+    font-size: clamp(2.6rem, 4.3vw, 3.4rem);
   }
 
   [data-view='introduction'] .introduction__languages {
@@ -1101,29 +1151,35 @@ p {
     grid-area: lead;
   }
 
-  [data-view='introduction'] .introduction__example {
-    grid-area: example;
-    margin-top: 1.25rem;
+  [data-view='introduction'] .introduction__note {
+    grid-area: note;
+  }
+
+  [data-view='introduction'] .introduction__action {
+    grid-area: action;
+    justify-self: start;
+  }
+
+  /* A little taller than its own 3:2, so the frame gives up quiet wall rather
+     than the subject, and held to the right, where the subject is. */
+  [data-view='introduction'] .introduction__hero {
+    grid-area: hero;
+    align-self: center;
+    aspect-ratio: 11 / 10;
+    margin-top: 1.5rem;
+    border-radius: 0 var(--radius-card) var(--radius-card) 0;
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 13%);
+    mask-image: linear-gradient(to right, transparent, #000 13%);
   }
 
   [data-view='introduction'] .introduction__flow {
     grid-area: flow;
-    margin-top: 2.25rem;
+    margin-top: 3.5rem;
   }
 
-  [data-view='introduction'] .parent-note {
-    grid-area: note;
-    margin-top: 1.25rem;
-  }
-
-  [data-view='introduction'] .introduction__guidance > .button {
-    grid-area: action;
-    justify-self: start;
-    margin-top: 1.5rem;
-  }
-
-  [data-view='introduction'] .introduction__steps {
-    gap: 0.85rem;
+  [data-view='introduction'] .introduction__example {
+    grid-area: example;
+    margin-top: 3rem;
   }
 }
 
@@ -1188,7 +1244,7 @@ p {
   display: grid;
   min-width: 0;
   min-height: 5.75rem;
-  grid-template-columns: clamp(4.5rem, 34%, 8.5rem) minmax(0, 1fr);
+  grid-template-columns: clamp(4.5rem, 30%, 7.25rem) minmax(0, 1fr);
   grid-template-rows: 1fr auto auto 1fr;
   grid-template-areas:
     'image .'
@@ -1224,7 +1280,7 @@ p {
   width: 100%;
   height: auto;
   grid-area: image;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 1;
   border-radius: 0.85rem;
   object-fit: cover;
 }
@@ -1295,9 +1351,10 @@ p {
 }
 
 /* Where the sheet is narrow for the reader's text — an enlarged root on a
-   phone — the picture moves above the label, in a wider, shorter window, so
-   the label keeps the full width and its words stay whole. The threshold is in
-   the sheet's own `em`, so it answers to the text size, not the device. */
+   phone — the picture moves above the label, square and centred, so the label
+   keeps the full width and its words stay whole, and the picture keeps its
+   whole subject. The threshold is in the sheet's own `em`, so it answers to
+   the text size, not the device. */
 @container view (max-width: 15em) {
   .mission-world {
     grid-template-columns: minmax(0, 1fr);
@@ -1310,11 +1367,9 @@ p {
     padding: 0.5rem 0.5rem 0.8rem;
   }
 
-  /* Shorter than the tiles' 4:3 and held toward the top, so the picture's
-     subject — the figure's raised hands, the cup's rim — stays inside it. */
   .mission-world__image {
-    aspect-ratio: 2 / 1;
-    object-position: 50% 30%;
+    width: 72%;
+    justify-self: center;
   }
 
   .mission-world__label {
@@ -1615,7 +1670,7 @@ p {
   }
 }
 
-/* On the introduction the example is the view's picture, one card on its own. */
+/* On the introduction the example is one card on its own. */
 .introduction__example .mission-card__title {
   font-size: 1.5rem;
 }

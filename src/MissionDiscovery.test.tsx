@@ -1037,8 +1037,8 @@ describe('the Mission Category images', () => {
       expect(image.getAttribute('alt')).toBe('');
       expect(image.getAttribute('aria-hidden')).toBe('true');
       // One size for all five: no category is pictured larger or richer.
-      expect(image.getAttribute('width')).toBe('800');
-      expect(image.getAttribute('height')).toBe('600');
+      expect(image.getAttribute('width')).toBe('640');
+      expect(image.getAttribute('height')).toBe('640');
       expect(image.getAttribute('src')).not.toMatch(/^https?:/);
     }
     // Each control is named by its label alone; no image is exposed.
