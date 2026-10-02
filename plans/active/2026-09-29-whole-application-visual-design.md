@@ -1,7 +1,7 @@
 # MissionKid Plan 06 — whole-application visual design
 
 **Date:** 2026-09-29
-**Status:** Scope recorded before implementation at `f68470a`; implemented and verified at `53d6a8d`, recorded under *Outcome*. **Implementation is paused, from 2026-09-29, while the reviewer visually reviews Plan 06**; human visual acceptance is not given and not recorded, and the known visual gaps listed under *Outcome* remain, so this plan stays active. Further imagery is a proposal pending review, not an approved obligation — see *Review hold and clarifications*. **One bounded exception to the pause** is authorized on 2026-09-29: the `helping-11` image integration recorded under *Bounded image integration*, and nothing else — scope recorded at `cca58f0`, implemented and verified at `899ff79`. **On 2026-09-30 the reviewer authorized a complete visual redesign against a newly supplied reference**, recorded under *Reference redesign — 2026-09-30*. It ends the pause for that scope and carries this plan's first specification amendments, recorded at `6f56054`; it is **implemented and verified at `d8bad52`**. **On 2026-10-01 the reviewer authorized one further batch**: a supplied package of nine images that finishes the introduction's hero and replaces the category and step images, recorded under *Visual asset package — 2026-10-01* with its specification amendments before code. Human visual acceptance is not given and not recorded, so this plan stays active.
+**Status:** Scope recorded before implementation at `f68470a`; implemented and verified at `53d6a8d`, recorded under *Outcome*. **Implementation is paused, from 2026-09-29, while the reviewer visually reviews Plan 06**; human visual acceptance is not given and not recorded, and the known visual gaps listed under *Outcome* remain, so this plan stays active. Further imagery is a proposal pending review, not an approved obligation — see *Review hold and clarifications*. **One bounded exception to the pause** is authorized on 2026-09-29: the `helping-11` image integration recorded under *Bounded image integration*, and nothing else — scope recorded at `cca58f0`, implemented and verified at `899ff79`. **On 2026-09-30 the reviewer authorized a complete visual redesign against a newly supplied reference**, recorded under *Reference redesign — 2026-09-30*. It ends the pause for that scope and carries this plan's first specification amendments, recorded at `6f56054`; it is **implemented and verified at `d8bad52`**. **On 2026-10-01 the reviewer authorized one further batch**: a supplied package of nine images that finishes the introduction's hero and replaces the category and step images, recorded under *Visual asset package — 2026-10-01* with its specification amendments before code at `0758e36`; it is **implemented and verified at `f30afbd`**, its verification interrupted once and completed, as recorded there. Human visual acceptance is not given and not recorded, so this plan stays active.
 **Branch:** `feat/whole-application-visual-design`, taken from `9f53610`, the commit that closed Plan 05 on `feat/guided-entry-and-presentation`. That branch is preserved unchanged at its closure. The reference redesign continues on `feat/reference-visual-redesign`, taken from `2e81cec`, the head of `feat/whole-application-visual-design`, which is preserved unchanged. No history was rewritten.
 
 ## Authorization basis
@@ -612,6 +612,73 @@ Every word of the introduction and every translation; the example's reviewed con
 - The introduction with images disabled.
 - Gates once, sequentially, with complete output kept: relevant tests, `tsc --noEmit`, the full suite, the production build, `git diff --check`.
 - A compact review package from the final build: introduction and categories on a desktop and a phone, one full journey, enlarged text including the bottom actions, the build named, and the reference side by side. The local development address confirmed.
+
+### Outcome, at `f30afbd`
+
+**What changed — `41` files.** `ParentIntroduction.tsx` takes the amended order — the lead, the parent's context, the one action, the hero picture, the steps, the example — and renders the hero once, eagerly and at high priority, and the step pictures lazily, each with `srcset`. `MissionDiscovery.tsx` gives the category pictures `srcset`. `productImagery.ts` maps the nine images, each in two widths. The stylesheet's introduction block is replaced — its two wrapper elements are gone — and the category pictures become square. Three tests follow the amended rules. The nine originals are kept unchanged in `src/assets/imagery/originals/`, never imported or bundled; `18` WebP derivatives are added beside them; the eight renders of `d8bad52` are removed, nothing importing them. No behaviour, state, data, route, persistence, catalog content, dependency, string or translation changed.
+
+| Surface | As built |
+| --- | --- |
+| Introduction, `64rem` and wider | The context tag and the language choice on one row; beneath them two equal columns — the headline, the lead, the parent's context on its sand panel at body size, and the one action on the left; the hero picture on the right at `11:10`, held to its right edge so it gives up quiet wall and never the subject, its left edge fading into the sheet over `13%` of its width. Two flexible rows centre the words beside it. The three steps follow as one row of `3:2` pictures, then the example's card with its picture beside its words |
+| Introduction, phone and enlarged text | One column: the context tag, the headline, the language choice, the lead, the parent's context, the action, the hero at `4:3` held to its right edge, the steps — a `3:2` thumbnail beside each step's words, the picture above the words where the sheet is narrow for the text — and the example |
+| Mission Categories | The five supplied pictures, square, in the existing rows, tiles and enlarged-text stack; the stack centres the picture at `72%` of the tile |
+
+| Image — original | Shipped as | Bytes |
+| --- | --- | --- |
+| Introduction hero — `01-hero.png` | `intro-hero-960.webp`, `intro-hero-1536.webp` | `27,434` / `58,462` |
+| Movement — `02-category-movement.png` | `category-movement-320.webp`, `-640.webp` | `26,652` / `93,122` |
+| Creativity — `03-category-creativity.png` | `category-creativity-320.webp`, `-640.webp` | `7,296` / `25,098` |
+| Helping at Home — `04-category-helping.png` | `category-helping-at-home-320.webp`, `-640.webp` | `11,766` / `42,846` |
+| Learning — `05-category-learning.png` | `category-learning-320.webp`, `-640.webp` | `9,714` / `28,916` |
+| Calm — `06-category-calm.png` | `category-calm-320.webp`, `-640.webp` | `9,002` / `33,844` |
+| Step 1 — `07-step-choose.png` | `step-choose-480.webp`, `-960.webp` | `26,728` / `87,654` |
+| Step 2 — `08-step-do.png` | `step-do-480.webp`, `-960.webp` | `29,220` / `103,090` |
+| Step 3 — `09-step-recognize.png` | `step-recognize-480.webp`, `-960.webp` | `28,196` / `110,580` |
+
+The derivatives were resampled with `sips` from the originals and encoded as WebP at quality `0.82` by Chromium's encoder at their own size; the originals carry no colour profile and are sRGB. Inspected at `1:1`: no banding on the hero's wall, the crayon texture intact. A browser loads one width of each image: on a `1280x900` desktop at `2×` the hero's `1536` file, on a phone its `960` file.
+
+**Found during verification.** The harness read the address of the build it measures before the script set it, so a run named for the baseline measured the new build; found when that run reported the new heading order. Every figure below comes from runs given the address explicitly, each batch first confirming the stylesheet its port served. Nothing in the product needed fixing.
+
+### Interruption and recovery
+
+On 2026-10-01 the new build's matrix completed — all `257` combinations, with the figures below — and the journey, images-blocked and action-position checks completed on both builds. The baseline's matrix and the keyboard walks ran in one long background command, which was stopped at its background time limit together with the baseline's preview server; neither finished, and neither is counted. The machine then restarted, which removed the temporary folder holding the harness, every result file and every capture. Nothing in the repository was lost: the implementation was uncommitted and intact.
+
+On 2026-10-02 the harness was rebuilt from the session record with its recorded corrections; the working tree rebuilt to the same content-hashed bundle that had been measured, and the baseline was rebuilt from `0758e36` to the stylesheet `d8bad52` was measured on. Both preview servers ran as detached processes. The verification ran in bounded batches — nine calls for the matrix on both builds, two for the keyboard walks — each saving its results before the next began, into the review package rather than a temporary folder. The new build's matrix was measured again rather than reused, because its per-combination results, including the words the interrupted comparison needs, were lost with the restart; it reproduced the earlier figures exactly. The journey, images-blocked and action-position checks were run again for the same reason, with the same results. No interrupted run is counted as passed, and none showed an application defect.
+
+### Verification, at `f30afbd`
+
+Chrome for Testing headless shell `149.0.7827.55`; the same harness on two served builds — before: the code of `0758e36`, whose stylesheet is byte-identical to `d8bad52`'s measured build (`index-CLxxm1sE.css`); after: the build of `f30afbd` (`index-pX2JJh1x.css`, `sha256 74e135c1…`; `index-DbYbID6G.js`), identical to the one measured. Results, logs and every capture are kept in the review package.
+
+| Check | Result |
+| --- | --- |
+| Combinations | `257` per build: `26` states in English, German and Russian — recovery and its reset panel in English only — at `1280x900`, `390x780` and `320` px with an injected `32px` root, and `13` of them under the browser's own `32px` setting with the root asserted before and after every capture |
+| Clipping against every clipping ancestor, page overflow, overlap | `0`, `0`, `0` |
+| Contrast, composited | minimum `5.05:1`, `0` below `4.5:1` or `3:1` for large text — as before |
+| Targets | minimum `52` px |
+| Images | `441` rendered (before: `429`), every one decoded, same-origin, `alt=""` and `aria-hidden`: the hero in all `12` introductions, the five category pictures in all `12` category views |
+| Faces | both loaded in all `257` |
+| Words and headings | **identical to the before build in `245` of `257`**; the `12` introductions keep the same words and the same headings, reordered as the amendment requires — the flow before the example |
+| Keyboard | `100` walks with Tab alone — desktop and `32px` root, English and Russian, every state: Tab order **identical** to the before build in all `100`; `340` stops, each with the `3px` ring and in view. On the introduction: the language choice, then the one action |
+| Words broken across lines at `320` px, `32px` root | `0` cut mid-word in both builds; `116` at a syllable with the engine's hyphen, `7` / `99` / `10` in EN / DE / RU (before: `118`) |
+| Under the browser's `32px` setting | `0` cut in both builds; `50` syllable breaks (before: `52`) |
+| Requests and errors | none to another origin; no page error, console error or failed request in any of the `257` |
+| Journey | In EN, DE and RU: introduction → setup → handoff → categories → Ready → Active → Reward Card, once with a reviewed still (*Tallest Tower*) and once with an authored scene (*Table Captain*) → History → categories → settings → handoff. Nothing stored on reaching the introduction, choosing a language or continuing to setup; the setup save stores; the same `30` Missions in the same order as before, first and second set of every category; the same path of views; Ready, Active and the Reward Card show the chosen card's own picture; the hero nowhere outside the introduction; no Mission picture on History |
+| Images blocked | The introduction at the three sizes: no image loaded, `0` clipping, overflow or overlap, contrast `5.87:1`, every word present, the action reaches setup, no error |
+| The action's position | Lower edge on a `1280x900` desktop `679` / `734` / `765` px in EN / DE / RU (before `826` / `858` / `858`); on a `390x780` phone `821` / `838` / `912` px (before `1907` / `2049` / `2123`) |
+| Local development address | `http://localhost:5173/` — `npm run dev` started from this repository after the restart, its process confirmed by working directory: the headline, the hero and the four other images decode at desktop and phone size, with no error or failed request |
+
+**Gates**, once, sequentially, with complete output kept: relevant tests `130` passed across `4` files; `tsc --noEmit` clean; the full suite at **`873` tests across `23` files**; the production build, byte-identical to the measured one, with no PNG in it; `git diff --check` clean, new files included. **No test added**; three changed with the same intent — the introduction's order and headings, its exactly five decorative images with the hero after the action, the category pictures' shared size — each proven to bite: with the action moved last, the hero before the action, one category image a different size, or the hero exposed to assistive technology, a test fails, and it passes once the change is restored.
+
+**Against the reference.** The introduction now has the board's structure: a large photographic hero with the serif headline, the lead and one action on the left and a block tower with a crayon drawing on the right, the three steps as a row of pictures beneath, and the five categories as photographs beside their labels. It differs where the specification does: the words stand beside the picture on plain cream rather than over it, the parent's context stands before the action as readable text instead of one small line, and there is no tagline, count, *See how it works*, header link or menu. The hero is the supplied scene, not the board's furnished room, and the step pictures are crayon drawings rather than a compass, boots and a note.
+
+### Limitations
+
+- One engine against one build; no Safari, Firefox or real device; no assistive technology; no CI.
+- The nine images are AI-generated and were inspected here, not by a content reviewer or a professional review. The Movement footprints in sand are the one recorded judgement.
+- With images blocked, the browser draws its own broken-image marker in the empty picture boxes; every word and control stays usable.
+- On a `390x780` phone the action's lower edge is at `821`–`912` px, just below the first screen, because the parent's context now stands before it.
+- The nine originals add `21` MB to the repository's history.
+- **Human visual acceptance is not given and not recorded.**
 
 ## Decisions for the reviewer
 
