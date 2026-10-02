@@ -2650,7 +2650,10 @@ p {
    syllable, following the page's own language, rather than at whichever letter
    reached the edge. Only words of ten letters or more are hyphenated, with at
    least six letters before a break and four after, so short words stay whole
-   and the product's own name never splits as *Missi-onKid*.
+   and the product's own name never splits as *Missi-onKid*. Safari does not
+   read `hyphenate-limit-chars`, so its own limits say the same there: six
+   letters before a break and four after leave no word shorter than ten
+   letters to hyphenate.
 
    The threshold is the sheet's width in its own `em`, so it answers to the
    reader's text size however it was set — the browser's setting or a root size
@@ -2660,6 +2663,8 @@ p {
   :is(.app-view__context, .app-view__title, .recovery-controls) {
     -webkit-hyphens: auto;
     hyphens: auto;
+    -webkit-hyphenate-limit-before: 6;
+    -webkit-hyphenate-limit-after: 4;
     hyphenate-limit-chars: 10 6 4;
   }
 
