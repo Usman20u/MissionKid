@@ -1,7 +1,7 @@
 # MissionKid Plan 06 — whole-application visual design
 
 **Date:** 2026-09-29
-**Status:** Scope recorded before implementation at `f68470a`; implemented and verified at `53d6a8d`, recorded under *Outcome*. **Implementation is paused, from 2026-09-29, while the reviewer visually reviews Plan 06**; human visual acceptance is not given and not recorded, and the known visual gaps listed under *Outcome* remain, so this plan stays active. Further imagery is a proposal pending review, not an approved obligation — see *Review hold and clarifications*. **One bounded exception to the pause** is authorized on 2026-09-29: the `helping-11` image integration recorded under *Bounded image integration*, and nothing else — scope recorded at `cca58f0`, implemented and verified at `899ff79`. **On 2026-09-30 the reviewer authorized a complete visual redesign against a newly supplied reference**, recorded under *Reference redesign — 2026-09-30*. It ends the pause for that scope and carries this plan's first specification amendments, recorded at `6f56054`; it is **implemented and verified at `d8bad52`**. **On 2026-10-01 the reviewer authorized one further batch**: a supplied package of nine images that finishes the introduction's hero and replaces the category and step images, recorded under *Visual asset package — 2026-10-01* with its specification amendments before code at `0758e36`; it is **implemented and verified at `f30afbd`**, its verification interrupted once and completed, as recorded there. Human visual acceptance is not given and not recorded, so this plan stays active.
+**Status:** Scope recorded before implementation at `f68470a`; implemented and verified at `53d6a8d`, recorded under *Outcome*. **Implementation is paused, from 2026-09-29, while the reviewer visually reviews Plan 06**; human visual acceptance is not given and not recorded, and the known visual gaps listed under *Outcome* remain, so this plan stays active. Further imagery is a proposal pending review, not an approved obligation — see *Review hold and clarifications*. **One bounded exception to the pause** is authorized on 2026-09-29: the `helping-11` image integration recorded under *Bounded image integration*, and nothing else — scope recorded at `cca58f0`, implemented and verified at `899ff79`. **On 2026-09-30 the reviewer authorized a complete visual redesign against a newly supplied reference**, recorded under *Reference redesign — 2026-09-30*. It ends the pause for that scope and carries this plan's first specification amendments, recorded at `6f56054`; it is **implemented and verified at `d8bad52`**. **On 2026-10-01 the reviewer authorized one further batch**: a supplied package of nine images that finishes the introduction's hero and replaces the category and step images, recorded under *Visual asset package — 2026-10-01* with its specification amendments before code at `0758e36`; it is **implemented and verified at `f30afbd`**, its verification interrupted once and completed, as recorded there. **On 2026-10-02 the reviewer authorized a bounded pre-release verification batch** on the current design, recorded under *Pre-release verification — 2026-10-02*; it is not release approval. Human visual acceptance is not given and not recorded, so this plan stays active.
 **Branch:** `feat/whole-application-visual-design`, taken from `9f53610`, the commit that closed Plan 05 on `feat/guided-entry-and-presentation`. That branch is preserved unchanged at its closure. The reference redesign continues on `feat/reference-visual-redesign`, taken from `2e81cec`, the head of `feat/whole-application-visual-design`, which is preserved unchanged. No history was rewritten.
 
 ## Authorization basis
@@ -679,6 +679,26 @@ Chrome for Testing headless shell `149.0.7827.55`; the same harness on two serve
 - On a `390x780` phone the action's lower edge is at `821`–`912` px, just below the first screen, because the parent's context now stands before it.
 - The nine originals add `21` MB to the repository's history.
 - **Human visual acceptance is not given and not recorded.**
+
+## Pre-release verification — 2026-10-02
+
+Recorded before any check ran, on `feat/reference-visual-redesign` at `ba3b06e`.
+
+### Authorization
+
+**Authorized on 2026-10-02** by the reviewer's instruction: one bounded pre-release verification batch on the current design, and fixes for defects it demonstrates. The reviewer has looked at the visual asset package and wants to proceed with the current design. The instruction states that this is **not release approval and not formal human visual acceptance**, and neither is recorded. Excluded: new features, further artwork, wording, safety or product-rule changes, a public tunnel, hosting, deployment, pushing and merging.
+
+### Scope
+
+| Check | Method | Trace |
+| --- | --- | --- |
+| Browser compatibility | The production build in every engine available on this Mac: Chromium through the existing harness, reusing its recorded evidence; actual Safari through `safaridriver`, whose sessions are isolated from the reviewer's browsing data; Firefox, which is not installed here, through an unmodified Mozilla release run from a temporary folder with a fresh profile, reported as such; Playwright WebKit only as supplementary evidence, never reported as Safari | Technical Architecture: *one web build supports modern mobile and desktop browsers*, and the *manual browser release checklist* its testing row names; Visual & Ergonomic *Accessibility baseline* |
+| Core journey | In EN, DE and RU: introduction → setup → category → Mission → Ready → Active → completion → Reward Card → History → settings | `F001`–`F004` |
+| Behaviour across reloads | Reload persistence of setup, a running Mission and a completed result; language switching; the leave confirmation cancelled and confirmed; the timer reaching zero without completing; a completion counted once, including a repeated press and a reload | `F001`, `F003` *Active state and timer*, *Refresh*, `F004` |
+| Layout | Desktop, phone width and enlarged text, including the lower controls: clipping, horizontal overflow, image and font loading, readable text, visible focus and keyboard operation | Visual & Ergonomic *Mobile-first*, *Localization resilience*, *Accessibility baseline* |
+| A real phone | Not available to the implementer. A five-minute checklist and instructions for opening a local preview from the reviewer's phone on the same trusted Wi-Fi, with how to stop it | — |
+
+Every test browser uses an isolated profile, so the reviewer's own saved MissionKid data is never read or changed. Elapsed time is simulated by moving a running Mission's stored start time in that isolated profile, not by changing the product. A fix is made only for a defect a check demonstrates, inside the owning specifications, and is followed by the relevant regression checks and the project gates. Evidence is kept in a Desktop review folder after each short batch.
 
 ## Decisions for the reviewer
 
