@@ -1,7 +1,7 @@
 # MissionKid Plan 06 — whole-application visual design
 
 **Date:** 2026-09-29
-**Status:** Scope recorded before implementation at `f68470a`; implemented and verified at `53d6a8d`, recorded under *Outcome*. **Implementation is paused, from 2026-09-29, while the reviewer visually reviews Plan 06**; human visual acceptance is not given and not recorded, and the known visual gaps listed under *Outcome* remain, so this plan stays active. Further imagery is a proposal pending review, not an approved obligation — see *Review hold and clarifications*. **One bounded exception to the pause** is authorized on 2026-09-29: the `helping-11` image integration recorded under *Bounded image integration*, and nothing else — scope recorded at `cca58f0`, implemented and verified at `899ff79`. **On 2026-09-30 the reviewer authorized a complete visual redesign against a newly supplied reference**, recorded under *Reference redesign — 2026-09-30*. It ends the pause for that scope and carries this plan's first specification amendments, recorded at `6f56054`; it is **implemented and verified at `d8bad52`**. **On 2026-10-01 the reviewer authorized one further batch**: a supplied package of nine images that finishes the introduction's hero and replaces the category and step images, recorded under *Visual asset package — 2026-10-01* with its specification amendments before code at `0758e36`; it is **implemented and verified at `f30afbd`**, its verification interrupted once and completed, as recorded there. **On 2026-10-02 the reviewer authorized a bounded pre-release verification batch** on the current design, recorded under *Pre-release verification — 2026-10-02*; it is not release approval. Human visual acceptance is not given and not recorded, so this plan stays active.
+**Status:** Scope recorded before implementation at `f68470a`; implemented and verified at `53d6a8d`, recorded under *Outcome*. **Implementation is paused, from 2026-09-29, while the reviewer visually reviews Plan 06**; human visual acceptance is not given and not recorded, and the known visual gaps listed under *Outcome* remain, so this plan stays active. Further imagery is a proposal pending review, not an approved obligation — see *Review hold and clarifications*. **One bounded exception to the pause** is authorized on 2026-09-29: the `helping-11` image integration recorded under *Bounded image integration*, and nothing else — scope recorded at `cca58f0`, implemented and verified at `899ff79`. **On 2026-09-30 the reviewer authorized a complete visual redesign against a newly supplied reference**, recorded under *Reference redesign — 2026-09-30*. It ends the pause for that scope and carries this plan's first specification amendments, recorded at `6f56054`; it is **implemented and verified at `d8bad52`**. **On 2026-10-01 the reviewer authorized one further batch**: a supplied package of nine images that finishes the introduction's hero and replaces the category and step images, recorded under *Visual asset package — 2026-10-01* with its specification amendments before code at `0758e36`; it is **implemented and verified at `f30afbd`**, its verification interrupted once and completed, as recorded there. **On 2026-10-02 the reviewer authorized a bounded pre-release verification batch** on the current design, recorded under *Pre-release verification — 2026-10-02*: Chrome `154` and Firefox `157` pass on the unchanged build, actual Safari awaits the reviewer's setting, and a real-phone check is prepared; it is not release approval. Human visual acceptance is not given and not recorded, so this plan stays active.
 **Branch:** `feat/whole-application-visual-design`, taken from `9f53610`, the commit that closed Plan 05 on `feat/guided-entry-and-presentation`. That branch is preserved unchanged at its closure. The reference redesign continues on `feat/reference-visual-redesign`, taken from `2e81cec`, the head of `feat/whole-application-visual-design`, which is preserved unchanged. No history was rewritten.
 
 ## Authorization basis
@@ -699,6 +699,62 @@ Recorded before any check ran, on `feat/reference-visual-redesign` at `ba3b06e`.
 | A real phone | Not available to the implementer. A five-minute checklist and instructions for opening a local preview from the reviewer's phone on the same trusted Wi-Fi, with how to stop it | — |
 
 Every test browser uses an isolated profile, so the reviewer's own saved MissionKid data is never read or changed. Elapsed time is simulated by moving a running Mission's stored start time in that isolated profile, not by changing the product. A fix is made only for a defect a check demonstrates, inside the owning specifications, and is followed by the relevant regression checks and the project gates. Evidence is kept in a Desktop review folder after each short batch.
+
+### Outcome — no product change
+
+**No defect was demonstrated, so no product file changed:** `git diff f30afbd` is empty for `src`, `index.html` and the build configuration, and every browser was served the build measured at `f30afbd` (`index-pX2JJh1x.css`). The project gates recorded at `f30afbd` therefore still describe the code, and were not rerun.
+
+| Browser | How it ran | Result |
+| --- | --- | --- |
+| Google Chrome `154.0.8037.97` — installed on this Mac | Through Playwright `1.63` with its own temporary profile and no window; the reviewer's Chrome profile is untouched | **Passed** |
+| Firefox `157.0` — not installed here | The notarized Mozilla release, copied from its disk image into a temporary folder and run headless with a temporary profile through WebDriver BiDi (Puppeteer `24.42`); deleted afterwards | **Passed** |
+| Chrome for Testing `149.0.7827.55` headless shell | The existing harness; its `257`-combination matrix at `f30afbd` is reused, and only the new behaviour checks ran | **Passed** |
+| Safari `26.6.1` — installed | `safaridriver` refused a session: *Allow remote automation* is off in Safari's developer settings, and only the reviewer can turn it on | **Not run** |
+| Playwright WebKit `26.6` (`v2251`) | Installed for supplementary evidence; it launches but cannot open a page on macOS `14.8` on this Intel Mac, headless or with a window; removed | **No evidence** |
+
+Each passing browser ran the same scenario `12` times — English, German and Russian at `1280x900`, `390x780`, `320` px with an injected `32px` root, and `320` px with the browser's own default text size at `32px`, asserted before and after every capture — on a fresh profile each time:
+
+| Check | Chrome `154` | Firefox `157` | Chrome for Testing `149` |
+| --- | --- | --- | --- |
+| Behaviour checks | `276` / `276` | `276` / `276` | `276` / `276` |
+| Views measured | `144` | `144` | `144` |
+| Clipping, page overflow, overlap | `0`, `0`, `0` | `0`, `0`, `0` | `0`, `0`, `0` |
+| Minimum contrast, minimum target | `5.05:1`, `52` px | `5.05:1`, `52` px | `5.05:1`, `52` px |
+| Images decoded, local, decorative; faces loaded | all `276`; `144` / `144` | all `276`; `144` / `144` | all `276`; `144` / `144` |
+| Words cut mid-word | `0` | `0` | `0` |
+| Tab stops, each with the ring, in view, page focused | `234` | `234` | `234` |
+| Requests to another origin, page errors | `0`, `0` | `0`, `0` | `0`, `0` |
+
+**The same in every engine:** the words of all `144` views and the Tab order of all `81` keyboard walks are identical in Firefox and Chrome for Testing, and in Chrome `154` and Chrome for Testing — so the same Missions, in the same order, in each language.
+
+**The `23` behaviour checks of each run:** a fresh profile reaches the introduction with nothing stored; the language choice applies there and stores nothing; the one action opens setup and stores nothing, carrying the language; the setup save stores language and age, and survives a reload in that language; exactly three Missions; Ready shows and pictures the chosen Mission and survives a reload; starting stores one active session; cancelling the leave confirmation keeps the Mission running, and confirming it ends the Mission uncounted; a running Mission survives a reload with the same guidance; moved — in that isolated profile only — to four seconds before its end and reloaded, it resumes from its stored start, showing *less than a minute* rather than the full duration in all `36` runs, then reaches the neutral zero wording by itself and stays running, uncompleted; two presses of *Mission done* in the same moment complete once; the Reward Card shows the Mission, and a reload on it counts nothing again; History lists the one completion; a language change in settings applies and survives a reload.
+
+**Measurement faults found and fixed — the harness's, not the product's.** Every result above is from the corrected harness.
+
+- Two checks returned a page element, which Playwright passes back as a value and Puppeteer's Firefox protocol does not; they now return booleans.
+- The keyboard walk pressed Tab past the page's last control into the browser's own toolbar. Firefox then still names the page's last control as focused while the page itself has none, so stops read as *no ring*. Probes in headless and windowed Firefox established it; within the page every stop is `:focus-visible` with the `3px` ring. The walk now starts from a click on the page background and presses Tab exactly as often as the page has stops.
+- A full-page capture drops Chromium's text-size setting, as recorded before; that configuration is captured at the viewport.
+- A review sheet cropped a short page at its sides; the capture itself was complete.
+
+**Observed, not a defect:** the application declares no icon, so Chrome and Firefox request `/favicon.ico` and the static server answers `404`; nothing is visible to the family. Whether to add an icon is a brand decision — a logo or brand mark is an explicit non-goal of the Visual & Ergonomic Specification — and is listed below.
+
+**An environment side effect, repaired.** Installing Playwright WebKit made Playwright's installer delete the cached Chrome for Testing `149.0.7827.55` builds, which no installed Playwright version still references. Both were restored from Google's Chrome for Testing downloads to the same paths and the same version.
+
+**Real phone — prepared, not done.** No phone is available to the implementer, and no device testing is claimed. This Mac's Wi-Fi address is `192.168.0.64` (`en0`); the macOS firewall is off. `npx vite preview --host 192.168.0.64 --port 4173 --strictPort` was run for a few seconds, served the measured build at `http://192.168.0.64:4173/` on that interface only, and was stopped. The reviewer's five-minute checklist, with how to stop the preview and remove the phone's test data, is in the review folder.
+
+### Release readiness, at `f30afbd`
+
+- **Launch blockers found by this batch:** none in the product.
+- **Still needs the reviewer:** actual Safari, once *Allow remote automation* is on; the real-phone check; human visual acceptance.
+- **Open decisions that matter for launch:** translation review of the German and Russian introduction copy (open since Plan 05); Mission instruction length; a way to leave settings without saving; the content reviewer's image questions — the *Tallest Tower* surface, the forearm in *Sock Friend*, the `helping-11` cup, the Movement footprints in sand, and the nine AI-generated images inspected only by the implementer; the remaining Mission imagery; whether to add an icon.
+- **Toward publication:** the branch is `58` commits ahead of `main` and has never been pushed. Publishing needs the reviewer's visual acceptance to close this plan, a separate authorization to push and open a pull request to `main`, and an approved release plan for a static HTTPS host, which no specification or plan has chosen yet.
+
+### Limitations
+
+- Safari is not covered at all; Safari's hyphenation and its handling of `:has()`, container queries and the image mask remain unverified.
+- Headless engines on one Intel Mac; no Windows, Linux, Android or iOS browser; no assistive technology; no CI.
+- Elapsed time was simulated by moving a stored start time, not waited out; a real wait across sleep and wake is on the phone checklist.
+- **Human visual acceptance is not given and not recorded, and this is not release approval.**
 
 ## Decisions for the reviewer
 
