@@ -9,19 +9,23 @@ import {
   type MessageKey,
   type SupportedLanguage,
 } from './localization';
+import type { AgeBand } from './ageBands';
 import { MissionLeaveConfirmation } from './MissionLeaveConfirmation';
 import { DurationMark } from './Marks';
 import { MissionPicture } from './MissionPicture';
 import { MissionSceneDefs } from './MissionScene';
-import type { MissionImageSurface } from './missionImages';
 import type { MissionSelectionIssue } from './appState';
 import { deriveSuggestionSet, type SuggestionContext } from './missionSuggestions';
 
 type CardProps = Readonly<{
   mission: MissionRecord;
   language: SupportedLanguage;
+  // The age band the card is shown for, which picks the Mission's
+  // illustration: the discovery context's in Discovery, and on the
+  // introduction the one its example is documented to show.
+  ageBand: AgeBand;
   onChoose?: (missionId: string) => void;
-  surface?: MissionImageSurface;
+  surface?: 'discovery' | 'introduction';
 }>;
 
 // Presentation only: an article, not a control. Task 5 has no choice behaviour,
@@ -31,7 +35,13 @@ type CardProps = Readonly<{
 // component discovery uses, with `onChoose` absent. A second rendering of a
 // Mission would be a second place for reviewed content, adult-involvement
 // wording and safety guidance to drift from what a Mission card presents.
-export function MissionCard({ mission, language, onChoose, surface = 'discovery' }: CardProps) {
+export function MissionCard({
+  mission,
+  language,
+  ageBand,
+  onChoose,
+  surface = 'discovery',
+}: CardProps) {
   const t = (key: MessageKey) => translateMessage(language, key);
   const content = mission.content[language];
   const adultLabelKey = MISSION_ADULT_LABEL_KEYS[mission.adultInvolvement];
@@ -44,10 +54,11 @@ export function MissionCard({ mission, language, onChoose, surface = 'discovery'
       className="mission-card"
       data-category={mission.category}
     >
-      {/* A reviewed still where one exists for this surface, the authored
-          scene otherwise. Either way the window is decoration: every word the
-          card means is in the text below. */}
+      {/* The Mission's illustration for the age band the card is shown for,
+          or its authored scene where its set has none. Either way the window
+          is decoration: every word the card means is in the text below. */}
       <MissionPicture
+        ageBand={ageBand}
         category={mission.category}
         className="mission-card__window mission-picture"
         missionId={mission.missionId}
@@ -330,6 +341,7 @@ export function MissionSuggestionSet({
         <div className="mission-suggestions__set">
           {result.missions.map((mission) => (
             <MissionCard
+              ageBand={context.ageBand}
               key={mission.missionId}
               language={context.language}
               mission={mission}

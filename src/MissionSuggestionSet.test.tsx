@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
-import { AGE_BANDS } from './ageBands';
+import { AGE_BANDS, type AgeBand } from './ageBands';
 import { MISSION_CATEGORIES, type MissionCategory, type MissionRecord } from './catalog';
 import { MISSION_CATALOG } from './catalogContent';
 import {
@@ -12,7 +12,11 @@ import {
   type MessageKey,
   type SupportedLanguage,
 } from './localization';
-import { INTRODUCTION_IMAGE_IDS, MISSION_IMAGE_IDS } from './missionImages';
+import {
+  MISSION_IMAGE_FILE_COUNT,
+  MISSION_IMAGE_KEYS,
+  resolveMissionImage,
+} from './missionImages';
 import { MissionSuggestionSet } from './MissionSuggestionSet';
 import { deriveSuggestionSet, type SuggestionContext } from './missionSuggestions';
 
@@ -40,6 +44,18 @@ function expectedMissions(ctx: SuggestionContext): readonly MissionRecord[] {
 
 function cards() {
   return screen.getAllByRole('article');
+}
+
+// Authored scenes still render in the one Discovery set whose illustrations are
+// withheld, 9–10 Learning's second; their grammar is checked there.
+function renderAuthoredSceneSet() {
+  const ctx = context({ ageBand: '9–10', category: 'Learning' });
+  const first = deriveSuggestionSet(MISSION_CATALOG, ctx);
+  if (first.status !== 'complete') throw new Error('expected a complete production set');
+
+  return render(
+    <MissionSuggestionSet context={ctx} shown={first.missions.map((mission) => mission.missionId)} />,
+  );
 }
 
 function localized(language: SupportedLanguage) {
@@ -199,7 +215,7 @@ describe('a complete suggestion set', () => {
   });
 
   it('gives each card a distinct scene while sharing the category atmosphere', () => {
-    render(<MissionSuggestionSet context={context()} />);
+    renderAuthoredSceneSet();
 
     const rendered = cards();
     const scenes = rendered.map((card) =>
@@ -223,7 +239,7 @@ describe('a complete suggestion set', () => {
       expect(card.querySelector('svg')!.getAttribute('aria-hidden')).toBe('true');
     }
     expect(new Set(rendered.map((card) => card.getAttribute('data-category')))).toEqual(
-      new Set(['Movement']),
+      new Set(['Learning']),
     );
   });
 
@@ -306,7 +322,7 @@ describe('a complete suggestion set', () => {
   });
 
   it('emphasises exactly one subject in each scene', () => {
-    render(<MissionSuggestionSet context={context()} />);
+    renderAuthoredSceneSet();
 
     for (const card of cards()) {
       const focal = card.querySelectorAll('.s-el[data-focal]');
@@ -762,25 +778,51 @@ describe('the insufficient-content state', () => {
     expect(screen.queryAllByRole('article')).toHaveLength(0);
   });
 });
-// Reviewed stills replace the authored scene for the Missions they were made
-// for, and for no others. They are decoration in exactly the sense the scene
-// they replace was: the card's meaning stays in its text, and nothing about
-// eligibility, ordering or content moves because a picture exists.
-describe('reviewed Mission stills', () => {
-  const withImages = ['creativity-02', 'creativity-05', 'creativity-10'];
+// Each Mission's illustrations replace its authored scene for the age bands the
+// catalog approves it for, and for no others. They are decoration in exactly
+// the sense the scene was: the card's meaning stays in its text, and nothing
+// about eligibility, ordering or content moves because a picture exists.
+describe('Mission illustrations', () => {
+  // The one Discovery set whose illustrations wait for a replacement: one of
+  // its three was withheld, so all three keep their authored scenes together.
+  const withheld = ['learning-04__9–10', 'learning-13__9–10', 'learning-14__9–10'];
+  const fileLabel = (ageBand: AgeBand) => ageBand.replace('–', '-');
 
-  it('covers exactly the Missions the still authorization names', () => {
-    expect([...MISSION_IMAGE_IDS].sort()).toEqual(withImages);
+  it('covers exactly the approved pairs of Mission and age band, in both widths', () => {
+    const approved = MISSION_CATALOG.flatMap((mission) =>
+      mission.ageBands.map((ageBand) => `${mission.missionId}__${ageBand}`),
+    );
+    expect(approved).toHaveLength(102);
+    expect([...MISSION_IMAGE_KEYS].sort()).toEqual(
+      approved.filter((key) => !withheld.includes(key)).sort(),
+    );
+    // Two widths of each, and no bundled file the map leaves unused.
+    expect(MISSION_IMAGE_FILE_COUNT).toBe(MISSION_IMAGE_KEYS.length * 2);
 
-    // Every one of them is a real, reviewed, discovery-eligible catalog entry.
-    for (const id of MISSION_IMAGE_IDS) {
-      const mission = MISSION_CATALOG.find((record) => record.missionId === id);
-      expect(mission?.reviewed).toBe(true);
-      expect(mission?.discoveryEligible).toBe(true);
+    // No illustration stands in for an age band the catalog does not approve.
+    for (const mission of MISSION_CATALOG) {
+      for (const ageBand of AGE_BANDS) {
+        if (!mission.ageBands.includes(ageBand)) {
+          expect(resolveMissionImage(mission.missionId, ageBand)).toBeNull();
+        }
+      }
     }
   });
 
-  it('presents a still as decoration and keeps the card readable without it', () => {
+  it("resolves each pair to its own two files, never another age band's or Mission's", () => {
+    for (const key of MISSION_IMAGE_KEYS) {
+      const [missionId, ageBand] = key.split('__') as [string, AgeBand];
+      const image = resolveMissionImage(missionId, ageBand)!;
+      const stem = `${missionId}__${fileLabel(ageBand)}`;
+
+      expect(image.src).toMatch(new RegExp(`/${stem}__768\\.webp$`));
+      expect(image.srcSet.startsWith(`${image.src} 768w, `)).toBe(true);
+      expect(image.srcSet).toMatch(new RegExp(`/${stem}__1536\\.webp 1536w$`));
+      expect([image.width, image.height]).toEqual([1536, 1024]);
+    }
+  });
+
+  it('presents an illustration as decoration and keeps the card readable without it', () => {
     const mission = MISSION_CATALOG.find((record) => record.missionId === 'creativity-02')!;
     const { container } = render(
       <MissionSuggestionSet
@@ -796,10 +838,14 @@ describe('reviewed Mission stills', () => {
     expect(photo.getAttribute('aria-hidden')).toBe('true');
     // The intrinsic size travels with it, so the card reserves the space before
     // the file arrives instead of reflowing the text under it.
-    expect(photo.getAttribute('width')).toBe('1000');
-    expect(photo.getAttribute('height')).toBe('666');
+    expect(photo.getAttribute('width')).toBe('1536');
+    expect(photo.getAttribute('height')).toBe('1024');
+    // Both widths are offered, and the window's drawn width picks between them.
+    expect(photo.getAttribute('srcset')).toBe(resolveMissionImage('creativity-02', '4–6')!.srcSet);
+    expect(photo.getAttribute('sizes')).toBeTruthy();
     // Bundled by the build, not fetched from anywhere else.
     expect(photo.getAttribute('src')).not.toMatch(/^https?:/);
+    expect(photo.getAttribute('srcset')).not.toMatch(/https?:/);
 
     // Assistive technology is offered no image at all, here or anywhere in the set.
     expect(screen.queryAllByRole('img')).toHaveLength(0);
@@ -814,29 +860,60 @@ describe('reviewed Mission stills', () => {
     expect(container.querySelectorAll('.mission-card')).toHaveLength(3);
   });
 
-  it('keeps the authored scene for a Mission that has no still', () => {
-    // The stills cover Creativity's first set and nothing else, so a set drawn
-    // from another Mission Category still renders its authored scenes rather
-    // than an empty frame. This is the fallback the map's default depends on.
-    const { container } = render(
-      <MissionSuggestionSet
-        catalog={MISSION_CATALOG}
-        context={context({ category: 'Movement', ageBand: '4–6' })}
-      />,
-    );
+  it("shows every reachable set in one kind of image, for the discovery context's age band", () => {
+    const sceneSets: string[] = [];
+    let sets = 0;
 
-    const missionCards = [...container.querySelectorAll('.mission-card')];
-    expect(missionCards).toHaveLength(3);
+    for (const ageBand of AGE_BANDS) {
+      for (const category of MISSION_CATEGORIES) {
+        const ctx = context({ ageBand, category });
+        let shown: string[] = [];
 
-    for (const card of missionCards) {
-      expect(card.querySelector('img')).toBeNull();
-      expect(card.querySelectorAll('.mission-scene .s-el').length).toBeGreaterThan(0);
+        for (;;) {
+          const result = deriveSuggestionSet(MISSION_CATALOG, ctx, shown);
+          if (result.status !== 'complete') break;
+          const ids = result.missions.map((mission) => mission.missionId);
+
+          const { container, unmount } = render(
+            <MissionSuggestionSet catalog={MISSION_CATALOG} context={ctx} shown={shown} />,
+          );
+          const windows = [...container.querySelectorAll('.mission-card__window')];
+          expect(windows).toHaveLength(3);
+          const photos = windows.map((window) => window.querySelector('img'));
+
+          if (photos.every((photo) => photo !== null)) {
+            // Each card's own Mission, for the age band the set was chosen for.
+            photos.forEach((photo, index) => {
+              expect(photo!.getAttribute('src')).toBe(resolveMissionImage(ids[index]!, ageBand)!.src);
+              expect(photo!.getAttribute('src')).toMatch(
+                new RegExp(`/${ids[index]}__${fileLabel(ageBand)}__768\\.webp$`),
+              );
+            });
+          } else {
+            // Never a mix: a set without all three illustrations shows three
+            // authored scenes.
+            expect(photos.every((photo) => photo === null)).toBe(true);
+            for (const window of windows) {
+              expect(window.querySelectorAll('.mission-scene .s-el').length).toBeGreaterThan(0);
+            }
+            sceneSets.push(`${ageBand} ${category}: ${ids.join(', ')}`);
+          }
+
+          unmount();
+          sets += 1;
+          if (!result.anotherSetAvailable) break;
+          shown = [...shown, ...ids];
+        }
+      }
     }
+
+    expect(sets).toBe(33);
+    expect(sceneSets).toEqual(['9–10 Learning: learning-04, learning-13, learning-14']);
   });
 
   it('changes no Mission content, eligibility or ordering', () => {
     // The set the family actually receives is the one the ordering rules give,
-    // derived here without any reference to the stills.
+    // derived here without any reference to the illustrations.
     const result = deriveSuggestionSet(
       MISSION_CATALOG,
       context({ category: 'Creativity', ageBand: '4–6' }),
@@ -852,14 +929,11 @@ describe('reviewed Mission stills', () => {
     expect(result.missions.map((mission) => mission.catalogOrder)).toEqual([10, 30, 50]);
   });
 
-  // The introduction's example has a still of its own, shown there and nowhere
-  // else. In Discovery it is one of three peers whose other two have authored
-  // scenes: a photograph beside them would make it the richer of three, and
-  // always the one that had been the example.
-  it('keeps the introduction still out of every Discovery set its Mission is in', () => {
-    expect([...INTRODUCTION_IMAGE_IDS]).toEqual(['helping-11']);
-    expect(MISSION_IMAGE_IDS).not.toContain('helping-11');
-
+  // The introduction's example is pictured there with its documented default.
+  // In Discovery it is one of three peers like any other: it shows the
+  // illustration for the discovery context's age band, exactly as they do, and
+  // nothing marks it as the Mission that had been the example.
+  it("pictures the introduction's example in Discovery exactly like its peers", () => {
     const reached: string[] = [];
     for (const ageBand of AGE_BANDS) {
       const ctx = context({ category: 'Helping at Home', ageBand });
@@ -879,12 +953,14 @@ describe('reviewed Mission stills', () => {
               shown={shown}
             />,
           );
-          const missionCards = [...container.querySelectorAll('.mission-card')];
-          expect(missionCards).toHaveLength(3);
-          for (const card of missionCards) {
-            expect(card.querySelector('img')).toBeNull();
-            expect(card.querySelectorAll('.mission-scene .s-el').length).toBeGreaterThan(0);
-          }
+          const photos = [...container.querySelectorAll('.mission-card__window img')];
+          expect(photos).toHaveLength(3);
+          photos.forEach((photo, index) => {
+            expect(photo.getAttribute('src')).toMatch(
+              new RegExp(`/${ids[index]}__${fileLabel(ageBand)}__768\\.webp$`),
+            );
+            expect(photo.getAttribute('sizes')).toBe(photos[0]!.getAttribute('sizes'));
+          });
           reached.push(`${ageBand}:${ids.indexOf('helping-11') + 1}`);
           unmount();
         }

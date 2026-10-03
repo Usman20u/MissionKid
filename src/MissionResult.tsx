@@ -150,9 +150,11 @@ function MissionResultCard({
             Mission gets no image rather than a stand-in. */}
         {mission ? (
           <MissionPicture
+            ageBand={session.ageBandAtSelection}
             category={session.missionCategoryAtSelection}
             className="mission-result__picture mission-picture"
             missionId={session.missionId}
+            surface="result"
             withSceneDefs
           />
         ) : null}

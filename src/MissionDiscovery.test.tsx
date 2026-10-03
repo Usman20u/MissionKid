@@ -823,8 +823,8 @@ describe('category selection and the discovery cycle', () => {
     }
     expect(container.querySelector('textarea, select, form, video, audio')).toBeNull();
     // The only pictures are decoration the specification authorizes: one
-    // image per Mission Category inside its label, and a Mission's reviewed
-    // still inside its card's window. None is exposed as an image, none is
+    // image per Mission Category inside its label, and a Mission's
+    // illustration inside its card's window. None is exposed as an image, none is
     // fetched from elsewhere, and nothing here can take or upload a picture.
     for (const image of Array.from(container.querySelectorAll('img'))) {
       expect(

@@ -1,55 +1,86 @@
-import tallestTower from './assets/missions/creativity-02-tallest-tower.jpg';
-import sockFriend from './assets/missions/creativity-05-sock-friend.jpg';
-import kindMonster from './assets/missions/creativity-10-kind-monster.jpg';
-import tableSurprise from './assets/missions/helping-11-table-surprise.jpg';
+import { AGE_BANDS, type AgeBand } from './ageBands';
 
-// Presentation only, keyed by the stable Mission identifier. This adds no field
-// to Mission catalog content, no persisted value and no snapshot data: the
-// catalog remains the single source of what a Mission is, and a Mission with no
-// entry here renders its authored scene exactly as before.
+// Presentation only, keyed by the stable Mission identifier and one age band the
+// catalog approves that Mission for. This adds no field to Mission catalog
+// content, no persisted value and no snapshot data: the catalog remains the
+// single source of what a Mission is and whom it suits, and a Mission and age
+// band with no entry here renders its authored scene exactly as before.
 //
-// Each asset is a reviewed still bundled with the application by the ordinary
-// build. Nothing is fetched from another origin and nothing is generated at
-// runtime.
+// Each Mission illustration is a reviewed file bundled with the application by
+// the ordinary build, in two widths, named `<missionId>__<age band>__<width>`.
+// Nothing is fetched from another origin and nothing is generated at runtime.
 //
-// The intrinsic size is carried with the URL so the card can reserve the space
-// before the file arrives, rather than reflowing the text under it when it
-// does.
+// One Discovery set — 9–10 Learning, the second — has no illustrations: one of
+// its three was withheld for regeneration, and a set keeps its authored scenes
+// together until all three of its illustrations can be shown.
+const FILES = import.meta.glob<string>('./assets/missions/*.webp', {
+  eager: true,
+  import: 'default',
+});
+
+const FILE_NAME = /\/([a-z]+-\d+)__(\d+-\d+)__(768|1536)\.webp$/;
+
+// The file names spell an age band with an ASCII hyphen; the product's own
+// value uses the en dash the catalog uses.
+const AGE_BAND_BY_FILE_LABEL: Readonly<Record<string, AgeBand>> = Object.fromEntries(
+  AGE_BANDS.map((ageBand) => [ageBand.replace('–', '-'), ageBand]),
+);
+
+// The intrinsic size is the larger file's, carried with the sources so the
+// window is reserved at the illustration's own ratio before a file arrives,
+// rather than reflowing the text under it when it does.
 export type MissionImage = Readonly<{
   src: string;
+  srcSet: string;
   width: number;
   height: number;
 }>;
 
-const MISSION_IMAGES: Readonly<Record<string, MissionImage>> = {
-  'creativity-02': { src: tallestTower, width: 1000, height: 666 },
-  'creativity-05': { src: sockFriend, width: 1000, height: 666 },
-  'creativity-10': { src: kindMonster, width: 1000, height: 666 },
-};
-
-// The introduction's example alone. Discovery keeps this Mission's authored
-// scene, like the two peers it shares each of its sets with: a still here would
-// make one of three suggestions look richer, and always the one that had been
-// the example, which F001 says carries no preference into later discovery.
-const INTRODUCTION_IMAGES: Readonly<Record<string, MissionImage>> = {
-  'helping-11': { src: tableSurprise, width: 1000, height: 666 },
-};
-
-// Where a Mission card is presented. Only the introduction shows its one
-// example on its own; everywhere else a card is one of three peers.
-export type MissionImageSurface = 'discovery' | 'introduction';
-
-export function resolveMissionImage(
-  missionId: string,
-  surface: MissionImageSurface = 'discovery',
-): MissionImage | null {
-  return (
-    (surface === 'introduction' ? INTRODUCTION_IMAGES[missionId] : undefined) ??
-    MISSION_IMAGES[missionId] ??
-    null
-  );
+function missionImageKey(missionId: string, ageBand: AgeBand): string {
+  return `${missionId}__${ageBand}`;
 }
 
-// Exported for the tests that hold these maps to their authorized scope.
-export const MISSION_IMAGE_IDS: readonly string[] = Object.keys(MISSION_IMAGES);
-export const INTRODUCTION_IMAGE_IDS: readonly string[] = Object.keys(INTRODUCTION_IMAGES);
+function collectMissionImages(): ReadonlyMap<string, MissionImage> {
+  const widths = new Map<string, { small?: string; large?: string }>();
+
+  for (const [path, url] of Object.entries(FILES)) {
+    const match = FILE_NAME.exec(path);
+    const ageBand = match ? AGE_BAND_BY_FILE_LABEL[match[2]!] : undefined;
+    if (!match || !ageBand) continue;
+
+    const key = missionImageKey(match[1]!, ageBand);
+    const entry = widths.get(key) ?? {};
+    if (match[3] === '768') entry.small = url;
+    else entry.large = url;
+    widths.set(key, entry);
+  }
+
+  // Only a complete pair is an illustration: one width alone would leave either
+  // a phone or Ready's widest window with a file that does not cover it.
+  const images = new Map<string, MissionImage>();
+  for (const [key, { small, large }] of widths) {
+    if (small && large) {
+      images.set(key, {
+        src: small,
+        srcSet: `${small} 768w, ${large} 1536w`,
+        width: 1536,
+        height: 1024,
+      });
+    }
+  }
+  return images;
+}
+
+const MISSION_IMAGES = collectMissionImages();
+
+// The one lookup every surface uses, so a card and the session views that
+// follow it can never disagree about which picture a Mission has. A surface
+// passes the age band in effect there; nothing here substitutes another age
+// band's illustration, another Mission's or a category image.
+export function resolveMissionImage(missionId: string, ageBand: AgeBand): MissionImage | null {
+  return MISSION_IMAGES.get(missionImageKey(missionId, ageBand)) ?? null;
+}
+
+// Exported for the tests that hold the map to the catalog's approved pairs.
+export const MISSION_IMAGE_KEYS: readonly string[] = [...MISSION_IMAGES.keys()];
+export const MISSION_IMAGE_FILE_COUNT = Object.keys(FILES).length;

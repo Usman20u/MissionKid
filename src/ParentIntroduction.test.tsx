@@ -7,10 +7,12 @@ import { MISSION_CATALOG } from './catalogContent';
 import { deriveSuggestionSet } from './missionSuggestions';
 import { isEligibleForContext } from './catalogValidation';
 import {
+  INTRODUCTION_EXAMPLE_AGE_BAND,
   INTRODUCTION_EXAMPLE_MISSION_ID,
   ParentIntroduction,
   resolveIntroductionExample,
 } from './ParentIntroduction';
+import { resolveMissionImage } from './missionImages';
 import { AppStateProvider, FRESH_APP_STATE } from './appState';
 import {
   SUPPORTED_LANGUAGES,
@@ -407,7 +409,7 @@ describe('F001 introduction example Mission', () => {
   });
 
   it.each([...SUPPORTED_LANGUAGES])(
-    'shows its reviewed still as decoration in %s, with every reviewed field still text',
+    'shows its illustration for the documented default age band in %s, as decoration',
     (language) => {
       const h = harness();
       render(<App adapter={h.adapter} />);
@@ -422,15 +424,24 @@ describe('F001 introduction example Mission', () => {
       const card = screen.getByRole('article', { name: content.title });
       const photo = card.querySelector('img');
 
-      // The still takes the scene's place in the same window.
+      // No age band is chosen yet, so the example shows the documented
+      // default's illustration, the same file in every language, in the
+      // window an authored scene would otherwise fill.
+      expect(INTRODUCTION_EXAMPLE_AGE_BAND).toBe('4–6');
       expect(photo).not.toBeNull();
       expect(card.querySelector('.mission-scene')).toBeNull();
+      expect(photo!.getAttribute('src')).toMatch(/\/helping-11__4-6__768\.webp$/);
+      expect(photo!.getAttribute('srcset')).toBe(
+        resolveMissionImage(INTRODUCTION_EXAMPLE_MISSION_ID, '4–6')!.srcSet,
+      );
       expect(photo!.getAttribute('alt')).toBe('');
       expect(photo!.getAttribute('aria-hidden')).toBe('true');
-      expect(photo!.getAttribute('width')).toBe('1000');
-      expect(photo!.getAttribute('height')).toBe('666');
+      expect(photo!.getAttribute('width')).toBe('1536');
+      expect(photo!.getAttribute('height')).toBe('1024');
       expect(photo!.getAttribute('src')).not.toMatch(/^https?:/);
       expect(screen.queryAllByRole('img')).toHaveLength(0);
+      // Showing it records nothing: the default is presentation, not a choice.
+      expect(h.calls.some((call) => call.startsWith('write:'))).toBe(false);
 
       // The instruction names an unbreakable cup; the text says so whatever
       // the picture shows.
@@ -438,6 +449,24 @@ describe('F001 introduction example Mission', () => {
       expect(card.textContent).toContain(content.safetyNote);
     },
   );
+
+  // Unreachable through the ordinary flow, which shows the introduction only
+  // while nothing is stored, but the rule is the specification's: were an age
+  // band already in effect, the example would show that band's illustration
+  // rather than the default.
+  it('shows the illustration of an age band already in effect instead of the default', () => {
+    const { container } = render(
+      <AppStateProvider initialState={{ ...FRESH_APP_STATE, ageBand: '9–10' }}>
+        <ParentIntroduction />
+      </AppStateProvider>,
+    );
+
+    const photo = container.querySelector('.introduction__example .mission-card__window img')!;
+    expect(photo.getAttribute('src')).toBe(
+      resolveMissionImage(INTRODUCTION_EXAMPLE_MISSION_ID, '9–10')!.src,
+    );
+    expect(photo.getAttribute('src')).toMatch(/\/helping-11__9-10__768\.webp$/);
+  });
 
   it('receives no preference in the first discovery set afterwards', () => {
     const h = harness();
@@ -683,8 +712,8 @@ describe('F001 introduction presentation boundaries', () => {
     expect(container.querySelector('form')).toBeNull();
     // The pictures are exactly the decoration the specification authorizes:
     // the introduction's hero after the one action, one image for each of the
-    // three steps of the flow, and the example Mission's still inside its
-    // card's image window. Nothing else is pictured, and none of them is
+    // three steps of the flow, and the example Mission's illustration inside
+    // its card's image window. Nothing else is pictured, and none of them is
     // exposed as an image or fetched from elsewhere.
     const images = [...container.querySelectorAll('img')];
     expect(images).toHaveLength(5);

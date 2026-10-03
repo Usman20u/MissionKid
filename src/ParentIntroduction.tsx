@@ -1,5 +1,5 @@
 import { MISSION_CATALOG } from './catalogContent';
-import { AGE_BANDS } from './ageBands';
+import { AGE_BANDS, type AgeBand } from './ageBands';
 import type { MissionRecord } from './catalog';
 import { isEligibleForContext, selectValidMissions } from './catalogValidation';
 import { useAppState } from './appState';
@@ -23,6 +23,13 @@ const LANGUAGE_NAME_KEYS: Readonly<Record<SupportedLanguage, MessageKey>> = {
 // catalog entry, chosen because it is approved for every supported age band, so
 // showing it infers no age context and decides no eligibility question.
 export const INTRODUCTION_EXAMPLE_MISSION_ID = 'helping-11';
+
+// Which of the example's illustrations it shows. The introduction is reached
+// before any age band is chosen, so it shows this documented default: a fixed
+// presentation choice that infers nothing about the child and is stored
+// nowhere. Were an age band already in effect, the example would show that
+// band's illustration instead.
+export const INTRODUCTION_EXAMPLE_AGE_BAND: AgeBand = '4–6';
 
 const FLOW_STEP_KEYS: readonly MessageKey[] = [
   'introduction.flow.step1',
@@ -187,7 +194,12 @@ export function ParentIntroduction({ catalog = MISSION_CATALOG }: ParentIntroduc
             {t('introduction.example.label')}
           </h2>
           <MissionSceneDefs />
-          <MissionCard language={language} mission={example} surface="introduction" />
+          <MissionCard
+            ageBand={state.ageBand ?? INTRODUCTION_EXAMPLE_AGE_BAND}
+            language={language}
+            mission={example}
+            surface="introduction"
+          />
         </section>
       ) : null}
     </div>

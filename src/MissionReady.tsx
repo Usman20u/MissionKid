@@ -320,9 +320,11 @@ export function MissionReady({
           one: nothing is pictured that cannot be started. */}
       {session.state === 'ready' && mission ? (
         <MissionPicture
+          ageBand={session.ageBandAtSelection}
           category={session.missionCategoryAtSelection}
           className="mission-session__picture mission-picture"
           missionId={session.missionId}
+          surface="ready"
           withSceneDefs
         />
       ) : null}

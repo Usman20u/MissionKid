@@ -683,12 +683,17 @@ describe('a Reward Card that cannot be displayed', () => {
 });
 
 describe("the Reward Card's picture and Monthly Goal bar", () => {
-  function renderResultFor(missionId: string, completed = 1) {
+  function renderResultFor(
+    missionId: string,
+    completed = 1,
+    overrides: Readonly<Record<string, unknown>> = {},
+  ) {
     const mission = MISSION_CATALOG.find((record) => record.missionId === missionId);
     const records = Array.from({ length: completed }, (_unused, index) => ({
       ...completedRecord(index),
       missionId,
       missionCategoryAtSelection: mission?.category ?? 'Movement',
+      ...overrides,
     }));
     const h = harness(
       storedSnapshot({
@@ -700,27 +705,40 @@ describe("the Reward Card's picture and Monthly Goal bar", () => {
     return h;
   }
 
-  it('shows the authored scene of the completed Mission as decoration', () => {
+  it('shows the illustration the family chose the Mission from, as decoration', () => {
     renderResultFor('movement-02');
 
     const picture = document.querySelector('.mission-result__panel .mission-result__picture')!;
     expect(picture).not.toBeNull();
-    expect(picture.querySelector('img')).toBeNull();
-    expect(picture.querySelector('svg.mission-scene')!.getAttribute('aria-hidden')).toBe('true');
+    // For the age band its session recorded, 7–8 here: the card's picture.
+    const photo = picture.querySelector('img')!;
+    expect(photo.getAttribute('src')).toBe(resolveMissionImage('movement-02', '7–8')!.src);
+    expect(photo.getAttribute('srcset')).toBe(resolveMissionImage('movement-02', '7–8')!.srcSet);
+    expect(photo.getAttribute('alt')).toBe('');
+    expect(photo.getAttribute('aria-hidden')).toBe('true');
+    expect(photo.getAttribute('width')).toBe('1536');
+    expect(photo.getAttribute('src')).not.toMatch(/^https?:/);
+    expect(picture.querySelector('svg.mission-scene')).toBeNull();
     expect(screen.queryAllByRole('img')).toHaveLength(0);
     // The words still say what was completed.
     expect(screen.getByRole('heading', { level: 2 }).textContent).toBe(MISSION.content.en.title);
   });
 
-  it('shows the reviewed still the family chose the Mission from', () => {
-    renderResultFor('creativity-02');
+  it('keeps the age band the session recorded, not the current setup age band', () => {
+    // Stored with a 7–8 profile, completed for 9–10 before the age changed.
+    renderResultFor('helping-11', 1, { ageBandAtSelection: '9–10' });
 
     const photo = document.querySelector('.mission-result__picture img')!;
-    expect(photo.getAttribute('src')).toBe(resolveMissionImage('creativity-02')!.src);
-    expect(photo.getAttribute('alt')).toBe('');
-    expect(photo.getAttribute('aria-hidden')).toBe('true');
-    expect(photo.getAttribute('width')).toBe('1000');
-    expect(photo.getAttribute('src')).not.toMatch(/^https?:/);
+    expect(photo.getAttribute('src')).toMatch(/\/helping-11__9-10__768\.webp$/);
+    expect(photo.getAttribute('src')).not.toBe(resolveMissionImage('helping-11', '7–8')!.src);
+  });
+
+  it('keeps the authored scene its card showed when its set has no illustrations', () => {
+    renderResultFor('learning-14', 1, { ageBandAtSelection: '9–10' });
+
+    const picture = document.querySelector('.mission-result__picture')!;
+    expect(picture.querySelector('img')).toBeNull();
+    expect(picture.querySelector('svg.mission-scene')!.getAttribute('aria-hidden')).toBe('true');
   });
 
   it('pictures nothing for a completion the catalog no longer resolves', () => {

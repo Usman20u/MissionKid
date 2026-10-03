@@ -291,9 +291,11 @@ export function MissionActive({
           its card showed. The instruction to leave the screen stays first. */}
       <div className="mission-session__reminder">
         <MissionPicture
+          ageBand={active.ageBandAtSelection}
           category={active.missionCategoryAtSelection}
           className="mission-session__thumb mission-picture"
           missionId={active.missionId}
+          surface="active"
           withSceneDefs
         />
         <div className="mission-session__reminder-text">
