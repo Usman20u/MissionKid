@@ -1,22 +1,22 @@
 import type { MissionCategory } from './catalog';
-import introHero960 from './assets/imagery/intro-hero-960.webp';
+import introHero768 from './assets/imagery/intro-hero-768.webp';
 import introHero1536 from './assets/imagery/intro-hero-1536.webp';
-import categoryMovement320 from './assets/imagery/category-movement-320.webp';
-import categoryMovement640 from './assets/imagery/category-movement-640.webp';
-import categoryCreativity320 from './assets/imagery/category-creativity-320.webp';
-import categoryCreativity640 from './assets/imagery/category-creativity-640.webp';
-import categoryHelping320 from './assets/imagery/category-helping-at-home-320.webp';
-import categoryHelping640 from './assets/imagery/category-helping-at-home-640.webp';
-import categoryLearning320 from './assets/imagery/category-learning-320.webp';
-import categoryLearning640 from './assets/imagery/category-learning-640.webp';
-import categoryCalm320 from './assets/imagery/category-calm-320.webp';
-import categoryCalm640 from './assets/imagery/category-calm-640.webp';
-import stepChoose480 from './assets/imagery/step-choose-480.webp';
-import stepChoose960 from './assets/imagery/step-choose-960.webp';
-import stepDo480 from './assets/imagery/step-do-480.webp';
-import stepDo960 from './assets/imagery/step-do-960.webp';
-import stepRecognize480 from './assets/imagery/step-recognize-480.webp';
-import stepRecognize960 from './assets/imagery/step-recognize-960.webp';
+import categoryMovement512 from './assets/imagery/category-movement-512.webp';
+import categoryMovement1024 from './assets/imagery/category-movement-1024.webp';
+import categoryCreativity512 from './assets/imagery/category-creativity-512.webp';
+import categoryCreativity1024 from './assets/imagery/category-creativity-1024.webp';
+import categoryHelping512 from './assets/imagery/category-helping-at-home-512.webp';
+import categoryHelping1024 from './assets/imagery/category-helping-at-home-1024.webp';
+import categoryLearning512 from './assets/imagery/category-learning-512.webp';
+import categoryLearning1024 from './assets/imagery/category-learning-1024.webp';
+import categoryCalm512 from './assets/imagery/category-calm-512.webp';
+import categoryCalm1024 from './assets/imagery/category-calm-1024.webp';
+import stepChoose768 from './assets/imagery/step-choose-768.webp';
+import stepChoose1536 from './assets/imagery/step-choose-1536.webp';
+import stepDo768 from './assets/imagery/step-do-768.webp';
+import stepDo1536 from './assets/imagery/step-do-1536.webp';
+import stepRecognize768 from './assets/imagery/step-recognize-768.webp';
+import stepRecognize1536 from './assets/imagery/step-recognize-1536.webp';
 
 // The bounded product imagery the Visual & Ergonomic Specification authorizes:
 // one image for each Mission Category, one for each step of the introduction's
@@ -25,10 +25,15 @@ import stepRecognize960 from './assets/imagery/step-recognize-960.webp';
 // image is decorative: the category label and the step's words carry all of
 // the meaning, and the hero stands for no Mission.
 //
-// Each image is a reviewed static file derived from the originals kept beside
-// it, bundled by the ordinary build in two widths so a phone is not sent a
-// desktop's file. Nothing is fetched from another origin and nothing is
-// generated at runtime.
+// Each image is a reviewed static file, bundled by the ordinary build in two
+// widths so a phone is not sent a desktop's file. Nothing is fetched from
+// another origin and nothing is generated at runtime.
+//
+// `sizes` follows the layout, measured on the served build at the browser's
+// ordinary and enlarged text size: each value is at or above the width the
+// image is drawn at — for the cover-framed hero, the width its image is scaled
+// to — and its conditions are in `em`, as the layout's are, so they follow the
+// browser's text size.
 export type ProductImage = Readonly<{
   src: string;
   srcSet: string;
@@ -41,9 +46,9 @@ export type ProductImage = Readonly<{
 
 // Shown once, on the introduction, never on a session surface.
 export const INTRODUCTION_HERO_IMAGE: ProductImage = {
-  src: introHero960,
-  srcSet: `${introHero960} 960w, ${introHero1536} 1536w`,
-  sizes: '(min-width: 64rem) 50vw, 100vw',
+  src: introHero768,
+  srcSet: `${introHero768} 768w, ${introHero1536} 1536w`,
+  sizes: '(min-width: 100em) 48vw, (min-width: 66em) 58vw, 103vw',
   width: 1536,
   height: 1024,
 };
@@ -51,36 +56,37 @@ export const INTRODUCTION_HERO_IMAGE: ProductImage = {
 function categoryImage(small: string, large: string): ProductImage {
   return {
     src: small,
-    srcSet: `${small} 320w, ${large} 640w`,
-    sizes: '(min-width: 64rem) 20vw, 30vw',
-    width: 640,
-    height: 640,
+    srcSet: `${small} 512w, ${large} 1024w`,
+    sizes: '(max-width: 20em) 60vw, (max-width: 37em) 24vw, (max-width: 59em) 13vw, 17vw',
+    width: 1024,
+    height: 1024,
   };
 }
 
 // The five share one treatment — size, framing, light and material — so no
-// category looks richer, easier or more valuable than another.
+// category looks richer, easier or more valuable than another. They are the
+// same for every age group.
 export const CATEGORY_IMAGES: Readonly<Record<MissionCategory, ProductImage>> = {
-  Movement: categoryImage(categoryMovement320, categoryMovement640),
-  Creativity: categoryImage(categoryCreativity320, categoryCreativity640),
-  'Helping at Home': categoryImage(categoryHelping320, categoryHelping640),
-  Learning: categoryImage(categoryLearning320, categoryLearning640),
-  Calm: categoryImage(categoryCalm320, categoryCalm640),
+  Movement: categoryImage(categoryMovement512, categoryMovement1024),
+  Creativity: categoryImage(categoryCreativity512, categoryCreativity1024),
+  'Helping at Home': categoryImage(categoryHelping512, categoryHelping1024),
+  Learning: categoryImage(categoryLearning512, categoryLearning1024),
+  Calm: categoryImage(categoryCalm512, categoryCalm1024),
 };
 
 function stepImage(small: string, large: string): ProductImage {
   return {
     src: small,
-    srcSet: `${small} 480w, ${large} 960w`,
-    sizes: '(min-width: 64rem) 32vw, 8rem',
-    width: 960,
-    height: 640,
+    srcSet: `${small} 768w, ${large} 1536w`,
+    sizes: '(max-width: 20em) 92vw, 29vw',
+    width: 1536,
+    height: 1024,
   };
 }
 
 // In the order of the three steps the introduction describes.
 export const FLOW_STEP_IMAGES: readonly ProductImage[] = [
-  stepImage(stepChoose480, stepChoose960),
-  stepImage(stepDo480, stepDo960),
-  stepImage(stepRecognize480, stepRecognize960),
+  stepImage(stepChoose768, stepChoose1536),
+  stepImage(stepDo768, stepDo1536),
+  stepImage(stepRecognize768, stepRecognize1536),
 ];

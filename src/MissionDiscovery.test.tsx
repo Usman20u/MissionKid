@@ -16,6 +16,7 @@ import {
   useAppState,
   type AppStateAction,
 } from './appState';
+import { AGE_BANDS } from './ageBands';
 import { MISSION_CATEGORIES, type MissionCategory } from './catalog';
 import { MISSION_CATALOG } from './catalogContent';
 import {
@@ -1037,8 +1038,8 @@ describe('the Mission Category images', () => {
       expect(image.getAttribute('alt')).toBe('');
       expect(image.getAttribute('aria-hidden')).toBe('true');
       // One size for all five: no category is pictured larger or richer.
-      expect(image.getAttribute('width')).toBe('640');
-      expect(image.getAttribute('height')).toBe('640');
+      expect(image.getAttribute('width')).toBe('1024');
+      expect(image.getAttribute('height')).toBe('1024');
       expect(image.getAttribute('src')).not.toMatch(/^https?:/);
     }
     // Each control is named by its label alone; no image is exposed.
@@ -1054,6 +1055,24 @@ describe('the Mission Category images', () => {
 
     const after = [...document.querySelectorAll('.mission-world img')].map((image) => image.getAttribute('src'));
     expect(after).toEqual(before);
+  });
+
+  // One picture per category, not per age group: the category images stand for
+  // the whole category, whichever age group the family chose.
+  it('shows the same five images for every age group', () => {
+    const sources = AGE_BANDS.map((ageBand) => {
+      const { unmount } = renderShell(inDiscovery({ ageBand }));
+      const images = [...document.querySelectorAll('.mission-world img')].map((image) => [
+        image.getAttribute('src'),
+        image.getAttribute('srcset'),
+      ]);
+      unmount();
+      return images;
+    });
+
+    expect(sources[0]).toHaveLength(5);
+    expect(sources[1]).toEqual(sources[0]);
+    expect(sources[2]).toEqual(sources[0]);
   });
 });
 
