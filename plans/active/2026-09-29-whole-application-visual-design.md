@@ -1,7 +1,7 @@
 # MissionKid Plan 06 — whole-application visual design
 
 **Date:** 2026-09-29
-**Status:** Scope recorded before implementation at `f68470a`; implemented and verified at `53d6a8d`, recorded under *Outcome*. **Implementation is paused, from 2026-09-29, while the reviewer visually reviews Plan 06**; human visual acceptance is not given and not recorded, and the known visual gaps listed under *Outcome* remain, so this plan stays active. Further imagery is a proposal pending review, not an approved obligation — see *Review hold and clarifications*. **One bounded exception to the pause** is authorized on 2026-09-29: the `helping-11` image integration recorded under *Bounded image integration*, and nothing else — scope recorded at `cca58f0`, implemented and verified at `899ff79`. **On 2026-09-30 the reviewer authorized a complete visual redesign against a newly supplied reference**, recorded under *Reference redesign — 2026-09-30*. It ends the pause for that scope and carries this plan's first specification amendments, recorded at `6f56054`; it is **implemented and verified at `d8bad52`**. **On 2026-10-01 the reviewer authorized one further batch**: a supplied package of nine images that finishes the introduction's hero and replaces the category and step images, recorded under *Visual asset package — 2026-10-01* with its specification amendments before code at `0758e36`; it is **implemented and verified at `f30afbd`**, its verification interrupted once and completed, as recorded there. **On 2026-10-02 the reviewer authorized a bounded pre-release verification batch** on the current design, recorded under *Pre-release verification — 2026-10-02*: actual Safari demonstrated two defects, fixed at `e7f2119`; Safari, Chrome `154`, Firefox `157` and Chrome for Testing `149` pass on the fixed build, and a real-phone check is prepared; it is not release approval. **Also on 2026-10-02 the reviewer authorized Mission image briefs and a full-width layout**, recorded under *Mission image briefs and the full-width layout — 2026-10-02* before code; the briefs are exported and the layout **implemented and verified at `395a99d`**, while `51` Mission photographs remain to be produced, so this plan stays open. **On 2026-10-03 the reviewer authorized integrating a supplied package of `102` age-specific 3D Mission illustrations**, which supersedes the photographic proposal, recorded under *3D Mission image family — 2026-10-03* with its specification amendments before code at `49a0344`; it is **implemented and verified at `21eab4f`**: `99` of `102` illustrations are integrated, and one, `learning-13` for `9–10`, waits for regeneration with its Discovery set. Human visual acceptance is not given and not recorded, so this plan stays active.
+**Status:** Scope recorded before implementation at `f68470a`; implemented and verified at `53d6a8d`, recorded under *Outcome*. **Implementation is paused, from 2026-09-29, while the reviewer visually reviews Plan 06**; human visual acceptance is not given and not recorded, and the known visual gaps listed under *Outcome* remain, so this plan stays active. Further imagery is a proposal pending review, not an approved obligation — see *Review hold and clarifications*. **One bounded exception to the pause** is authorized on 2026-09-29: the `helping-11` image integration recorded under *Bounded image integration*, and nothing else — scope recorded at `cca58f0`, implemented and verified at `899ff79`. **On 2026-09-30 the reviewer authorized a complete visual redesign against a newly supplied reference**, recorded under *Reference redesign — 2026-09-30*. It ends the pause for that scope and carries this plan's first specification amendments, recorded at `6f56054`; it is **implemented and verified at `d8bad52`**. **On 2026-10-01 the reviewer authorized one further batch**: a supplied package of nine images that finishes the introduction's hero and replaces the category and step images, recorded under *Visual asset package — 2026-10-01* with its specification amendments before code at `0758e36`; it is **implemented and verified at `f30afbd`**, its verification interrupted once and completed, as recorded there. **On 2026-10-02 the reviewer authorized a bounded pre-release verification batch** on the current design, recorded under *Pre-release verification — 2026-10-02*: actual Safari demonstrated two defects, fixed at `e7f2119`; Safari, Chrome `154`, Firefox `157` and Chrome for Testing `149` pass on the fixed build, and a real-phone check is prepared; it is not release approval. **Also on 2026-10-02 the reviewer authorized Mission image briefs and a full-width layout**, recorded under *Mission image briefs and the full-width layout — 2026-10-02* before code; the briefs are exported and the layout **implemented and verified at `395a99d`**, while `51` Mission photographs remain to be produced, so this plan stays open. **On 2026-10-03 the reviewer authorized integrating a supplied package of `102` age-specific 3D Mission illustrations**, which supersedes the photographic proposal, recorded under *3D Mission image family — 2026-10-03* with its specification amendments before code at `49a0344`; it is **implemented and verified at `21eab4f`**: `99` of `102` illustrations are integrated, and one, `learning-13` for `9–10`, waits for regeneration with its Discovery set. **Also on 2026-10-03 the reviewer authorized replacing the nine remaining photographic site images** — the introduction's hero, its three steps and the five categories — with matching 3D images, recorded under *3D site images — 2026-10-03* with its specification amendment before code. Human visual acceptance is not given and not recorded, so this plan stays active.
 **Branch:** `feat/whole-application-visual-design`, taken from `9f53610`, the commit that closed Plan 05 on `feat/guided-entry-and-presentation`. That branch is preserved unchanged at its closure. The reference redesign continues on `feat/reference-visual-redesign`, taken from `2e81cec`, the head of `feat/whole-application-visual-design`, which is preserved unchanged. No history was rewritten.
 
 ## Authorization basis
@@ -1051,6 +1051,118 @@ The served build of `21eab4f` — `index-Bo32T7nk.js` (`sha256 184f0985…`), `i
 - **The repository grows by `23.9` MB** of illustrations.
 - **Human visual acceptance of the illustrations and of Plan 06 is not given and not recorded**, and this is not release approval.
 
+## 3D site images — 2026-10-03
+
+Recorded before any product file changed, on `feat/reference-visual-redesign` at `d3a838f`.
+
+### Authorization
+
+**Authorized on 2026-10-03** by the reviewer's instruction: replace all nine remaining photographic site images — the introduction's hero, its three step images and the five category images — with a supplied package of matching three-dimensional cartoon images, as one batch rather than a partial replacement. The instruction asks:
+
+- that the five category images stay universal across age groups, with no age-specific category behaviour; that the `99` Mission illustrations, every Mission/age lookup, the withheld `9–10` Learning set and its documented reason stay exactly as they are; and that nothing claims all `102` Mission illustrations are integrated;
+- that the shared mapping stays central, every use of the nine roles is replaced, and obsolete assets are removed only once nothing uses them, keeping unrelated images and fallback behaviour;
+- for square framing of the category pictures and the existing landscape frames of the introduction and its steps, keeping both children, their hands and the tower whole in the hero at every framing, no text over faces, nothing stretched, and the `1536` file wherever it is needed; correct intrinsic sizes, `srcset` and `sizes`, same-origin files and appropriate loading priorities; decorative accessibility and usable behaviour with images blocked; PNG originals and production documents kept out of the shipped assets;
+- that the full-width layout, the fonts, copy, catalog, headings, radio semantics, reading and Tab order, touch targets, focus rings, persistence, timers, completion and both fixes of `e7f2119` are preserved, with no new feature, control, navigation, account, runtime generation or dependency;
+- for verification in EN, DE and RU on a desktop, a phone and at `320` px with enlarged text — all nine roles loading and decoding, category selection stable, subjects uncut, no new clipping, overflow or overlap, images blocked and the relevant keyboard navigation — and for the relevant tests, the type check, the full suite and the production build, reusing the existing scripts and not repeating broad matrices without a new failure or change.
+
+Local commits are authorized. **Excluded:** pushing, merging, deployment, recording human visual acceptance and closing this plan.
+
+### The package
+
+`MissionKid-3D-site-images-v1`, extracted onto the Desktop without overwriting anything: nine PNG originals — `1536×1024` for the hero and the steps, `1254×1254` for the categories — and `18` WebP files, `768` and `1536` px wide for the hero and the steps, `512` and `1024` px for the categories. **`17` of the `18` WebP files match their manifest's byte size, dimensions and SHA-256. One is empty:** `webp/category-movement__1024.webp` is `0` bytes in the archive, where the manifest records `141,586` bytes. The manifest records no hashes for the originals; their dimensions match it. The images were made offline with an image-generation tool, as fictional three-dimensional cartoon characters; they are not photographs and record no real family or activity.
+
+**The missing file is derived from the package's own original, not substituted.** The Movement original is drawn at `1024×1024` with high-quality smoothing and encoded as WebP by Chromium, at a setting calibrated on the four category files the package does contain: re-derived from their originals at quality `0.9`, they match the packaged files to a mean absolute difference of `1.4`–`1.6` levels of `255`, at `94`–`96` % of their bytes. At that setting Movement's file is `135,974` bytes — `96` % of the `141,586` the manifest records — and matches the packaged `512` px Movement file, drawn at `1024`, to `2.4` levels. The originals, the overview sheet, the prompts and the manifest stay outside the repository.
+
+### Content inspection, before integration
+
+Each image was looked at in full, at `1536` or `1024` px.
+
+| Image | What it shows | Finding |
+| --- | --- | --- |
+| Hero | Two fictional children, a girl and a younger boy, on a cream rug in a living room: she sets a block on a low tower and he watches, chin on his hands; the left third is open cream wall | Block-building in general, as the previous hero's tower was — not a Mission's measuring or counting. Whole children, hands and tower; low and on the floor; the subjects span `35`–`97` % of the width |
+| Step 1, choose | The girl and an adult at a table with three equal picture cards — blocks, a leaf, a folded cloth — the girl pointing at the middle one | Choosing one of three together. The cards are equal in size, light and placement; the pointing is the act of choosing, not a mark on one card |
+| Step 2, do | The girl drawing a fluffy purple monster in crayon at a table | Doing the activity away from the screen |
+| Step 3, recognize | The girl holding up her finished drawing while the adult smiles at it | Recognizing the effort; no score, prize or words of praise |
+| Movement | The girl stretching tall with both arms high and her feet wide on a rug, in open floor | The clear-floor, open-space movement the Movement Missions ask for |
+| Creativity | The girl building a block house with a triangular roof on a rug | Making with blocks |
+| Helping at Home | The girl folding a cloth at a table | Folding, as in *Napkin Fold Five* |
+| Learning | The girl comparing a green and a dry leaf on a table, pointing at one | Observing and comparing |
+| Calm | The girl sitting on a chair, watching a curtain move at a window | Watching one slow change |
+
+Every image: no text, letters, numerals, logos or interface — the cards and drawings are pictures; no real or recognizable person, photograph or photorealistic face; nothing hot, sharp, high or climbed; the people are clearly fictional animated characters of the Mission illustrations' family. **No image conflicts with a content or safety rule.**
+
+**Recorded for the content reviewer — judgements, not defects:**
+
+1. The same girl appears in all nine, and the boy only in the hero; the adult in both steps that show one is the same woman as in the Mission illustrations.
+2. Several category images are close to particular Missions — Calm to *Watch It Change*, Helping at Home to *Napkin Fold Five*, Creativity to *The Tiny World* — as the previous category pictures were, with their folded cloths and blocks; each stands for its category.
+3. The Learning image shows leaves, which no Learning Mission uses.
+4. Every image is set in the same kind of comfortable home.
+
+### Specification amendments
+
+| Document | Change | Reason |
+| --- | --- | --- |
+| [`visual-and-ergonomic.md`](../../docs/specs/visual-and-ergonomic.md) | *Bounded product imagery*: a person appears only as a clearly fictional animated character of the *Mission illustrations*' family, under the same limits — never a real or recognizable person, a photograph or a photorealistic or uncanny face — and an adult only where the image shows something the family does together; a category image may be a metaphor or a fictional child doing a kind of activity its category involves, standing for the whole category and never for one Mission; the hero and step images show the kind of activity the Missions involve and the family's part in the flow; an ordinary home room may be the decorative background of a pictured activity, never a requirement; the images share the illustrations' rendering where they show people. Criterion `26` follows | The section was written for still lifes and metaphors: it excluded every person and child and any household type |
+
+**Not changed:** `business-context.md`, `global-spec.md` and `functional-map.md` — they exclude photos and videos of children, which these images are not; `roadmap.md`, `user-stories.md`, `mission-catalog-and-safety.md`, the Technical Specifications and `F001`–`F004`. *Parent introduction presentation* and *F002 — Mission Category Selection presentation* already require what this batch keeps — the hero as the principal picture with no text over it, every picture showing its whole subject, five category images of one treatment with their labels — and are unchanged. No behaviour, state, data, Mission content, eligibility, ordering, lifecycle, persistence or recovery outcome changes, and no string, translation or navigation is added.
+
+### Revalidation
+
+**User Story / traceability validation — passed.** All `14` stories are unchanged, unique and keep their owners; none is added, because no behaviour is. The hero and the steps serve `P8` (`F001`); the category images `P3` and `C1` (`F002`). Nothing traces to nothing.
+
+**Focused Full Specification Audit — passed, no blockers.** Scope: the amended section and every clause that could conflict with it.
+
+| Check | Result |
+| --- | --- |
+| Higher authority | Passed. Business Context, the Global Specification and the Functional Map exclude photos and videos of children; fictional animated characters are neither, and photographic and photorealistic people stay excluded |
+| Peer rules | Passed. The five category images keep one treatment and one square frame and are the same for every age group; the three step images keep one treatment; nothing is badged, ranked or raised |
+| The hero | Passed. It appears only on the introduction, never on a session surface, never stands in for a Mission's image and pictures block-building in general |
+| Imagery content | Passed with four judgements recorded for the content reviewer |
+| Anti-manipulation | Passed. Recognition is a smile at a drawing — no score, prize, count or praise in words |
+| Accessibility | Passed by construction, to be re-measured after implementation: every image decorative, every statement text, labels authoritative, a usable view with images blocked |
+| Localization | Passed. No words in any image |
+| Technical boundary | Passed. Bundled static files from the application's own origin in responsive widths, no dependency, no runtime generation; measured in the production build |
+| Mission Catalog and Safety | Passed. No content, eligibility or approval changes |
+| Reference integrity | Passed. Every relative link in the repository's Markdown resolves |
+
+**Blockers: none. Unresolved contradictions: none.**
+
+### Renewed implementation authorization
+
+Recorded on 2026-10-03 from the same instruction, which authorizes the batch and the image-rule amendment it needs. The revalidation above passed before any product file changed. **Authorized:** the batch scoped below. **Still excluded:** pushing, merging, deployment, unrelated deletion, closing this plan and recording human visual acceptance.
+
+### Scope
+
+| Item | What changes | Trace |
+| --- | --- | --- |
+| Assets | `18` WebP files into `src/assets/imagery/`, named as before by role and width — `17` copied unchanged from the package and Movement's `1024` px file derived as above. The `18` previous WebP files and the nine previous originals in `src/assets/imagery/originals/` removed once nothing uses them; no PNG added | *Bounded product imagery*; Technical Architecture *Performance boundary* |
+| `src/productImagery.ts` | The nine roles mapped to the new files: `srcset` at `768`/`1536` and `512`/`1024`; intrinsic `1536×1024` and `1024×1024`; `sizes` from the layout, below | `F001` `13`–`18`; `F002`; criteria `24`, `26` |
+| Tests | The category images' shared intrinsic size follows the new files | Criterion `26` |
+
+**`sizes`, measured on the served build** at `76` viewport widths from `320` to `1920` px, at the browser's ordinary text size and at its own `32px` setting — the hero as the width its cover-framed image is drawn at. Each value is at or above the drawn width at all `456` measurements, and its conditions are in `em`, as the layout's are, so they follow the browser's text size; each breakpoint errs toward the larger file.
+
+| Image | Drawn width | `sizes` |
+| --- | --- | --- |
+| Hero | about `97` % of the viewport in one column, up to `102` % with enlarged text; `55`–`57` % beside the words; `46`–`47` % at its whole `3:2` from `100rem` | `(min-width: 100em) 48vw, (min-width: 66em) 58vw, 103vw` |
+| Steps | `26`–`29` % — thumbnails beside the words on a phone, a row on a desktop; `79`–`91` % when they stack under enlarged text | `(max-width: 20em) 92vw, 29vw` |
+| Categories | `21`–`24` % in rows; `12`–`13` % in two-column rows; `14`–`16` % as five tiles; `52`–`59` % when they stack under enlarged text | `(max-width: 20em) 60vw, (max-width: 37em) 24vw, (max-width: 59em) 13vw, 17vw` |
+
+The previous hero value underestimated the drawn hero between `1366` and `1536` px, where the `768` file would have been enlarged.
+
+No component, stylesheet, copy or behaviour change is planned. The hero's frames are measured on the build — on a desktop below `100rem` the `11:10` frame's fading left edge reaches the girl's knee — and changed only if a subject is cut.
+
+### Preserved exactly
+
+Every word, heading and translation; the introduction's reading order and its one action; the category controls, their labels, radio semantics and selection; the `99` Mission illustrations, every Mission/age lookup, the withheld set and the authored-scene fallback; the full-width layout and both fixes of `e7f2119`; persistence, the lifecycle, the timer and completion; focus order and management, the focus ring, targets of `52` px or more.
+
+### Verification intent
+
+- **The nine roles** on the served build in EN, DE and RU at `1920` and `1280` px, a `390` px phone, and `320` px with a `32px` root and with the browser's own `32px` text: each image the new file for its role, decoded, from the same origin, decorative and covering its drawn width at the screen's density; the category pictures square and uncropped and the same for every age group; the step pictures uncropped; the hero's children, hands and tower whole in every frame, with the share of the subject under the desktop fade measured.
+- **No regression:** words, headings, text boxes and Tab order identical to the build of `d3a838f`; `0` clipping, page overflow and overlap; category selection stable through every age group; the Mission illustrations unchanged.
+- **Images blocked:** the introduction and the categories usable, every frame keeping its size.
+- **Gates** once, sequentially, with complete output kept: relevant tests, `tsc --noEmit`, the full suite, the production build, `git diff --check`.
+- **Delivery:** results saved as produced in the local review folder `MissionKid-Plan06-3d-site-images`; an overview of the introduction and the five category pictures; the local address serving this repository.
+
 ## Decisions for the reviewer
 
 1. **A Mission's image on Ready and Active** — *authorized on 2026-09-30* and amended into the Visual & Ergonomic Specification under *Reference redesign — 2026-09-30*; no longer open.
@@ -1060,4 +1172,4 @@ The served build of `21eab4f` — `index-Bo32T7nk.js` (`sha256 184f0985…`), `i
 
 ## Definition of complete
 
-Every improvement in the scope above implemented, the verification actually run and recorded here and in the changelog with its limitations, the diff limited to this scope, and screenshots from the actual builds delivered. *Amended on 2026-09-30:* the same holds for the scope of *Reference redesign — 2026-09-30*, whose outcome is recorded in its own section. *Amended on 2026-10-01:* and for the scope of *Visual asset package — 2026-10-01*. *Amended on 2026-10-03:* and for the scope of *3D Mission image family — 2026-10-03*, which is complete only once every withheld illustration is replaced and integrated. Human visual acceptance, if given, is recorded separately, and **this plan stays active until the reviewer's visual judgement is recorded**, as Plan 05 did. This plan claims nothing about the imagery beyond the shared frame and grade it implemented; extending it is a proposal pending review. No claim of full design completion is made while the gaps it names remain.
+Every improvement in the scope above implemented, the verification actually run and recorded here and in the changelog with its limitations, the diff limited to this scope, and screenshots from the actual builds delivered. *Amended on 2026-09-30:* the same holds for the scope of *Reference redesign — 2026-09-30*, whose outcome is recorded in its own section. *Amended on 2026-10-01:* and for the scope of *Visual asset package — 2026-10-01*. *Amended on 2026-10-03:* and for the scope of *3D Mission image family — 2026-10-03*, which is complete only once every withheld illustration is replaced and integrated, and of *3D site images — 2026-10-03*. Human visual acceptance, if given, is recorded separately, and **this plan stays active until the reviewer's visual judgement is recorded**, as Plan 05 did. This plan claims nothing about the imagery beyond the shared frame and grade it implemented; extending it is a proposal pending review. No claim of full design completion is made while the gaps it names remain.
