@@ -219,7 +219,7 @@ Each option must make the approved comparison information easy to scan:
 
 All three options must receive equal visual weight. A stable reading order may be used, but order must not look like rank or recommendation. Information should follow the same hierarchy across all three so the family can compare without dense scanning.
 
-Where Mission cards use the controlled Mission Mini-World scene system, all three scenes are peers. Scene richness, hero-object emphasis, color, or composition must not make one suggestion look recommended, better, easier, or more valuable, and each card's required text content remains complete and comparable regardless of its scene.
+Where Mission cards use the controlled Mission Mini-World scene system, all three images are peers of one kind — three Mission illustrations or three authored scenes, never a mix. Richness, hero-object emphasis, a pictured child's expression, color, or composition must not make one suggestion look recommended, better, easier, or more valuable, and each card's required text content remains complete and comparable regardless of its image.
 
 `Another set`, when available under `F002`, remains visually secondary to choosing one of the current Missions. It must not resemble refresh gambling, autoplay, swiping, or endless discovery. When another complete set is unavailable, the current three choices remain visually usable; absence of another set is a bounded state, not child failure.
 
@@ -244,7 +244,7 @@ The Mission title and short instruction establish the reading hierarchy. Mission
 
 No recommendation, reward preview, extra tutorial, or unnecessary intermediate choice belongs between ready and the approved start action.
 
-Ready may show the chosen Mission's own image — the same reviewed still or authored scene its Mission card shows — to support recognizing the Mission. The image is decoration to assistive technology and does not lead the reading hierarchy: the title and instruction remain the dominant content, and the image never displaces the adult-involvement or safety guidance or the start action.
+Ready may show the chosen Mission's own image — the same image its Mission card showed — to support recognizing the Mission. The image is decoration to assistive technology and does not lead the reading hierarchy: the title and instruction remain the dominant content, and the image never displaces the adult-involvement or safety guidance or the start action.
 
 ## F003 — Mission Break transition and active presentation
 
@@ -304,7 +304,7 @@ Recognition should be warm but brief. It must not use concealed or random reveal
 
 The Reward Card must not pressure the family to begin another Mission. It must provide the approved short next step back to the core flow or away from the screen, and preserving completion must not depend on further interaction.
 
-The Reward Card may show the completed Mission's own image — the same still or authored scene that represented it in Discovery — only while the catalog still resolves that Mission; a completion whose reviewed content is unavailable shows no image rather than a substitute. Its Monthly Goal progress may be reinforced by the calm bar described under *Monthly Goal presentation*.
+The Reward Card may show the completed Mission's own image — the same image that represented it in Discovery — only while the catalog still resolves that Mission; a completion whose reviewed content is unavailable shows no image rather than a substitute. Its Monthly Goal progress may be reinforced by the calm bar described under *Monthly Goal presentation*.
 
 ## F004 — Mission History presentation
 
@@ -434,11 +434,13 @@ Icons and illustrations support comprehension. Approved text remains authoritati
 
 Mission Discovery may present each Mission through a controlled scene: one small, distinctive mini-world or diorama that shows what the Mission involves. A Mission scene is a prominent emotional and comprehension entry point into the Mission card rather than background decoration.
 
+A Mission's image may instead be a reviewed Mission illustration, under *Mission illustrations* below: a static three-dimensional cartoon picture of a clearly fictional child doing that Mission's own activity, made for one of the Mission's approved age bands. In this section a *scene* is either kind of Mission image unless a rule names an authored scene.
+
 This authorizes one bounded scene system for child-facing Mission presentation. It does not authorize an open illustration library, and it changes no `F001`–`F004` behavior, Mission eligibility rule, or Mission content requirement.
 
-Outside Mission Discovery, a Mission's own image — its authored scene or a reviewed still of that Mission — is authorized in exactly these places, under every limit in this section:
+Outside Mission Discovery, a Mission's own image — its illustration, its authored scene, or a reviewed still of that Mission — is authorized in exactly these places, under every limit in this section:
 
-- the `F001` parent introduction's one non-selectable example Mission, which may show a reviewed still of its own;
+- the `F001` parent introduction's one non-selectable example Mission, which shows its own image — for an illustrated Mission, the illustration the age rule under *Mission illustrations* selects — or a reviewed still of its own;
 - the chosen Mission on Ready and on the active Mission, showing the image its Mission card showed in Discovery, as the `F003` sections above describe; and
 - the completed Mission on its own Reward Card, showing the image that represented it in Discovery.
 
@@ -457,13 +459,15 @@ On a session surface the image is always that session's own Mission, never a dif
 
 Child-facing Mission scenes should feel premium, warm, and child-safe: semi-realistic or stylized three-dimensional or two-and-a-half-dimensional form, a miniature-diorama sense of place, recognizable real-world subjects, depth, light, material, atmosphere, and tactile form.
 
+A Mission illustration carries the same warmth through a premium animated-film look: an appealing, clearly fictional cartoon child with expressive features and believable hands in real contact with real objects, in an ordinary room in warm daylight.
+
 Excluded: generic flat iconography, generic abstract banners, a stock-illustration look, cheap cartoon styling, casino or neon gaming energy, visual noise, photorealistic or uncanny depictions of children, and realism heavy enough to reduce warmth.
 
 Parent-oriented utility, confirmation, and recovery surfaces remain calmer and more restrained and do not adopt child-facing scene richness. The parent introduction is not one of those surfaces: its single example scene is authorized above, while its explanatory and consequence text stays restrained.
 
 ### Three-layer color and material model
 
-A Mission scene separates three layers so it reads as a place rather than a single-hue symbol:
+An authored scene separates three layers so it reads as a place rather than a single-hue symbol:
 
 1. **Category atmosphere.** Mission Category color lights the scene's environment and air and establishes category continuity. It must not recolor every object into one hue, and it never replaces the visible category label.
 2. **Object-local color and material.** Recognizable objects keep their own restrained local color and material identity at controlled low-to-medium saturation.
@@ -471,11 +475,13 @@ A Mission scene separates three layers so it reads as a place rather than a sing
 
 Hero-object emphasis describes the Mission's own action. It must never indicate rank, recommendation, popularity, difficulty, quality, or that one suggestion is better than another, and it must not vary by anything other than that Mission's content.
 
+Mission illustrations share one warm daylight, one palette, and one level of finish across every Mission Category; the visible category label, not the light, carries the category, and the same rule applies to their emphasis.
+
 ### Scene composition
 
 Scenes should share one consistent grammar: a foreground, midground, and background; one readable focal subject; soft directional key light with restrained ambient fill; contact shadows and believable grounding; controlled perspective; and a matte, soft-material feeling.
 
-A scene should read as a small world or miniature place rather than a decorative icon banner. Composition must not create a false content feed, an autoplaying surface, or an attention trap.
+An authored scene should read as a small world or miniature place, and an illustration as one moment of the Mission in an ordinary room, rather than a decorative icon banner. Composition must not create a false content feed, an autoplaying surface, or an attention trap.
 
 ### Accessibility and performance
 
@@ -484,15 +490,28 @@ A scene should read as a small world or miniature place rather than a decorative
 - Scenes must not create color-only meaning, clip or truncate critical text, or reduce touch-target size, contrast, visible focus, keyboard order, or larger-text behavior.
 - Scenes remain mobile-first and must not degrade responsive behavior in English, German, or Russian, including where a longer translation grows a card.
 - Scene motion follows the motion rules: no continuous attention animation, no autoplay attention capture, and reduced-motion preferences respected.
-- Scenes must remain performant on ordinary mobile devices and must not introduce heavy runtime rendering.
+- Scenes must remain performant on ordinary mobile devices and must not introduce heavy runtime rendering. An illustration is served in responsive widths, so a device is sent the width its window needs rather than the largest file.
 
 ### Implementation neutrality
 
 The scene system may be implemented with SVG, CSS, lightweight raster assets, or controlled static rendered imagery, in any combination that satisfies the accessibility, localization, responsive, and performance requirements above.
 
-Any controlled presentation metadata the scene system needs, such as a scene composition keyed by the stable Mission identifier, belongs to the presentation layer. It adds no field to Mission catalog content, no persisted value, and no snapshot data. [Mission Catalog and Safety](mission-catalog-and-safety.md) keeps the hero object or focal action as a human-reviewed content and presentation handoff; if a genuine machine-readable requirement ever arises, the owning technical specifications introduce it.
+Any controlled presentation metadata the scene system needs, such as a scene composition keyed by the stable Mission identifier or an illustration keyed by that identifier and an approved age band, belongs to the presentation layer. It adds no field to Mission catalog content, no persisted value, and no snapshot data. [Mission Catalog and Safety](mission-catalog-and-safety.md) keeps the hero object or focal action as a human-reviewed content and presentation handoff; if a genuine machine-readable requirement ever arises, the owning technical specifications introduce it.
 
-No specific rendering technology is a permanent product requirement, and a runtime three-dimensional engine is not mandated. Runtime AI-generated imagery is not permitted: Mission scenes are controlled, reviewed, bundled product content in the same sense as Mission text. Asset weight remains subject to the Technical Architecture's minimal static-application constraints, and any new dependency still requires a documented need and the privacy, accessibility, size, and maintenance review that specification requires.
+No specific rendering technology is a permanent product requirement, and a runtime three-dimensional engine is not mandated. Runtime AI-generated imagery is not permitted: Mission scenes are controlled, reviewed, bundled product content in the same sense as Mission text. An illustration made offline with an image-generation tool is admissible only as such content: inspected against the Mission's reviewed text and this section before integration, recorded as generated, and never presented as a photograph or a record of a real child or activity. Asset weight remains subject to the Technical Architecture's minimal static-application constraints, and any new dependency still requires a documented need and the privacy, accessibility, size, and maintenance review that specification requires.
+
+### Mission illustrations
+
+A Mission illustration is one Mission's own image, made for one of the Mission's approved age bands.
+
+- The child is an invented, clearly fictional animated character of about that age — never a recognizable real child, never a photograph, and never a photorealistic or uncanny depiction. No illustration invites or implies photographing or filming a child.
+- It shows one moment of the Mission's instructed activity and only what the Mission's reviewed text describes or leaves to the family's choice. It implies no equipment, material, place, or action the text does not, nothing the text or its safety guidance excludes, and never makes an unsafe action appealing. Where a material matters to safety, such as an unbreakable cup, the text carries the requirement, not the picture.
+- An adult appears only in a Mission whose reviewed text requires an adult nearby or taking part, doing what that text says.
+- The room around the activity is an ordinary home room. It is decorative background and never a requirement, and it shows no luxury, garden, landscape, or place a family would have to reach.
+- It carries no words, letters, logos, brand marks, signs, or pictured interface elements. A pictured drawing, label, or sign may carry the pictograms or symbols a child would draw, and the numerals of a numbered sequence the Mission's own instruction asks for, which read the same in every supported language. None carries an instruction, a safety condition, or a consequence.
+- Every illustration shares one rendering, light, palette, and level of finish, so that no Mission, Mission Category, or age band looks richer, easier, or more valuable than another. Pictured children vary between Missions and stand for no particular family's child, and the stereotype rules of *Icons and imagery* apply to every person pictured.
+- Each surface shows the illustration for the age band in effect there: Discovery, the age band of the current discovery context; Ready, the active Mission, and its Reward Card, the age band the Mission Session recorded when the Mission was selected, so the family sees the same picture from choosing it to its recognition, across a reload, and whatever setup changes later; the introduction's example, the age band of the current setup context where one exists and otherwise the documented default `4–6`, a fixed presentation choice that infers and records no age context. No surface substitutes another Mission's image, a category image, or another age band's illustration, and no illustration exists for an age band the catalog does not approve the Mission for.
+- Within one set of three suggestions all three images are of one kind. Where one illustration of a set cannot be used, the whole set keeps its authored scenes until it can, and the record names the missing illustration.
 
 ## Bounded product imagery
 
@@ -660,13 +679,14 @@ If presentation would require new behavior, a new state, a new data fact, a chan
 18. No visual pattern introduces an infinite feed, autoplay, fake scarcity, streak pressure, social proof, public comparison, random reward, urgent countdown manipulation, or pressure to continue.
 19. No presentation rule changes the `F001`–`F004` behavior, Technical Specification mechanics, or Mission Catalog and Safety eligibility rules.
 20. An ergonomic review results in one to three targeted improvements rather than a generic redesign. An explicitly authorized and recorded visual redesign against a supplied reference is not an ergonomic-review outcome and is judged by the other criteria.
-21. Child-facing Mission scenes, where used, remain one bounded controlled system in which approved text stays authoritative, required adult-involvement and safety guidance stay visible as text, no critical meaning depends on the scene, and no scene depicts or makes attractive an action the Mission does not instruct.
+21. Child-facing Mission scenes — authored scenes and Mission illustrations — where used, remain one bounded controlled system in which approved text stays authoritative, required adult-involvement and safety guidance stay visible as text, no critical meaning depends on the scene, and no scene depicts or makes attractive an action the Mission does not instruct.
 22. Scene category atmosphere, object-local color, and single hero-object emphasis describe the Mission action only and never convey rank, recommendation, popularity, or relative value among the three equally weighted suggestions.
 23. Mission scenes preserve the accessibility baseline, reduced-motion behavior, localization resilience, and mobile performance requirements without mandating a specific rendering technology, a runtime three-dimensional engine, or runtime AI-generated imagery.
 24. The parent introduction explains what MissionKid is for, shows at most one non-selectable example Mission with its required adult-involvement wording and safety guidance intact, offers the supported language choice and exactly one dominant forward action into setup, and uses no marketing, testimonial, rating, urgency, persuasion, or onboarding-carousel pattern.
 25. Outside Mission Discovery, a Mission's own image appears only on the introduction's example, on Ready and the active Mission for that session's own Mission, and on that completion's Reward Card; it is always decoration, and it never displaces required text, guidance, or the primary action.
 26. The bounded product imagery is exactly five category images, three flow-step images and one introduction hero image; each is local, static, reviewed, free of text and people, decorative to assistive technology, and never read as a Mission requirement; the five category images share one treatment; and the hero image appears only on the introduction.
 27. Wherever a Monthly Goal bar appears, its filled share equals the displayed count over the target, it caps with the count, it does not animate, and the text `X / 20 missions` remains present.
+28. Every Mission illustration shows a clearly fictional animated child doing that Mission's instructed activity for one of its approved age bands, never a recognizable real child or a photographic or photorealistic depiction; it carries no words, letters, logos, or pictured interface and implies no equipment, material, or action the reviewed text does not; each surface shows the illustration for the age band in effect there — the discovery context, the age band the Mission Session recorded, or the introduction's documented default — never another Mission's, a category's, or another age band's image; and the three suggestions of a set always show images of one kind.
 
 ## Explicit non-goals
 
@@ -675,7 +695,7 @@ This specification does not define or authorize:
 - an exact final palette or color tokens;
 - an exact final font family or typography tokens;
 - a logo or brand identity;
-- an open or general-purpose illustration library, a broad decorative illustration system, arbitrary marketing artwork, or asset-heavy illustration bloat; the bounded Mission Mini-World scene system above, including its scene grammar, reusable scene primitives, Mission-specific compositions, and controlled presentation metadata, and the nine images of the bounded product imagery are authorized and are not such a library;
+- an open or general-purpose illustration library, a broad decorative illustration system, arbitrary marketing artwork, or asset-heavy illustration bloat; the bounded Mission Mini-World scene system above, including its scene grammar, reusable scene primitives, Mission-specific compositions, its Mission illustrations — one for each Mission and approved age band — and controlled presentation metadata, and the nine images of the bounded product imagery are authorized and are not such a library;
 - a complete design system;
 - detailed design tokens;
 - a component-library choice;
