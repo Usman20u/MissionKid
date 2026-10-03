@@ -1,7 +1,7 @@
 # MissionKid Plan 06 — whole-application visual design
 
 **Date:** 2026-09-29
-**Status:** Scope recorded before implementation at `f68470a`; implemented and verified at `53d6a8d`, recorded under *Outcome*. **Implementation is paused, from 2026-09-29, while the reviewer visually reviews Plan 06**; human visual acceptance is not given and not recorded, and the known visual gaps listed under *Outcome* remain, so this plan stays active. Further imagery is a proposal pending review, not an approved obligation — see *Review hold and clarifications*. **One bounded exception to the pause** is authorized on 2026-09-29: the `helping-11` image integration recorded under *Bounded image integration*, and nothing else — scope recorded at `cca58f0`, implemented and verified at `899ff79`. **On 2026-09-30 the reviewer authorized a complete visual redesign against a newly supplied reference**, recorded under *Reference redesign — 2026-09-30*. It ends the pause for that scope and carries this plan's first specification amendments, recorded at `6f56054`; it is **implemented and verified at `d8bad52`**. **On 2026-10-01 the reviewer authorized one further batch**: a supplied package of nine images that finishes the introduction's hero and replaces the category and step images, recorded under *Visual asset package — 2026-10-01* with its specification amendments before code at `0758e36`; it is **implemented and verified at `f30afbd`**, its verification interrupted once and completed, as recorded there. **On 2026-10-02 the reviewer authorized a bounded pre-release verification batch** on the current design, recorded under *Pre-release verification — 2026-10-02*: actual Safari demonstrated two defects, fixed at `e7f2119`; Safari, Chrome `154`, Firefox `157` and Chrome for Testing `149` pass on the fixed build, and a real-phone check is prepared; it is not release approval. **Also on 2026-10-02 the reviewer authorized Mission image briefs and a full-width layout**, recorded under *Mission image briefs and the full-width layout — 2026-10-02* before code. Human visual acceptance is not given and not recorded, so this plan stays active.
+**Status:** Scope recorded before implementation at `f68470a`; implemented and verified at `53d6a8d`, recorded under *Outcome*. **Implementation is paused, from 2026-09-29, while the reviewer visually reviews Plan 06**; human visual acceptance is not given and not recorded, and the known visual gaps listed under *Outcome* remain, so this plan stays active. Further imagery is a proposal pending review, not an approved obligation — see *Review hold and clarifications*. **One bounded exception to the pause** is authorized on 2026-09-29: the `helping-11` image integration recorded under *Bounded image integration*, and nothing else — scope recorded at `cca58f0`, implemented and verified at `899ff79`. **On 2026-09-30 the reviewer authorized a complete visual redesign against a newly supplied reference**, recorded under *Reference redesign — 2026-09-30*. It ends the pause for that scope and carries this plan's first specification amendments, recorded at `6f56054`; it is **implemented and verified at `d8bad52`**. **On 2026-10-01 the reviewer authorized one further batch**: a supplied package of nine images that finishes the introduction's hero and replaces the category and step images, recorded under *Visual asset package — 2026-10-01* with its specification amendments before code at `0758e36`; it is **implemented and verified at `f30afbd`**, its verification interrupted once and completed, as recorded there. **On 2026-10-02 the reviewer authorized a bounded pre-release verification batch** on the current design, recorded under *Pre-release verification — 2026-10-02*: actual Safari demonstrated two defects, fixed at `e7f2119`; Safari, Chrome `154`, Firefox `157` and Chrome for Testing `149` pass on the fixed build, and a real-phone check is prepared; it is not release approval. **Also on 2026-10-02 the reviewer authorized Mission image briefs and a full-width layout**, recorded under *Mission image briefs and the full-width layout — 2026-10-02* before code; the briefs are exported and the layout **implemented and verified at `395a99d`**, while `51` Mission photographs remain to be produced, so this plan stays open. Human visual acceptance is not given and not recorded, so this plan stays active.
 **Branch:** `feat/whole-application-visual-design`, taken from `9f53610`, the commit that closed Plan 05 on `feat/guided-entry-and-presentation`. That branch is preserved unchanged at its closure. The reference redesign continues on `feat/reference-visual-redesign`, taken from `2e81cec`, the head of `feat/whole-application-visual-design`, which is preserved unchanged. No history was rewritten.
 
 ## Authorization basis
@@ -832,6 +832,53 @@ Verification: EN, DE and RU at `1280` and `1920` px, `390` px, and `320` px with
 | Text keeps a readable measure inside the wider sheets | Every view | *Typography principles*, *Localization resilience* |
 
 No component, wording, route, state or behaviour changes; stylesheet only, unless a view needs a wrapper to keep its document order.
+
+### Outcome, at `395a99d`
+
+**The Mission image briefs** were exported to `~/Desktop/MissionKid-mission-image-briefs.md` at `395a99d`: all `54` Missions grouped by category with their exact ID, age groups, English title, instruction, safety guidance and adult-involvement note — the `114` quoted fields each checked verbatim against `src/catalogContent.ts`; the current image of each, `3` photographic stills in Discovery and its session views, `helping-11`'s still on the introduction only and `51` authored illustrations; the actual Discovery sets per age group, so photographs can arrive a whole set at a time; the restrictions with their specification references, separating literal Mission images from category metaphors; the 3:2 frame, the measured display sizes and the integration points. It records the tension between the scene system's *Visual direction* and a fully photographic family for a later amendment, and authorizes no image or catalog change. **The Mission imagery itself is not done: `51` Missions still need a photograph.**
+
+**The full-width layout — `src/styles.css` only**, `167` lines added and `23` removed; no component, wording, semantics, route or behaviour changed.
+
+| Surface | As built |
+| --- | --- |
+| Shell | One shell across the window up to `120rem`, shared by the wordmark and every view; gutters `8px`–`1rem` on a phone as before, `clamp(1.5rem, 2.5vw, 3rem)` from `48rem`; the page fills the window's height (`100dvh`) and scrolls as usual |
+| Every view sheet | Spans the shell — the `46rem`, `64rem` and `40rem` caps are gone — and reaches the foot of the window; the introduction keeps its own height, because its hero shares spare height between the rows around its words; the error view fills the window too |
+| Introduction | From a `100rem` window the hero gives the picture `1.1` parts to the words' `0.9` and frames it at its own 3:2, so the whole photograph shows; the example card keeps a `72rem` reading width |
+| Discovery | Unchanged rules: five category tiles and three Mission cards now spread across the full sheet |
+| Setup, settings, temporary mode | The two choice groups side by side once the sheet is `60em` wide, at most `84rem`; the note and the action beneath both |
+| Ready | Picture and Mission share the width until the picture reaches `44rem` and the text `40rem` |
+| Active, confirmations, recovery | One readable column on the full sheet; the reminder card at most `52rem`, the reset confirmation `46rem` |
+| Reward Card | From a `56em` sheet: centred at `68rem`, *You did it.* across the panel, the Mission's picture beside its title, tag, date and goal; a completion without a picture keeps one column |
+| History | From a `56em` sheet: the month's goal beside the entries, the way back after the list |
+
+**Found during implementation and fixed:** the Reward Card's picture spread its height across the detail rows beside it, leaving gaps between the title, the date and the goal; a final flexible row now takes that height.
+
+### Verification, at `395a99d`
+
+The served build of `395a99d` — `index-CgkQDkLR.css`, `index-DsEPOJYE.js` — identical to the one measured; before: the build of `e7f2119`.
+
+| Check | Result |
+| --- | --- |
+| Chromium matrix | `331` combinations — `26` states in EN, DE and RU at `1920`, `1280`, `390` px and `320` px with a `32px` root, and `13` states under the browser's own `32px` setting: `0` clipping, page overflow or overlap; contrast at least `5.05:1`; targets at least `52` px; all `573` images decoded, local and decorative; both faces everywhere; `0` words cut mid-word |
+| Words and headings | Identical to the visual-asset build in all `257` comparable combinations; at `1920` px identical to `1280` px in all `74` |
+| Line length | Longest line `86` characters at `1920` px, `85` at `1280`, `44` on a phone, `32` with enlarged text; no block over `90` anywhere. The Mission cards' lines grow from about `41` to about `71` characters at `1920` px |
+| Image framing | Only the hero's frame crops: `27%` of quiet wall at `1280` px, as reviewed for the visual asset package, `11%` on a phone, none at `1920` px; every other picture under `2%` |
+| Keyboard | `150` walks: Tab order identical to the visual-asset build in all `100` comparable walks and to `1280` px in all `50` at `1920` px; `510` stops, each with the ring and in view |
+| Safari `26.6.1` | `1680` px — the widest window this `1680`-px screen allows — `1280`, `390` and `320` px with a `32px` root, EN/DE/RU: `276` / `276` scenario checks, `0` clipping, overflow, overlap or cut words, the ring on all `156` Option-Tab stops |
+| Chrome `154` and Firefox `157` | `1920`, `1280`, `390`, `320` px with a `32px` root and the browser's own `32px` text, EN/DE/RU: `345` / `345` checks each, the same layout results, the ring on every stop |
+| Across engines | The same words in all `288` comparable views once the completion day — the runs crossed midnight — and Safari's known joined introduction token are normalised; the same Tab order in every walk |
+| Lower controls | Every view captured to its foot in every engine; Safari's foot captured separately, because it captures only the screen |
+
+The behaviour verification of `e7f2119` is reused, because nothing behavioural changed; the scenario's own checks passed again as it reached each view. **Harness fault found and fixed:** in some Safari sessions a window that had filled the screen returned to full width after the page loaded; the viewport is now checked after every navigation, and the affected `1280` px runs were repeated.
+
+**Gates**, once, sequentially, with complete output kept in `~/Desktop/MissionKid-Plan06-wide-layout/evidence/gates`: `tsc --noEmit` clean; the relevant tests `350` across `8` files; the full suite **`873` tests across `23` files**; the production build identical to the measured one; `git diff --check` clean. **No test added:** the change is layout, which jsdom cannot measure; the existing stylesheet invariants still hold, and the browser measurements are the evidence.
+
+**Interrupted after verification, resumed from the saved evidence.** The session stopped after every check above, with this record written but not committed, and the machine then restarted. On resuming, `395a99d` rebuilt to the same bundle; each engine batch's log names that build, and the Chromium batches' own build lines are copied into `evidence/chromium-matrix/build-attribution.txt`; the exported briefs were checked again against the catalog — `54` of `54` Missions, every field present, all `114` quoted fields verbatim. The saved results were reused and no check was repeated. The development server was restarted from this repository and serves `395a99d`'s code at `http://localhost:5173/`.
+
+### Remaining
+
+- **The Mission imagery:** `51` photographs to produce, review and integrate under their own authorization, a whole Discovery set at a time; the briefs recommend sources of at least `1536×1024`, because Ready shows a Mission picture at `704` CSS px on a `1920`-px window; the open review notes on the existing stills stand.
+- Safari was not checked at `1920` px, which this screen cannot show; a real phone, human visual acceptance and release approval remain outstanding.
 
 ## Decisions for the reviewer
 
