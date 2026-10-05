@@ -15,7 +15,9 @@
 
 ## Governing workflow and implementation gate
 
-Before making changes, read the active plan and the specifications that own or constrain the requested work.
+Before making changes, recover the actual branch, HEAD, worktree, active plan and applicable instructions, then read the specifications that own or constrain the requested work. Treat reported checkpoints as historical evidence, never as reset instructions; preserve existing work.
+
+Record newly authorized work in the existing active plan before editing implementation or other project documents. Identify its concrete outcome, owning specifications, verification intent and exclusions. A bounded authorization during a review hold applies only to that recorded scope; it does not lift unrelated holds or imply human acceptance.
 
 Progress new work through the applicable stages in this order; do not repeat stages that are already complete and still valid:
 
@@ -64,7 +66,7 @@ An active plan alone and Technical Specifications alone do not authorize code. I
 - Specifications are the source of truth for approved behavior. Do not invent unspecified behavior or silently reinterpret an approved specification.
 - Stop and report when authoritative specifications conflict, required product behavior is missing, requested work contradicts approved scope, completion would require inventing a product or specification decision, or a change would weaken an approved safety, privacy, state, or interaction rule.
 - Do not stop for an ordinary implementation choice already delegated by approved specifications and the active implementation plan; make the smallest reasonable choice and verify it.
-- Follow `ONE PROBLEM → ONE PROJECT → ONE SOLUTION`. Use the smallest implementation that fully satisfies approved requirements.
+- Follow `ONE PROBLEM → ONE PROJECT → ONE CORE SOLUTION`. Use the smallest implementation that fully satisfies approved requirements.
 - Do not add convenience or future features, speculative infrastructure, abstractions, services, dependencies, configuration, or documentation solely for perceived professionalism. Every artifact and dependency needs a clear role in approved work.
 - Trace behavior-affecting work to `F001`, `F002`, `F003`, or `F004`, or to the appropriate cross-cutting specification. Implementation plans must identify the relevant ownership; do not require Function IDs on every code line, commit line, or test.
 - Never weaken authoritative safety, privacy, MVP, or future-scope boundaries. Consult and update the owning specification and active plan before an approved behavior or architecture change.
@@ -74,13 +76,16 @@ An active plan alone and Technical Specifications alone do not authorize code. I
 - Keep exactly one active work or implementation plan under `plans/active/`; move it to `plans/completed/` only when its status is truthfully complete.
 - Plan status must reflect repository reality.
 - Every plan task needs a concrete outcome, specification trace, and verification or test intent.
+- Distinguish authorized, implemented, verified, awaiting human review and completed work. Verification is not human acceptance, and completed implementation is not automatically a completed plan. Record human acceptance only when explicitly given for the reviewed scope.
+- Keep dated outcomes, failed or interrupted checks, limitations and superseded criteria as historical evidence. Identify what supersedes a criterion; do not mark it achieved. Keep current open tasks and their acceptance criteria clear without reopening completed plans.
 - Do not add a parallel project-management system.
 
 ## Implementation quality
 
 - Verify implementation behavior against its owning specifications, including applicable error and recovery behavior. Build or compilation success alone is insufficient.
 - Give every implementation task a test or verification intent, run the relevant checks before claiming completion, and report failures and checks truthfully.
-- Every approved MVP view or state that is implemented must receive the ergonomic review required by `docs/specs/visual-and-ergonomic.md` before it is considered polished. Prefer `1–3` targeted improvements; do not perform a broad redesign unless the specification requires it.
+- Every approved MVP view or state that is implemented must receive the ergonomic review required by `docs/specs/visual-and-ergonomic.md` before it is considered polished. Prefer `1–3` targeted improvements. A broad redesign requires explicit authorization recorded in the active plan and permission under the owning specification, including any required specification revalidation.
+- Reuse verification evidence when its implementation basis is unchanged and it still covers the requested work; name the verified revision/build and its limits. For documentation-only corrections, check references and `git diff --check`; rerun executable checks only when code, build inputs or an unresolved concern justify them.
 - Before a meaningful commit, inspect the actual diff, run relevant validation, compare behavior with owning specifications, confirm no unrelated changes, identify real blockers, and make targeted fixes only. Audit is a quality gate, not permission for scope expansion; do not rewrite correct work merely for style.
 
 ## Git and changelog discipline
@@ -88,11 +93,12 @@ An active plan alone and Technical Specifications alone do not authorize code. I
 Use this working model unless an approved workflow explicitly requires otherwise:
 
 ```text
-one plan → one focused branch → work → tests/checks → audit → clean commit(s) → push → merge → return to main
+one plan → one focused branch → work → tests/checks → audit → clean commit(s) → push → PR → merge → return to main
 ```
 
 - Create a branch only when it is useful, not to appear sophisticated. Do not mix unrelated work or casually rewrite Git history.
-- Do not push or merge without explicit authorization for the current work.
+- When a branch already contains earlier authorized work, preserve its history and record the inherited scope in the active plan and eventual PR. Do not reset, rewrite or split it solely to make the history look cleaner.
+- Do not push, create a PR, merge or deploy without explicit authorization for the current work. Local commit authorization does not authorize those actions.
 - Update the dated changelog for every meaningful change. Record factual project changes only; do not claim implementation that does not exist, rewrite history for presentation, turn the changelog into a shell-command diary, or include conversational coaching.
 
 ## Repository hygiene
