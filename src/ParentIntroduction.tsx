@@ -1,3 +1,5 @@
+import { useLayoutEffect, useRef } from 'react';
+
 import { MISSION_CATALOG } from './catalogContent';
 import { AGE_BANDS, type AgeBand } from './ageBands';
 import type { MissionRecord } from './catalog';
@@ -12,6 +14,7 @@ import {
 import { MissionSceneDefs } from './MissionScene';
 import { MissionCard } from './MissionSuggestionSet';
 import { FLOW_STEP_IMAGES, INTRODUCTION_HERO_IMAGE } from './productImagery';
+import { revealFocusedChoice } from './focusedChoice';
 
 const LANGUAGE_NAME_KEYS: Readonly<Record<SupportedLanguage, MessageKey>> = {
   en: 'setup.language.en',
@@ -85,6 +88,11 @@ export function ParentIntroduction({ catalog = MISSION_CATALOG }: ParentIntroduc
   const example = resolveIntroductionExample(catalog, language);
   const exampleHeadingId = 'introduction-example-heading';
   const flowHeadingId = 'introduction-flow-heading';
+  const languageGroup = useRef<HTMLFieldSetElement>(null);
+
+  useLayoutEffect(() => {
+    revealFocusedChoice(languageGroup.current);
+  }, [language]);
 
   return (
     <div className="introduction">
@@ -92,7 +100,7 @@ export function ParentIntroduction({ catalog = MISSION_CATALOG }: ParentIntroduc
           without reading the view. Secondary to the one forward action, and
           deliberately compact: the same radio group setup uses, at the size a
           switch needs rather than the size a setup choice needs. */}
-      <fieldset className="choice-group introduction__languages">
+      <fieldset className="choice-group introduction__languages" ref={languageGroup}>
         <legend>{t('setup.language.legend')}</legend>
         <div className="choice-grid choice-grid--inline">
           {SUPPORTED_LANGUAGES.map((languageChoice) => (

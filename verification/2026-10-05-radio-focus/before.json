@@ -1,0 +1,3496 @@
+{
+  "browser": "149.0.7827.55",
+  "base": "http://127.0.0.1:4311/",
+  "builds": [
+    "/assets/index-DYJmmybd.js"
+  ],
+  "cases": [
+    {
+      "config": "desktop",
+      "language": "en",
+      "root": "16px",
+      "signatures": {
+        "introduction": "8469f5ac31af7ac73da4adefb9c645da9d02a97249359db2af814a327825800e",
+        "discovery": "51e27e207c0990627719ab5d4b935fd5a6f9cba2ccf18f281b832510d50d7cf0"
+      },
+      "checks": 40,
+      "oversized": 0,
+      "stops": [
+        {
+          "action": "introduction: Tab in",
+          "name": "introduction-language",
+          "value": "en",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            890.421875,
+            146.1875,
+            105.9375,
+            52
+          ],
+          "outline": [
+            885.421875,
+            141.1875,
+            1001.359375,
+            203.1875
+          ],
+          "viewport": [
+            1280,
+            900
+          ],
+          "scroll": [
+            0,
+            0
+          ],
+          "fits": true,
+          "visible": true,
+          "overflow": 0
+        },
+        {
+          "action": "introduction: Shift+Tab in",
+          "name": "introduction-language",
+          "value": "en",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            890.421875,
+            146.1875,
+            105.9375,
+            52
+          ],
+          "outline": [
+            885.421875,
+            141.1875,
+            1001.359375,
+            203.1875
+          ],
+          "viewport": [
+            1280,
+            900
+          ],
+          "scroll": [
+            0,
+            0
+          ],
+          "fits": true,
+          "visible": true,
+          "overflow": 0
+        },
+        {
+          "action": "discovery: Tab in",
+          "name": "discovery-category",
+          "value": "Helping at Home",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            534.59375,
+            347.78125,
+            210.796875,
+            279.671875
+          ],
+          "outline": [
+            528.59375,
+            341.78125,
+            751.390625,
+            633.453125
+          ],
+          "viewport": [
+            1280,
+            900
+          ],
+          "scroll": [
+            0,
+            0
+          ],
+          "fits": true,
+          "visible": true,
+          "overflow": 0
+        },
+        {
+          "action": "discovery: Shift+Tab in",
+          "name": "discovery-category",
+          "value": "Helping at Home",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            534.59375,
+            347.78125,
+            210.796875,
+            279.671875
+          ],
+          "outline": [
+            528.59375,
+            341.78125,
+            751.390625,
+            633.453125
+          ],
+          "viewport": [
+            1280,
+            900
+          ],
+          "scroll": [
+            0,
+            0
+          ],
+          "fits": true,
+          "visible": true,
+          "overflow": 0
+        }
+      ],
+      "failures": []
+    },
+    {
+      "config": "desktop",
+      "language": "de",
+      "root": "16px",
+      "signatures": {
+        "introduction": "4ed8ce6f5a08469e68502c8b436a2607b5f596af31469876594358ad35033764",
+        "discovery": "78f9efeab978a72df5d0799b419b57c28214be3acdaf73259255276d7f352ab7"
+      },
+      "checks": 40,
+      "oversized": 0,
+      "stops": [
+        {
+          "action": "introduction: Tab in",
+          "name": "introduction-language",
+          "value": "de",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            980.75,
+            146.1875,
+            113.234375,
+            52
+          ],
+          "outline": [
+            975.75,
+            141.1875,
+            1098.984375,
+            203.1875
+          ],
+          "viewport": [
+            1280,
+            900
+          ],
+          "scroll": [
+            0,
+            0
+          ],
+          "fits": true,
+          "visible": true,
+          "overflow": 0
+        },
+        {
+          "action": "introduction: Shift+Tab in",
+          "name": "introduction-language",
+          "value": "de",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            980.75,
+            146.1875,
+            113.234375,
+            52
+          ],
+          "outline": [
+            975.75,
+            141.1875,
+            1098.984375,
+            203.1875
+          ],
+          "viewport": [
+            1280,
+            900
+          ],
+          "scroll": [
+            0,
+            0
+          ],
+          "fits": true,
+          "visible": true,
+          "overflow": 0
+        },
+        {
+          "action": "discovery: Tab in",
+          "name": "discovery-category",
+          "value": "Helping at Home",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            534.59375,
+            347.78125,
+            210.796875,
+            279.671875
+          ],
+          "outline": [
+            528.59375,
+            341.78125,
+            751.390625,
+            633.453125
+          ],
+          "viewport": [
+            1280,
+            900
+          ],
+          "scroll": [
+            0,
+            0
+          ],
+          "fits": true,
+          "visible": true,
+          "overflow": 0
+        },
+        {
+          "action": "discovery: Shift+Tab in",
+          "name": "discovery-category",
+          "value": "Helping at Home",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            534.59375,
+            347.78125,
+            210.796875,
+            279.671875
+          ],
+          "outline": [
+            528.59375,
+            341.78125,
+            751.390625,
+            633.453125
+          ],
+          "viewport": [
+            1280,
+            900
+          ],
+          "scroll": [
+            0,
+            0
+          ],
+          "fits": true,
+          "visible": true,
+          "overflow": 0
+        }
+      ],
+      "failures": []
+    },
+    {
+      "config": "desktop",
+      "language": "ru",
+      "root": "16px",
+      "signatures": {
+        "introduction": "c19bebb511c0941b99fc7f6cc089b9c5348be8fefc8f7e61cd330d7b96f7dc6f",
+        "discovery": "85884c458de1639972e7c292ef3b5e15c7a8cb40acaf2b235e4832a50172043f"
+      },
+      "checks": 40,
+      "oversized": 0,
+      "stops": [
+        {
+          "action": "introduction: Tab in",
+          "name": "introduction-language",
+          "value": "ru",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            1078.375,
+            146.1875,
+            115.625,
+            52
+          ],
+          "outline": [
+            1073.375,
+            141.1875,
+            1199,
+            203.1875
+          ],
+          "viewport": [
+            1280,
+            900
+          ],
+          "scroll": [
+            0,
+            0
+          ],
+          "fits": true,
+          "visible": true,
+          "overflow": 0
+        },
+        {
+          "action": "introduction: Shift+Tab in",
+          "name": "introduction-language",
+          "value": "ru",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            1078.375,
+            146.1875,
+            115.625,
+            52
+          ],
+          "outline": [
+            1073.375,
+            141.1875,
+            1199,
+            203.1875
+          ],
+          "viewport": [
+            1280,
+            900
+          ],
+          "scroll": [
+            0,
+            0
+          ],
+          "fits": true,
+          "visible": true,
+          "overflow": 0
+        },
+        {
+          "action": "discovery: Tab in",
+          "name": "discovery-category",
+          "value": "Helping at Home",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            534.59375,
+            347.78125,
+            210.796875,
+            279.671875
+          ],
+          "outline": [
+            528.59375,
+            341.78125,
+            751.390625,
+            633.453125
+          ],
+          "viewport": [
+            1280,
+            900
+          ],
+          "scroll": [
+            0,
+            0
+          ],
+          "fits": true,
+          "visible": true,
+          "overflow": 0
+        },
+        {
+          "action": "discovery: Shift+Tab in",
+          "name": "discovery-category",
+          "value": "Helping at Home",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            534.59375,
+            347.78125,
+            210.796875,
+            279.671875
+          ],
+          "outline": [
+            528.59375,
+            341.78125,
+            751.390625,
+            633.453125
+          ],
+          "viewport": [
+            1280,
+            900
+          ],
+          "scroll": [
+            0,
+            0
+          ],
+          "fits": true,
+          "visible": true,
+          "overflow": 0
+        }
+      ],
+      "failures": []
+    },
+    {
+      "config": "phone",
+      "language": "en",
+      "root": "16px",
+      "signatures": {
+        "introduction": "64e580d1ed9f1e71719a1cf78b1267a931a402f2bf6201a241be52b2bd9014f2",
+        "discovery": "f9b0a5c0516ec7d0819e552d2d9b1ad1c2821f964ef97419074a26c43e00eb1f"
+      },
+      "checks": 40,
+      "oversized": 0,
+      "stops": [
+        {
+          "action": "introduction: Tab in",
+          "name": "introduction-language",
+          "value": "en",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            42,
+            309.125,
+            105.9375,
+            52
+          ],
+          "outline": [
+            37,
+            304.125,
+            152.9375,
+            366.125
+          ],
+          "viewport": [
+            390,
+            780
+          ],
+          "scroll": [
+            0,
+            0
+          ],
+          "fits": true,
+          "visible": true,
+          "overflow": 0
+        },
+        {
+          "action": "introduction: Shift+Tab in",
+          "name": "introduction-language",
+          "value": "en",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            42,
+            268.125,
+            105.9375,
+            52
+          ],
+          "outline": [
+            37,
+            263.125,
+            152.9375,
+            325.125
+          ],
+          "viewport": [
+            390,
+            780
+          ],
+          "scroll": [
+            0,
+            41
+          ],
+          "fits": true,
+          "visible": true,
+          "overflow": 0
+        },
+        {
+          "action": "discovery: Tab in",
+          "name": "discovery-category",
+          "value": "Helping at Home",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            37,
+            565.90625,
+            316,
+            105
+          ],
+          "outline": [
+            31,
+            559.90625,
+            359,
+            676.90625
+          ],
+          "viewport": [
+            390,
+            780
+          ],
+          "scroll": [
+            0,
+            0
+          ],
+          "fits": true,
+          "visible": true,
+          "overflow": 0
+        },
+        {
+          "action": "discovery: Shift+Tab in",
+          "name": "discovery-category",
+          "value": "Helping at Home",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            37,
+            337.90625,
+            316,
+            105
+          ],
+          "outline": [
+            31,
+            331.90625,
+            359,
+            448.90625
+          ],
+          "viewport": [
+            390,
+            780
+          ],
+          "scroll": [
+            0,
+            228
+          ],
+          "fits": true,
+          "visible": true,
+          "overflow": 0
+        }
+      ],
+      "failures": []
+    },
+    {
+      "config": "phone",
+      "language": "de",
+      "root": "16px",
+      "signatures": {
+        "introduction": "d522aa01060eb6cb351abab942db59f22f3830e7d07c10e52520898471f30d03",
+        "discovery": "8cbe27578aaa37429c29860fe5e759c41abb6b1643291d77c10f8632913151fa"
+      },
+      "checks": 40,
+      "oversized": 0,
+      "stops": [
+        {
+          "action": "introduction: Tab in",
+          "name": "introduction-language",
+          "value": "de",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            132.328125,
+            270.40625,
+            113.234375,
+            52
+          ],
+          "outline": [
+            127.328125,
+            265.40625,
+            250.5625,
+            327.40625
+          ],
+          "viewport": [
+            390,
+            780
+          ],
+          "scroll": [
+            0,
+            0
+          ],
+          "fits": true,
+          "visible": true,
+          "overflow": 0
+        },
+        {
+          "action": "introduction: Shift+Tab in",
+          "name": "introduction-language",
+          "value": "de",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            132.328125,
+            270.40625,
+            113.234375,
+            52
+          ],
+          "outline": [
+            127.328125,
+            265.40625,
+            250.5625,
+            327.40625
+          ],
+          "viewport": [
+            390,
+            780
+          ],
+          "scroll": [
+            0,
+            0
+          ],
+          "fits": true,
+          "visible": true,
+          "overflow": 0
+        },
+        {
+          "action": "discovery: Tab in",
+          "name": "discovery-category",
+          "value": "Helping at Home",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            37,
+            601.0625,
+            316,
+            105
+          ],
+          "outline": [
+            31,
+            595.0625,
+            359,
+            712.0625
+          ],
+          "viewport": [
+            390,
+            780
+          ],
+          "scroll": [
+            0,
+            0
+          ],
+          "fits": true,
+          "visible": true,
+          "overflow": 0
+        },
+        {
+          "action": "discovery: Shift+Tab in",
+          "name": "discovery-category",
+          "value": "Helping at Home",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            37,
+            337.0625,
+            316,
+            105
+          ],
+          "outline": [
+            31,
+            331.0625,
+            359,
+            448.0625
+          ],
+          "viewport": [
+            390,
+            780
+          ],
+          "scroll": [
+            0,
+            264
+          ],
+          "fits": true,
+          "visible": true,
+          "overflow": 0
+        }
+      ],
+      "failures": []
+    },
+    {
+      "config": "phone",
+      "language": "ru",
+      "root": "16px",
+      "signatures": {
+        "introduction": "33cff6deed6e8389aca4b462bb34a6459c140eafb39a1412c80e46eaa9157cc2",
+        "discovery": "d4976a09cf50862d5f08a32ed09a86edd4d0a4c98c4cdefdb285dc02341bcaeb"
+      },
+      "checks": 40,
+      "oversized": 0,
+      "stops": [
+        {
+          "action": "introduction: Tab in",
+          "name": "introduction-language",
+          "value": "ru",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            229.953125,
+            347.84375,
+            115.625,
+            52
+          ],
+          "outline": [
+            224.953125,
+            342.84375,
+            350.578125,
+            404.84375
+          ],
+          "viewport": [
+            390,
+            780
+          ],
+          "scroll": [
+            0,
+            0
+          ],
+          "fits": true,
+          "visible": true,
+          "overflow": 0
+        },
+        {
+          "action": "introduction: Shift+Tab in",
+          "name": "introduction-language",
+          "value": "ru",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            229.953125,
+            347.84375,
+            115.625,
+            52
+          ],
+          "outline": [
+            224.953125,
+            342.84375,
+            350.578125,
+            404.84375
+          ],
+          "viewport": [
+            390,
+            780
+          ],
+          "scroll": [
+            0,
+            0
+          ],
+          "fits": true,
+          "visible": true,
+          "overflow": 0
+        },
+        {
+          "action": "discovery: Tab in",
+          "name": "discovery-category",
+          "value": "Helping at Home",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            37,
+            590.703125,
+            316,
+            105
+          ],
+          "outline": [
+            31,
+            584.703125,
+            359,
+            701.703125
+          ],
+          "viewport": [
+            390,
+            780
+          ],
+          "scroll": [
+            0,
+            0
+          ],
+          "fits": true,
+          "visible": true,
+          "overflow": 0
+        },
+        {
+          "action": "discovery: Shift+Tab in",
+          "name": "discovery-category",
+          "value": "Helping at Home",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            37,
+            337.703125,
+            316,
+            105
+          ],
+          "outline": [
+            31,
+            331.703125,
+            359,
+            448.703125
+          ],
+          "viewport": [
+            390,
+            780
+          ],
+          "scroll": [
+            0,
+            253
+          ],
+          "fits": true,
+          "visible": true,
+          "overflow": 0
+        }
+      ],
+      "failures": []
+    },
+    {
+      "config": "root32",
+      "language": "en",
+      "root": "32px",
+      "signatures": {
+        "introduction": "048c95cbad165f057ec0e530829b42cf9485438c4314ebb9015dd994a80b1789",
+        "discovery": "bc644ade761e09747f38e7b6cfc088f27a3e6c681528c87a5f81380ae2f61d0a"
+      },
+      "checks": 40,
+      "oversized": 0,
+      "stops": [
+        {
+          "action": "introduction: Tab in",
+          "name": "introduction-language",
+          "value": "en",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            26,
+            487.515625,
+            168.625,
+            104
+          ],
+          "outline": [
+            21,
+            482.515625,
+            199.625,
+            596.515625
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            0
+          ],
+          "fits": true,
+          "visible": true,
+          "overflow": 0
+        },
+        {
+          "action": "introduction: Shift+Tab in",
+          "name": "introduction-language",
+          "value": "en",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            26,
+            297.515625,
+            168.625,
+            104
+          ],
+          "outline": [
+            21,
+            292.515625,
+            199.625,
+            406.515625
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            190
+          ],
+          "fits": true,
+          "visible": true,
+          "overflow": 0
+        },
+        {
+          "action": "introduction: ArrowRight 2",
+          "name": "introduction-language",
+          "value": "ru",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            26,
+            601.890625,
+            187.90625,
+            104
+          ],
+          "outline": [
+            21,
+            596.890625,
+            218.90625,
+            710.890625
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            190
+          ],
+          "fits": true,
+          "visible": false,
+          "overflow": 0
+        },
+        {
+          "action": "introduction: ArrowLeft 1",
+          "name": "introduction-language",
+          "value": "ru",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            26,
+            601.890625,
+            187.90625,
+            104
+          ],
+          "outline": [
+            21,
+            596.890625,
+            218.90625,
+            710.890625
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            190
+          ],
+          "fits": true,
+          "visible": false,
+          "overflow": 0
+        },
+        {
+          "action": "introduction: ArrowDown 2",
+          "name": "introduction-language",
+          "value": "ru",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            26,
+            601.890625,
+            187.90625,
+            104
+          ],
+          "outline": [
+            21,
+            596.890625,
+            218.90625,
+            710.890625
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            190
+          ],
+          "fits": true,
+          "visible": false,
+          "overflow": 0
+        },
+        {
+          "action": "introduction: ArrowUp 1",
+          "name": "introduction-language",
+          "value": "ru",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            26,
+            601.890625,
+            187.90625,
+            104
+          ],
+          "outline": [
+            21,
+            596.890625,
+            218.90625,
+            710.890625
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            190
+          ],
+          "fits": true,
+          "visible": false,
+          "overflow": 0
+        },
+        {
+          "action": "discovery: Tab in",
+          "name": "discovery-category",
+          "value": "Helping at Home",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            17,
+            348.546875,
+            286,
+            387
+          ],
+          "outline": [
+            11,
+            342.546875,
+            309,
+            741.546875
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            1079
+          ],
+          "fits": true,
+          "visible": false,
+          "overflow": 0
+        },
+        {
+          "action": "discovery: Shift+Tab in",
+          "name": "discovery-category",
+          "value": "Helping at Home",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            17,
+            348.546875,
+            286,
+            387
+          ],
+          "outline": [
+            11,
+            342.546875,
+            309,
+            741.546875
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            1079
+          ],
+          "fits": true,
+          "visible": false,
+          "overflow": 0
+        },
+        {
+          "action": "discovery: ArrowRight 2",
+          "name": "discovery-category",
+          "value": "Calm",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            17,
+            608.984375,
+            286,
+            342
+          ],
+          "outline": [
+            11,
+            602.984375,
+            309,
+            956.984375
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            1490
+          ],
+          "fits": true,
+          "visible": false,
+          "overflow": 0
+        },
+        {
+          "action": "discovery: ArrowRight 5",
+          "name": "discovery-category",
+          "value": "Helping at Home",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            17,
+            608.546875,
+            286,
+            387
+          ],
+          "outline": [
+            11,
+            602.546875,
+            309,
+            1001.546875
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            819
+          ],
+          "fits": true,
+          "visible": false,
+          "overflow": 0
+        },
+        {
+          "action": "discovery: ArrowLeft 5",
+          "name": "discovery-category",
+          "value": "Helping at Home",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            17,
+            348.546875,
+            286,
+            387
+          ],
+          "outline": [
+            11,
+            342.546875,
+            309,
+            741.546875
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            1079
+          ],
+          "fits": true,
+          "visible": false,
+          "overflow": 0
+        },
+        {
+          "action": "discovery: ArrowDown 2",
+          "name": "discovery-category",
+          "value": "Calm",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            17,
+            608.984375,
+            286,
+            342
+          ],
+          "outline": [
+            11,
+            602.984375,
+            309,
+            956.984375
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            1490
+          ],
+          "fits": true,
+          "visible": false,
+          "overflow": 0
+        },
+        {
+          "action": "discovery: ArrowDown 5",
+          "name": "discovery-category",
+          "value": "Helping at Home",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            17,
+            608.546875,
+            286,
+            387
+          ],
+          "outline": [
+            11,
+            602.546875,
+            309,
+            1001.546875
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            819
+          ],
+          "fits": true,
+          "visible": false,
+          "overflow": 0
+        },
+        {
+          "action": "discovery: ArrowUp 5",
+          "name": "discovery-category",
+          "value": "Helping at Home",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            17,
+            348.546875,
+            286,
+            387
+          ],
+          "outline": [
+            11,
+            342.546875,
+            309,
+            741.546875
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            1079
+          ],
+          "fits": true,
+          "visible": false,
+          "overflow": 0
+        }
+      ],
+      "failures": [
+        "introduction: ArrowRight 2: fitting choice/outline offscreen",
+        "introduction: ArrowLeft 1: fitting choice/outline offscreen",
+        "introduction: ArrowDown 2: fitting choice/outline offscreen",
+        "introduction: ArrowUp 1: fitting choice/outline offscreen",
+        "discovery: Tab in: fitting choice/outline offscreen",
+        "discovery: Shift+Tab in: fitting choice/outline offscreen",
+        "discovery: ArrowRight 2: fitting choice/outline offscreen",
+        "discovery: ArrowRight 5: fitting choice/outline offscreen",
+        "discovery: ArrowLeft 5: fitting choice/outline offscreen",
+        "discovery: ArrowDown 2: fitting choice/outline offscreen",
+        "discovery: ArrowDown 5: fitting choice/outline offscreen",
+        "discovery: ArrowUp 5: fitting choice/outline offscreen"
+      ]
+    },
+    {
+      "config": "root32",
+      "language": "de",
+      "root": "32px",
+      "signatures": {
+        "introduction": "43a371cc7e532a0d41ed2db7c1259c01fe02742b6d06bb8e5b9ba85a5ebf334c",
+        "discovery": "6a8c04e218c954520b5aab08a15b0cc74d42b0bac2817c37ea3d3e250c3c5c4e"
+      },
+      "checks": 40,
+      "oversized": 0,
+      "stops": [
+        {
+          "action": "introduction: Tab in",
+          "name": "introduction-language",
+          "value": "de",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            26,
+            633.515625,
+            183.203125,
+            104
+          ],
+          "outline": [
+            21,
+            628.515625,
+            214.203125,
+            742.515625
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            0
+          ],
+          "fits": true,
+          "visible": false,
+          "overflow": 0
+        },
+        {
+          "action": "introduction: Shift+Tab in",
+          "name": "introduction-language",
+          "value": "de",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            26,
+            297.515625,
+            183.203125,
+            104
+          ],
+          "outline": [
+            21,
+            292.515625,
+            214.203125,
+            406.515625
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            336
+          ],
+          "fits": true,
+          "visible": true,
+          "overflow": 0
+        },
+        {
+          "action": "discovery: Tab in",
+          "name": "discovery-category",
+          "value": "Helping at Home",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            17,
+            348.34375,
+            286,
+            387
+          ],
+          "outline": [
+            11,
+            342.34375,
+            309,
+            741.34375
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            1131
+          ],
+          "fits": true,
+          "visible": false,
+          "overflow": 0
+        },
+        {
+          "action": "discovery: Shift+Tab in",
+          "name": "discovery-category",
+          "value": "Helping at Home",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            17,
+            348.34375,
+            286,
+            387
+          ],
+          "outline": [
+            11,
+            342.34375,
+            309,
+            741.34375
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            1131
+          ],
+          "fits": true,
+          "visible": false,
+          "overflow": 0
+        },
+        {
+          "action": "discovery: ArrowRight 2",
+          "name": "discovery-category",
+          "value": "Calm",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            17,
+            608.78125,
+            286,
+            342
+          ],
+          "outline": [
+            11,
+            602.78125,
+            309,
+            956.78125
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            1542
+          ],
+          "fits": true,
+          "visible": false,
+          "overflow": 0
+        },
+        {
+          "action": "discovery: ArrowRight 5",
+          "name": "discovery-category",
+          "value": "Helping at Home",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            17,
+            609.34375,
+            286,
+            387
+          ],
+          "outline": [
+            11,
+            603.34375,
+            309,
+            1002.34375
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            870
+          ],
+          "fits": true,
+          "visible": false,
+          "overflow": 0
+        },
+        {
+          "action": "discovery: ArrowLeft 5",
+          "name": "discovery-category",
+          "value": "Helping at Home",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            17,
+            348.34375,
+            286,
+            387
+          ],
+          "outline": [
+            11,
+            342.34375,
+            309,
+            741.34375
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            1131
+          ],
+          "fits": true,
+          "visible": false,
+          "overflow": 0
+        },
+        {
+          "action": "discovery: ArrowDown 2",
+          "name": "discovery-category",
+          "value": "Calm",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            17,
+            608.78125,
+            286,
+            342
+          ],
+          "outline": [
+            11,
+            602.78125,
+            309,
+            956.78125
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            1542
+          ],
+          "fits": true,
+          "visible": false,
+          "overflow": 0
+        },
+        {
+          "action": "discovery: ArrowDown 5",
+          "name": "discovery-category",
+          "value": "Helping at Home",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            17,
+            609.34375,
+            286,
+            387
+          ],
+          "outline": [
+            11,
+            603.34375,
+            309,
+            1002.34375
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            870
+          ],
+          "fits": true,
+          "visible": false,
+          "overflow": 0
+        },
+        {
+          "action": "discovery: ArrowUp 5",
+          "name": "discovery-category",
+          "value": "Helping at Home",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            17,
+            348.34375,
+            286,
+            387
+          ],
+          "outline": [
+            11,
+            342.34375,
+            309,
+            741.34375
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            1131
+          ],
+          "fits": true,
+          "visible": false,
+          "overflow": 0
+        }
+      ],
+      "failures": [
+        "introduction: Tab in: fitting choice/outline offscreen",
+        "discovery: Tab in: fitting choice/outline offscreen",
+        "discovery: Shift+Tab in: fitting choice/outline offscreen",
+        "discovery: ArrowRight 2: fitting choice/outline offscreen",
+        "discovery: ArrowRight 5: fitting choice/outline offscreen",
+        "discovery: ArrowLeft 5: fitting choice/outline offscreen",
+        "discovery: ArrowDown 2: fitting choice/outline offscreen",
+        "discovery: ArrowDown 5: fitting choice/outline offscreen",
+        "discovery: ArrowUp 5: fitting choice/outline offscreen"
+      ]
+    },
+    {
+      "config": "root32",
+      "language": "ru",
+      "root": "32px",
+      "signatures": {
+        "introduction": "30938c4458c4a956fcf4f519632e88dbb745c8091d95b70eff155f79244a449a",
+        "discovery": "0878aba011d36344b44e01f2115f71bc2c09c251aab46f3439b473fc565a2076"
+      },
+      "checks": 40,
+      "oversized": 0,
+      "stops": [
+        {
+          "action": "introduction: Tab in",
+          "name": "introduction-language",
+          "value": "ru",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            26,
+            297.890625,
+            187.90625,
+            104
+          ],
+          "outline": [
+            21,
+            292.890625,
+            218.90625,
+            406.890625
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            494
+          ],
+          "fits": true,
+          "visible": true,
+          "overflow": 0
+        },
+        {
+          "action": "introduction: Shift+Tab in",
+          "name": "introduction-language",
+          "value": "ru",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            26,
+            297.890625,
+            187.90625,
+            104
+          ],
+          "outline": [
+            21,
+            292.890625,
+            218.90625,
+            406.890625
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            494
+          ],
+          "fits": true,
+          "visible": true,
+          "overflow": 0
+        },
+        {
+          "action": "discovery: Tab in",
+          "name": "discovery-category",
+          "value": "Helping at Home",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            17,
+            348.9375,
+            286,
+            387
+          ],
+          "outline": [
+            11,
+            342.9375,
+            309,
+            741.9375
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            1219
+          ],
+          "fits": true,
+          "visible": false,
+          "overflow": 0
+        },
+        {
+          "action": "discovery: Shift+Tab in",
+          "name": "discovery-category",
+          "value": "Helping at Home",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            17,
+            348.9375,
+            286,
+            387
+          ],
+          "outline": [
+            11,
+            342.9375,
+            309,
+            741.9375
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            1219
+          ],
+          "fits": true,
+          "visible": false,
+          "overflow": 0
+        },
+        {
+          "action": "discovery: ArrowRight 2",
+          "name": "discovery-category",
+          "value": "Calm",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            17,
+            609.375,
+            286,
+            342
+          ],
+          "outline": [
+            11,
+            603.375,
+            309,
+            957.375
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            1630
+          ],
+          "fits": true,
+          "visible": false,
+          "overflow": 0
+        },
+        {
+          "action": "discovery: ArrowRight 5",
+          "name": "discovery-category",
+          "value": "Helping at Home",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            17,
+            608.9375,
+            286,
+            387
+          ],
+          "outline": [
+            11,
+            602.9375,
+            309,
+            1001.9375
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            959
+          ],
+          "fits": true,
+          "visible": false,
+          "overflow": 0
+        },
+        {
+          "action": "discovery: ArrowLeft 5",
+          "name": "discovery-category",
+          "value": "Helping at Home",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            17,
+            348.9375,
+            286,
+            387
+          ],
+          "outline": [
+            11,
+            342.9375,
+            309,
+            741.9375
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            1219
+          ],
+          "fits": true,
+          "visible": false,
+          "overflow": 0
+        },
+        {
+          "action": "discovery: ArrowDown 2",
+          "name": "discovery-category",
+          "value": "Calm",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            17,
+            609.375,
+            286,
+            342
+          ],
+          "outline": [
+            11,
+            603.375,
+            309,
+            957.375
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            1630
+          ],
+          "fits": true,
+          "visible": false,
+          "overflow": 0
+        },
+        {
+          "action": "discovery: ArrowDown 5",
+          "name": "discovery-category",
+          "value": "Helping at Home",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            17,
+            608.9375,
+            286,
+            387
+          ],
+          "outline": [
+            11,
+            602.9375,
+            309,
+            1001.9375
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            959
+          ],
+          "fits": true,
+          "visible": false,
+          "overflow": 0
+        },
+        {
+          "action": "discovery: ArrowUp 5",
+          "name": "discovery-category",
+          "value": "Helping at Home",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            17,
+            348.9375,
+            286,
+            387
+          ],
+          "outline": [
+            11,
+            342.9375,
+            309,
+            741.9375
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            1219
+          ],
+          "fits": true,
+          "visible": false,
+          "overflow": 0
+        }
+      ],
+      "failures": [
+        "discovery: Tab in: fitting choice/outline offscreen",
+        "discovery: Shift+Tab in: fitting choice/outline offscreen",
+        "discovery: ArrowRight 2: fitting choice/outline offscreen",
+        "discovery: ArrowRight 5: fitting choice/outline offscreen",
+        "discovery: ArrowLeft 5: fitting choice/outline offscreen",
+        "discovery: ArrowDown 2: fitting choice/outline offscreen",
+        "discovery: ArrowDown 5: fitting choice/outline offscreen",
+        "discovery: ArrowUp 5: fitting choice/outline offscreen"
+      ]
+    },
+    {
+      "config": "browser32",
+      "language": "en",
+      "root": "32px",
+      "signatures": {
+        "introduction": "048c95cbad165f057ec0e530829b42cf9485438c4314ebb9015dd994a80b1789",
+        "discovery": "bc644ade761e09747f38e7b6cfc088f27a3e6c681528c87a5f81380ae2f61d0a"
+      },
+      "checks": 40,
+      "oversized": 0,
+      "stops": [
+        {
+          "action": "introduction: Tab in",
+          "name": "introduction-language",
+          "value": "en",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            26,
+            487.515625,
+            168.625,
+            104
+          ],
+          "outline": [
+            21,
+            482.515625,
+            199.625,
+            596.515625
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            0
+          ],
+          "fits": true,
+          "visible": true,
+          "overflow": 0
+        },
+        {
+          "action": "introduction: Shift+Tab in",
+          "name": "introduction-language",
+          "value": "en",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            26,
+            297.515625,
+            168.625,
+            104
+          ],
+          "outline": [
+            21,
+            292.515625,
+            199.625,
+            406.515625
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            190
+          ],
+          "fits": true,
+          "visible": true,
+          "overflow": 0
+        },
+        {
+          "action": "introduction: ArrowRight 2",
+          "name": "introduction-language",
+          "value": "ru",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            26,
+            601.890625,
+            187.90625,
+            104
+          ],
+          "outline": [
+            21,
+            596.890625,
+            218.90625,
+            710.890625
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            190
+          ],
+          "fits": true,
+          "visible": false,
+          "overflow": 0
+        },
+        {
+          "action": "introduction: ArrowLeft 1",
+          "name": "introduction-language",
+          "value": "ru",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            26,
+            601.890625,
+            187.90625,
+            104
+          ],
+          "outline": [
+            21,
+            596.890625,
+            218.90625,
+            710.890625
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            190
+          ],
+          "fits": true,
+          "visible": false,
+          "overflow": 0
+        },
+        {
+          "action": "introduction: ArrowDown 2",
+          "name": "introduction-language",
+          "value": "ru",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            26,
+            601.890625,
+            187.90625,
+            104
+          ],
+          "outline": [
+            21,
+            596.890625,
+            218.90625,
+            710.890625
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            190
+          ],
+          "fits": true,
+          "visible": false,
+          "overflow": 0
+        },
+        {
+          "action": "introduction: ArrowUp 1",
+          "name": "introduction-language",
+          "value": "ru",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            26,
+            601.890625,
+            187.90625,
+            104
+          ],
+          "outline": [
+            21,
+            596.890625,
+            218.90625,
+            710.890625
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            190
+          ],
+          "fits": true,
+          "visible": false,
+          "overflow": 0
+        },
+        {
+          "action": "discovery: Tab in",
+          "name": "discovery-category",
+          "value": "Helping at Home",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            17,
+            348.546875,
+            286,
+            387
+          ],
+          "outline": [
+            11,
+            342.546875,
+            309,
+            741.546875
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            1079
+          ],
+          "fits": true,
+          "visible": false,
+          "overflow": 0
+        },
+        {
+          "action": "discovery: Shift+Tab in",
+          "name": "discovery-category",
+          "value": "Helping at Home",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            17,
+            348.546875,
+            286,
+            387
+          ],
+          "outline": [
+            11,
+            342.546875,
+            309,
+            741.546875
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            1079
+          ],
+          "fits": true,
+          "visible": false,
+          "overflow": 0
+        },
+        {
+          "action": "discovery: ArrowRight 2",
+          "name": "discovery-category",
+          "value": "Calm",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            17,
+            608.984375,
+            286,
+            342
+          ],
+          "outline": [
+            11,
+            602.984375,
+            309,
+            956.984375
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            1490
+          ],
+          "fits": true,
+          "visible": false,
+          "overflow": 0
+        },
+        {
+          "action": "discovery: ArrowRight 5",
+          "name": "discovery-category",
+          "value": "Helping at Home",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            17,
+            608.546875,
+            286,
+            387
+          ],
+          "outline": [
+            11,
+            602.546875,
+            309,
+            1001.546875
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            819
+          ],
+          "fits": true,
+          "visible": false,
+          "overflow": 0
+        },
+        {
+          "action": "discovery: ArrowLeft 5",
+          "name": "discovery-category",
+          "value": "Helping at Home",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            17,
+            348.546875,
+            286,
+            387
+          ],
+          "outline": [
+            11,
+            342.546875,
+            309,
+            741.546875
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            1079
+          ],
+          "fits": true,
+          "visible": false,
+          "overflow": 0
+        },
+        {
+          "action": "discovery: ArrowDown 2",
+          "name": "discovery-category",
+          "value": "Calm",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            17,
+            608.984375,
+            286,
+            342
+          ],
+          "outline": [
+            11,
+            602.984375,
+            309,
+            956.984375
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            1490
+          ],
+          "fits": true,
+          "visible": false,
+          "overflow": 0
+        },
+        {
+          "action": "discovery: ArrowDown 5",
+          "name": "discovery-category",
+          "value": "Helping at Home",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            17,
+            608.546875,
+            286,
+            387
+          ],
+          "outline": [
+            11,
+            602.546875,
+            309,
+            1001.546875
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            819
+          ],
+          "fits": true,
+          "visible": false,
+          "overflow": 0
+        },
+        {
+          "action": "discovery: ArrowUp 5",
+          "name": "discovery-category",
+          "value": "Helping at Home",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            17,
+            348.546875,
+            286,
+            387
+          ],
+          "outline": [
+            11,
+            342.546875,
+            309,
+            741.546875
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            1079
+          ],
+          "fits": true,
+          "visible": false,
+          "overflow": 0
+        }
+      ],
+      "failures": [
+        "introduction: ArrowRight 2: fitting choice/outline offscreen",
+        "introduction: ArrowLeft 1: fitting choice/outline offscreen",
+        "introduction: ArrowDown 2: fitting choice/outline offscreen",
+        "introduction: ArrowUp 1: fitting choice/outline offscreen",
+        "discovery: Tab in: fitting choice/outline offscreen",
+        "discovery: Shift+Tab in: fitting choice/outline offscreen",
+        "discovery: ArrowRight 2: fitting choice/outline offscreen",
+        "discovery: ArrowRight 5: fitting choice/outline offscreen",
+        "discovery: ArrowLeft 5: fitting choice/outline offscreen",
+        "discovery: ArrowDown 2: fitting choice/outline offscreen",
+        "discovery: ArrowDown 5: fitting choice/outline offscreen",
+        "discovery: ArrowUp 5: fitting choice/outline offscreen"
+      ]
+    },
+    {
+      "config": "browser32",
+      "language": "de",
+      "root": "32px",
+      "signatures": {
+        "introduction": "43a371cc7e532a0d41ed2db7c1259c01fe02742b6d06bb8e5b9ba85a5ebf334c",
+        "discovery": "6a8c04e218c954520b5aab08a15b0cc74d42b0bac2817c37ea3d3e250c3c5c4e"
+      },
+      "checks": 40,
+      "oversized": 0,
+      "stops": [
+        {
+          "action": "introduction: Tab in",
+          "name": "introduction-language",
+          "value": "de",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            26,
+            633.515625,
+            183.203125,
+            104
+          ],
+          "outline": [
+            21,
+            628.515625,
+            214.203125,
+            742.515625
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            0
+          ],
+          "fits": true,
+          "visible": false,
+          "overflow": 0
+        },
+        {
+          "action": "introduction: Shift+Tab in",
+          "name": "introduction-language",
+          "value": "de",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            26,
+            297.515625,
+            183.203125,
+            104
+          ],
+          "outline": [
+            21,
+            292.515625,
+            214.203125,
+            406.515625
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            336
+          ],
+          "fits": true,
+          "visible": true,
+          "overflow": 0
+        },
+        {
+          "action": "discovery: Tab in",
+          "name": "discovery-category",
+          "value": "Helping at Home",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            17,
+            348.34375,
+            286,
+            387
+          ],
+          "outline": [
+            11,
+            342.34375,
+            309,
+            741.34375
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            1131
+          ],
+          "fits": true,
+          "visible": false,
+          "overflow": 0
+        },
+        {
+          "action": "discovery: Shift+Tab in",
+          "name": "discovery-category",
+          "value": "Helping at Home",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            17,
+            348.34375,
+            286,
+            387
+          ],
+          "outline": [
+            11,
+            342.34375,
+            309,
+            741.34375
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            1131
+          ],
+          "fits": true,
+          "visible": false,
+          "overflow": 0
+        },
+        {
+          "action": "discovery: ArrowRight 2",
+          "name": "discovery-category",
+          "value": "Calm",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            17,
+            608.78125,
+            286,
+            342
+          ],
+          "outline": [
+            11,
+            602.78125,
+            309,
+            956.78125
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            1542
+          ],
+          "fits": true,
+          "visible": false,
+          "overflow": 0
+        },
+        {
+          "action": "discovery: ArrowRight 5",
+          "name": "discovery-category",
+          "value": "Helping at Home",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            17,
+            609.34375,
+            286,
+            387
+          ],
+          "outline": [
+            11,
+            603.34375,
+            309,
+            1002.34375
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            870
+          ],
+          "fits": true,
+          "visible": false,
+          "overflow": 0
+        },
+        {
+          "action": "discovery: ArrowLeft 5",
+          "name": "discovery-category",
+          "value": "Helping at Home",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            17,
+            348.34375,
+            286,
+            387
+          ],
+          "outline": [
+            11,
+            342.34375,
+            309,
+            741.34375
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            1131
+          ],
+          "fits": true,
+          "visible": false,
+          "overflow": 0
+        },
+        {
+          "action": "discovery: ArrowDown 2",
+          "name": "discovery-category",
+          "value": "Calm",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            17,
+            608.78125,
+            286,
+            342
+          ],
+          "outline": [
+            11,
+            602.78125,
+            309,
+            956.78125
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            1542
+          ],
+          "fits": true,
+          "visible": false,
+          "overflow": 0
+        },
+        {
+          "action": "discovery: ArrowDown 5",
+          "name": "discovery-category",
+          "value": "Helping at Home",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            17,
+            609.34375,
+            286,
+            387
+          ],
+          "outline": [
+            11,
+            603.34375,
+            309,
+            1002.34375
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            870
+          ],
+          "fits": true,
+          "visible": false,
+          "overflow": 0
+        },
+        {
+          "action": "discovery: ArrowUp 5",
+          "name": "discovery-category",
+          "value": "Helping at Home",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            17,
+            348.34375,
+            286,
+            387
+          ],
+          "outline": [
+            11,
+            342.34375,
+            309,
+            741.34375
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            1131
+          ],
+          "fits": true,
+          "visible": false,
+          "overflow": 0
+        }
+      ],
+      "failures": [
+        "introduction: Tab in: fitting choice/outline offscreen",
+        "discovery: Tab in: fitting choice/outline offscreen",
+        "discovery: Shift+Tab in: fitting choice/outline offscreen",
+        "discovery: ArrowRight 2: fitting choice/outline offscreen",
+        "discovery: ArrowRight 5: fitting choice/outline offscreen",
+        "discovery: ArrowLeft 5: fitting choice/outline offscreen",
+        "discovery: ArrowDown 2: fitting choice/outline offscreen",
+        "discovery: ArrowDown 5: fitting choice/outline offscreen",
+        "discovery: ArrowUp 5: fitting choice/outline offscreen"
+      ]
+    },
+    {
+      "config": "browser32",
+      "language": "ru",
+      "root": "32px",
+      "signatures": {
+        "introduction": "30938c4458c4a956fcf4f519632e88dbb745c8091d95b70eff155f79244a449a",
+        "discovery": "0878aba011d36344b44e01f2115f71bc2c09c251aab46f3439b473fc565a2076"
+      },
+      "checks": 40,
+      "oversized": 0,
+      "stops": [
+        {
+          "action": "introduction: Tab in",
+          "name": "introduction-language",
+          "value": "ru",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            26,
+            297.890625,
+            187.90625,
+            104
+          ],
+          "outline": [
+            21,
+            292.890625,
+            218.90625,
+            406.890625
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            494
+          ],
+          "fits": true,
+          "visible": true,
+          "overflow": 0
+        },
+        {
+          "action": "introduction: Shift+Tab in",
+          "name": "introduction-language",
+          "value": "ru",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            26,
+            297.890625,
+            187.90625,
+            104
+          ],
+          "outline": [
+            21,
+            292.890625,
+            218.90625,
+            406.890625
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            494
+          ],
+          "fits": true,
+          "visible": true,
+          "overflow": 0
+        },
+        {
+          "action": "discovery: Tab in",
+          "name": "discovery-category",
+          "value": "Helping at Home",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            17,
+            348.9375,
+            286,
+            387
+          ],
+          "outline": [
+            11,
+            342.9375,
+            309,
+            741.9375
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            1219
+          ],
+          "fits": true,
+          "visible": false,
+          "overflow": 0
+        },
+        {
+          "action": "discovery: Shift+Tab in",
+          "name": "discovery-category",
+          "value": "Helping at Home",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            17,
+            348.9375,
+            286,
+            387
+          ],
+          "outline": [
+            11,
+            342.9375,
+            309,
+            741.9375
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            1219
+          ],
+          "fits": true,
+          "visible": false,
+          "overflow": 0
+        },
+        {
+          "action": "discovery: ArrowRight 2",
+          "name": "discovery-category",
+          "value": "Calm",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            17,
+            609.375,
+            286,
+            342
+          ],
+          "outline": [
+            11,
+            603.375,
+            309,
+            957.375
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            1630
+          ],
+          "fits": true,
+          "visible": false,
+          "overflow": 0
+        },
+        {
+          "action": "discovery: ArrowRight 5",
+          "name": "discovery-category",
+          "value": "Helping at Home",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            17,
+            608.9375,
+            286,
+            387
+          ],
+          "outline": [
+            11,
+            602.9375,
+            309,
+            1001.9375
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            959
+          ],
+          "fits": true,
+          "visible": false,
+          "overflow": 0
+        },
+        {
+          "action": "discovery: ArrowLeft 5",
+          "name": "discovery-category",
+          "value": "Helping at Home",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            17,
+            348.9375,
+            286,
+            387
+          ],
+          "outline": [
+            11,
+            342.9375,
+            309,
+            741.9375
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            1219
+          ],
+          "fits": true,
+          "visible": false,
+          "overflow": 0
+        },
+        {
+          "action": "discovery: ArrowDown 2",
+          "name": "discovery-category",
+          "value": "Calm",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            17,
+            609.375,
+            286,
+            342
+          ],
+          "outline": [
+            11,
+            603.375,
+            309,
+            957.375
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            1630
+          ],
+          "fits": true,
+          "visible": false,
+          "overflow": 0
+        },
+        {
+          "action": "discovery: ArrowDown 5",
+          "name": "discovery-category",
+          "value": "Helping at Home",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            17,
+            608.9375,
+            286,
+            387
+          ],
+          "outline": [
+            11,
+            602.9375,
+            309,
+            1001.9375
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            959
+          ],
+          "fits": true,
+          "visible": false,
+          "overflow": 0
+        },
+        {
+          "action": "discovery: ArrowUp 5",
+          "name": "discovery-category",
+          "value": "Helping at Home",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            17,
+            348.9375,
+            286,
+            387
+          ],
+          "outline": [
+            11,
+            342.9375,
+            309,
+            741.9375
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            1219
+          ],
+          "fits": true,
+          "visible": false,
+          "overflow": 0
+        }
+      ],
+      "failures": [
+        "discovery: Tab in: fitting choice/outline offscreen",
+        "discovery: Shift+Tab in: fitting choice/outline offscreen",
+        "discovery: ArrowRight 2: fitting choice/outline offscreen",
+        "discovery: ArrowRight 5: fitting choice/outline offscreen",
+        "discovery: ArrowLeft 5: fitting choice/outline offscreen",
+        "discovery: ArrowDown 2: fitting choice/outline offscreen",
+        "discovery: ArrowDown 5: fitting choice/outline offscreen",
+        "discovery: ArrowUp 5: fitting choice/outline offscreen"
+      ]
+    },
+    {
+      "config": "short-root32",
+      "language": "en",
+      "root": "32px",
+      "signatures": {
+        "introduction": "048c95cbad165f057ec0e530829b42cf9485438c4314ebb9015dd994a80b1789",
+        "discovery": "bc644ade761e09747f38e7b6cfc088f27a3e6c681528c87a5f81380ae2f61d0a"
+      },
+      "checks": 40,
+      "oversized": 24,
+      "stops": [
+        {
+          "action": "introduction: Tab in",
+          "name": "introduction-language",
+          "value": "en",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            26,
+            47.515625,
+            168.625,
+            104
+          ],
+          "outline": [
+            21,
+            42.515625,
+            199.625,
+            156.515625
+          ],
+          "viewport": [
+            320,
+            200
+          ],
+          "scroll": [
+            0,
+            440
+          ],
+          "fits": true,
+          "visible": true,
+          "overflow": 0
+        },
+        {
+          "action": "introduction: Shift+Tab in",
+          "name": "introduction-language",
+          "value": "en",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            26,
+            47.515625,
+            168.625,
+            104
+          ],
+          "outline": [
+            21,
+            42.515625,
+            199.625,
+            156.515625
+          ],
+          "viewport": [
+            320,
+            200
+          ],
+          "scroll": [
+            0,
+            440
+          ],
+          "fits": true,
+          "visible": true,
+          "overflow": 0
+        },
+        {
+          "action": "introduction: ArrowDown 1",
+          "name": "introduction-language",
+          "value": "de",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            26,
+            125.515625,
+            183.203125,
+            104
+          ],
+          "outline": [
+            21,
+            120.515625,
+            214.203125,
+            234.515625
+          ],
+          "viewport": [
+            320,
+            200
+          ],
+          "scroll": [
+            0,
+            508
+          ],
+          "fits": true,
+          "visible": false,
+          "overflow": 0
+        },
+        {
+          "action": "discovery: Tab in",
+          "name": "discovery-category",
+          "value": "Helping at Home",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            17,
+            98.546875,
+            286,
+            387
+          ],
+          "outline": [
+            11,
+            92.546875,
+            309,
+            491.546875
+          ],
+          "viewport": [
+            320,
+            200
+          ],
+          "scroll": [
+            0,
+            1329
+          ],
+          "fits": false,
+          "visible": false,
+          "overflow": 0
+        },
+        {
+          "action": "discovery: Shift+Tab in",
+          "name": "discovery-category",
+          "value": "Helping at Home",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            17,
+            98.546875,
+            286,
+            387
+          ],
+          "outline": [
+            11,
+            92.546875,
+            309,
+            491.546875
+          ],
+          "viewport": [
+            320,
+            200
+          ],
+          "scroll": [
+            0,
+            1329
+          ],
+          "fits": false,
+          "visible": false,
+          "overflow": 0
+        }
+      ],
+      "failures": [
+        "introduction: ArrowDown 1: fitting choice/outline offscreen"
+      ]
+    },
+    {
+      "config": "short-root32",
+      "language": "de",
+      "root": "32px",
+      "signatures": {
+        "introduction": "43a371cc7e532a0d41ed2db7c1259c01fe02742b6d06bb8e5b9ba85a5ebf334c",
+        "discovery": "6a8c04e218c954520b5aab08a15b0cc74d42b0bac2817c37ea3d3e250c3c5c4e"
+      },
+      "checks": 40,
+      "oversized": 24,
+      "stops": [
+        {
+          "action": "introduction: Tab in",
+          "name": "introduction-language",
+          "value": "de",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            26,
+            47.515625,
+            183.203125,
+            104
+          ],
+          "outline": [
+            21,
+            42.515625,
+            214.203125,
+            156.515625
+          ],
+          "viewport": [
+            320,
+            200
+          ],
+          "scroll": [
+            0,
+            586
+          ],
+          "fits": true,
+          "visible": true,
+          "overflow": 0
+        },
+        {
+          "action": "introduction: Shift+Tab in",
+          "name": "introduction-language",
+          "value": "de",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            26,
+            47.515625,
+            183.203125,
+            104
+          ],
+          "outline": [
+            21,
+            42.515625,
+            214.203125,
+            156.515625
+          ],
+          "viewport": [
+            320,
+            200
+          ],
+          "scroll": [
+            0,
+            586
+          ],
+          "fits": true,
+          "visible": true,
+          "overflow": 0
+        },
+        {
+          "action": "discovery: Tab in",
+          "name": "discovery-category",
+          "value": "Helping at Home",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            17,
+            98.34375,
+            286,
+            387
+          ],
+          "outline": [
+            11,
+            92.34375,
+            309,
+            491.34375
+          ],
+          "viewport": [
+            320,
+            200
+          ],
+          "scroll": [
+            0,
+            1381
+          ],
+          "fits": false,
+          "visible": false,
+          "overflow": 0
+        },
+        {
+          "action": "discovery: Shift+Tab in",
+          "name": "discovery-category",
+          "value": "Helping at Home",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            17,
+            98.34375,
+            286,
+            387
+          ],
+          "outline": [
+            11,
+            92.34375,
+            309,
+            491.34375
+          ],
+          "viewport": [
+            320,
+            200
+          ],
+          "scroll": [
+            0,
+            1381
+          ],
+          "fits": false,
+          "visible": false,
+          "overflow": 0
+        }
+      ],
+      "failures": []
+    },
+    {
+      "config": "short-root32",
+      "language": "ru",
+      "root": "32px",
+      "signatures": {
+        "introduction": "30938c4458c4a956fcf4f519632e88dbb745c8091d95b70eff155f79244a449a",
+        "discovery": "0878aba011d36344b44e01f2115f71bc2c09c251aab46f3439b473fc565a2076"
+      },
+      "checks": 40,
+      "oversized": 24,
+      "stops": [
+        {
+          "action": "introduction: Tab in",
+          "name": "introduction-language",
+          "value": "ru",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            26,
+            47.890625,
+            187.90625,
+            104
+          ],
+          "outline": [
+            21,
+            42.890625,
+            218.90625,
+            156.890625
+          ],
+          "viewport": [
+            320,
+            200
+          ],
+          "scroll": [
+            0,
+            744
+          ],
+          "fits": true,
+          "visible": true,
+          "overflow": 0
+        },
+        {
+          "action": "introduction: Shift+Tab in",
+          "name": "introduction-language",
+          "value": "ru",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            26,
+            47.890625,
+            187.90625,
+            104
+          ],
+          "outline": [
+            21,
+            42.890625,
+            218.90625,
+            156.890625
+          ],
+          "viewport": [
+            320,
+            200
+          ],
+          "scroll": [
+            0,
+            744
+          ],
+          "fits": true,
+          "visible": true,
+          "overflow": 0
+        },
+        {
+          "action": "discovery: Tab in",
+          "name": "discovery-category",
+          "value": "Helping at Home",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            17,
+            98.9375,
+            286,
+            387
+          ],
+          "outline": [
+            11,
+            92.9375,
+            309,
+            491.9375
+          ],
+          "viewport": [
+            320,
+            200
+          ],
+          "scroll": [
+            0,
+            1469
+          ],
+          "fits": false,
+          "visible": false,
+          "overflow": 0
+        },
+        {
+          "action": "discovery: Shift+Tab in",
+          "name": "discovery-category",
+          "value": "Helping at Home",
+          "checked": true,
+          "ring": true,
+          "choice": [
+            17,
+            98.9375,
+            286,
+            387
+          ],
+          "outline": [
+            11,
+            92.9375,
+            309,
+            491.9375
+          ],
+          "viewport": [
+            320,
+            200
+          ],
+          "scroll": [
+            0,
+            1469
+          ],
+          "fits": false,
+          "visible": false,
+          "overflow": 0
+        }
+      ],
+      "failures": []
+    }
+  ],
+  "failures": [
+    "root32/en: introduction: ArrowRight 2: fitting choice/outline offscreen",
+    "root32/en: introduction: ArrowLeft 1: fitting choice/outline offscreen",
+    "root32/en: introduction: ArrowDown 2: fitting choice/outline offscreen",
+    "root32/en: introduction: ArrowUp 1: fitting choice/outline offscreen",
+    "root32/en: discovery: Tab in: fitting choice/outline offscreen",
+    "root32/en: discovery: Shift+Tab in: fitting choice/outline offscreen",
+    "root32/en: discovery: ArrowRight 2: fitting choice/outline offscreen",
+    "root32/en: discovery: ArrowRight 5: fitting choice/outline offscreen",
+    "root32/en: discovery: ArrowLeft 5: fitting choice/outline offscreen",
+    "root32/en: discovery: ArrowDown 2: fitting choice/outline offscreen",
+    "root32/en: discovery: ArrowDown 5: fitting choice/outline offscreen",
+    "root32/en: discovery: ArrowUp 5: fitting choice/outline offscreen",
+    "root32/de: introduction: Tab in: fitting choice/outline offscreen",
+    "root32/de: discovery: Tab in: fitting choice/outline offscreen",
+    "root32/de: discovery: Shift+Tab in: fitting choice/outline offscreen",
+    "root32/de: discovery: ArrowRight 2: fitting choice/outline offscreen",
+    "root32/de: discovery: ArrowRight 5: fitting choice/outline offscreen",
+    "root32/de: discovery: ArrowLeft 5: fitting choice/outline offscreen",
+    "root32/de: discovery: ArrowDown 2: fitting choice/outline offscreen",
+    "root32/de: discovery: ArrowDown 5: fitting choice/outline offscreen",
+    "root32/de: discovery: ArrowUp 5: fitting choice/outline offscreen",
+    "root32/ru: discovery: Tab in: fitting choice/outline offscreen",
+    "root32/ru: discovery: Shift+Tab in: fitting choice/outline offscreen",
+    "root32/ru: discovery: ArrowRight 2: fitting choice/outline offscreen",
+    "root32/ru: discovery: ArrowRight 5: fitting choice/outline offscreen",
+    "root32/ru: discovery: ArrowLeft 5: fitting choice/outline offscreen",
+    "root32/ru: discovery: ArrowDown 2: fitting choice/outline offscreen",
+    "root32/ru: discovery: ArrowDown 5: fitting choice/outline offscreen",
+    "root32/ru: discovery: ArrowUp 5: fitting choice/outline offscreen",
+    "browser32/en: introduction: ArrowRight 2: fitting choice/outline offscreen",
+    "browser32/en: introduction: ArrowLeft 1: fitting choice/outline offscreen",
+    "browser32/en: introduction: ArrowDown 2: fitting choice/outline offscreen",
+    "browser32/en: introduction: ArrowUp 1: fitting choice/outline offscreen",
+    "browser32/en: discovery: Tab in: fitting choice/outline offscreen",
+    "browser32/en: discovery: Shift+Tab in: fitting choice/outline offscreen",
+    "browser32/en: discovery: ArrowRight 2: fitting choice/outline offscreen",
+    "browser32/en: discovery: ArrowRight 5: fitting choice/outline offscreen",
+    "browser32/en: discovery: ArrowLeft 5: fitting choice/outline offscreen",
+    "browser32/en: discovery: ArrowDown 2: fitting choice/outline offscreen",
+    "browser32/en: discovery: ArrowDown 5: fitting choice/outline offscreen",
+    "browser32/en: discovery: ArrowUp 5: fitting choice/outline offscreen",
+    "browser32/de: introduction: Tab in: fitting choice/outline offscreen",
+    "browser32/de: discovery: Tab in: fitting choice/outline offscreen",
+    "browser32/de: discovery: Shift+Tab in: fitting choice/outline offscreen",
+    "browser32/de: discovery: ArrowRight 2: fitting choice/outline offscreen",
+    "browser32/de: discovery: ArrowRight 5: fitting choice/outline offscreen",
+    "browser32/de: discovery: ArrowLeft 5: fitting choice/outline offscreen",
+    "browser32/de: discovery: ArrowDown 2: fitting choice/outline offscreen",
+    "browser32/de: discovery: ArrowDown 5: fitting choice/outline offscreen",
+    "browser32/de: discovery: ArrowUp 5: fitting choice/outline offscreen",
+    "browser32/ru: discovery: Tab in: fitting choice/outline offscreen",
+    "browser32/ru: discovery: Shift+Tab in: fitting choice/outline offscreen",
+    "browser32/ru: discovery: ArrowRight 2: fitting choice/outline offscreen",
+    "browser32/ru: discovery: ArrowRight 5: fitting choice/outline offscreen",
+    "browser32/ru: discovery: ArrowLeft 5: fitting choice/outline offscreen",
+    "browser32/ru: discovery: ArrowDown 2: fitting choice/outline offscreen",
+    "browser32/ru: discovery: ArrowDown 5: fitting choice/outline offscreen",
+    "browser32/ru: discovery: ArrowUp 5: fitting choice/outline offscreen",
+    "short-root32/en: introduction: ArrowDown 1: fitting choice/outline offscreen"
+  ]
+}

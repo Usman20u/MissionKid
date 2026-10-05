@@ -1,0 +1,12 @@
+
+> missionkid@0.0.0 test
+> vitest run src/focusedChoice.test.ts src/ParentIntroduction.test.tsx src/MissionDiscovery.test.tsx src/Accessibility.test.tsx --maxWorkers=2
+
+
+ RUN  v4.1.11 <repository>
+
+
+ Test Files  4 passed (4)
+      Tests  123 passed (123)
+   Start at  12:15:09
+   Duration  10.19s (transform 2.27s, setup 1.11s, import 3.20s, tests 8.10s, environment 6.22s)

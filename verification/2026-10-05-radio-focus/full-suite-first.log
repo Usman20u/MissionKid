@@ -1,0 +1,64 @@
+
+> missionkid@0.0.0 test
+> vitest run
+
+
+ RUN  v4.1.11 <repository>
+
+ ❯ src/MissionDiscovery.test.tsx (54 tests | 1 failed) 1244219ms
+     × records exactly one selected session and starts no timer 1235202ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/MissionDiscovery.test.tsx > category selection and the discovery cycle > records exactly one selected session and starts no timer
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ src/MissionDiscovery.test.tsx:738:3
+    736|   });
+    737|
+    738|   it('records exactly one selected session and starts no timer', () =>…
+       |   ^
+    739|     const memory = memoryStorage();
+    740|     const captured: AppState[] = [];
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+⎯⎯⎯⎯⎯⎯ Unhandled Errors ⎯⎯⎯⎯⎯⎯
+
+Vitest caught 2 unhandled errors during the test run.
+This might cause false positive tests. Resolve unhandled errors to make sure your tests are not affected.
+
+⎯⎯⎯⎯⎯⎯ Unhandled Error ⎯⎯⎯⎯⎯⎯⎯
+Error: [vitest-pool]: Failed to start forks worker for test files <repository>/src/MissionExit.test.tsx.
+ ❯ node_modules/vitest/dist/chunks/cli-api.CnMVyzaz.js:3532:94
+ ❯ runNextTicks node:internal/process/task_queues:60:5
+ ❯ listOnTimeout node:internal/timers:545:9
+ ❯ processTimers node:internal/timers:519:7
+ ❯ Pool.schedule node_modules/vitest/dist/chunks/cli-api.CnMVyzaz.js:3532:5
+
+Caused by: Error: [vitest-pool-runner]: Timeout waiting for worker to respond
+ ❯ Timeout.<anonymous> node_modules/vitest/dist/chunks/cli-api.CnMVyzaz.js:3108:58
+ ❯ listOnTimeout node:internal/timers:581:17
+ ❯ processTimers node:internal/timers:519:7
+
+
+⎯⎯⎯⎯⎯⎯ Unhandled Error ⎯⎯⎯⎯⎯⎯⎯
+Error: [vitest-pool]: Failed to start forks worker for test files <repository>/src/Restoration.test.tsx.
+ ❯ node_modules/vitest/dist/chunks/cli-api.CnMVyzaz.js:3532:94
+ ❯ runNextTicks node:internal/process/task_queues:60:5
+ ❯ processTimers node:internal/timers:516:9
+ ❯ Pool.schedule node_modules/vitest/dist/chunks/cli-api.CnMVyzaz.js:3532:5
+
+Caused by: Error: [vitest-pool-runner]: Timeout waiting for worker to respond
+ ❯ Timeout.<anonymous> node_modules/vitest/dist/chunks/cli-api.CnMVyzaz.js:3108:58
+ ❯ listOnTimeout node:internal/timers:581:17
+ ❯ processTimers node:internal/timers:519:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+
+
+ Test Files  1 failed | 20 passed (21)
+      Tests  1 failed | 818 passed (819)
+     Errors  2 errors
+   Start at  11:37:01
+   Duration  1280.87s (transform 10.24s, setup 8.15s, import 20.24s, tests 1288.02s, environment 34.17s)

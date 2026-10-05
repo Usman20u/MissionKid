@@ -1,3 +1,5 @@
+import { useLayoutEffect, useRef } from 'react';
+
 import {
   selectConflictSession,
   selectDiscoveryCycle,
@@ -28,6 +30,7 @@ import {
 import { HistoryMark, SetupMark } from './Marks';
 import { MissionSuggestionSet } from './MissionSuggestionSet';
 import { CATEGORY_IMAGES } from './productImagery';
+import { revealFocusedChoice } from './focusedChoice';
 
 // The five canonical Mission Categories as one bounded peer-choice group. This
 // view derives and exposes the discovery cycle; it renders no Mission.
@@ -47,6 +50,11 @@ export function MissionCategorySelection({
   const selected = state.discovery?.category ?? null;
   const cycle = selectDiscoveryCycle(state);
   const helpId = 'discovery-categories-help';
+  const categoryGroup = useRef<HTMLFieldSetElement>(null);
+
+  useLayoutEffect(() => {
+    revealFocusedChoice(categoryGroup.current);
+  }, [state.language, selected]);
 
   // A conflict is about one already-chosen Mission, and the specification makes
   // that Mission the state's dominant information. Its wording comes from the
@@ -108,7 +116,7 @@ export function MissionCategorySelection({
         </p>
       ) : null}
 
-      <fieldset className="choice-group" aria-describedby={helpId}>
+      <fieldset className="choice-group" aria-describedby={helpId} ref={categoryGroup}>
         <legend>{t('discovery.categories.legend')}</legend>
         <p className="choice-group__help" id={helpId}>
           {t('discovery.categories.help')}

@@ -1,0 +1,42 @@
+[
+  {
+    "phase": "before",
+    "state": "introduction",
+    "methods": [
+      "root32",
+      "browser32"
+    ],
+    "file": "before-captures/root32-introduction.png",
+    "sha256": "17047f14e5c325c1e45fda6ff9375e8bf9c661a9a3604e77ebe650ce0a7308c4"
+  },
+  {
+    "phase": "before",
+    "state": "discovery",
+    "methods": [
+      "root32",
+      "browser32"
+    ],
+    "file": "before-captures/root32-discovery.png",
+    "sha256": "6a5d2b857ed6a702beb0e7f8537a914bc5771f2d85ca3e06b822300313df731d"
+  },
+  {
+    "phase": "after",
+    "state": "introduction",
+    "methods": [
+      "root32",
+      "browser32"
+    ],
+    "file": "after-captures/root32-introduction.png",
+    "sha256": "5c07e1847156ecb72bf95737f589dfc9b38a319db51b03254608e77d7ad3a0c9"
+  },
+  {
+    "phase": "after",
+    "state": "discovery",
+    "methods": [
+      "root32",
+      "browser32"
+    ],
+    "file": "after-captures/root32-discovery.png",
+    "sha256": "21da321829b8b205c764ec4e0d6b778a3a36e37d7dfa8c34d419864571eae508"
+  }
+]

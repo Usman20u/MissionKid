@@ -1,0 +1,12 @@
+
+> missionkid@0.0.0 test
+> vitest run --maxWorkers=2
+
+
+ RUN  v4.1.11 <repository>
+
+
+ Test Files  24 passed (24)
+      Tests  885 passed (885)
+   Start at  12:15:53
+   Duration  39.51s (transform 3.23s, setup 5.28s, import 7.54s, tests 33.66s, environment 23.71s)

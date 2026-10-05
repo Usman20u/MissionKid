@@ -1,0 +1,15 @@
+desktop/en: 48 focus checks, 0 failures
+desktop/de: 48 focus checks, 0 failures
+desktop/ru: 48 focus checks, 0 failures
+phone/en: 48 focus checks, 0 failures
+phone/de: 48 focus checks, 0 failures
+phone/ru: 48 focus checks, 0 failures
+root32/en: 48 focus checks, 0 failures
+root32/de: 48 focus checks, 0 failures
+root32/ru: 48 focus checks, 0 failures
+browser32/en: 48 focus checks, 0 failures
+browser32/de: 48 focus checks, 0 failures
+browser32/ru: 48 focus checks, 0 failures
+short-root32/en: 44 focus checks, 0 failures
+short-root32/de: 44 focus checks, 0 failures
+short-root32/ru: 44 focus checks, 0 failures

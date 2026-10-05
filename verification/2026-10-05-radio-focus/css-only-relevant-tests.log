@@ -1,0 +1,12 @@
+
+> missionkid@0.0.0 test
+> vitest run src/ParentIntroduction.test.tsx src/MissionDiscovery.test.tsx src/Accessibility.test.tsx
+
+
+ RUN  v4.1.11 <repository>
+
+
+ Test Files  3 passed (3)
+      Tests  116 passed (116)
+   Start at  11:34:56
+   Duration  10.29s (transform 3.47s, setup 1.13s, import 4.75s, tests 12.51s, environment 6.93s)

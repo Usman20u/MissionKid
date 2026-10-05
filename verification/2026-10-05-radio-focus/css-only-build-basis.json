@@ -1,0 +1,28 @@
+{
+  "baselineHead": "0d6b4850bb25fbb0277232054c5c5e8c2479ffcb",
+  "baselineFiles": 222,
+  "afterFiles": 222,
+  "unchangedFiles": 219,
+  "changedCommonFiles": [
+    "index.html"
+  ],
+  "removedNames": [
+    "assets/index-CgkQDkLR.css",
+    "assets/index-DYJmmybd.js"
+  ],
+  "newNames": [
+    "assets/index-DIkimylC.css",
+    "assets/index-TpNLRCFh.js"
+  ],
+  "beforeEntrypoints": {
+    "index.html": "278f3a7f7549b466585a618303899a44781446593b3fb5a3ee75079946ad9153",
+    "assets/index-CgkQDkLR.css": "d4d32e41e24903d591f54b8cc8f1cdff72eccf6725df5a56caa8070935a4220a",
+    "assets/index-DYJmmybd.js": "40bf3f47b0f772dbe41861fed55c4eefbfadb1f3bb25a682ca7dc13985cc0e50"
+  },
+  "afterEntrypoints": {
+    "index.html": "825dcf697870dd7f8a6513cc939f651a5eb6f7ee553581a1c9ece6c6858c5a5e",
+    "assets/index-DIkimylC.css": "eea877781e63a802f644967a194adec38c0bdd808d38098603a3738864418286",
+    "assets/index-TpNLRCFh.js": "40bf3f47b0f772dbe41861fed55c4eefbfadb1f3bb25a682ca7dc13985cc0e50"
+  },
+  "stylesheetSha256": "38f0ebfb55d2c82623c80c368730c609b0ef34de171d78d77c834b2d16780c4c"
+}
