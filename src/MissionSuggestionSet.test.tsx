@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 
 import { fireEvent, render, screen, within } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { AGE_BANDS, type AgeBand } from './ageBands';
 import { MISSION_CATEGORIES, type MissionCategory, type MissionRecord } from './catalog';
@@ -17,6 +17,7 @@ import {
   MISSION_IMAGE_KEYS,
   resolveMissionImage,
 } from './missionImages';
+import * as missionImages from './missionImages';
 import { MissionSuggestionSet } from './MissionSuggestionSet';
 import { deriveSuggestionSet, type SuggestionContext } from './missionSuggestions';
 
@@ -46,16 +47,21 @@ function cards() {
   return screen.getAllByRole('article');
 }
 
-// Authored scenes still render in the one Discovery set whose illustrations are
-// withheld, 9–10 Learning's second; their grammar is checked there.
+// Exercise the retained missing-illustration fallback independently of today's
+// complete asset family, without changing the production catalog or assets.
 function renderAuthoredSceneSet() {
   const ctx = context({ ageBand: '9–10', category: 'Learning' });
   const first = deriveSuggestionSet(MISSION_CATALOG, ctx);
   if (first.status !== 'complete') throw new Error('expected a complete production set');
 
-  return render(
-    <MissionSuggestionSet context={ctx} shown={first.missions.map((mission) => mission.missionId)} />,
-  );
+  const lookup = vi.spyOn(missionImages, 'resolveMissionImage').mockReturnValue(null);
+  try {
+    return render(
+      <MissionSuggestionSet context={ctx} shown={first.missions.map((mission) => mission.missionId)} />,
+    );
+  } finally {
+    lookup.mockRestore();
+  }
 }
 
 function localized(language: SupportedLanguage) {
@@ -783,9 +789,6 @@ describe('the insufficient-content state', () => {
 // the sense the scene was: the card's meaning stays in its text, and nothing
 // about eligibility, ordering or content moves because a picture exists.
 describe('Mission illustrations', () => {
-  // The one Discovery set whose illustrations wait for a replacement: one of
-  // its three was withheld, so all three keep their authored scenes together.
-  const withheld = ['learning-04__9–10', 'learning-13__9–10', 'learning-14__9–10'];
   const fileLabel = (ageBand: AgeBand) => ageBand.replace('–', '-');
 
   it('covers exactly the approved pairs of Mission and age band, in both widths', () => {
@@ -793,9 +796,7 @@ describe('Mission illustrations', () => {
       mission.ageBands.map((ageBand) => `${mission.missionId}__${ageBand}`),
     );
     expect(approved).toHaveLength(102);
-    expect([...MISSION_IMAGE_KEYS].sort()).toEqual(
-      approved.filter((key) => !withheld.includes(key)).sort(),
-    );
+    expect([...MISSION_IMAGE_KEYS].sort()).toEqual(approved.sort());
     // Two widths of each, and no bundled file the map leaves unused.
     expect(MISSION_IMAGE_FILE_COUNT).toBe(MISSION_IMAGE_KEYS.length * 2);
 
@@ -908,7 +909,7 @@ describe('Mission illustrations', () => {
     }
 
     expect(sets).toBe(33);
-    expect(sceneSets).toEqual(['9–10 Learning: learning-04, learning-13, learning-14']);
+    expect(sceneSets).toEqual([]);
   });
 
   it('changes no Mission content, eligibility or ordering', () => {

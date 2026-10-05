@@ -1,0 +1,81 @@
+{
+  "source": {
+    "sha256": "649c72f7c90e993d15977b064f0bf9c91ec7cb17232118bbafaffd105a86cdb2",
+    "dimensions": [
+      1536,
+      1024
+    ]
+  },
+  "method": "Chromium canvas, high-quality smoothing, WebP quality 0.9, whole image without cropping",
+  "browser": "149.0.7827.55",
+  "files": [
+    {
+      "name": "learning-13__9-10__768.webp",
+      "bytes": 44606,
+      "sha256": "61e5b61560e1dc1387f305202fc7c295401fcd535cc952c7eae8962f124102c9",
+      "dimensions": [
+        768,
+        512
+      ],
+      "origin": "inspected replacement"
+    },
+    {
+      "name": "learning-13__9-10__1536.webp",
+      "bytes": 126228,
+      "sha256": "dafdaae1f39ed178ea10815f0592a35a0b6046f05d4f97c2194dd156332b951d",
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "origin": "inspected replacement"
+    },
+    {
+      "name": "learning-04__9-10__768.webp",
+      "bytes": 58868,
+      "sha256": "915877eccb5118a0747649069299a797e2b7739705f7fd8fde7bd71a429d52d3",
+      "origin": "unchanged approved package",
+      "dimensions": [
+        768,
+        512
+      ],
+      "matchesPackageBytes": true,
+      "matchesManifestHash": true
+    },
+    {
+      "name": "learning-04__9-10__1536.webp",
+      "bytes": 148980,
+      "sha256": "43c56d80a0470e17c22bc42ab71a240a4781773de77d92c3bf824de531c7cb3a",
+      "origin": "unchanged approved package",
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "matchesPackageBytes": true,
+      "matchesManifestHash": true
+    },
+    {
+      "name": "learning-14__9-10__768.webp",
+      "bytes": 75626,
+      "sha256": "38f49177650dd98459b3d1bd056b9fb79144108a7e89595e261d03f7d114cc23",
+      "origin": "unchanged approved package",
+      "dimensions": [
+        768,
+        512
+      ],
+      "matchesPackageBytes": true,
+      "matchesManifestHash": true
+    },
+    {
+      "name": "learning-14__9-10__1536.webp",
+      "bytes": 228124,
+      "sha256": "3c585131bbe90968b60448fc22481f2f8e486ed940c482f623f6d39bb02b99a7",
+      "origin": "unchanged approved package",
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "matchesPackageBytes": true,
+      "matchesManifestHash": true
+    }
+  ]
+}

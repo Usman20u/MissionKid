@@ -733,13 +733,18 @@ describe("the Reward Card's picture and Monthly Goal bar", () => {
     expect(photo.getAttribute('src')).not.toBe(resolveMissionImage('helping-11', '7–8')!.src);
   });
 
-  it('keeps the authored scene its card showed when its set has no illustrations', () => {
-    renderResultFor('learning-14', 1, { ageBandAtSelection: '9–10' });
+  it.each(['learning-04', 'learning-13', 'learning-14'])(
+    'restores %s with its selected 9–10 illustration despite the current 7–8 profile',
+    (missionId) => {
+      renderResultFor(missionId, 1, { ageBandAtSelection: '9–10' });
 
-    const picture = document.querySelector('.mission-result__picture')!;
-    expect(picture.querySelector('img')).toBeNull();
-    expect(picture.querySelector('svg.mission-scene')!.getAttribute('aria-hidden')).toBe('true');
-  });
+      const picture = document.querySelector('.mission-result__picture')!;
+      expect(picture.querySelector('img')!.getAttribute('src')).toBe(
+        resolveMissionImage(missionId, '9–10')!.src,
+      );
+      expect(picture.querySelector('svg.mission-scene')).toBeNull();
+    },
+  );
 
   it('pictures nothing for a completion the catalog no longer resolves', () => {
     renderResultFor('movement-99');

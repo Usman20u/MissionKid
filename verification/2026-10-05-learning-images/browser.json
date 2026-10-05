@@ -1,0 +1,773 @@
+{
+  "browser": "149.0.7827.55",
+  "base": "http://127.0.0.1:4173/",
+  "blocked": false,
+  "cases": [
+    {
+      "config": "desktop",
+      "language": "en",
+      "missionId": "learning-04",
+      "states": [
+        {"label": "Discovery", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [330.65625, 220.4375], "decoded": true}, {"file": "learning-13__9-10__768", "window": [330.671875, 220.4375], "decoded": true}, {"file": "learning-14__9-10__768", "window": [330.65625, 220.4375], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 482},
+        {"label": "Discovery reselected after reload", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [330.65625, 220.4375], "decoded": true}, {"file": "learning-13__9-10__768", "window": [330.671875, 220.4375], "decoded": true}, {"file": "learning-14__9-10__768", "window": [330.65625, 220.4375], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 482},
+        {"label": "ready", "view": "session-ready", "pictures": [{"file": "learning-04__9-10__1536", "window": [533.40625, 355.59375], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 166},
+        {"label": "ready reload", "view": "session-ready", "pictures": [{"file": "learning-04__9-10__1536", "window": [533.40625, 355.59375], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 166},
+        {"label": "ready reload with 7–8 profile", "view": "session-ready", "pictures": [{"file": "learning-04__9-10__1536", "window": [533.40625, 355.59375], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "7–8", "words": 166},
+        {"label": "active", "view": "session-active", "pictures": [{"file": "learning-04__9-10__1536", "window": [224, 149.328125], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 148},
+        {"label": "active reload", "view": "session-active", "pictures": [{"file": "learning-04__9-10__768", "window": [224, 149.328125], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 148},
+        {"label": "Reward Card", "view": "session-result", "pictures": [{"file": "learning-04__9-10__1536", "window": [528.015625, 352], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 26},
+        {"label": "Reward Card reload", "view": "session-result", "pictures": [{"file": "learning-04__9-10__1536", "window": [528.015625, 352], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 26}
+      ],
+      "failures": []
+    },
+    {
+      "config": "desktop",
+      "language": "en",
+      "missionId": "learning-13",
+      "states": [
+        {"label": "Discovery", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [330.65625, 220.4375], "decoded": true}, {"file": "learning-13__9-10__768", "window": [330.671875, 220.4375], "decoded": true}, {"file": "learning-14__9-10__768", "window": [330.65625, 220.4375], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 482},
+        {"label": "Discovery reselected after reload", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [330.65625, 220.4375], "decoded": true}, {"file": "learning-13__9-10__768", "window": [330.671875, 220.4375], "decoded": true}, {"file": "learning-14__9-10__768", "window": [330.65625, 220.4375], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 482},
+        {"label": "ready", "view": "session-ready", "pictures": [{"file": "learning-13__9-10__1536", "window": [533.40625, 355.59375], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 153},
+        {"label": "ready reload", "view": "session-ready", "pictures": [{"file": "learning-13__9-10__1536", "window": [533.40625, 355.59375], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 153},
+        {"label": "ready reload with 7–8 profile", "view": "session-ready", "pictures": [{"file": "learning-13__9-10__1536", "window": [533.40625, 355.59375], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "7–8", "words": 153},
+        {"label": "active", "view": "session-active", "pictures": [{"file": "learning-13__9-10__1536", "window": [224, 149.328125], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 135},
+        {"label": "active reload", "view": "session-active", "pictures": [{"file": "learning-13__9-10__768", "window": [224, 149.328125], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 135},
+        {"label": "Reward Card", "view": "session-result", "pictures": [{"file": "learning-13__9-10__1536", "window": [528.015625, 352], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 26},
+        {"label": "Reward Card reload", "view": "session-result", "pictures": [{"file": "learning-13__9-10__1536", "window": [528.015625, 352], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 26}
+      ],
+      "failures": []
+    },
+    {
+      "config": "desktop",
+      "language": "en",
+      "missionId": "learning-14",
+      "states": [
+        {"label": "Discovery", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [330.65625, 220.4375], "decoded": true}, {"file": "learning-13__9-10__768", "window": [330.671875, 220.4375], "decoded": true}, {"file": "learning-14__9-10__768", "window": [330.65625, 220.4375], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 482},
+        {"label": "Discovery reselected after reload", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [330.65625, 220.4375], "decoded": true}, {"file": "learning-13__9-10__768", "window": [330.671875, 220.4375], "decoded": true}, {"file": "learning-14__9-10__768", "window": [330.65625, 220.4375], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 482},
+        {"label": "ready", "view": "session-ready", "pictures": [{"file": "learning-14__9-10__1536", "window": [533.40625, 355.59375], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 221},
+        {"label": "ready reload", "view": "session-ready", "pictures": [{"file": "learning-14__9-10__1536", "window": [533.40625, 355.59375], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 221},
+        {"label": "ready reload with 7–8 profile", "view": "session-ready", "pictures": [{"file": "learning-14__9-10__1536", "window": [533.40625, 355.59375], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "7–8", "words": 221},
+        {"label": "active", "view": "session-active", "pictures": [{"file": "learning-14__9-10__1536", "window": [224, 149.328125], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 203},
+        {"label": "active reload", "view": "session-active", "pictures": [{"file": "learning-14__9-10__768", "window": [224, 149.328125], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 203},
+        {"label": "Reward Card", "view": "session-result", "pictures": [{"file": "learning-14__9-10__1536", "window": [528.015625, 352], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 26},
+        {"label": "Reward Card reload", "view": "session-result", "pictures": [{"file": "learning-14__9-10__1536", "window": [528.015625, 352], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 26}
+      ],
+      "failures": []
+    },
+    {
+      "config": "desktop",
+      "language": "de",
+      "missionId": "learning-04",
+      "states": [
+        {"label": "Discovery", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [330.65625, 220.4375], "decoded": true}, {"file": "learning-13__9-10__768", "window": [330.671875, 220.4375], "decoded": true}, {"file": "learning-14__9-10__768", "window": [330.65625, 220.4375], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 511},
+        {"label": "Discovery reselected after reload", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [330.65625, 220.4375], "decoded": true}, {"file": "learning-13__9-10__768", "window": [330.671875, 220.4375], "decoded": true}, {"file": "learning-14__9-10__768", "window": [330.65625, 220.4375], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 511},
+        {"label": "ready", "view": "session-ready", "pictures": [{"file": "learning-04__9-10__1536", "window": [533.40625, 355.59375], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 184},
+        {"label": "ready reload", "view": "session-ready", "pictures": [{"file": "learning-04__9-10__1536", "window": [533.40625, 355.59375], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 184},
+        {"label": "ready reload with 7–8 profile", "view": "session-ready", "pictures": [{"file": "learning-04__9-10__1536", "window": [533.40625, 355.59375], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "7–8", "words": 184},
+        {"label": "active", "view": "session-active", "pictures": [{"file": "learning-04__9-10__1536", "window": [224, 149.328125], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 161},
+        {"label": "active reload", "view": "session-active", "pictures": [{"file": "learning-04__9-10__768", "window": [224, 149.328125], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 161},
+        {"label": "Reward Card", "view": "session-result", "pictures": [{"file": "learning-04__9-10__1536", "window": [528.015625, 352], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 26},
+        {"label": "Reward Card reload", "view": "session-result", "pictures": [{"file": "learning-04__9-10__1536", "window": [528.015625, 352], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 26}
+      ],
+      "failures": []
+    },
+    {
+      "config": "desktop",
+      "language": "de",
+      "missionId": "learning-13",
+      "states": [
+        {"label": "Discovery", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [330.65625, 220.4375], "decoded": true}, {"file": "learning-13__9-10__768", "window": [330.671875, 220.4375], "decoded": true}, {"file": "learning-14__9-10__768", "window": [330.65625, 220.4375], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 511},
+        {"label": "Discovery reselected after reload", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [330.65625, 220.4375], "decoded": true}, {"file": "learning-13__9-10__768", "window": [330.671875, 220.4375], "decoded": true}, {"file": "learning-14__9-10__768", "window": [330.65625, 220.4375], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 511},
+        {"label": "ready", "view": "session-ready", "pictures": [{"file": "learning-13__9-10__1536", "window": [533.40625, 355.59375], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 160},
+        {"label": "ready reload", "view": "session-ready", "pictures": [{"file": "learning-13__9-10__1536", "window": [533.40625, 355.59375], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 160},
+        {"label": "ready reload with 7–8 profile", "view": "session-ready", "pictures": [{"file": "learning-13__9-10__1536", "window": [533.40625, 355.59375], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "7–8", "words": 160},
+        {"label": "active", "view": "session-active", "pictures": [{"file": "learning-13__9-10__1536", "window": [224, 149.328125], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 137},
+        {"label": "active reload", "view": "session-active", "pictures": [{"file": "learning-13__9-10__768", "window": [224, 149.328125], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 137},
+        {"label": "Reward Card", "view": "session-result", "pictures": [{"file": "learning-13__9-10__1536", "window": [528.015625, 352], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 26},
+        {"label": "Reward Card reload", "view": "session-result", "pictures": [{"file": "learning-13__9-10__1536", "window": [528.015625, 352], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 26}
+      ],
+      "failures": []
+    },
+    {
+      "config": "desktop",
+      "language": "de",
+      "missionId": "learning-14",
+      "states": [
+        {"label": "Discovery", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [330.65625, 220.4375], "decoded": true}, {"file": "learning-13__9-10__768", "window": [330.671875, 220.4375], "decoded": true}, {"file": "learning-14__9-10__768", "window": [330.65625, 220.4375], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 511},
+        {"label": "Discovery reselected after reload", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [330.65625, 220.4375], "decoded": true}, {"file": "learning-13__9-10__768", "window": [330.671875, 220.4375], "decoded": true}, {"file": "learning-14__9-10__768", "window": [330.65625, 220.4375], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 511},
+        {"label": "ready", "view": "session-ready", "pictures": [{"file": "learning-14__9-10__1536", "window": [533.40625, 355.59375], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 233},
+        {"label": "ready reload", "view": "session-ready", "pictures": [{"file": "learning-14__9-10__1536", "window": [533.40625, 355.59375], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 233},
+        {"label": "ready reload with 7–8 profile", "view": "session-ready", "pictures": [{"file": "learning-14__9-10__1536", "window": [533.40625, 355.59375], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "7–8", "words": 233},
+        {"label": "active", "view": "session-active", "pictures": [{"file": "learning-14__9-10__1536", "window": [224, 149.328125], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 210},
+        {"label": "active reload", "view": "session-active", "pictures": [{"file": "learning-14__9-10__768", "window": [224, 149.328125], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 210},
+        {"label": "Reward Card", "view": "session-result", "pictures": [{"file": "learning-14__9-10__1536", "window": [528.015625, 352], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 25},
+        {"label": "Reward Card reload", "view": "session-result", "pictures": [{"file": "learning-14__9-10__1536", "window": [528.015625, 352], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 25}
+      ],
+      "failures": []
+    },
+    {
+      "config": "desktop",
+      "language": "ru",
+      "missionId": "learning-04",
+      "states": [
+        {"label": "Discovery", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [330.65625, 220.4375], "decoded": true}, {"file": "learning-13__9-10__768", "window": [330.671875, 220.4375], "decoded": true}, {"file": "learning-14__9-10__768", "window": [330.65625, 220.4375], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 445},
+        {"label": "Discovery reselected after reload", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [330.65625, 220.4375], "decoded": true}, {"file": "learning-13__9-10__768", "window": [330.671875, 220.4375], "decoded": true}, {"file": "learning-14__9-10__768", "window": [330.65625, 220.4375], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 445},
+        {"label": "ready", "view": "session-ready", "pictures": [{"file": "learning-04__9-10__1536", "window": [533.40625, 355.59375], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 151},
+        {"label": "ready reload", "view": "session-ready", "pictures": [{"file": "learning-04__9-10__1536", "window": [533.40625, 355.59375], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 151},
+        {"label": "ready reload with 7–8 profile", "view": "session-ready", "pictures": [{"file": "learning-04__9-10__1536", "window": [533.40625, 355.59375], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "7–8", "words": 151},
+        {"label": "active", "view": "session-active", "pictures": [{"file": "learning-04__9-10__1536", "window": [224, 149.328125], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 138},
+        {"label": "active reload", "view": "session-active", "pictures": [{"file": "learning-04__9-10__768", "window": [224, 149.328125], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 138},
+        {"label": "Reward Card", "view": "session-result", "pictures": [{"file": "learning-04__9-10__1536", "window": [528.015625, 352], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 28},
+        {"label": "Reward Card reload", "view": "session-result", "pictures": [{"file": "learning-04__9-10__1536", "window": [528.015625, 352], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 28}
+      ],
+      "failures": []
+    },
+    {
+      "config": "desktop",
+      "language": "ru",
+      "missionId": "learning-13",
+      "states": [
+        {"label": "Discovery", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [330.65625, 220.4375], "decoded": true}, {"file": "learning-13__9-10__768", "window": [330.671875, 220.4375], "decoded": true}, {"file": "learning-14__9-10__768", "window": [330.65625, 220.4375], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 445},
+        {"label": "Discovery reselected after reload", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [330.65625, 220.4375], "decoded": true}, {"file": "learning-13__9-10__768", "window": [330.671875, 220.4375], "decoded": true}, {"file": "learning-14__9-10__768", "window": [330.65625, 220.4375], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 445},
+        {"label": "ready", "view": "session-ready", "pictures": [{"file": "learning-13__9-10__1536", "window": [533.40625, 355.59375], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 135},
+        {"label": "ready reload", "view": "session-ready", "pictures": [{"file": "learning-13__9-10__1536", "window": [533.40625, 355.59375], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 135},
+        {"label": "ready reload with 7–8 profile", "view": "session-ready", "pictures": [{"file": "learning-13__9-10__1536", "window": [533.40625, 355.59375], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "7–8", "words": 135},
+        {"label": "active", "view": "session-active", "pictures": [{"file": "learning-13__9-10__1536", "window": [224, 149.328125], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 122},
+        {"label": "active reload", "view": "session-active", "pictures": [{"file": "learning-13__9-10__768", "window": [224, 149.328125], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 122},
+        {"label": "Reward Card", "view": "session-result", "pictures": [{"file": "learning-13__9-10__1536", "window": [528.015625, 352], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 28},
+        {"label": "Reward Card reload", "view": "session-result", "pictures": [{"file": "learning-13__9-10__1536", "window": [528.015625, 352], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 28}
+      ],
+      "failures": []
+    },
+    {
+      "config": "desktop",
+      "language": "ru",
+      "missionId": "learning-14",
+      "states": [
+        {"label": "Discovery", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [330.65625, 220.4375], "decoded": true}, {"file": "learning-13__9-10__768", "window": [330.671875, 220.4375], "decoded": true}, {"file": "learning-14__9-10__768", "window": [330.65625, 220.4375], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 445},
+        {"label": "Discovery reselected after reload", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [330.65625, 220.4375], "decoded": true}, {"file": "learning-13__9-10__768", "window": [330.671875, 220.4375], "decoded": true}, {"file": "learning-14__9-10__768", "window": [330.65625, 220.4375], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 445},
+        {"label": "ready", "view": "session-ready", "pictures": [{"file": "learning-14__9-10__1536", "window": [533.40625, 355.59375], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 191},
+        {"label": "ready reload", "view": "session-ready", "pictures": [{"file": "learning-14__9-10__1536", "window": [533.40625, 355.59375], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 191},
+        {"label": "ready reload with 7–8 profile", "view": "session-ready", "pictures": [{"file": "learning-14__9-10__1536", "window": [533.40625, 355.59375], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "7–8", "words": 191},
+        {"label": "active", "view": "session-active", "pictures": [{"file": "learning-14__9-10__1536", "window": [224, 149.328125], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 178},
+        {"label": "active reload", "view": "session-active", "pictures": [{"file": "learning-14__9-10__768", "window": [224, 149.328125], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 178},
+        {"label": "Reward Card", "view": "session-result", "pictures": [{"file": "learning-14__9-10__1536", "window": [528.015625, 352], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 27},
+        {"label": "Reward Card reload", "view": "session-result", "pictures": [{"file": "learning-14__9-10__1536", "window": [528.015625, 352], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 27}
+      ],
+      "failures": []
+    },
+    {
+      "config": "wide",
+      "language": "en",
+      "missionId": "learning-04",
+      "states": [
+        {"label": "Discovery", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [533.328125, 355.546875], "decoded": true}, {"file": "learning-13__9-10__768", "window": [533.328125, 355.546875], "decoded": true}, {"file": "learning-14__9-10__768", "window": [533.328125, 355.546875], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 482},
+        {"label": "Discovery reselected after reload", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [533.328125, 355.546875], "decoded": true}, {"file": "learning-13__9-10__768", "window": [533.328125, 355.546875], "decoded": true}, {"file": "learning-14__9-10__768", "window": [533.328125, 355.546875], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 482},
+        {"label": "ready", "view": "session-ready", "pictures": [{"file": "learning-04__9-10__768", "window": [704, 469.328125], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 166},
+        {"label": "ready reload", "view": "session-ready", "pictures": [{"file": "learning-04__9-10__768", "window": [704, 469.328125], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 166},
+        {"label": "ready reload with 7–8 profile", "view": "session-ready", "pictures": [{"file": "learning-04__9-10__768", "window": [704, 469.328125], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "7–8", "words": 166},
+        {"label": "active", "view": "session-active", "pictures": [{"file": "learning-04__9-10__768", "window": [224, 149.328125], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 148},
+        {"label": "active reload", "view": "session-active", "pictures": [{"file": "learning-04__9-10__768", "window": [224, 149.328125], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 148},
+        {"label": "Reward Card", "view": "session-result", "pictures": [{"file": "learning-04__9-10__768", "window": [523.59375, 349.0625], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 26},
+        {"label": "Reward Card reload", "view": "session-result", "pictures": [{"file": "learning-04__9-10__768", "window": [523.59375, 349.0625], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 26}
+      ],
+      "failures": []
+    },
+    {
+      "config": "wide",
+      "language": "en",
+      "missionId": "learning-13",
+      "states": [
+        {"label": "Discovery", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [533.328125, 355.546875], "decoded": true}, {"file": "learning-13__9-10__768", "window": [533.328125, 355.546875], "decoded": true}, {"file": "learning-14__9-10__768", "window": [533.328125, 355.546875], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 482},
+        {"label": "Discovery reselected after reload", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [533.328125, 355.546875], "decoded": true}, {"file": "learning-13__9-10__768", "window": [533.328125, 355.546875], "decoded": true}, {"file": "learning-14__9-10__768", "window": [533.328125, 355.546875], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 482},
+        {"label": "ready", "view": "session-ready", "pictures": [{"file": "learning-13__9-10__768", "window": [704, 469.328125], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 153},
+        {"label": "ready reload", "view": "session-ready", "pictures": [{"file": "learning-13__9-10__768", "window": [704, 469.328125], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 153},
+        {"label": "ready reload with 7–8 profile", "view": "session-ready", "pictures": [{"file": "learning-13__9-10__768", "window": [704, 469.328125], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "7–8", "words": 153},
+        {"label": "active", "view": "session-active", "pictures": [{"file": "learning-13__9-10__768", "window": [224, 149.328125], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 135},
+        {"label": "active reload", "view": "session-active", "pictures": [{"file": "learning-13__9-10__768", "window": [224, 149.328125], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 135},
+        {"label": "Reward Card", "view": "session-result", "pictures": [{"file": "learning-13__9-10__768", "window": [523.59375, 349.0625], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 26},
+        {"label": "Reward Card reload", "view": "session-result", "pictures": [{"file": "learning-13__9-10__768", "window": [523.59375, 349.0625], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 26}
+      ],
+      "failures": []
+    },
+    {
+      "config": "wide",
+      "language": "en",
+      "missionId": "learning-14",
+      "states": [
+        {"label": "Discovery", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [533.328125, 355.546875], "decoded": true}, {"file": "learning-13__9-10__768", "window": [533.328125, 355.546875], "decoded": true}, {"file": "learning-14__9-10__768", "window": [533.328125, 355.546875], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 482},
+        {"label": "Discovery reselected after reload", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [533.328125, 355.546875], "decoded": true}, {"file": "learning-13__9-10__768", "window": [533.328125, 355.546875], "decoded": true}, {"file": "learning-14__9-10__768", "window": [533.328125, 355.546875], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 482},
+        {"label": "ready", "view": "session-ready", "pictures": [{"file": "learning-14__9-10__768", "window": [704, 469.328125], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 221},
+        {"label": "ready reload", "view": "session-ready", "pictures": [{"file": "learning-14__9-10__768", "window": [704, 469.328125], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 221},
+        {"label": "ready reload with 7–8 profile", "view": "session-ready", "pictures": [{"file": "learning-14__9-10__768", "window": [704, 469.328125], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "7–8", "words": 221},
+        {"label": "active", "view": "session-active", "pictures": [{"file": "learning-14__9-10__768", "window": [224, 149.328125], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 203},
+        {"label": "active reload", "view": "session-active", "pictures": [{"file": "learning-14__9-10__768", "window": [224, 149.328125], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 203},
+        {"label": "Reward Card", "view": "session-result", "pictures": [{"file": "learning-14__9-10__768", "window": [523.59375, 349.0625], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 26},
+        {"label": "Reward Card reload", "view": "session-result", "pictures": [{"file": "learning-14__9-10__768", "window": [523.59375, 349.0625], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 26}
+      ],
+      "failures": []
+    },
+    {
+      "config": "wide",
+      "language": "de",
+      "missionId": "learning-04",
+      "states": [
+        {"label": "Discovery", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [533.328125, 355.546875], "decoded": true}, {"file": "learning-13__9-10__768", "window": [533.328125, 355.546875], "decoded": true}, {"file": "learning-14__9-10__768", "window": [533.328125, 355.546875], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 511},
+        {"label": "Discovery reselected after reload", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [533.328125, 355.546875], "decoded": true}, {"file": "learning-13__9-10__768", "window": [533.328125, 355.546875], "decoded": true}, {"file": "learning-14__9-10__768", "window": [533.328125, 355.546875], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 511},
+        {"label": "ready", "view": "session-ready", "pictures": [{"file": "learning-04__9-10__768", "window": [704, 469.328125], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 184},
+        {"label": "ready reload", "view": "session-ready", "pictures": [{"file": "learning-04__9-10__768", "window": [704, 469.328125], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 184},
+        {"label": "ready reload with 7–8 profile", "view": "session-ready", "pictures": [{"file": "learning-04__9-10__768", "window": [704, 469.328125], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "7–8", "words": 184},
+        {"label": "active", "view": "session-active", "pictures": [{"file": "learning-04__9-10__768", "window": [224, 149.328125], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 161},
+        {"label": "active reload", "view": "session-active", "pictures": [{"file": "learning-04__9-10__768", "window": [224, 149.328125], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 161},
+        {"label": "Reward Card", "view": "session-result", "pictures": [{"file": "learning-04__9-10__768", "window": [523.59375, 349.0625], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 26},
+        {"label": "Reward Card reload", "view": "session-result", "pictures": [{"file": "learning-04__9-10__768", "window": [523.59375, 349.0625], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 26}
+      ],
+      "failures": []
+    },
+    {
+      "config": "wide",
+      "language": "de",
+      "missionId": "learning-13",
+      "states": [
+        {"label": "Discovery", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [533.328125, 355.546875], "decoded": true}, {"file": "learning-13__9-10__768", "window": [533.328125, 355.546875], "decoded": true}, {"file": "learning-14__9-10__768", "window": [533.328125, 355.546875], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 511},
+        {"label": "Discovery reselected after reload", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [533.328125, 355.546875], "decoded": true}, {"file": "learning-13__9-10__768", "window": [533.328125, 355.546875], "decoded": true}, {"file": "learning-14__9-10__768", "window": [533.328125, 355.546875], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 511},
+        {"label": "ready", "view": "session-ready", "pictures": [{"file": "learning-13__9-10__768", "window": [704, 469.328125], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 160},
+        {"label": "ready reload", "view": "session-ready", "pictures": [{"file": "learning-13__9-10__768", "window": [704, 469.328125], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 160},
+        {"label": "ready reload with 7–8 profile", "view": "session-ready", "pictures": [{"file": "learning-13__9-10__768", "window": [704, 469.328125], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "7–8", "words": 160},
+        {"label": "active", "view": "session-active", "pictures": [{"file": "learning-13__9-10__768", "window": [224, 149.328125], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 137},
+        {"label": "active reload", "view": "session-active", "pictures": [{"file": "learning-13__9-10__768", "window": [224, 149.328125], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 137},
+        {"label": "Reward Card", "view": "session-result", "pictures": [{"file": "learning-13__9-10__768", "window": [523.59375, 349.0625], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 26},
+        {"label": "Reward Card reload", "view": "session-result", "pictures": [{"file": "learning-13__9-10__768", "window": [523.59375, 349.0625], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 26}
+      ],
+      "failures": []
+    },
+    {
+      "config": "wide",
+      "language": "de",
+      "missionId": "learning-14",
+      "states": [
+        {"label": "Discovery", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [533.328125, 355.546875], "decoded": true}, {"file": "learning-13__9-10__768", "window": [533.328125, 355.546875], "decoded": true}, {"file": "learning-14__9-10__768", "window": [533.328125, 355.546875], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 511},
+        {"label": "Discovery reselected after reload", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [533.328125, 355.546875], "decoded": true}, {"file": "learning-13__9-10__768", "window": [533.328125, 355.546875], "decoded": true}, {"file": "learning-14__9-10__768", "window": [533.328125, 355.546875], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 511},
+        {"label": "ready", "view": "session-ready", "pictures": [{"file": "learning-14__9-10__768", "window": [704, 469.328125], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 233},
+        {"label": "ready reload", "view": "session-ready", "pictures": [{"file": "learning-14__9-10__768", "window": [704, 469.328125], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 233},
+        {"label": "ready reload with 7–8 profile", "view": "session-ready", "pictures": [{"file": "learning-14__9-10__768", "window": [704, 469.328125], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "7–8", "words": 233},
+        {"label": "active", "view": "session-active", "pictures": [{"file": "learning-14__9-10__768", "window": [224, 149.328125], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 210},
+        {"label": "active reload", "view": "session-active", "pictures": [{"file": "learning-14__9-10__768", "window": [224, 149.328125], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 210},
+        {"label": "Reward Card", "view": "session-result", "pictures": [{"file": "learning-14__9-10__768", "window": [523.59375, 349.0625], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 25},
+        {"label": "Reward Card reload", "view": "session-result", "pictures": [{"file": "learning-14__9-10__768", "window": [523.59375, 349.0625], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 25}
+      ],
+      "failures": []
+    },
+    {
+      "config": "wide",
+      "language": "ru",
+      "missionId": "learning-04",
+      "states": [
+        {"label": "Discovery", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [533.328125, 355.546875], "decoded": true}, {"file": "learning-13__9-10__768", "window": [533.328125, 355.546875], "decoded": true}, {"file": "learning-14__9-10__768", "window": [533.328125, 355.546875], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 445},
+        {"label": "Discovery reselected after reload", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [533.328125, 355.546875], "decoded": true}, {"file": "learning-13__9-10__768", "window": [533.328125, 355.546875], "decoded": true}, {"file": "learning-14__9-10__768", "window": [533.328125, 355.546875], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 445},
+        {"label": "ready", "view": "session-ready", "pictures": [{"file": "learning-04__9-10__768", "window": [704, 469.328125], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 151},
+        {"label": "ready reload", "view": "session-ready", "pictures": [{"file": "learning-04__9-10__768", "window": [704, 469.328125], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 151},
+        {"label": "ready reload with 7–8 profile", "view": "session-ready", "pictures": [{"file": "learning-04__9-10__768", "window": [704, 469.328125], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "7–8", "words": 151},
+        {"label": "active", "view": "session-active", "pictures": [{"file": "learning-04__9-10__768", "window": [224, 149.328125], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 138},
+        {"label": "active reload", "view": "session-active", "pictures": [{"file": "learning-04__9-10__768", "window": [224, 149.328125], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 138},
+        {"label": "Reward Card", "view": "session-result", "pictures": [{"file": "learning-04__9-10__768", "window": [523.59375, 349.0625], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 28},
+        {"label": "Reward Card reload", "view": "session-result", "pictures": [{"file": "learning-04__9-10__768", "window": [523.59375, 349.0625], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 28}
+      ],
+      "failures": []
+    },
+    {
+      "config": "wide",
+      "language": "ru",
+      "missionId": "learning-13",
+      "states": [
+        {"label": "Discovery", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [533.328125, 355.546875], "decoded": true}, {"file": "learning-13__9-10__768", "window": [533.328125, 355.546875], "decoded": true}, {"file": "learning-14__9-10__768", "window": [533.328125, 355.546875], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 445},
+        {"label": "Discovery reselected after reload", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [533.328125, 355.546875], "decoded": true}, {"file": "learning-13__9-10__768", "window": [533.328125, 355.546875], "decoded": true}, {"file": "learning-14__9-10__768", "window": [533.328125, 355.546875], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 445},
+        {"label": "ready", "view": "session-ready", "pictures": [{"file": "learning-13__9-10__768", "window": [704, 469.328125], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 135},
+        {"label": "ready reload", "view": "session-ready", "pictures": [{"file": "learning-13__9-10__768", "window": [704, 469.328125], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 135},
+        {"label": "ready reload with 7–8 profile", "view": "session-ready", "pictures": [{"file": "learning-13__9-10__768", "window": [704, 469.328125], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "7–8", "words": 135},
+        {"label": "active", "view": "session-active", "pictures": [{"file": "learning-13__9-10__768", "window": [224, 149.328125], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 122},
+        {"label": "active reload", "view": "session-active", "pictures": [{"file": "learning-13__9-10__768", "window": [224, 149.328125], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 122},
+        {"label": "Reward Card", "view": "session-result", "pictures": [{"file": "learning-13__9-10__768", "window": [523.59375, 349.0625], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 28},
+        {"label": "Reward Card reload", "view": "session-result", "pictures": [{"file": "learning-13__9-10__768", "window": [523.59375, 349.0625], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 28}
+      ],
+      "failures": []
+    },
+    {
+      "config": "wide",
+      "language": "ru",
+      "missionId": "learning-14",
+      "states": [
+        {"label": "Discovery", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [533.328125, 355.546875], "decoded": true}, {"file": "learning-13__9-10__768", "window": [533.328125, 355.546875], "decoded": true}, {"file": "learning-14__9-10__768", "window": [533.328125, 355.546875], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 445},
+        {"label": "Discovery reselected after reload", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [533.328125, 355.546875], "decoded": true}, {"file": "learning-13__9-10__768", "window": [533.328125, 355.546875], "decoded": true}, {"file": "learning-14__9-10__768", "window": [533.328125, 355.546875], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 445},
+        {"label": "ready", "view": "session-ready", "pictures": [{"file": "learning-14__9-10__768", "window": [704, 469.328125], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 191},
+        {"label": "ready reload", "view": "session-ready", "pictures": [{"file": "learning-14__9-10__768", "window": [704, 469.328125], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 191},
+        {"label": "ready reload with 7–8 profile", "view": "session-ready", "pictures": [{"file": "learning-14__9-10__768", "window": [704, 469.328125], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "7–8", "words": 191},
+        {"label": "active", "view": "session-active", "pictures": [{"file": "learning-14__9-10__768", "window": [224, 149.328125], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 178},
+        {"label": "active reload", "view": "session-active", "pictures": [{"file": "learning-14__9-10__768", "window": [224, 149.328125], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 178},
+        {"label": "Reward Card", "view": "session-result", "pictures": [{"file": "learning-14__9-10__768", "window": [523.59375, 349.0625], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 27},
+        {"label": "Reward Card reload", "view": "session-result", "pictures": [{"file": "learning-14__9-10__768", "window": [523.59375, 349.0625], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 27}
+      ],
+      "failures": []
+    },
+    {
+      "config": "phone",
+      "language": "en",
+      "missionId": "learning-04",
+      "states": [
+        {"label": "Discovery", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__1536", "window": [292.03125, 194.6875], "decoded": true}, {"file": "learning-13__9-10__1536", "window": [292.03125, 194.6875], "decoded": true}, {"file": "learning-14__9-10__1536", "window": [292.03125, 194.6875], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 482},
+        {"label": "Discovery reselected after reload", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__1536", "window": [292.03125, 194.6875], "decoded": true}, {"file": "learning-13__9-10__1536", "window": [292.03125, 194.6875], "decoded": true}, {"file": "learning-14__9-10__1536", "window": [292.03125, 194.6875], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 482},
+        {"label": "ready", "view": "session-ready", "pictures": [{"file": "learning-04__9-10__1536", "window": [316, 210.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 166},
+        {"label": "ready reload", "view": "session-ready", "pictures": [{"file": "learning-04__9-10__1536", "window": [316, 210.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 166},
+        {"label": "ready reload with 7–8 profile", "view": "session-ready", "pictures": [{"file": "learning-04__9-10__1536", "window": [316, 210.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "7–8", "words": 166},
+        {"label": "active", "view": "session-active", "pictures": [{"file": "learning-04__9-10__1536", "window": [240, 160], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 148},
+        {"label": "active reload", "view": "session-active", "pictures": [{"file": "learning-04__9-10__768", "window": [240, 160], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 148},
+        {"label": "Reward Card", "view": "session-result", "pictures": [{"file": "learning-04__9-10__1536", "window": [260, 173.328125], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 26},
+        {"label": "Reward Card reload", "view": "session-result", "pictures": [{"file": "learning-04__9-10__1536", "window": [260, 173.328125], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 26}
+      ],
+      "failures": []
+    },
+    {
+      "config": "phone",
+      "language": "en",
+      "missionId": "learning-13",
+      "states": [
+        {"label": "Discovery", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__1536", "window": [292.03125, 194.6875], "decoded": true}, {"file": "learning-13__9-10__1536", "window": [292.03125, 194.6875], "decoded": true}, {"file": "learning-14__9-10__1536", "window": [292.03125, 194.6875], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 482},
+        {"label": "Discovery reselected after reload", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__1536", "window": [292.03125, 194.6875], "decoded": true}, {"file": "learning-13__9-10__1536", "window": [292.03125, 194.6875], "decoded": true}, {"file": "learning-14__9-10__1536", "window": [292.03125, 194.6875], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 482},
+        {"label": "ready", "view": "session-ready", "pictures": [{"file": "learning-13__9-10__1536", "window": [316, 210.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 153},
+        {"label": "ready reload", "view": "session-ready", "pictures": [{"file": "learning-13__9-10__1536", "window": [316, 210.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 153},
+        {"label": "ready reload with 7–8 profile", "view": "session-ready", "pictures": [{"file": "learning-13__9-10__1536", "window": [316, 210.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "7–8", "words": 153},
+        {"label": "active", "view": "session-active", "pictures": [{"file": "learning-13__9-10__1536", "window": [240, 160], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 135},
+        {"label": "active reload", "view": "session-active", "pictures": [{"file": "learning-13__9-10__768", "window": [240, 160], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 135},
+        {"label": "Reward Card", "view": "session-result", "pictures": [{"file": "learning-13__9-10__1536", "window": [260, 173.328125], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 26},
+        {"label": "Reward Card reload", "view": "session-result", "pictures": [{"file": "learning-13__9-10__1536", "window": [260, 173.328125], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 26}
+      ],
+      "failures": []
+    },
+    {
+      "config": "phone",
+      "language": "en",
+      "missionId": "learning-14",
+      "states": [
+        {"label": "Discovery", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__1536", "window": [292.03125, 194.6875], "decoded": true}, {"file": "learning-13__9-10__1536", "window": [292.03125, 194.6875], "decoded": true}, {"file": "learning-14__9-10__1536", "window": [292.03125, 194.6875], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 482},
+        {"label": "Discovery reselected after reload", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__1536", "window": [292.03125, 194.6875], "decoded": true}, {"file": "learning-13__9-10__1536", "window": [292.03125, 194.6875], "decoded": true}, {"file": "learning-14__9-10__1536", "window": [292.03125, 194.6875], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 482},
+        {"label": "ready", "view": "session-ready", "pictures": [{"file": "learning-14__9-10__1536", "window": [316, 210.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 221},
+        {"label": "ready reload", "view": "session-ready", "pictures": [{"file": "learning-14__9-10__1536", "window": [316, 210.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 221},
+        {"label": "ready reload with 7–8 profile", "view": "session-ready", "pictures": [{"file": "learning-14__9-10__1536", "window": [316, 210.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "7–8", "words": 221},
+        {"label": "active", "view": "session-active", "pictures": [{"file": "learning-14__9-10__1536", "window": [240, 160], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 203},
+        {"label": "active reload", "view": "session-active", "pictures": [{"file": "learning-14__9-10__768", "window": [240, 160], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 203},
+        {"label": "Reward Card", "view": "session-result", "pictures": [{"file": "learning-14__9-10__1536", "window": [260, 173.328125], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 26},
+        {"label": "Reward Card reload", "view": "session-result", "pictures": [{"file": "learning-14__9-10__1536", "window": [260, 173.328125], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 26}
+      ],
+      "failures": []
+    },
+    {
+      "config": "phone",
+      "language": "de",
+      "missionId": "learning-04",
+      "states": [
+        {"label": "Discovery", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__1536", "window": [292.03125, 194.6875], "decoded": true}, {"file": "learning-13__9-10__1536", "window": [292.03125, 194.6875], "decoded": true}, {"file": "learning-14__9-10__1536", "window": [292.03125, 194.6875], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 511},
+        {"label": "Discovery reselected after reload", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__1536", "window": [292.03125, 194.6875], "decoded": true}, {"file": "learning-13__9-10__1536", "window": [292.03125, 194.6875], "decoded": true}, {"file": "learning-14__9-10__1536", "window": [292.03125, 194.6875], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 511},
+        {"label": "ready", "view": "session-ready", "pictures": [{"file": "learning-04__9-10__1536", "window": [316, 210.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 184},
+        {"label": "ready reload", "view": "session-ready", "pictures": [{"file": "learning-04__9-10__1536", "window": [316, 210.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 184},
+        {"label": "ready reload with 7–8 profile", "view": "session-ready", "pictures": [{"file": "learning-04__9-10__1536", "window": [316, 210.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "7–8", "words": 184},
+        {"label": "active", "view": "session-active", "pictures": [{"file": "learning-04__9-10__1536", "window": [240, 160], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 161},
+        {"label": "active reload", "view": "session-active", "pictures": [{"file": "learning-04__9-10__768", "window": [240, 160], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 161},
+        {"label": "Reward Card", "view": "session-result", "pictures": [{"file": "learning-04__9-10__1536", "window": [260, 173.328125], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 26},
+        {"label": "Reward Card reload", "view": "session-result", "pictures": [{"file": "learning-04__9-10__1536", "window": [260, 173.328125], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 26}
+      ],
+      "failures": []
+    },
+    {
+      "config": "phone",
+      "language": "de",
+      "missionId": "learning-13",
+      "states": [
+        {"label": "Discovery", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__1536", "window": [292.03125, 194.6875], "decoded": true}, {"file": "learning-13__9-10__1536", "window": [292.03125, 194.6875], "decoded": true}, {"file": "learning-14__9-10__1536", "window": [292.03125, 194.6875], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 511},
+        {"label": "Discovery reselected after reload", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__1536", "window": [292.03125, 194.6875], "decoded": true}, {"file": "learning-13__9-10__1536", "window": [292.03125, 194.6875], "decoded": true}, {"file": "learning-14__9-10__1536", "window": [292.03125, 194.6875], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 511},
+        {"label": "ready", "view": "session-ready", "pictures": [{"file": "learning-13__9-10__1536", "window": [316, 210.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 160},
+        {"label": "ready reload", "view": "session-ready", "pictures": [{"file": "learning-13__9-10__1536", "window": [316, 210.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 160},
+        {"label": "ready reload with 7–8 profile", "view": "session-ready", "pictures": [{"file": "learning-13__9-10__1536", "window": [316, 210.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "7–8", "words": 160},
+        {"label": "active", "view": "session-active", "pictures": [{"file": "learning-13__9-10__1536", "window": [240, 160], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 137},
+        {"label": "active reload", "view": "session-active", "pictures": [{"file": "learning-13__9-10__768", "window": [240, 160], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 137},
+        {"label": "Reward Card", "view": "session-result", "pictures": [{"file": "learning-13__9-10__1536", "window": [260, 173.328125], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 26},
+        {"label": "Reward Card reload", "view": "session-result", "pictures": [{"file": "learning-13__9-10__1536", "window": [260, 173.328125], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 26}
+      ],
+      "failures": []
+    },
+    {
+      "config": "phone",
+      "language": "de",
+      "missionId": "learning-14",
+      "states": [
+        {"label": "Discovery", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__1536", "window": [292.03125, 194.6875], "decoded": true}, {"file": "learning-13__9-10__1536", "window": [292.03125, 194.6875], "decoded": true}, {"file": "learning-14__9-10__1536", "window": [292.03125, 194.6875], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 511},
+        {"label": "Discovery reselected after reload", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__1536", "window": [292.03125, 194.6875], "decoded": true}, {"file": "learning-13__9-10__1536", "window": [292.03125, 194.6875], "decoded": true}, {"file": "learning-14__9-10__1536", "window": [292.03125, 194.6875], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 511},
+        {"label": "ready", "view": "session-ready", "pictures": [{"file": "learning-14__9-10__1536", "window": [316, 210.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 233},
+        {"label": "ready reload", "view": "session-ready", "pictures": [{"file": "learning-14__9-10__1536", "window": [316, 210.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 233},
+        {"label": "ready reload with 7–8 profile", "view": "session-ready", "pictures": [{"file": "learning-14__9-10__1536", "window": [316, 210.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "7–8", "words": 233},
+        {"label": "active", "view": "session-active", "pictures": [{"file": "learning-14__9-10__1536", "window": [240, 160], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 210},
+        {"label": "active reload", "view": "session-active", "pictures": [{"file": "learning-14__9-10__768", "window": [240, 160], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 210},
+        {"label": "Reward Card", "view": "session-result", "pictures": [{"file": "learning-14__9-10__1536", "window": [260, 173.328125], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 25},
+        {"label": "Reward Card reload", "view": "session-result", "pictures": [{"file": "learning-14__9-10__1536", "window": [260, 173.328125], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 25}
+      ],
+      "failures": []
+    },
+    {
+      "config": "phone",
+      "language": "ru",
+      "missionId": "learning-04",
+      "states": [
+        {"label": "Discovery", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__1536", "window": [292.03125, 194.6875], "decoded": true}, {"file": "learning-13__9-10__1536", "window": [292.03125, 194.6875], "decoded": true}, {"file": "learning-14__9-10__1536", "window": [292.03125, 194.6875], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 445},
+        {"label": "Discovery reselected after reload", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__1536", "window": [292.03125, 194.6875], "decoded": true}, {"file": "learning-13__9-10__1536", "window": [292.03125, 194.6875], "decoded": true}, {"file": "learning-14__9-10__1536", "window": [292.03125, 194.6875], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 445},
+        {"label": "ready", "view": "session-ready", "pictures": [{"file": "learning-04__9-10__1536", "window": [316, 210.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 151},
+        {"label": "ready reload", "view": "session-ready", "pictures": [{"file": "learning-04__9-10__1536", "window": [316, 210.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 151},
+        {"label": "ready reload with 7–8 profile", "view": "session-ready", "pictures": [{"file": "learning-04__9-10__1536", "window": [316, 210.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "7–8", "words": 151},
+        {"label": "active", "view": "session-active", "pictures": [{"file": "learning-04__9-10__1536", "window": [240, 160], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 138},
+        {"label": "active reload", "view": "session-active", "pictures": [{"file": "learning-04__9-10__768", "window": [240, 160], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 138},
+        {"label": "Reward Card", "view": "session-result", "pictures": [{"file": "learning-04__9-10__1536", "window": [260, 173.328125], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 28},
+        {"label": "Reward Card reload", "view": "session-result", "pictures": [{"file": "learning-04__9-10__1536", "window": [260, 173.328125], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 28}
+      ],
+      "failures": []
+    },
+    {
+      "config": "phone",
+      "language": "ru",
+      "missionId": "learning-13",
+      "states": [
+        {"label": "Discovery", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__1536", "window": [292.03125, 194.6875], "decoded": true}, {"file": "learning-13__9-10__1536", "window": [292.03125, 194.6875], "decoded": true}, {"file": "learning-14__9-10__1536", "window": [292.03125, 194.6875], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 445},
+        {"label": "Discovery reselected after reload", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__1536", "window": [292.03125, 194.6875], "decoded": true}, {"file": "learning-13__9-10__1536", "window": [292.03125, 194.6875], "decoded": true}, {"file": "learning-14__9-10__1536", "window": [292.03125, 194.6875], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 445},
+        {"label": "ready", "view": "session-ready", "pictures": [{"file": "learning-13__9-10__1536", "window": [316, 210.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 135},
+        {"label": "ready reload", "view": "session-ready", "pictures": [{"file": "learning-13__9-10__1536", "window": [316, 210.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 135},
+        {"label": "ready reload with 7–8 profile", "view": "session-ready", "pictures": [{"file": "learning-13__9-10__1536", "window": [316, 210.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "7–8", "words": 135},
+        {"label": "active", "view": "session-active", "pictures": [{"file": "learning-13__9-10__1536", "window": [240, 160], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 122},
+        {"label": "active reload", "view": "session-active", "pictures": [{"file": "learning-13__9-10__768", "window": [240, 160], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 122},
+        {"label": "Reward Card", "view": "session-result", "pictures": [{"file": "learning-13__9-10__1536", "window": [260, 173.328125], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 28},
+        {"label": "Reward Card reload", "view": "session-result", "pictures": [{"file": "learning-13__9-10__1536", "window": [260, 173.328125], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 28}
+      ],
+      "failures": []
+    },
+    {
+      "config": "phone",
+      "language": "ru",
+      "missionId": "learning-14",
+      "states": [
+        {"label": "Discovery", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__1536", "window": [292.03125, 194.6875], "decoded": true}, {"file": "learning-13__9-10__1536", "window": [292.03125, 194.6875], "decoded": true}, {"file": "learning-14__9-10__1536", "window": [292.03125, 194.6875], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 445},
+        {"label": "Discovery reselected after reload", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__1536", "window": [292.03125, 194.6875], "decoded": true}, {"file": "learning-13__9-10__1536", "window": [292.03125, 194.6875], "decoded": true}, {"file": "learning-14__9-10__1536", "window": [292.03125, 194.6875], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 445},
+        {"label": "ready", "view": "session-ready", "pictures": [{"file": "learning-14__9-10__1536", "window": [316, 210.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 191},
+        {"label": "ready reload", "view": "session-ready", "pictures": [{"file": "learning-14__9-10__1536", "window": [316, 210.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 191},
+        {"label": "ready reload with 7–8 profile", "view": "session-ready", "pictures": [{"file": "learning-14__9-10__1536", "window": [316, 210.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "7–8", "words": 191},
+        {"label": "active", "view": "session-active", "pictures": [{"file": "learning-14__9-10__1536", "window": [240, 160], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 178},
+        {"label": "active reload", "view": "session-active", "pictures": [{"file": "learning-14__9-10__768", "window": [240, 160], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 178},
+        {"label": "Reward Card", "view": "session-result", "pictures": [{"file": "learning-14__9-10__1536", "window": [260, 173.328125], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 27},
+        {"label": "Reward Card reload", "view": "session-result", "pictures": [{"file": "learning-14__9-10__1536", "window": [260, 173.328125], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 27}
+      ],
+      "failures": []
+    },
+    {
+      "config": "enlarged",
+      "language": "en",
+      "missionId": "learning-04",
+      "states": [
+        {"label": "Discovery", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [264.125, 176.078125], "decoded": true}, {"file": "learning-13__9-10__768", "window": [264.125, 176.078125], "decoded": true}, {"file": "learning-14__9-10__768", "window": [264.125, 176.078125], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 482},
+        {"label": "Discovery reselected after reload", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [264.125, 176.078125], "decoded": true}, {"file": "learning-13__9-10__768", "window": [264.125, 176.078125], "decoded": true}, {"file": "learning-14__9-10__768", "window": [264.125, 176.078125], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 482},
+        {"label": "ready", "view": "session-ready", "pictures": [{"file": "learning-04__9-10__768", "window": [286, 190.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 166},
+        {"label": "ready reload", "view": "session-ready", "pictures": [{"file": "learning-04__9-10__768", "window": [286, 190.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 166},
+        {"label": "ready reload with 7–8 profile", "view": "session-ready", "pictures": [{"file": "learning-04__9-10__768", "window": [286, 190.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "7–8", "words": 166},
+        {"label": "active", "view": "session-active", "pictures": [{"file": "learning-04__9-10__768", "window": [260, 173.328125], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 148},
+        {"label": "active reload", "view": "session-active", "pictures": [{"file": "learning-04__9-10__768", "window": [260, 173.328125], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 148},
+        {"label": "Reward Card", "view": "session-result", "pictures": [{"file": "learning-04__9-10__768", "window": [258, 172], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 26},
+        {"label": "Reward Card reload", "view": "session-result", "pictures": [{"file": "learning-04__9-10__768", "window": [258, 172], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 26}
+      ],
+      "failures": []
+    },
+    {
+      "config": "enlarged",
+      "language": "en",
+      "missionId": "learning-13",
+      "states": [
+        {"label": "Discovery", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [264.125, 176.078125], "decoded": true}, {"file": "learning-13__9-10__768", "window": [264.125, 176.078125], "decoded": true}, {"file": "learning-14__9-10__768", "window": [264.125, 176.078125], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 482},
+        {"label": "Discovery reselected after reload", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [264.125, 176.078125], "decoded": true}, {"file": "learning-13__9-10__768", "window": [264.125, 176.078125], "decoded": true}, {"file": "learning-14__9-10__768", "window": [264.125, 176.078125], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 482},
+        {"label": "ready", "view": "session-ready", "pictures": [{"file": "learning-13__9-10__768", "window": [286, 190.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 153},
+        {"label": "ready reload", "view": "session-ready", "pictures": [{"file": "learning-13__9-10__768", "window": [286, 190.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 153},
+        {"label": "ready reload with 7–8 profile", "view": "session-ready", "pictures": [{"file": "learning-13__9-10__768", "window": [286, 190.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "7–8", "words": 153},
+        {"label": "active", "view": "session-active", "pictures": [{"file": "learning-13__9-10__768", "window": [260, 173.328125], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 135},
+        {"label": "active reload", "view": "session-active", "pictures": [{"file": "learning-13__9-10__768", "window": [260, 173.328125], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 135},
+        {"label": "Reward Card", "view": "session-result", "pictures": [{"file": "learning-13__9-10__768", "window": [258, 172], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 26},
+        {"label": "Reward Card reload", "view": "session-result", "pictures": [{"file": "learning-13__9-10__768", "window": [258, 172], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 26}
+      ],
+      "failures": []
+    },
+    {
+      "config": "enlarged",
+      "language": "en",
+      "missionId": "learning-14",
+      "states": [
+        {"label": "Discovery", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [264.125, 176.078125], "decoded": true}, {"file": "learning-13__9-10__768", "window": [264.125, 176.078125], "decoded": true}, {"file": "learning-14__9-10__768", "window": [264.125, 176.078125], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 482},
+        {"label": "Discovery reselected after reload", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [264.125, 176.078125], "decoded": true}, {"file": "learning-13__9-10__768", "window": [264.125, 176.078125], "decoded": true}, {"file": "learning-14__9-10__768", "window": [264.125, 176.078125], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 482},
+        {"label": "ready", "view": "session-ready", "pictures": [{"file": "learning-14__9-10__768", "window": [286, 190.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 221},
+        {"label": "ready reload", "view": "session-ready", "pictures": [{"file": "learning-14__9-10__768", "window": [286, 190.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 221},
+        {"label": "ready reload with 7–8 profile", "view": "session-ready", "pictures": [{"file": "learning-14__9-10__768", "window": [286, 190.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "7–8", "words": 221},
+        {"label": "active", "view": "session-active", "pictures": [{"file": "learning-14__9-10__768", "window": [260, 173.328125], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 203},
+        {"label": "active reload", "view": "session-active", "pictures": [{"file": "learning-14__9-10__768", "window": [260, 173.328125], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 203},
+        {"label": "Reward Card", "view": "session-result", "pictures": [{"file": "learning-14__9-10__768", "window": [258, 172], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 26},
+        {"label": "Reward Card reload", "view": "session-result", "pictures": [{"file": "learning-14__9-10__768", "window": [258, 172], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 26}
+      ],
+      "failures": []
+    },
+    {
+      "config": "enlarged",
+      "language": "de",
+      "missionId": "learning-04",
+      "states": [
+        {"label": "Discovery", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [264.125, 176.078125], "decoded": true}, {"file": "learning-13__9-10__768", "window": [264.125, 176.078125], "decoded": true}, {"file": "learning-14__9-10__768", "window": [264.125, 176.078125], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 511},
+        {"label": "Discovery reselected after reload", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [264.125, 176.078125], "decoded": true}, {"file": "learning-13__9-10__768", "window": [264.125, 176.078125], "decoded": true}, {"file": "learning-14__9-10__768", "window": [264.125, 176.078125], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 511},
+        {"label": "ready", "view": "session-ready", "pictures": [{"file": "learning-04__9-10__768", "window": [286, 190.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 184},
+        {"label": "ready reload", "view": "session-ready", "pictures": [{"file": "learning-04__9-10__768", "window": [286, 190.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 184},
+        {"label": "ready reload with 7–8 profile", "view": "session-ready", "pictures": [{"file": "learning-04__9-10__768", "window": [286, 190.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "7–8", "words": 184},
+        {"label": "active", "view": "session-active", "pictures": [{"file": "learning-04__9-10__768", "window": [260, 173.328125], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 161},
+        {"label": "active reload", "view": "session-active", "pictures": [{"file": "learning-04__9-10__768", "window": [260, 173.328125], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 161},
+        {"label": "Reward Card", "view": "session-result", "pictures": [{"file": "learning-04__9-10__768", "window": [258, 172], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 26},
+        {"label": "Reward Card reload", "view": "session-result", "pictures": [{"file": "learning-04__9-10__768", "window": [258, 172], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 26}
+      ],
+      "failures": []
+    },
+    {
+      "config": "enlarged",
+      "language": "de",
+      "missionId": "learning-13",
+      "states": [
+        {"label": "Discovery", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [264.125, 176.078125], "decoded": true}, {"file": "learning-13__9-10__768", "window": [264.125, 176.078125], "decoded": true}, {"file": "learning-14__9-10__768", "window": [264.125, 176.078125], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 511},
+        {"label": "Discovery reselected after reload", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [264.125, 176.078125], "decoded": true}, {"file": "learning-13__9-10__768", "window": [264.125, 176.078125], "decoded": true}, {"file": "learning-14__9-10__768", "window": [264.125, 176.078125], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 511},
+        {"label": "ready", "view": "session-ready", "pictures": [{"file": "learning-13__9-10__768", "window": [286, 190.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 160},
+        {"label": "ready reload", "view": "session-ready", "pictures": [{"file": "learning-13__9-10__768", "window": [286, 190.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 160},
+        {"label": "ready reload with 7–8 profile", "view": "session-ready", "pictures": [{"file": "learning-13__9-10__768", "window": [286, 190.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "7–8", "words": 160},
+        {"label": "active", "view": "session-active", "pictures": [{"file": "learning-13__9-10__768", "window": [260, 173.328125], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 137},
+        {"label": "active reload", "view": "session-active", "pictures": [{"file": "learning-13__9-10__768", "window": [260, 173.328125], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 137},
+        {"label": "Reward Card", "view": "session-result", "pictures": [{"file": "learning-13__9-10__768", "window": [258, 172], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 26},
+        {"label": "Reward Card reload", "view": "session-result", "pictures": [{"file": "learning-13__9-10__768", "window": [258, 172], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 26}
+      ],
+      "failures": []
+    },
+    {
+      "config": "enlarged",
+      "language": "de",
+      "missionId": "learning-14",
+      "states": [
+        {"label": "Discovery", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [264.125, 176.078125], "decoded": true}, {"file": "learning-13__9-10__768", "window": [264.125, 176.078125], "decoded": true}, {"file": "learning-14__9-10__768", "window": [264.125, 176.078125], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 511},
+        {"label": "Discovery reselected after reload", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [264.125, 176.078125], "decoded": true}, {"file": "learning-13__9-10__768", "window": [264.125, 176.078125], "decoded": true}, {"file": "learning-14__9-10__768", "window": [264.125, 176.078125], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 511},
+        {"label": "ready", "view": "session-ready", "pictures": [{"file": "learning-14__9-10__768", "window": [286, 190.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 233},
+        {"label": "ready reload", "view": "session-ready", "pictures": [{"file": "learning-14__9-10__768", "window": [286, 190.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 233},
+        {"label": "ready reload with 7–8 profile", "view": "session-ready", "pictures": [{"file": "learning-14__9-10__768", "window": [286, 190.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "7–8", "words": 233},
+        {"label": "active", "view": "session-active", "pictures": [{"file": "learning-14__9-10__768", "window": [260, 173.328125], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 210},
+        {"label": "active reload", "view": "session-active", "pictures": [{"file": "learning-14__9-10__768", "window": [260, 173.328125], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 210},
+        {"label": "Reward Card", "view": "session-result", "pictures": [{"file": "learning-14__9-10__768", "window": [258, 172], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 25},
+        {"label": "Reward Card reload", "view": "session-result", "pictures": [{"file": "learning-14__9-10__768", "window": [258, 172], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 25}
+      ],
+      "failures": []
+    },
+    {
+      "config": "enlarged",
+      "language": "ru",
+      "missionId": "learning-04",
+      "states": [
+        {"label": "Discovery", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [264.125, 176.078125], "decoded": true}, {"file": "learning-13__9-10__768", "window": [264.125, 176.078125], "decoded": true}, {"file": "learning-14__9-10__768", "window": [264.125, 176.078125], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 445},
+        {"label": "Discovery reselected after reload", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [264.125, 176.078125], "decoded": true}, {"file": "learning-13__9-10__768", "window": [264.125, 176.078125], "decoded": true}, {"file": "learning-14__9-10__768", "window": [264.125, 176.078125], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 445},
+        {"label": "ready", "view": "session-ready", "pictures": [{"file": "learning-04__9-10__768", "window": [286, 190.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 151},
+        {"label": "ready reload", "view": "session-ready", "pictures": [{"file": "learning-04__9-10__768", "window": [286, 190.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 151},
+        {"label": "ready reload with 7–8 profile", "view": "session-ready", "pictures": [{"file": "learning-04__9-10__768", "window": [286, 190.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "7–8", "words": 151},
+        {"label": "active", "view": "session-active", "pictures": [{"file": "learning-04__9-10__768", "window": [260, 173.328125], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 138},
+        {"label": "active reload", "view": "session-active", "pictures": [{"file": "learning-04__9-10__768", "window": [260, 173.328125], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 138},
+        {"label": "Reward Card", "view": "session-result", "pictures": [{"file": "learning-04__9-10__768", "window": [258, 172], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 28},
+        {"label": "Reward Card reload", "view": "session-result", "pictures": [{"file": "learning-04__9-10__768", "window": [258, 172], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 28}
+      ],
+      "failures": []
+    },
+    {
+      "config": "enlarged",
+      "language": "ru",
+      "missionId": "learning-13",
+      "states": [
+        {"label": "Discovery", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [264.125, 176.078125], "decoded": true}, {"file": "learning-13__9-10__768", "window": [264.125, 176.078125], "decoded": true}, {"file": "learning-14__9-10__768", "window": [264.125, 176.078125], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 445},
+        {"label": "Discovery reselected after reload", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [264.125, 176.078125], "decoded": true}, {"file": "learning-13__9-10__768", "window": [264.125, 176.078125], "decoded": true}, {"file": "learning-14__9-10__768", "window": [264.125, 176.078125], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 445},
+        {"label": "ready", "view": "session-ready", "pictures": [{"file": "learning-13__9-10__768", "window": [286, 190.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 135},
+        {"label": "ready reload", "view": "session-ready", "pictures": [{"file": "learning-13__9-10__768", "window": [286, 190.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 135},
+        {"label": "ready reload with 7–8 profile", "view": "session-ready", "pictures": [{"file": "learning-13__9-10__768", "window": [286, 190.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "7–8", "words": 135},
+        {"label": "active", "view": "session-active", "pictures": [{"file": "learning-13__9-10__768", "window": [260, 173.328125], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 122},
+        {"label": "active reload", "view": "session-active", "pictures": [{"file": "learning-13__9-10__768", "window": [260, 173.328125], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 122},
+        {"label": "Reward Card", "view": "session-result", "pictures": [{"file": "learning-13__9-10__768", "window": [258, 172], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 28},
+        {"label": "Reward Card reload", "view": "session-result", "pictures": [{"file": "learning-13__9-10__768", "window": [258, 172], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 28}
+      ],
+      "failures": []
+    },
+    {
+      "config": "enlarged",
+      "language": "ru",
+      "missionId": "learning-14",
+      "states": [
+        {"label": "Discovery", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [264.125, 176.078125], "decoded": true}, {"file": "learning-13__9-10__768", "window": [264.125, 176.078125], "decoded": true}, {"file": "learning-14__9-10__768", "window": [264.125, 176.078125], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 445},
+        {"label": "Discovery reselected after reload", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [264.125, 176.078125], "decoded": true}, {"file": "learning-13__9-10__768", "window": [264.125, 176.078125], "decoded": true}, {"file": "learning-14__9-10__768", "window": [264.125, 176.078125], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 445},
+        {"label": "ready", "view": "session-ready", "pictures": [{"file": "learning-14__9-10__768", "window": [286, 190.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 191},
+        {"label": "ready reload", "view": "session-ready", "pictures": [{"file": "learning-14__9-10__768", "window": [286, 190.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 191},
+        {"label": "ready reload with 7–8 profile", "view": "session-ready", "pictures": [{"file": "learning-14__9-10__768", "window": [286, 190.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "7–8", "words": 191},
+        {"label": "active", "view": "session-active", "pictures": [{"file": "learning-14__9-10__768", "window": [260, 173.328125], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 178},
+        {"label": "active reload", "view": "session-active", "pictures": [{"file": "learning-14__9-10__768", "window": [260, 173.328125], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 178},
+        {"label": "Reward Card", "view": "session-result", "pictures": [{"file": "learning-14__9-10__768", "window": [258, 172], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 27},
+        {"label": "Reward Card reload", "view": "session-result", "pictures": [{"file": "learning-14__9-10__768", "window": [258, 172], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 27}
+      ],
+      "failures": []
+    },
+    {
+      "config": "browser32",
+      "language": "en",
+      "missionId": "learning-04",
+      "states": [
+        {"label": "Discovery", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [264.125, 176.078125], "decoded": true}, {"file": "learning-13__9-10__768", "window": [264.125, 176.078125], "decoded": true}, {"file": "learning-14__9-10__768", "window": [264.125, 176.078125], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 482},
+        {"label": "Discovery reselected after reload", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [264.125, 176.078125], "decoded": true}, {"file": "learning-13__9-10__768", "window": [264.125, 176.078125], "decoded": true}, {"file": "learning-14__9-10__768", "window": [264.125, 176.078125], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 482},
+        {"label": "ready", "view": "session-ready", "pictures": [{"file": "learning-04__9-10__768", "window": [286, 190.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 166},
+        {"label": "ready reload", "view": "session-ready", "pictures": [{"file": "learning-04__9-10__768", "window": [286, 190.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 166},
+        {"label": "ready reload with 7–8 profile", "view": "session-ready", "pictures": [{"file": "learning-04__9-10__768", "window": [286, 190.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "7–8", "words": 166},
+        {"label": "active", "view": "session-active", "pictures": [{"file": "learning-04__9-10__1536", "window": [260, 173.328125], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 148},
+        {"label": "active reload", "view": "session-active", "pictures": [{"file": "learning-04__9-10__1536", "window": [260, 173.328125], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 148},
+        {"label": "Reward Card", "view": "session-result", "pictures": [{"file": "learning-04__9-10__1536", "window": [258, 172], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 26},
+        {"label": "Reward Card reload", "view": "session-result", "pictures": [{"file": "learning-04__9-10__768", "window": [258, 172], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 26}
+      ],
+      "failures": []
+    },
+    {
+      "config": "browser32",
+      "language": "en",
+      "missionId": "learning-13",
+      "states": [
+        {"label": "Discovery", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [264.125, 176.078125], "decoded": true}, {"file": "learning-13__9-10__768", "window": [264.125, 176.078125], "decoded": true}, {"file": "learning-14__9-10__768", "window": [264.125, 176.078125], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 482},
+        {"label": "Discovery reselected after reload", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [264.125, 176.078125], "decoded": true}, {"file": "learning-13__9-10__768", "window": [264.125, 176.078125], "decoded": true}, {"file": "learning-14__9-10__768", "window": [264.125, 176.078125], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 482},
+        {"label": "ready", "view": "session-ready", "pictures": [{"file": "learning-13__9-10__768", "window": [286, 190.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 153},
+        {"label": "ready reload", "view": "session-ready", "pictures": [{"file": "learning-13__9-10__768", "window": [286, 190.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 153},
+        {"label": "ready reload with 7–8 profile", "view": "session-ready", "pictures": [{"file": "learning-13__9-10__768", "window": [286, 190.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "7–8", "words": 153},
+        {"label": "active", "view": "session-active", "pictures": [{"file": "learning-13__9-10__1536", "window": [260, 173.328125], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 135},
+        {"label": "active reload", "view": "session-active", "pictures": [{"file": "learning-13__9-10__1536", "window": [260, 173.328125], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 135},
+        {"label": "Reward Card", "view": "session-result", "pictures": [{"file": "learning-13__9-10__1536", "window": [258, 172], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 26},
+        {"label": "Reward Card reload", "view": "session-result", "pictures": [{"file": "learning-13__9-10__768", "window": [258, 172], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 26}
+      ],
+      "failures": []
+    },
+    {
+      "config": "browser32",
+      "language": "en",
+      "missionId": "learning-14",
+      "states": [
+        {"label": "Discovery", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [264.125, 176.078125], "decoded": true}, {"file": "learning-13__9-10__768", "window": [264.125, 176.078125], "decoded": true}, {"file": "learning-14__9-10__768", "window": [264.125, 176.078125], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 482},
+        {"label": "Discovery reselected after reload", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [264.125, 176.078125], "decoded": true}, {"file": "learning-13__9-10__768", "window": [264.125, 176.078125], "decoded": true}, {"file": "learning-14__9-10__768", "window": [264.125, 176.078125], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 482},
+        {"label": "ready", "view": "session-ready", "pictures": [{"file": "learning-14__9-10__768", "window": [286, 190.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 221},
+        {"label": "ready reload", "view": "session-ready", "pictures": [{"file": "learning-14__9-10__768", "window": [286, 190.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 221},
+        {"label": "ready reload with 7–8 profile", "view": "session-ready", "pictures": [{"file": "learning-14__9-10__768", "window": [286, 190.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "7–8", "words": 221},
+        {"label": "active", "view": "session-active", "pictures": [{"file": "learning-14__9-10__1536", "window": [260, 173.328125], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 203},
+        {"label": "active reload", "view": "session-active", "pictures": [{"file": "learning-14__9-10__1536", "window": [260, 173.328125], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 203},
+        {"label": "Reward Card", "view": "session-result", "pictures": [{"file": "learning-14__9-10__1536", "window": [258, 172], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 26},
+        {"label": "Reward Card reload", "view": "session-result", "pictures": [{"file": "learning-14__9-10__768", "window": [258, 172], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 26}
+      ],
+      "failures": []
+    },
+    {
+      "config": "browser32",
+      "language": "de",
+      "missionId": "learning-04",
+      "states": [
+        {"label": "Discovery", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [264.125, 176.078125], "decoded": true}, {"file": "learning-13__9-10__768", "window": [264.125, 176.078125], "decoded": true}, {"file": "learning-14__9-10__768", "window": [264.125, 176.078125], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 511},
+        {"label": "Discovery reselected after reload", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [264.125, 176.078125], "decoded": true}, {"file": "learning-13__9-10__768", "window": [264.125, 176.078125], "decoded": true}, {"file": "learning-14__9-10__768", "window": [264.125, 176.078125], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 511},
+        {"label": "ready", "view": "session-ready", "pictures": [{"file": "learning-04__9-10__768", "window": [286, 190.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 184},
+        {"label": "ready reload", "view": "session-ready", "pictures": [{"file": "learning-04__9-10__768", "window": [286, 190.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 184},
+        {"label": "ready reload with 7–8 profile", "view": "session-ready", "pictures": [{"file": "learning-04__9-10__768", "window": [286, 190.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "7–8", "words": 184},
+        {"label": "active", "view": "session-active", "pictures": [{"file": "learning-04__9-10__1536", "window": [260, 173.328125], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 161},
+        {"label": "active reload", "view": "session-active", "pictures": [{"file": "learning-04__9-10__1536", "window": [260, 173.328125], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 161},
+        {"label": "Reward Card", "view": "session-result", "pictures": [{"file": "learning-04__9-10__1536", "window": [258, 172], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 26},
+        {"label": "Reward Card reload", "view": "session-result", "pictures": [{"file": "learning-04__9-10__768", "window": [258, 172], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 26}
+      ],
+      "failures": []
+    },
+    {
+      "config": "browser32",
+      "language": "de",
+      "missionId": "learning-13",
+      "states": [
+        {"label": "Discovery", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [264.125, 176.078125], "decoded": true}, {"file": "learning-13__9-10__768", "window": [264.125, 176.078125], "decoded": true}, {"file": "learning-14__9-10__768", "window": [264.125, 176.078125], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 511},
+        {"label": "Discovery reselected after reload", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [264.125, 176.078125], "decoded": true}, {"file": "learning-13__9-10__768", "window": [264.125, 176.078125], "decoded": true}, {"file": "learning-14__9-10__768", "window": [264.125, 176.078125], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 511},
+        {"label": "ready", "view": "session-ready", "pictures": [{"file": "learning-13__9-10__768", "window": [286, 190.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 160},
+        {"label": "ready reload", "view": "session-ready", "pictures": [{"file": "learning-13__9-10__768", "window": [286, 190.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 160},
+        {"label": "ready reload with 7–8 profile", "view": "session-ready", "pictures": [{"file": "learning-13__9-10__768", "window": [286, 190.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "7–8", "words": 160},
+        {"label": "active", "view": "session-active", "pictures": [{"file": "learning-13__9-10__1536", "window": [260, 173.328125], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 137},
+        {"label": "active reload", "view": "session-active", "pictures": [{"file": "learning-13__9-10__1536", "window": [260, 173.328125], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 137},
+        {"label": "Reward Card", "view": "session-result", "pictures": [{"file": "learning-13__9-10__1536", "window": [258, 172], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 26},
+        {"label": "Reward Card reload", "view": "session-result", "pictures": [{"file": "learning-13__9-10__768", "window": [258, 172], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 26}
+      ],
+      "failures": []
+    },
+    {
+      "config": "browser32",
+      "language": "de",
+      "missionId": "learning-14",
+      "states": [
+        {"label": "Discovery", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [264.125, 176.078125], "decoded": true}, {"file": "learning-13__9-10__768", "window": [264.125, 176.078125], "decoded": true}, {"file": "learning-14__9-10__768", "window": [264.125, 176.078125], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 511},
+        {"label": "Discovery reselected after reload", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [264.125, 176.078125], "decoded": true}, {"file": "learning-13__9-10__768", "window": [264.125, 176.078125], "decoded": true}, {"file": "learning-14__9-10__768", "window": [264.125, 176.078125], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 511},
+        {"label": "ready", "view": "session-ready", "pictures": [{"file": "learning-14__9-10__768", "window": [286, 190.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 233},
+        {"label": "ready reload", "view": "session-ready", "pictures": [{"file": "learning-14__9-10__768", "window": [286, 190.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 233},
+        {"label": "ready reload with 7–8 profile", "view": "session-ready", "pictures": [{"file": "learning-14__9-10__768", "window": [286, 190.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "7–8", "words": 233},
+        {"label": "active", "view": "session-active", "pictures": [{"file": "learning-14__9-10__1536", "window": [260, 173.328125], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 210},
+        {"label": "active reload", "view": "session-active", "pictures": [{"file": "learning-14__9-10__1536", "window": [260, 173.328125], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 210},
+        {"label": "Reward Card", "view": "session-result", "pictures": [{"file": "learning-14__9-10__1536", "window": [258, 172], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 25},
+        {"label": "Reward Card reload", "view": "session-result", "pictures": [{"file": "learning-14__9-10__768", "window": [258, 172], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 25}
+      ],
+      "failures": []
+    },
+    {
+      "config": "browser32",
+      "language": "ru",
+      "missionId": "learning-04",
+      "states": [
+        {"label": "Discovery", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [264.125, 176.078125], "decoded": true}, {"file": "learning-13__9-10__768", "window": [264.125, 176.078125], "decoded": true}, {"file": "learning-14__9-10__768", "window": [264.125, 176.078125], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 445},
+        {"label": "Discovery reselected after reload", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [264.125, 176.078125], "decoded": true}, {"file": "learning-13__9-10__768", "window": [264.125, 176.078125], "decoded": true}, {"file": "learning-14__9-10__768", "window": [264.125, 176.078125], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 445},
+        {"label": "ready", "view": "session-ready", "pictures": [{"file": "learning-04__9-10__768", "window": [286, 190.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 151},
+        {"label": "ready reload", "view": "session-ready", "pictures": [{"file": "learning-04__9-10__768", "window": [286, 190.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 151},
+        {"label": "ready reload with 7–8 profile", "view": "session-ready", "pictures": [{"file": "learning-04__9-10__768", "window": [286, 190.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "7–8", "words": 151},
+        {"label": "active", "view": "session-active", "pictures": [{"file": "learning-04__9-10__1536", "window": [260, 173.328125], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 138},
+        {"label": "active reload", "view": "session-active", "pictures": [{"file": "learning-04__9-10__1536", "window": [260, 173.328125], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 138},
+        {"label": "Reward Card", "view": "session-result", "pictures": [{"file": "learning-04__9-10__1536", "window": [258, 172], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 28},
+        {"label": "Reward Card reload", "view": "session-result", "pictures": [{"file": "learning-04__9-10__768", "window": [258, 172], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 28}
+      ],
+      "failures": []
+    },
+    {
+      "config": "browser32",
+      "language": "ru",
+      "missionId": "learning-13",
+      "states": [
+        {"label": "Discovery", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [264.125, 176.078125], "decoded": true}, {"file": "learning-13__9-10__768", "window": [264.125, 176.078125], "decoded": true}, {"file": "learning-14__9-10__768", "window": [264.125, 176.078125], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 445},
+        {"label": "Discovery reselected after reload", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [264.125, 176.078125], "decoded": true}, {"file": "learning-13__9-10__768", "window": [264.125, 176.078125], "decoded": true}, {"file": "learning-14__9-10__768", "window": [264.125, 176.078125], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 445},
+        {"label": "ready", "view": "session-ready", "pictures": [{"file": "learning-13__9-10__768", "window": [286, 190.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 135},
+        {"label": "ready reload", "view": "session-ready", "pictures": [{"file": "learning-13__9-10__768", "window": [286, 190.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 135},
+        {"label": "ready reload with 7–8 profile", "view": "session-ready", "pictures": [{"file": "learning-13__9-10__768", "window": [286, 190.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "7–8", "words": 135},
+        {"label": "active", "view": "session-active", "pictures": [{"file": "learning-13__9-10__1536", "window": [260, 173.328125], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 122},
+        {"label": "active reload", "view": "session-active", "pictures": [{"file": "learning-13__9-10__1536", "window": [260, 173.328125], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 122},
+        {"label": "Reward Card", "view": "session-result", "pictures": [{"file": "learning-13__9-10__1536", "window": [258, 172], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 28},
+        {"label": "Reward Card reload", "view": "session-result", "pictures": [{"file": "learning-13__9-10__768", "window": [258, 172], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 28}
+      ],
+      "failures": []
+    },
+    {
+      "config": "browser32",
+      "language": "ru",
+      "missionId": "learning-14",
+      "states": [
+        {"label": "Discovery", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [264.125, 176.078125], "decoded": true}, {"file": "learning-13__9-10__768", "window": [264.125, 176.078125], "decoded": true}, {"file": "learning-14__9-10__768", "window": [264.125, 176.078125], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 445},
+        {"label": "Discovery reselected after reload", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [264.125, 176.078125], "decoded": true}, {"file": "learning-13__9-10__768", "window": [264.125, 176.078125], "decoded": true}, {"file": "learning-14__9-10__768", "window": [264.125, 176.078125], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 445},
+        {"label": "ready", "view": "session-ready", "pictures": [{"file": "learning-14__9-10__768", "window": [286, 190.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 191},
+        {"label": "ready reload", "view": "session-ready", "pictures": [{"file": "learning-14__9-10__768", "window": [286, 190.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "9–10", "words": 191},
+        {"label": "ready reload with 7–8 profile", "view": "session-ready", "pictures": [{"file": "learning-14__9-10__768", "window": [286, 190.65625], "decoded": true}], "sessionState": "ready", "completed": 0, "profileAge": "7–8", "words": 191},
+        {"label": "active", "view": "session-active", "pictures": [{"file": "learning-14__9-10__1536", "window": [260, 173.328125], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 178},
+        {"label": "active reload", "view": "session-active", "pictures": [{"file": "learning-14__9-10__1536", "window": [260, 173.328125], "decoded": true}], "sessionState": "active", "completed": 0, "profileAge": "7–8", "words": 178},
+        {"label": "Reward Card", "view": "session-result", "pictures": [{"file": "learning-14__9-10__1536", "window": [258, 172], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 27},
+        {"label": "Reward Card reload", "view": "session-result", "pictures": [{"file": "learning-14__9-10__768", "window": [258, 172], "decoded": true}], "sessionState": "completed", "completed": 1, "profileAge": "7–8", "words": 27}
+      ],
+      "failures": []
+    }
+  ],
+  "failures": []
+}

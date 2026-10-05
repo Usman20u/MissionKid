@@ -480,4 +480,19 @@ describe("the running Mission's reminder picture", () => {
     expect(screen.getByText(t('session.active.missionUnavailable'))).toBeTruthy();
     expect(container.querySelector('.mission-session__thumb')).toBeNull();
   });
+
+  it.each(['learning-04', 'learning-13', 'learning-14'])(
+    'keeps %s’s selected 9–10 illustration despite the current 7–8 profile',
+    (missionId) => {
+      const { clocks } = movableClocks(STARTED_AT + 60_000);
+      const { container } = renderActive(
+        activeSession(missionId, { ageBandAtSelection: '9–10' }),
+        clocks,
+      );
+
+      const photo = container.querySelector('.mission-session__thumb img')!;
+      expect(photo.getAttribute('src')).toBe(resolveMissionImage(missionId, '9–10')!.src);
+      expect(photo.getAttribute('aria-hidden')).toBe('true');
+    },
+  );
 });

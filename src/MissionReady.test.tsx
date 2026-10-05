@@ -1152,13 +1152,18 @@ describe("the chosen Mission's picture on Ready", () => {
     expect(photo.getAttribute('src')).not.toBe(resolveMissionImage('movement-02', '4–6')!.src);
   });
 
-  it('keeps the authored scene its card showed when its set has no illustrations', () => {
-    const { container } = renderReady('learning-13', 'en', { ageBandAtSelection: '9–10' });
+  it.each(['learning-04', 'learning-13', 'learning-14'])(
+    'restores %s with its selected 9–10 illustration despite the current 7–8 profile',
+    (missionId) => {
+      const { container } = renderReady(missionId, 'en', { ageBandAtSelection: '9–10' });
 
-    const picture = container.querySelector('.mission-session__picture')!;
-    expect(picture.querySelector('img')).toBeNull();
-    expect(picture.querySelector('svg.mission-scene')!.getAttribute('aria-hidden')).toBe('true');
-  });
+      const picture = container.querySelector('.mission-session__picture')!;
+      expect(picture.querySelector('img')!.getAttribute('src')).toBe(
+        resolveMissionImage(missionId, '9–10')!.src,
+      );
+      expect(picture.querySelector('svg.mission-scene')).toBeNull();
+    },
+  );
 
   it('pictures nothing that cannot be started', () => {
     const { container } = renderReady('movement-02', 'en', { missionId: 'movement-99' });

@@ -10,9 +10,6 @@ import { AGE_BANDS, type AgeBand } from './ageBands';
 // the ordinary build, in two widths, named `<missionId>__<age band>__<width>`.
 // Nothing is fetched from another origin and nothing is generated at runtime.
 //
-// One Discovery set — 9–10 Learning, the second — has no illustrations: one of
-// its three was withheld for regeneration, and a set keeps its authored scenes
-// together until all three of its illustrations can be shown.
 const FILES = import.meta.glob<string>('./assets/missions/*.webp', {
   eager: true,
   import: 'default',

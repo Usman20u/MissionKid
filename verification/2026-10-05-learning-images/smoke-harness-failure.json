@@ -1,0 +1,35 @@
+{
+  "browser": "149.0.7827.55",
+  "base": "http://127.0.0.1:4173/",
+  "blocked": false,
+  "cases": [
+    {
+      "config": "desktop",
+      "language": "en",
+      "missionId": "learning-04",
+      "states": [
+        {"label": "Discovery", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [330.65625, 220.4375], "decoded": true}, {"file": "learning-13__9-10__768", "window": [330.671875, 220.4375], "decoded": true}, {"file": "learning-14__9-10__768", "window": [330.65625, 220.4375], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 482}
+      ],
+      "failures": ["Discovery: layout {\"overflow\":0,\"clipped\":[],\"overlaps\":[\"span.mission-world__label × input.mission-world__input\",\"span.mission-world__label × input.mission-world__input\",\"span.mission-world__label × input.mission-world__input\",\"span.mission-world__label × input.mission-world__input\",\"span.mission-world__state × input.mission-world__input\",\"span.mission-world__check × input.mission-world__input\",\"span.mission-world__label × input.mission-world__input\"]}", "Stopped: TimeoutError: page.waitForSelector: Timeout 15000ms exceeded."]
+    },
+    {
+      "config": "desktop",
+      "language": "en",
+      "missionId": "learning-13",
+      "states": [
+        {"label": "Discovery", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [330.65625, 220.4375], "decoded": true}, {"file": "learning-13__9-10__768", "window": [330.671875, 220.4375], "decoded": true}, {"file": "learning-14__9-10__768", "window": [330.65625, 220.4375], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 482}
+      ],
+      "failures": ["Discovery: layout {\"overflow\":0,\"clipped\":[],\"overlaps\":[\"span.mission-world__label × input.mission-world__input\",\"span.mission-world__label × input.mission-world__input\",\"span.mission-world__label × input.mission-world__input\",\"span.mission-world__label × input.mission-world__input\",\"span.mission-world__state × input.mission-world__input\",\"span.mission-world__check × input.mission-world__input\",\"span.mission-world__label × input.mission-world__input\"]}", "Stopped: TimeoutError: page.waitForSelector: Timeout 15000ms exceeded."]
+    },
+    {
+      "config": "desktop",
+      "language": "en",
+      "missionId": "learning-14",
+      "states": [
+        {"label": "Discovery", "view": "discovery-categories", "pictures": [{"file": "learning-04__9-10__768", "window": [330.65625, 220.4375], "decoded": true}, {"file": "learning-13__9-10__768", "window": [330.671875, 220.4375], "decoded": true}, {"file": "learning-14__9-10__768", "window": [330.65625, 220.4375], "decoded": true}], "sessionState": "completed", "completed": 0, "profileAge": "9–10", "words": 482}
+      ],
+      "failures": ["Discovery: layout {\"overflow\":0,\"clipped\":[],\"overlaps\":[\"span.mission-world__label × input.mission-world__input\",\"span.mission-world__label × input.mission-world__input\",\"span.mission-world__label × input.mission-world__input\",\"span.mission-world__label × input.mission-world__input\",\"span.mission-world__state × input.mission-world__input\",\"span.mission-world__check × input.mission-world__input\",\"span.mission-world__label × input.mission-world__input\"]}", "Stopped: TimeoutError: page.waitForSelector: Timeout 15000ms exceeded."]
+    }
+  ],
+  "failures": ["desktop en learning-04: Discovery: layout {\"overflow\":0,\"clipped\":[],\"overlaps\":[\"span.mission-world__label × input.mission-world__input\",\"span.mission-world__label × input.mission-world__input\",\"span.mission-world__label × input.mission-world__input\",\"span.mission-world__label × input.mission-world__input\",\"span.mission-world__state × input.mission-world__input\",\"span.mission-world__check × input.mission-world__input\",\"span.mission-world__label × input.mission-world__input\"]}", "desktop en learning-04: Stopped: TimeoutError: page.waitForSelector: Timeout 15000ms exceeded.", "desktop en learning-13: Discovery: layout {\"overflow\":0,\"clipped\":[],\"overlaps\":[\"span.mission-world__label × input.mission-world__input\",\"span.mission-world__label × input.mission-world__input\",\"span.mission-world__label × input.mission-world__input\",\"span.mission-world__label × input.mission-world__input\",\"span.mission-world__state × input.mission-world__input\",\"span.mission-world__check × input.mission-world__input\",\"span.mission-world__label × input.mission-world__input\"]}", "desktop en learning-13: Stopped: TimeoutError: page.waitForSelector: Timeout 15000ms exceeded.", "desktop en learning-14: Discovery: layout {\"overflow\":0,\"clipped\":[],\"overlaps\":[\"span.mission-world__label × input.mission-world__input\",\"span.mission-world__label × input.mission-world__input\",\"span.mission-world__label × input.mission-world__input\",\"span.mission-world__label × input.mission-world__input\",\"span.mission-world__state × input.mission-world__input\",\"span.mission-world__check × input.mission-world__input\",\"span.mission-world__label × input.mission-world__input\"]}", "desktop en learning-14: Stopped: TimeoutError: page.waitForSelector: Timeout 15000ms exceeded."]
+}

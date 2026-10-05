@@ -1,0 +1,12 @@
+cft149 desktop en learning-04: 1 states, 2 failures
+cft149 desktop en learning-13: 1 states, 2 failures
+cft149 desktop en learning-14: 1 states, 2 failures
+Total: 3 journeys, 3 states, 6 failures
+[
+  'desktop en learning-04: Discovery: layout {"overflow":0,"clipped":[],"overlaps":["span.mission-world__label × input.mission-world__input","span.mission-world__label × input.mission-world__input","span.mission-world__label × input.mission-world__input","span.mission-world__label × input.mission-world__input","span.mission-world__state × input.mission-world__input","span.mission-world__check × input.mission-world__input","span.mission-world__label × input.mission-world__input"]}',
+  'desktop en learning-04: Stopped: TimeoutError: page.waitForSelector: Timeout 15000ms exceeded.',
+  'desktop en learning-13: Discovery: layout {"overflow":0,"clipped":[],"overlaps":["span.mission-world__label × input.mission-world__input","span.mission-world__label × input.mission-world__input","span.mission-world__label × input.mission-world__input","span.mission-world__label × input.mission-world__input","span.mission-world__state × input.mission-world__input","span.mission-world__check × input.mission-world__input","span.mission-world__label × input.mission-world__input"]}',
+  'desktop en learning-13: Stopped: TimeoutError: page.waitForSelector: Timeout 15000ms exceeded.',
+  'desktop en learning-14: Discovery: layout {"overflow":0,"clipped":[],"overlaps":["span.mission-world__label × input.mission-world__input","span.mission-world__label × input.mission-world__input","span.mission-world__label × input.mission-world__input","span.mission-world__label × input.mission-world__input","span.mission-world__state × input.mission-world__input","span.mission-world__check × input.mission-world__input","span.mission-world__label × input.mission-world__input"]}',
+  'desktop en learning-14: Stopped: TimeoutError: page.waitForSelector: Timeout 15000ms exceeded.'
+]
