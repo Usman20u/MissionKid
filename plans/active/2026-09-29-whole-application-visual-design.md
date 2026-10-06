@@ -1372,3 +1372,32 @@ Excluded: generation/redrawing, catalog or translation edits, new features/depen
 [Saved verification evidence](../../verification/2026-10-05-learning-images/README.md) records asset/input/build hashes, gate logs, final browser results and the two failed checker attempts. The first helper treated opacity-zero radios as visible overlap and expected Discovery to reload directly into selection; the second included the Ready safety label when comparing Active guidance. The checker now excludes invisible geometry, follows the actual handoff/reselection flow and compares the complete guidance text independently of its correct phase-specific label. These are checker corrections; no product behavior is changed. Local Chromium requires execution outside the filesystem sandbox. A build-inventory assertion also initially omitted the expected `index.html` entrypoint change; the corrected accounting above includes it. No executable gate failed or was repeated after a product change in this batch.
 
 **Final audit:** focused diff matches the recorded scope and unchanged owning specifications; existing history/work is preserved; references, asset completeness, unchanged input/build basis and `git diff --check` pass before commit. No concrete replacement-image defect remains. No new Safari/Firefox, physical-phone, assistive-technology, CI, broad visual/content acceptance or release evidence is claimed. All unrelated review holds remain; no push, PR, merge or deployment.
+
+## English-only engineering language — 2026-10-06
+
+### Authorization and boundary, recorded before edits
+
+The reviewer authorizes one focused language audit on the recovered repository: `feat/reference-visual-redesign`, HEAD `f2dc075`, clean worktree, Plan 06 the only active plan. Engineering documentation, specifications, plans, skills, AI instructions, code comments, developer-facing messages and future commit and pull-request text are written in English. Intentional English, German and Russian product localization, localized Mission content and the tests or fixtures that verify those languages are preserved and never translated.
+
+| Task | Concrete outcome and trace | Acceptance / verification intent |
+| --- | --- | --- |
+| Inventory | Inspect tracked text files and relevant untracked project files for Russian and German, excluding dependencies, generated output, binary assets and secrets | Every non-English occurrence is classified as engineering prose, product localization, quoted product copy or localization test data |
+| Translation | Translate any unintended Russian engineering prose into English, preserving meaning, requirement IDs, paths, links and acceptance criteria | No Russian engineering prose remains; product copy and its quotations are unchanged |
+| Rule | `AGENTS.md` *Repository hygiene* already requires English for repository content, specifications, code, changelog entries and commit messages. Complete that one line with plans, skills and AI instructions, code comments, developer-facing messages and pull-request text, plus an explicit exception for product localization and its tests | One rule in one instruction file; the product-level language statements in README and the specifications stay unchanged |
+| Record and validation | Record the outcome here and in the dated changelog | `git diff --check` and a relative-link and anchor check over tracked Markdown; executable checks only if code changes |
+
+This is an execution-policy and documentation correction under `AGENTS.md`. It changes no product behavior, specification, architecture, Mission content or localization, so the completed foundation gate and the recorded presentation revalidations remain applicable. Excluded: Supabase or any other architecture change, dependencies, product code, translating product copy or historical commit messages, history rewriting, a new plan or separate audit document, human acceptance, closing Plan 06, push, PR, merge and deployment. No commit was requested at first. After reviewing the diff, the reviewer confirmed the exception: intentional German and Russian product copy may remain in localization files, tests and quotations inside English engineering documentation. The reviewer also kept the other compatible language statements unchanged and authorized one local commit.
+
+### Outcome
+
+**Implemented and verified — 2026-10-06.** This documentation-only change is complete in the local commit containing this record; nothing is pushed or merged. Plan 06 remains active, and every other review item keeps its stage.
+
+- **Inventory.** `133` tracked text files were read; `229` binary image and font assets and `package-lock.json` were excluded. Apart from the ignored `node_modules/` and `dist/`, there are no untracked files, and no project skill or nested instruction file exists. No secret-bearing file is present.
+- **Classification.** Russian appears in `18` files, and German appears in the same kinds of places. Every occurrence is intentional:
+  - the product dictionaries `src/localization.ts` (including the `Русский` language-name label) and `src/catalogContent.ts`;
+  - string and regular-expression test data in nine test files;
+  - English prose in plans and the changelog that quotes product copy: the locked German and Russian catalog tables, the added-string review tables, and words measured in rendering.
+- **Quotations in comments and commit messages.** One English comment in `src/localization.test.ts` quotes two Russian phrases to explain its grammatical-agreement check. One historical commit message quotes a Russian interface string inside English prose; history is unchanged.
+- **Translation.** No code comment, developer-facing message, specification, instruction or plan prose is written in Russian or German, so nothing needed translation.
+- **Rule.** The existing `AGENTS.md` line is completed rather than duplicated. It now names plans, skills and AI instructions, code comments, developer-facing messages and pull-request text, and explicitly exempts product localization, its quotations and the tests that verify it.
+- **Checks.** `git diff --check` passes. All `167` relative links and `4` heading anchors in the `29` tracked Markdown files resolve. No product code, build input or specification changed, so no type check, test or build was run.

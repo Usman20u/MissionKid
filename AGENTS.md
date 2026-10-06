@@ -104,7 +104,7 @@ one plan → one focused branch → work → tests/checks → audit → clean co
 ## Repository hygiene
 
 - Keep the repository minimal and add only files required by approved specifications and the active plan.
-- Keep repository content, specifications, code, changelog entries, and commit messages in English.
+- Write all engineering material in English: documentation, specifications, plans, skills and AI instructions, code and code comments, developer-facing messages, changelog entries, and commit and pull-request text. The only exception is intentional English, German, and Russian product localization—interface text, localized Mission content, quotations of that copy, and the tests and fixtures that verify it—which stays in its own language and is never translated into English.
 - Report only implementation, completion, test, and verification work that actually occurred.
 - Repository material must read as MissionKid project material. Do not add unrelated mentor, reviewer, or person names; coaching or conversation text; prompt history; hidden reasoning; unnecessary AI metadata; personal information; generated junk; or speculative future features presented as approved scope.
 - Never add secrets, credentials, tokens, or private keys.
