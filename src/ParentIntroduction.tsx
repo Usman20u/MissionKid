@@ -122,13 +122,15 @@ export function ParentIntroduction({ catalog = MISSION_CATALOG }: ParentIntroduc
 
       <p className="introduction__lead">{t('introduction.lead')}</p>
 
-      {/* What the one action leads to, in the setup step's own approved
-          wording rather than a second version of it, read directly before the
-          action it describes. Ordinary text at the view's size. */}
+      {/* What the one action leads to, read directly before the action it
+          describes. The privacy sentence is the setup step's own; the
+          responsibility sentence is the introduction's, which German and
+          Russian word for the family it addresses. Ordinary text at the
+          view's size. */}
       <aside className="parent-note introduction__note">
         <p>{t('introduction.setup.brief')}</p>
         <p>{t('setup.privacy')}</p>
-        <p>{t('setup.parentResponsibility')}</p>
+        <p>{t('introduction.parentResponsibility')}</p>
       </aside>
 
       {/* The one forward action, rendered once. Where there is room it stands

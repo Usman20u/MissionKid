@@ -42,6 +42,11 @@ const englishMessages = {
   'introduction.flow.step3': 'Come back and mark the Mission as done.',
   'introduction.setup.brief':
     'Setup is short: choose a language and an age group.',
+  // The introduction's own responsibility sentence. In English it is the setup
+  // step's sentence word for word; German and Russian word it for the
+  // introduction, which addresses the family together.
+  'introduction.parentResponsibility':
+    'You remain responsible for deciding whether an activity suits your child and surroundings.',
   'introduction.action.setup': 'Set up MissionKid',
   'setup.introduction':
     'A parent or caregiver sets up the language and age context for this family.',
@@ -232,17 +237,19 @@ export const INTERFACE_MESSAGES: CompleteInterfaceMessages = {
     'view.setupCompleteHandoff.title': 'Einrichtung abgeschlossen',
     'error.unexpected.title': 'MissionKid benötigt Ihre Aufmerksamkeit',
     'introduction.lead':
-      'Wählt gemeinsam eine kurze Aktivität aus, macht sie abseits des Bildschirms und kommt danach zurück, um sie als erledigt einzutragen.',
+      'Wählt gemeinsam eine kurze Aktivität aus, macht sie ohne Bildschirm und kommt danach zurück, um sie als erledigt zu markieren.',
     'introduction.example.label': 'Beispielmission',
-    'introduction.flow.heading': 'Was die Familie macht',
+    'introduction.flow.heading': 'So funktioniert MissionKid',
     'introduction.flow.step1':
       'Wählt gemeinsam eine Missionskategorie und danach eine von drei Missionen.',
     'introduction.flow.step2':
-      'Wenn ihr bereit seid, startet die Mission, verlasst dann den Bildschirm und macht sie im echten Leben.',
+      'Wenn ihr bereit seid, startet die Mission und macht sie anschließend ohne Bildschirm im echten Leben.',
     'introduction.flow.step3':
-      'Kommt zurück und tragt die Mission als erledigt ein.',
+      'Kommt zurück und markiert die Mission als erledigt.',
     'introduction.setup.brief':
-      'Die Einrichtung ist kurz: Sprache und Altersgruppe auswählen.',
+      'Die Einrichtung dauert nur einen Moment: Wählt Sprache und Altersgruppe aus.',
+    'introduction.parentResponsibility':
+      'Ihr entscheidet weiterhin, ob eine Aktivität für euer Kind und eure Umgebung geeignet ist.',
     'introduction.action.setup': 'MissionKid einrichten',
     'setup.introduction':
       'Ein Elternteil oder eine Betreuungsperson richtet Sprache und Alterskontext für diese Familie ein.',
@@ -402,17 +409,19 @@ export const INTERFACE_MESSAGES: CompleteInterfaceMessages = {
     'view.setupCompleteHandoff.title': 'Настройка завершена',
     'error.unexpected.title': 'MissionKid требует вашего внимания',
     'introduction.lead':
-      'Выберите вместе короткое занятие, выполните его вдали от экрана, а затем вернитесь и отметьте выполнение.',
+      'Выберите вместе короткое занятие, выполните его без экрана, а затем вернитесь и отметьте миссию как выполненную.',
     'introduction.example.label': 'Пример миссии',
-    'introduction.flow.heading': 'Что делает семья',
+    'introduction.flow.heading': 'Как работает MissionKid',
     'introduction.flow.step1':
-      'Выберите вместе категорию миссии, а затем одну из трёх миссий.',
+      'Вместе выберите категорию миссии, а затем одну из трёх миссий.',
     'introduction.flow.step2':
-      'Когда будете готовы, начните миссию, затем отойдите от экрана и выполните её в реальной жизни.',
+      'Когда будете готовы, запустите миссию и выполните её без экрана — в реальной жизни.',
     'introduction.flow.step3':
       'Вернитесь и отметьте миссию как выполненную.',
     'introduction.setup.brief':
-      'Настройка короткая: выберите язык и возрастную группу.',
+      'Настройка займёт совсем немного времени: выберите язык и возрастную группу.',
+    'introduction.parentResponsibility':
+      'Вы по-прежнему сами решаете, подходит ли занятие вашему ребёнку и вашей ситуации.',
     'introduction.action.setup': 'Настроить MissionKid',
     'setup.introduction':
       'Родитель или другой взрослый выбирает язык и возрастную группу для этой семьи.',

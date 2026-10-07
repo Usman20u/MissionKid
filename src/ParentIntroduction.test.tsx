@@ -155,7 +155,7 @@ describe('F001 first-use introduction', () => {
     // That setup is brief, needs no account, and asks for no identifying data.
     expect(screen.getByText(t('en', 'introduction.setup.brief'))).toBeTruthy();
     expect(screen.getByText(t('en', 'setup.privacy'))).toBeTruthy();
-    expect(screen.getByText(t('en', 'setup.parentResponsibility'))).toBeTruthy();
+    expect(screen.getByText(t('en', 'introduction.parentResponsibility'))).toBeTruthy();
   });
 
   it('offers exactly one forward action, and it opens the unchanged setup form', () => {
@@ -574,6 +574,9 @@ describe('F001 language on the introduction', () => {
       screen.getByRole('heading', { level: 1, name: t(language, 'view.introduction.title') }),
     ).toBeTruthy();
     expect(screen.getByText(t(language, 'introduction.lead'))).toBeTruthy();
+    // The introduction's own responsibility sentence, which German and Russian
+    // word differently from the setup step's.
+    expect(screen.getByText(t(language, 'introduction.parentResponsibility'))).toBeTruthy();
     expect(
       screen.getByRole('heading', { level: 2, name: t(language, 'introduction.example.label') }),
     ).toBeTruthy();
