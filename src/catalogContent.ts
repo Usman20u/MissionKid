@@ -2,7 +2,7 @@ import type { MissionRecord } from './catalog';
 
 // Provenance for every entry below: one controlled, reviewed MVP content set.
 // A new review pass publishes a new version rather than editing entries in place.
-export const CATALOG_CONTENT_VERSION = 'mvp-catalog-2026-09-r2';
+export const CATALOG_CONTENT_VERSION = 'mvp-catalog-2026-09-r3';
 
 // Reviewed production Mission content. Bundled, static and read-only at runtime.
 // `catalogOrder` is editorial priority within a Mission Category and is spaced by
@@ -1403,21 +1403,21 @@ export const MISSION_CATALOG: readonly MissionRecord[] = [
       en: {
         title: 'Roll It Down',
         instruction:
-          'Lean a book against something low to make a small ramp on the floor. Find three different round things that roll, and make three small paper markers. Before you roll anything, say which one you think will travel furthest. Choose one starting place on the ramp. Roll the first thing from there, put one marker where it stops, then move it aside. Repeat from the same starting place with the other two. Look at the three markers: did the one you picked travel furthest?',
+          'Lean a book against something low to make a small ramp on the floor. Find three different round things that roll and three small pieces of paper to use as markers. Before you start, guess which one will roll furthest. One at a time, let each thing roll from the top of the ramp, put a marker where it stops, and move it aside. Then look at the three markers: was your guess right?',
         safetyNote:
           'Build the ramp low and on the floor. Use only light, unbreakable things and paper you are allowed to use, and do not stand or lean on the ramp.',
       },
       de: {
         title: 'Lass es rollen',
         instruction:
-          'Lehne ein Buch an etwas Niedriges, so entsteht eine kleine Rampe auf dem Boden. Such dir drei verschiedene runde Dinge, die rollen, und mach drei kleine Markierungen aus Papier. Bevor du etwas rollen lässt, sag, welches deiner Meinung nach am weitesten kommt. Such dir auf der Rampe eine Startstelle aus. Lass das erste Ding von dort hinunterrollen, leg eine Markierung dorthin, wo es liegen bleibt, und nimm das Ding dann zur Seite. Mach dasselbe mit den anderen beiden, immer von derselben Startstelle aus. Schau dir die drei Markierungen an: Ist das Ding, das du ausgesucht hast, am weitesten gekommen?',
+          'Lehne ein Buch an etwas Niedriges, so entsteht eine kleine Rampe auf dem Boden. Such dir drei verschiedene runde Dinge, die rollen, und drei kleine Stücke Papier als Markierungen. Rate vorher, welches Ding am weitesten rollt. Lass jedes Ding einzeln von ganz oben die Rampe hinunterrollen, leg eine Markierung dorthin, wo es liegen bleibt, und nimm es dann zur Seite. Schau dir zum Schluss die drei Markierungen an: War deine Vermutung richtig?',
         safetyNote:
           'Bau die Rampe niedrig und auf dem Boden. Nimm nur leichte, unzerbrechliche Dinge und Papier, das du benutzen darfst, und stell dich nicht auf die Rampe und lehn dich nicht daran.',
       },
       ru: {
         title: 'Скати с горки',
         instruction:
-          'Прислони книгу к чему-нибудь низкому — получится маленькая горка на полу. Найди три разных круглых предмета, которые катятся, и сделай из бумаги три маленькие метки. Прежде чем что-нибудь катить, скажи, как думаешь: какой предмет укатится дальше всех? Выбери на горке одно место для старта. Скати оттуда первый предмет, положи метку туда, где он остановится, и отодвинь предмет в сторону. Повтори с двумя другими — каждый раз с того же места старта. Посмотри на три метки: совпала ли твоя догадка с тем, что получилось?',
+          'Прислони книгу к чему-нибудь низкому — получится маленькая горка на полу. Найди три разных круглых предмета, которые катятся, и три маленьких кусочка бумаги для меток. Перед началом угадай, какой предмет укатится дальше всех. По очереди скатывай каждый предмет с самого верха горки, клади метку туда, где он остановился, и отодвигай его в сторону. Потом посмотри на три метки: совпала ли твоя догадка с результатом?',
         safetyNote:
           'Делай горку низкой и на полу. Бери только лёгкие небьющиеся предметы и бумагу, которыми тебе разрешено пользоваться, не вставай на горку и не опирайся на неё.',
       },
@@ -1660,21 +1660,21 @@ export const MISSION_CATALOG: readonly MissionRecord[] = [
       en: {
         title: 'Soft Landing',
         instruction:
-          'Put two socks on the floor a hand\'s width apart to make a little gate. Sit or kneel a few steps back with a third sock rolled into a ball. Roll it gently along the floor toward the gate — always rolling, never throwing. After each roll, notice where it stopped. If it stopped short, move a little closer before the next one; if it rolled past, move a little farther back. Take three rolls in all. After the third, look where the sock came to rest: inside the gate, short of it, or past it.',
+          'Put two socks on the floor a hand\'s width apart to make a little gate. Sit or kneel a few steps back with a third sock rolled into a ball. Roll it gently along the floor toward the gate — always rolling, never throwing — and watch it until it stops. Take three rolls in all. After the third, look where the sock came to rest: inside the gate, short of it, or past it.',
         safetyNote:
           'Use clean socks and a clear stretch of floor. Roll the sock along the floor — never throw it, and never roll it at a person or a pet.',
       },
       de: {
         title: 'Wohin rollt die Socke?',
         instruction:
-          'Leg zwei Socken eine Handbreit auseinander auf den Boden – so entsteht ein kleines Tor. Roll eine dritte Socke zu einem Ball zusammen und setz oder knie dich damit ein paar Schritte entfernt hin. Roll sie sanft über den Boden auf das Tor zu – immer rollen, nie werfen. Achte nach jedem Rollen darauf, wo sie liegen geblieben ist. Ist sie vor dem Tor liegen geblieben, rück vor dem nächsten Mal ein Stück näher heran; ist sie hinter das Tor gerollt, rück ein Stück weiter zurück. Roll insgesamt dreimal. Schau nach dem dritten Mal, wo die Socke liegen geblieben ist: im Tor, davor oder dahinter.',
+          'Leg zwei Socken eine Handbreit auseinander auf den Boden – so entsteht ein kleines Tor. Roll eine dritte Socke zu einem Ball zusammen und setz oder knie dich damit ein paar Schritte entfernt hin. Roll sie sanft über den Boden auf das Tor zu – immer rollen, nie werfen – und schau ihr nach, bis sie liegen bleibt. Roll insgesamt dreimal. Schau nach dem dritten Mal, wo die Socke liegen geblieben ist: im Tor, davor oder dahinter.',
         safetyNote:
           'Nimm saubere Socken und ein freies Stück Boden. Roll die Socke über den Boden – wirf sie nie und roll sie nie auf einen Menschen oder ein Haustier zu.',
       },
       ru: {
         title: 'Куда докатится носок?',
         instruction:
-          'Положи на пол два носка на ширину ладони друг от друга — получатся маленькие воротца. Сверни третий носок в мячик и сядь или встань на колени в нескольких шагах от воротец. Мягко покати его по полу к воротцам — только кати, никогда не бросай. После каждого раза замечай, где он остановился. Если он не докатился до воротец, перед следующим разом придвинься чуть ближе; если укатился за воротца — отодвинься чуть назад. Всего покати носок три раза. После третьего раза посмотри, где остановился носок: в воротцах, перед ними или за ними.',
+          'Положи на пол два носка на ширину ладони друг от друга — получатся маленькие воротца. Сверни третий носок в мячик и сядь или встань на колени в нескольких шагах от воротец. Мягко покати его по полу к воротцам — только кати, никогда не бросай — и следи за ним, пока он не остановится. Всего покати носок три раза. После третьего раза посмотри, где остановился носок: в воротцах, перед ними или за ними.',
         safetyNote:
           'Бери чистые носки и свободный участок пола. Кати носок по полу — никогда не бросай его и никогда не кати в сторону человека или домашнего животного.',
       },
