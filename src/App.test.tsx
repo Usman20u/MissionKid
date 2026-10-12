@@ -21,6 +21,19 @@ type ShellScenario = {
 
 const shellScenarios: ShellScenario[] = [
   {
+    name: 'first-use introduction',
+    state: {
+      language: 'en',
+      ageBand: null,
+      localProfileId: null,
+      status: 'ready',
+      setupView: 'introduction',
+      saveStatus: 'idle',
+    },
+    view: 'introduction',
+    title: 'Small missions. Real\u2011world adventures.',
+  },
+  {
     name: 'fresh setup',
     state: {
       language: 'en',
@@ -116,11 +129,13 @@ describe('application shell', () => {
     expect(region.getAttribute('data-view')).toBe(view);
   });
 
-  it('renders fresh setup deterministically by default', () => {
+  it('renders the introduction deterministically by default', () => {
+    // Nothing stored and storage working is the one case the introduction is
+    // eligible in, and it is what an unseeded default resolves to.
     render(<App />);
 
     expect(
-      screen.getByRole('region', { name: 'Parent setup' }),
+      screen.getByRole('region', { name: 'Small missions. Real\u2011world adventures.' }),
     ).toBeTruthy();
   });
 

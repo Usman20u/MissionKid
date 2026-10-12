@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useLayoutEffect, useState } from 'react';
 
 import { ApplicationErrorBoundary, AppShell } from './AppShell';
 import {
@@ -40,7 +40,11 @@ function LocalizedApplicationShell({
 }: LocalizedApplicationShellProps) {
   const { state } = useAppState();
 
-  useEffect(() => {
+  // Before the browser paints, so the document never shows one language's
+  // words under another's language: an ordinary effect runs after the paint,
+  // and Safari showed a restored German or Russian page labelled `en` for up
+  // to a fifth of a second.
+  useLayoutEffect(() => {
     document.documentElement.lang = state.language;
   }, [state.language]);
 

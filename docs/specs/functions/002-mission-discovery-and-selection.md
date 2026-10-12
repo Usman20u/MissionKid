@@ -141,6 +141,10 @@ Mission instructions and safety notes must preserve the same meaning in English,
 
 If no valid age band is available, discovery explains that parent-guided setup must be completed and provides a route back to the age-context step. It shows no mission suggestions and does not infer an age. A missing, unsupported, or unreadable language value resolves to English before this check.
 
+The first-use parent introduction defined by [F001](001-parent-setup-and-localization.md) may show one non-selectable example Mission before setup. That example is not a discovery result: it is not one of the three suggestions, it cannot be chosen, it starts no discovery cycle, and it infers no age because it is already approved for every supported age band. It does not relax the rule above — discovery still presents no mission suggestions until a valid age band exists.
+
+Having been the introduction's example gives a Mission no standing in discovery. It is neither preselected, promoted, pinned, excluded, nor reordered; the eligibility rules and the deterministic `catalogOrder` and stable-identifier ordering above apply to it exactly as to any other Mission, and discovery keeps no record that it was shown there.
+
 ### No complete eligible set
 
 If fewer than three eligible missions exist for the selected age band, Mission Category, and UI language, MissionKid shows no partial set. It explains that missions are currently unavailable and allows the family to retry or return to Mission Category selection. It does not substitute unsafe, unreviewed, incorrectly localized, or age-inappropriate content.

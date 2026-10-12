@@ -45,13 +45,14 @@ The production artifact is a static browser application containing the applicati
 
 ### Root-only navigation
 
-MissionKid MVP is a single-route static SPA served only from `/`. Setup, Mission Category Selection, suggestions, ready, active Mission Break, Reward Card, Mission History, and Monthly Goal are application views selected by validated product and temporary application state; they are not URL-addressable pages.
+MissionKid MVP is a single-route static SPA served only from `/`. The parent introduction, setup, Mission Category Selection, suggestions, ready, active Mission Break, Reward Card, Mission History, and Monthly Goal are application views selected by validated product and temporary application state; they are not URL-addressable pages.
 
 - Production hosting needs to serve the SPA shell and its static assets at `/`; no history-route fallback is required for MVP.
 - Refresh at `/` reloads the shell, validates and hydrates the persisted snapshot, and restores the application view implied by a recoverable current Mission Session or current-result pointer.
 - If no recoverable current flow exists, the shell selects the safe setup or Mission Category view from validated state.
 - Deep-link routes, URL-based page state, and direct navigation to child-flow views are outside MVP.
 - No router dependency is required solely for MVP navigation.
+- The first-use parent introduction is one such view. It is selected from the existing first-use setup state, and it requires no route, URL, history entry, router dependency, snapshot field, or persisted acknowledgement. It performs no storage write: no state-changing operation originates from it, and therefore no serialization, storage replacement, read-back, or unconfirmed-write path does either. The read side is unchanged and is required — the ordinary hydration read and its validation are what decide whether this view is eligible at all, and they run for it exactly as for every other arrival. A hydration failure resolves to the recovery or temporary-mode surface before this view could be selected, so it is not a failure path out of the introduction. A hydrated snapshot that resolves to a valid setup context, a current Mission Session, or a current completed result never selects it, so a returning family is not interrupted by it and existing durable-state precedence is unchanged.
 
 The application must neither generate nor advertise non-root product URLs. A request for a non-root path is a hosting-level not-found response, not an application recovery path and not an MVP deep link.
 
@@ -76,7 +77,7 @@ The implementation should use shallow, feature-oriented boundaries rather than a
 | Boundary | Responsibility | Must not own |
 | --- | --- | --- |
 | App shell and navigation | Start the root-only SPA, select the current application view from validated state, restore a valid flow, manage top-level error containment, and make location and next action understandable. | URL-based page routing, product calculations, direct storage parsing, or catalog mutation. |
-| Setup and localization | Resolve English by default, capture one supported age band, change settings later, and expose valid setup context. | Child identity collection, accounts, or mission filtering rules. |
+| Setup and localization | Present the first-use parent introduction, resolve English by default, capture one supported age band, change settings later, and expose valid setup context. | Child identity collection, accounts, mission filtering rules, or a persisted record that the introduction was seen. |
 | Mission catalog | Load and validate bundled reviewed content by stable Mission identifier and catalog version. | Family state, runtime generation, popularity ranking, or network content. |
 | Mission discovery | Combine valid age band, Mission Category, language completeness, and safety eligibility; provide exactly three choices and bounded replacement sets. | Timer, completion, rewards, or durable History records. |
 | Mission session | Enforce the exact selected → ready → active → completed lifecycle, deliberate start/completion, cancellation and abandonment outcomes, and current-session recovery. | New lifecycle states, device monitoring, or completion proof. |
@@ -429,7 +430,7 @@ The responsive approach is mobile-first, with a clear single primary action and 
 
 The MVP should remain a small static application:
 
-- ship only required application code and the controlled catalog/localization content;
+- ship only required application code, the controlled catalog/localization content, and the bounded presentation assets the Visual & Ergonomic Specification authorizes — locally served font files and static images, each served from the application's own origin and measured in the production build;
 - avoid large general-purpose dependencies when browser or small local logic is sufficient;
 - perform catalog filtering and derived-state calculations locally;
 - keep persisted records minimal and avoid duplicate view data;

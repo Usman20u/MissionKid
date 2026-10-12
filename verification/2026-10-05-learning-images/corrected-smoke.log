@@ -1,0 +1,12 @@
+cft149 desktop en learning-04: 9 states, 2 failures
+cft149 desktop en learning-13: 9 states, 2 failures
+cft149 desktop en learning-14: 9 states, 2 failures
+Total: 3 journeys, 27 states, 6 failures
+[
+  'desktop en learning-04: active: adult/safety missing',
+  'desktop en learning-04: active reload: adult/safety missing',
+  'desktop en learning-13: active: adult/safety missing',
+  'desktop en learning-13: active reload: adult/safety missing',
+  'desktop en learning-14: active: adult/safety missing',
+  'desktop en learning-14: active reload: adult/safety missing'
+]

@@ -27,6 +27,8 @@ import {
   type MissionTimerClocks,
 } from './missionTimer';
 import { persistenceAdapter, type PersistenceAdapter } from './persistence';
+import { DurationMark } from './Marks';
+import { MissionPicture } from './MissionPicture';
 
 // Leaving fails into its own truth, so it carries its own wording: an
 // established refusal leaves the Mission exactly where it was, and an
@@ -284,28 +286,44 @@ export function MissionActive({
   return (
     <div className="mission-session">
       <p className="mission-session__away">{t('session.active.away')}</p>
-      <h2 className="mission-session__mission">{content.title}</h2>
-      <p className="mission-session__instruction">{content.instruction}</p>
-      {adultLabelKey && content.adultInvolvementNote ? (
-        <p className="mission-session__note mission-session__note--adult">
-          <span aria-hidden="true" className="mission-session__note-mark" />
-          <span className="mission-session__note-label">{t(adultLabelKey)}</span>
-          {content.adultInvolvementNote}
-        </p>
-      ) : null}
-      {content.safetyNote ? (
-        <p className="mission-session__note mission-session__note--safety">
-          <span aria-hidden="true" className="mission-session__note-mark" />
-          <span className="mission-session__note-label">
-            {/* Not the ready screen's "before you start": the Mission is
-                already running, and guidance labelled as past no longer reads
-                as guidance to follow. */}
-            {t('session.active.safetyLabel')}
-          </span>
-          {content.safetyNote}
-        </p>
-      ) : null}
-      <p className="mission-session__guidance">
+      {/* The Mission reminder: which Mission is running, what it asks and the
+          guidance read before starting, beside a smaller copy of the picture
+          its card showed. The instruction to leave the screen stays first. */}
+      <div className="mission-session__reminder">
+        <MissionPicture
+          ageBand={active.ageBandAtSelection}
+          category={active.missionCategoryAtSelection}
+          className="mission-session__thumb mission-picture"
+          missionId={active.missionId}
+          surface="active"
+          withSceneDefs
+        />
+        <div className="mission-session__reminder-text">
+          <h2 className="mission-session__mission">{content.title}</h2>
+          <p className="mission-session__instruction">{content.instruction}</p>
+          {adultLabelKey && content.adultInvolvementNote ? (
+            <p className="mission-session__note mission-session__note--adult">
+              <span aria-hidden="true" className="mission-session__note-mark" />
+              <span className="mission-session__note-label">{t(adultLabelKey)}</span>
+              {content.adultInvolvementNote}
+            </p>
+          ) : null}
+          {content.safetyNote ? (
+            <p className="mission-session__note mission-session__note--safety">
+              <span aria-hidden="true" className="mission-session__note-mark" />
+              <span className="mission-session__note-label">
+                {/* Not the ready screen's "before you start": the Mission is
+                    already running, and guidance labelled as past no longer
+                    reads as guidance to follow. */}
+                {t('session.active.safetyLabel')}
+              </span>
+              {content.safetyNote}
+            </p>
+          ) : null}
+        </div>
+      </div>
+      <p className="mission-session__guidance mission-session__guidance--time">
+        <DurationMark />
         {guidanceMessage(guidance, state.language)}
       </p>
       {/* Where the clock cannot be read, the duration the session recorded is

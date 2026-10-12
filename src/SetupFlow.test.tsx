@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -62,6 +64,13 @@ function createCompletedSnapshot(
   };
 }
 
+// First use now begins at the F001 parent introduction. The cases below are
+// about the setup form it leads into, so they take its one forward action
+// first; the introduction itself is covered in `ParentIntroduction.test.tsx`.
+function continueToSetup() {
+  fireEvent.click(screen.getByRole('button', { name: 'Set up MissionKid' }));
+}
+
 describe('parent-guided first-use setup', () => {
   it('defaults to English and requests only the approved setup choices', () => {
     const harness = createAdapterHarness();
@@ -71,6 +80,8 @@ describe('parent-guided first-use setup', () => {
         createProfileId={() => 'local-profile-1'}
       />,
     );
+
+    continueToSetup();
 
     expect(
       screen.getByRole('heading', { name: 'Parent setup' }),
@@ -131,6 +142,7 @@ describe('parent-guided first-use setup', () => {
     ({ label, language, title }) => {
       const harness = createAdapterHarness();
       render(<App adapter={harness.adapter} />);
+      continueToSetup();
 
       fireEvent.click(screen.getByRole('radio', { name: label }));
 
@@ -144,6 +156,7 @@ describe('parent-guided first-use setup', () => {
     (ageBand) => {
       const harness = createAdapterHarness();
       render(<App adapter={harness.adapter} />);
+      continueToSetup();
 
       const selected = screen.getByRole('radio', { name: ageBand });
       fireEvent.click(selected);
@@ -173,6 +186,7 @@ describe('parent-guided first-use setup', () => {
         createProfileId={createProfileId}
       />,
     );
+    continueToSetup();
 
     fireEvent.click(screen.getByRole('radio', { name: '9–10' }));
     expect(screen.queryByText(/language and age group are saved/i)).toBeNull();
@@ -209,6 +223,7 @@ describe('parent-guided first-use setup', () => {
         createProfileId={() => 'local-profile-1'}
       />,
     );
+    continueToSetup();
 
     fireEvent.click(screen.getByRole('radio', { name: 'Deutsch' }));
     fireEvent.click(screen.getByRole('radio', { name: '4–6' }));
@@ -312,6 +327,38 @@ describe('returning and editing setup', () => {
     expect(harness.setCalls).toEqual([]);
   });
 
+  // The handoff reads in two parts: what was saved, with the one control that
+  // changes it, then what comes next, leading into the one primary action. Only
+  // the reading order moved; the keyboard reaches the controls as it always did.
+  it('keeps the setup change with the summary and leads into the one primary action', () => {
+    const harness = createAdapterHarness(createCompletedSnapshot());
+    render(<App adapter={harness.adapter} />);
+
+    const summary = document.querySelector('.setup-summary')!;
+    const change = screen.getByRole('button', { name: 'Change setup' });
+    const next = screen.getByText('MissionKid is ready for the next step.');
+    const find = screen.getByRole('button', { name: 'Find a Mission' });
+    const history = screen.getByRole('button', { name: 'Mission history' });
+    const precedes = (first: Node, second: Node) =>
+      (first.compareDocumentPosition(second) & Node.DOCUMENT_POSITION_FOLLOWING) !== 0;
+
+    expect(precedes(summary, change)).toBe(true);
+    expect(precedes(change, next)).toBe(true);
+    expect(precedes(next, find)).toBe(true);
+    expect(precedes(find, history)).toBe(true);
+    expect(find.className).toContain('button--primary');
+    expect(change.className).toContain('button--secondary');
+    expect(history.className).toContain('button--secondary');
+
+    expect(screen.getAllByRole('button').map((button) => button.textContent)).toEqual([
+      'Change setup',
+      'Find a Mission',
+      'Mission history',
+      'Reset MissionKid data',
+    ]);
+    expect(harness.setCalls).toEqual([]);
+  });
+
   it('changes localized presentation while preserving profile and age identity', () => {
     const harness = createAdapterHarness(createCompletedSnapshot());
     render(<App adapter={harness.adapter} />);
@@ -384,6 +431,9 @@ describe('returning and editing setup', () => {
   it('contains no unauthorized later-function interface', () => {
     const harness = createAdapterHarness();
     render(<App adapter={harness.adapter} />);
+    // The setup form itself. The introduction before it does name Mission
+    // Category, in the short account of the flow that `F001` requires of it.
+    continueToSetup();
 
     expect(screen.queryByText(/Mission Category/i)).toBeNull();
     expect(screen.queryByText(/Mission suggestions/i)).toBeNull();
@@ -402,6 +452,7 @@ describe('Task 5 save and editing regressions', () => {
     persist.mockReturnValueOnce({ status: 'unconfirmed', reason: 'write-failed' });
     const createProfileId = vi.fn(() => 'stable-retry-profile');
     render(<App adapter={harness.adapter} createProfileId={createProfileId} />);
+    continueToSetup();
 
     fireEvent.click(screen.getByRole('radio', { name: '4–6' }));
     fireEvent.click(screen.getByRole('button', { name: 'Complete setup' }));
@@ -433,6 +484,7 @@ describe('Task 5 save and editing regressions', () => {
     (raw) => {
       const harness = createAdapterHarness();
       render(<App adapter={harness.adapter} />);
+      continueToSetup();
       harness.values.set(MISSIONKID_STORAGE_KEY, raw);
       fireEvent.click(screen.getByRole('radio', { name: '4–6' }));
       fireEvent.click(screen.getByRole('button', { name: 'Complete setup' }));
@@ -474,6 +526,7 @@ describe('Task 5 save and editing regressions', () => {
     });
     const createProfileId = vi.fn(() => 'profile');
     render(<App adapter={harness.adapter} createProfileId={createProfileId} />);
+    continueToSetup();
     fireEvent.click(screen.getByRole('radio', { name: '7–8' }));
     fireEvent.click(screen.getByRole('button', { name: 'Complete setup' }));
 
@@ -502,6 +555,23 @@ describe('Task 5 save and editing regressions', () => {
     fireEvent.click(screen.getByRole('button', { name: scenario.edit }));
     expect(screen.getByText(scenario.languageEffect)).toBeTruthy();
     expect(screen.getByText(scenario.ageEffect)).toBeTruthy();
+    // Each effect is its own line, and the group's description still reads
+    // exactly as the help and the effect did as one sentence pair.
+    for (const [legend, help, effect] of [
+      ['setup.language.legend', 'setup.language.help', 'setup.edit.languageEffect'],
+      ['setup.age.legend', 'setup.age.help', 'setup.edit.ageEffect'],
+    ] as const) {
+      const group = screen.getByRole('group', { name: translateMessage(scenario.language, legend) });
+      const description = document.getElementById(
+        group.getAttribute('aria-describedby')!.split(' ')[0]!,
+      )!;
+      expect(description.textContent).toBe(
+        `${translateMessage(scenario.language, help)} ${translateMessage(scenario.language, effect)}`,
+      );
+      expect(description.querySelector('.choice-group__effect')?.textContent?.trim()).toBe(
+        translateMessage(scenario.language, effect),
+      );
+    }
     expect(screen.getAllByRole('radio')).toHaveLength(6);
     fireEvent.click(screen.getByRole('radio', { name: '9–10' }));
     fireEvent.click(screen.getByRole('button', { name: scenario.save }));
@@ -512,4 +582,34 @@ describe('Task 5 save and editing regressions', () => {
       childProfile: { localProfileId: 'stable-local-profile', ageBand: '9–10' },
     });
   });
+});
+
+// A grid column's automatic minimum is its widest item. Both layouts below are
+// grids, and without a named minimum each was sized to its longest content at an
+// enlarged text size: at 320 CSS px with a 32px root the setup form's language
+// controls pushed the page 14px sideways in every language on every build from
+// ee35a70 onward, and the recovery actions — the reset panel, the retry action
+// and its help — pushed it up to 127px. Page-level checks did catch these, but
+// an earlier record reported the setup form clean, so the cause is pinned here.
+//
+// jsdom has no layout engine, so this is a stylesheet invariant that encodes the
+// cause rather than the symptom. The rendered proof is the browser measurement
+// recorded in the plan.
+describe('parent form and recovery layout invariants', () => {
+  const stylesheet = readFileSync('src/styles.css', 'utf8');
+  const rules = [...stylesheet.matchAll(/([^{}]+)\{([^{}]*)\}/g)].map((match) => ({
+    selector: match[1]!.trim().split('\n').at(-1)!.trim(),
+    body: match[2]!,
+  }));
+
+  it.each(['.choice-grid', '.recovery-actions'])(
+    'names a zero column minimum on the %s grid',
+    (selector) => {
+      const rule = rules.find((candidate) => candidate.selector === selector);
+
+      expect(rule).toBeDefined();
+      expect(rule!.body).toMatch(/display:\s*grid/);
+      expect(rule!.body).toMatch(/grid-template-columns:\s*minmax\(\s*0\s*,/);
+    },
+  );
 });

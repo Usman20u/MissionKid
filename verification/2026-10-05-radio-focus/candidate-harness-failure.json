@@ -1,0 +1,35 @@
+{
+  "browser": "149.0.7827.55",
+  "base": "http://127.0.0.1:4312/",
+  "builds": [],
+  "cases": [
+    {
+      "config": "root32",
+      "language": "de",
+      "root": null,
+      "signatures": {},
+      "checks": 0,
+      "oversized": 0,
+      "stops": [],
+      "failures": [
+        "locator.getAttribute: Error: strict mode violation: locator('script[type=\"module\"]') resolved to 3 elements:\n    1) <script type=\"module\">import { injectIntoGlobalHook } from \"/@react-ref…</script> aka locator('script').first()\n    2) <script type=\"module\" src=\"/@vite/client\"></script> aka locator('script').nth(1)\n    3) <script type=\"module\" src=\"/src/main.tsx\"></script> aka locator('body script')\n\nCall log:\n\u001b[2m  - waiting for locator('script[type=\"module\"]')\u001b[22m\n"
+      ]
+    },
+    {
+      "config": "browser32",
+      "language": "de",
+      "root": null,
+      "signatures": {},
+      "checks": 0,
+      "oversized": 0,
+      "stops": [],
+      "failures": [
+        "locator.getAttribute: Error: strict mode violation: locator('script[type=\"module\"]') resolved to 3 elements:\n    1) <script type=\"module\">import { injectIntoGlobalHook } from \"/@react-ref…</script> aka locator('script').first()\n    2) <script type=\"module\" src=\"/@vite/client\"></script> aka locator('script').nth(1)\n    3) <script type=\"module\" src=\"/src/main.tsx\"></script> aka locator('body script')\n\nCall log:\n\u001b[2m  - waiting for locator('script[type=\"module\"]')\u001b[22m\n"
+      ]
+    }
+  ],
+  "failures": [
+    "root32/de: locator.getAttribute: Error: strict mode violation: locator('script[type=\"module\"]') resolved to 3 elements:\n    1) <script type=\"module\">import { injectIntoGlobalHook } from \"/@react-ref…</script> aka locator('script').first()\n    2) <script type=\"module\" src=\"/@vite/client\"></script> aka locator('script').nth(1)\n    3) <script type=\"module\" src=\"/src/main.tsx\"></script> aka locator('body script')\n\nCall log:\n\u001b[2m  - waiting for locator('script[type=\"module\"]')\u001b[22m\n",
+    "browser32/de: locator.getAttribute: Error: strict mode violation: locator('script[type=\"module\"]') resolved to 3 elements:\n    1) <script type=\"module\">import { injectIntoGlobalHook } from \"/@react-ref…</script> aka locator('script').first()\n    2) <script type=\"module\" src=\"/@vite/client\"></script> aka locator('script').nth(1)\n    3) <script type=\"module\" src=\"/src/main.tsx\"></script> aka locator('body script')\n\nCall log:\n\u001b[2m  - waiting for locator('script[type=\"module\"]')\u001b[22m\n"
+  ]
+}

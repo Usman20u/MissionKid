@@ -41,6 +41,13 @@ function harness(raw?: string) {
 
 function click(name: string) { fireEvent.click(screen.getByRole('button', { name })); }
 
+// First use now begins at the F001 parent introduction. The cases below are
+// about the setup form it leads into, so they take its one forward action
+// first; the introduction itself is covered in `ParentIntroduction.test.tsx`.
+function continueToSetup() {
+  fireEvent.click(screen.getByRole('button', { name: 'Set up MissionKid' }));
+}
+
 describe('F001 recovery and reset', () => {
   it('allows clearly temporary choices on unavailable load, then adopts changed durable state without a write or merge', () => {
     const h = harness();
@@ -72,6 +79,10 @@ describe('F001 recovery and reset', () => {
     fireEvent.click(screen.getByRole('radio', { name: '4–6' }));
     h.faults.read = false;
     click('Retry browser storage');
+    // The retry re-resolves the arrival context, and working storage holding
+    // nothing is the no-stored-context row: the introduction, not a bare form.
+    expect(screen.getByRole('heading', { name: 'Small missions. Real\u2011world adventures.' })).toBeTruthy();
+    continueToSetup();
     expect(screen.getByRole('heading', { name: 'Parent setup' })).toBeTruthy();
     expect((screen.getByRole('button', { name: 'Complete setup' }) as HTMLButtonElement).disabled).toBe(true);
     expect(h.values.has(MISSIONKID_STORAGE_KEY)).toBe(false);
@@ -122,6 +133,10 @@ describe('F001 recovery and reset', () => {
     expect(h.values.has(MISSIONKID_STORAGE_KEY)).toBe(false);
     expect(h.values.get('unrelated')).toBe('keep');
     expect(document.documentElement.lang).toBe('en');
+    // A previously stored context that ceased to exist is the same row a first
+    // visit is, so the parent reaches the introduction rather than a bare form.
+    expect(screen.getByRole('heading', { name: 'Small missions. Real\u2011world adventures.' })).toBeTruthy();
+    continueToSetup();
     expect(screen.getByRole('heading', { name: 'Parent setup' })).toBeTruthy();
     expect((screen.getByRole('button', { name: 'Complete setup' }) as HTMLButtonElement).disabled).toBe(true);
     expect(screen.queryByRole('heading', { name: 'Setup complete' })).toBeNull();
@@ -141,7 +156,7 @@ describe('F001 recovery and reset', () => {
     else expect(h.values.has(MISSIONKID_STORAGE_KEY)).toBe(false);
     h.faults.read = false;
     click('Retry browser storage');
-    expect(screen.getByRole('heading', { name: fault === 'afterRemove' ? 'Parent setup' : 'Setup complete' })).toBeTruthy();
+    expect(screen.getByRole('heading', { name: fault === 'afterRemove' ? 'Small missions. Real\u2011world adventures.' : 'Setup complete' })).toBeTruthy();
   });
 
   it('retains last validated authority when reset and subsequent reads fail', () => {
@@ -176,6 +191,7 @@ describe('F001 recovery and reset', () => {
       return persist(snapshot);
     });
     render(<App adapter={h.adapter} />);
+    continueToSetup();
     fireEvent.click(screen.getByRole('radio', { name: '7–8' })); click('Complete setup');
     expect(screen.queryByRole('status')).toBeNull();
     expect(screen.getByRole('heading', { name: 'Setup complete' })).toBeTruthy();
@@ -204,7 +220,7 @@ describe('F001 recovery and reset', () => {
     expect(h.values.get(MISSIONKID_STORAGE_KEY)).toBe(raw);
     click('Confirm reset');
     expect(h.values.has(MISSIONKID_STORAGE_KEY)).toBe(false);
-    expect(screen.getByRole('heading', { name: 'Parent setup' })).toBeTruthy();
+    expect(screen.getByRole('heading', { name: 'Small missions. Real\u2011world adventures.' })).toBeTruthy();
   });
 
   it.each(['en', 'de', 'ru'] as const)('localizes temporary and failed reset recovery in %s without forbidden inputs or later views', (language) => {

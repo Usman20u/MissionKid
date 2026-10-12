@@ -33,7 +33,11 @@ type SetupContext = Readonly<{
 type ReadyAppState = SetupContext &
   Readonly<{
     status: 'ready';
-    setupView: 'first-use' | 'incomplete' | 'editing' | 'handoff';
+    // `introduction` is the F001 first-use introduction and `first-use` the
+    // setup form that follows it. Both describe a context with nothing stored,
+    // so neither carries durable authority; the split is what keeps a parent
+    // who has continued to the setup choices from being sent back.
+    setupView: 'introduction' | 'first-use' | 'incomplete' | 'editing' | 'handoff';
     saveStatus: 'idle' | 'unconfirmed';
   }>;
 
@@ -147,6 +151,9 @@ export type AppStateAction =
   | { type: 'validated-state-received'; state: ResolvedAppState }
   | { type: 'language-changed'; language: SupportedLanguage }
   | { type: 'age-band-changed'; ageBand: AgeBand }
+  // The parent took the introduction's one forward action. Runtime only: it
+  // records nothing, writes nothing and changes no setup choice.
+  | { type: 'introduction-continued' }
   | { type: 'setup-editing-started' }
   | { type: 'discovery-opened' }
   // The family asked for the private record. Leaving discovery for it ends the
@@ -202,12 +209,14 @@ export type AppStateAction =
     }
   | { type: 'setup-save-confirmed'; snapshot: MissionKidSnapshot };
 
+// Working storage holding no MissionKid context, which is where the F001
+// introduction is eligible and the only place it is.
 export const FRESH_APP_STATE: ResolvedAppState = {
   language: DEFAULT_LANGUAGE,
   ageBand: null,
   localProfileId: null,
   status: 'ready',
-  setupView: 'first-use',
+  setupView: 'introduction',
   saveStatus: 'idle',
 };
 
@@ -440,6 +449,13 @@ export function appStateReducer(
         ageBand: action.ageBand,
         discovery: state.discovery ? { ...state.discovery, shown: [] } : undefined,
       };
+    case 'introduction-continued':
+      // Only from the introduction itself. Nothing else about the state moves,
+      // so the language chosen there is carried into setup as the current
+      // selection rather than asked for again.
+      return state.status === 'ready' && state.setupView === 'introduction'
+        ? { ...state, setupView: 'first-use' }
+        : state;
     case 'setup-editing-started':
       // Leaving discovery for the parent-guided setup step ends the cycle.
       return state.status === 'ready'
@@ -729,7 +745,9 @@ export function AppStateProvider({
   initialState = FRESH_APP_STATE,
 }: AppStateProviderProps) {
   const [state, dispatch] = useReducer(appStateReducer, initialState, (initial) => (
-    initial.status === 'ready' && initial.setupView !== 'first-use'
+    initial.status === 'ready' &&
+    initial.setupView !== 'introduction' &&
+    initial.setupView !== 'first-use'
       ? { ...initial, lastDurable: {
           language: initial.language, ageBand: initial.ageBand,
           localProfileId: initial.localProfileId,

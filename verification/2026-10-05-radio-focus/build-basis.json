@@ -1,0 +1,35 @@
+{
+  "baselineHead": "0d6b4850bb25fbb0277232054c5c5e8c2479ffcb",
+  "baselineFiles": 222,
+  "afterFiles": 222,
+  "unchangedFiles": 219,
+  "changedCommonFiles": [
+    "index.html"
+  ],
+  "removedNames": [
+    "assets/index-CgkQDkLR.css",
+    "assets/index-DYJmmybd.js"
+  ],
+  "newNames": [
+    "assets/index-C-2mnqdV.js",
+    "assets/index-DIkimylC.css"
+  ],
+  "beforeEntrypoints": {
+    "index.html": "278f3a7f7549b466585a618303899a44781446593b3fb5a3ee75079946ad9153",
+    "assets/index-CgkQDkLR.css": "d4d32e41e24903d591f54b8cc8f1cdff72eccf6725df5a56caa8070935a4220a",
+    "assets/index-DYJmmybd.js": "40bf3f47b0f772dbe41861fed55c4eefbfadb1f3bb25a682ca7dc13985cc0e50"
+  },
+  "afterEntrypoints": {
+    "index.html": "41773a80e99db23d7447863480165dd3ecd11f9bc61bf891c7d21613b8e0b21a",
+    "assets/index-DIkimylC.css": "eea877781e63a802f644967a194adec38c0bdd808d38098603a3738864418286",
+    "assets/index-C-2mnqdV.js": "df8f0a7393973b8fa18fe91ae40e63cb0ad5256fa6ad60ee32ae749f3bbc9d28"
+  },
+  "implementationInputsSha256": {
+    "src/styles.css": "38f0ebfb55d2c82623c80c368730c609b0ef34de171d78d77c834b2d16780c4c",
+    "src/focusedChoice.ts": "018f8dbab99e06120be3848d0fe786a65afc1e13b3da0d841817c1bc8488b3b6",
+    "src/ParentIntroduction.tsx": "70341d4d994e8bf62242a8d75bb71a06f49980c85760a29bd115f9dd822b4340",
+    "src/MissionDiscovery.tsx": "95a21fc24525eb8742f37fe0db54efb75112183c718ac7a5bb5cdde448d15334",
+    "package.json": "70eab1e02526e97b1cd1a514f35edf4266eb98a35152bc8f9b1d38832a9ca7bc",
+    "package-lock.json": "1f7ac49eac75ed7c657aca0fa195f4cf499f7c4b1fca608ac0b3b8808e934d29"
+  }
+}

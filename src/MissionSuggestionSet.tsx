@@ -9,20 +9,39 @@ import {
   type MessageKey,
   type SupportedLanguage,
 } from './localization';
+import type { AgeBand } from './ageBands';
 import { MissionLeaveConfirmation } from './MissionLeaveConfirmation';
-import { MissionScene, MissionSceneDefs } from './MissionScene';
+import { DurationMark } from './Marks';
+import { MissionPicture } from './MissionPicture';
+import { MissionSceneDefs } from './MissionScene';
 import type { MissionSelectionIssue } from './appState';
 import { deriveSuggestionSet, type SuggestionContext } from './missionSuggestions';
 
 type CardProps = Readonly<{
   mission: MissionRecord;
   language: SupportedLanguage;
+  // The age band the card is shown for, which picks the Mission's
+  // illustration: the discovery context's in Discovery, and on the
+  // introduction the one its example is documented to show.
+  ageBand: AgeBand;
   onChoose?: (missionId: string) => void;
+  surface?: 'discovery' | 'introduction';
 }>;
 
 // Presentation only: an article, not a control. Task 5 has no choice behaviour,
 // so nothing here may look or behave like a button.
-function MissionCard({ mission, language, onChoose }: CardProps) {
+//
+// Exported so the F001 introduction shows its one example through the very
+// component discovery uses, with `onChoose` absent. A second rendering of a
+// Mission would be a second place for reviewed content, adult-involvement
+// wording and safety guidance to drift from what a Mission card presents.
+export function MissionCard({
+  mission,
+  language,
+  ageBand,
+  onChoose,
+  surface = 'discovery',
+}: CardProps) {
   const t = (key: MessageKey) => translateMessage(language, key);
   const content = mission.content[language];
   const adultLabelKey = MISSION_ADULT_LABEL_KEYS[mission.adultInvolvement];
@@ -35,15 +54,23 @@ function MissionCard({ mission, language, onChoose }: CardProps) {
       className="mission-card"
       data-category={mission.category}
     >
-      <div className="mission-card__window">
-        <MissionScene category={mission.category} missionId={mission.missionId} />
-      </div>
+      {/* The Mission's illustration for the age band the card is shown for,
+          or its authored scene where its set has none. Either way the window
+          is decoration: every word the card means is in the text below. */}
+      <MissionPicture
+        ageBand={ageBand}
+        category={mission.category}
+        className="mission-card__window mission-picture"
+        missionId={mission.missionId}
+        surface={surface}
+      />
       <div className="mission-card__content">
         <p className="mission-card__meta">
           <span className="mission-card__category">
             {t(MISSION_CATEGORY_LABEL_KEYS[mission.category])}
           </span>
           <span className="mission-card__duration">
+            <DurationMark />
             {t('discovery.card.about')} {minutes} {t('discovery.card.minutes')}
           </span>
         </p>
@@ -70,14 +97,17 @@ function MissionCard({ mission, language, onChoose }: CardProps) {
             names its own Mission, and choosing twice resolves one session
             rather than relying on the press being hard to repeat. */}
         {onChoose ? (
-          <button
-            aria-describedby={titleId}
-            className="button button--primary mission-card__choose"
-            onClick={() => onChoose(mission.missionId)}
-            type="button"
-          >
-            {t('discovery.card.choose')}
-          </button>
+          // Presentational: the action's own layer, below a hairline.
+          <div className="mission-card__action">
+            <button
+              aria-describedby={titleId}
+              className="button button--primary mission-card__choose"
+              onClick={() => onChoose(mission.missionId)}
+              type="button"
+            >
+              {t('discovery.card.choose')}
+            </button>
+          </div>
         ) : null}
       </div>
     </article>
@@ -311,6 +341,7 @@ export function MissionSuggestionSet({
         <div className="mission-suggestions__set">
           {result.missions.map((mission) => (
             <MissionCard
+              ageBand={context.ageBand}
               key={mission.missionId}
               language={context.language}
               mission={mission}

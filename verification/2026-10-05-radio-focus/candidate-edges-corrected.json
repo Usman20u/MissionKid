@@ -1,0 +1,290 @@
+{
+  "browser": "149.0.7827.55",
+  "base": "http://127.0.0.1:4312/",
+  "builds": [
+    "/src/main.tsx"
+  ],
+  "cases": [
+    {
+      "config": "root32",
+      "language": "de",
+      "root": "32px",
+      "signatures": {
+        "introduction": "5550b843710964c93c8040e69ef04de0e186b65d756a7cd4643ac9306720fd57",
+        "discovery": "ea918923dfc04a78b92b7eede1cfb4849ec71f5d7b2a24d653d567cb6c961c51"
+      },
+      "checks": 48,
+      "oversized": 0,
+      "stops": [
+        {
+          "action": "introduction: Tab in",
+          "name": "introduction-language",
+          "value": "de",
+          "checked": true,
+          "language": "de",
+          "ring": true,
+          "choice": [
+            26,
+            590.515625,
+            183.203125,
+            104
+          ],
+          "outline": [
+            21,
+            585.515625,
+            214.203125,
+            699.515625
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            43
+          ],
+          "fits": true,
+          "visible": true,
+          "overflow": 0
+        },
+        {
+          "action": "introduction: Shift+Tab in",
+          "name": "introduction-language",
+          "value": "de",
+          "checked": true,
+          "language": "de",
+          "ring": true,
+          "choice": [
+            26,
+            297.515625,
+            183.203125,
+            104
+          ],
+          "outline": [
+            21,
+            292.515625,
+            214.203125,
+            406.515625
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            336
+          ],
+          "fits": true,
+          "visible": true,
+          "overflow": 0
+        },
+        {
+          "action": "discovery: Tab in",
+          "name": "discovery-category",
+          "value": "Helping at Home",
+          "checked": true,
+          "language": "de",
+          "selectedCue": true,
+          "ring": true,
+          "choice": [
+            17,
+            156.34375,
+            286,
+            387
+          ],
+          "outline": [
+            11,
+            150.34375,
+            309,
+            549.34375
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            1323
+          ],
+          "fits": true,
+          "visible": true,
+          "overflow": 0
+        },
+        {
+          "action": "discovery: Shift+Tab in",
+          "name": "discovery-category",
+          "value": "Helping at Home",
+          "checked": true,
+          "language": "de",
+          "selectedCue": true,
+          "ring": true,
+          "choice": [
+            17,
+            156.34375,
+            286,
+            387
+          ],
+          "outline": [
+            11,
+            150.34375,
+            309,
+            549.34375
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            1323
+          ],
+          "fits": true,
+          "visible": true,
+          "overflow": 0
+        }
+      ],
+      "failures": []
+    },
+    {
+      "config": "browser32",
+      "language": "de",
+      "root": "32px",
+      "signatures": {
+        "introduction": "5550b843710964c93c8040e69ef04de0e186b65d756a7cd4643ac9306720fd57",
+        "discovery": "ea918923dfc04a78b92b7eede1cfb4849ec71f5d7b2a24d653d567cb6c961c51"
+      },
+      "checks": 48,
+      "oversized": 0,
+      "stops": [
+        {
+          "action": "introduction: Tab in",
+          "name": "introduction-language",
+          "value": "de",
+          "checked": true,
+          "language": "de",
+          "ring": true,
+          "choice": [
+            26,
+            590.515625,
+            183.203125,
+            104
+          ],
+          "outline": [
+            21,
+            585.515625,
+            214.203125,
+            699.515625
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            43
+          ],
+          "fits": true,
+          "visible": true,
+          "overflow": 0
+        },
+        {
+          "action": "introduction: Shift+Tab in",
+          "name": "introduction-language",
+          "value": "de",
+          "checked": true,
+          "language": "de",
+          "ring": true,
+          "choice": [
+            26,
+            297.515625,
+            183.203125,
+            104
+          ],
+          "outline": [
+            21,
+            292.515625,
+            214.203125,
+            406.515625
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            336
+          ],
+          "fits": true,
+          "visible": true,
+          "overflow": 0
+        },
+        {
+          "action": "discovery: Tab in",
+          "name": "discovery-category",
+          "value": "Helping at Home",
+          "checked": true,
+          "language": "de",
+          "selectedCue": true,
+          "ring": true,
+          "choice": [
+            17,
+            156.34375,
+            286,
+            387
+          ],
+          "outline": [
+            11,
+            150.34375,
+            309,
+            549.34375
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            1323
+          ],
+          "fits": true,
+          "visible": true,
+          "overflow": 0
+        },
+        {
+          "action": "discovery: Shift+Tab in",
+          "name": "discovery-category",
+          "value": "Helping at Home",
+          "checked": true,
+          "language": "de",
+          "selectedCue": true,
+          "ring": true,
+          "choice": [
+            17,
+            156.34375,
+            286,
+            387
+          ],
+          "outline": [
+            11,
+            150.34375,
+            309,
+            549.34375
+          ],
+          "viewport": [
+            320,
+            700
+          ],
+          "scroll": [
+            0,
+            1323
+          ],
+          "fits": true,
+          "visible": true,
+          "overflow": 0
+        }
+      ],
+      "failures": []
+    }
+  ],
+  "failures": []
+}

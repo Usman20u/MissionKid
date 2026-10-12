@@ -48,6 +48,16 @@ export const SCENE_ELEMENTS = [
   'pebble',
   'ballRolling',
   'cushion',
+  // Richer per-Mission subjects. They belong to the same grammar as the rest —
+  // environment behind, subject in front, light and contact shadow — and are
+  // drawn at higher fidelity for the Missions the approved visual reference
+  // covers.
+  'rug',
+  'plantPot',
+  'cupTower',
+  'sockPuppet',
+  'monsterSketch',
+  'crayonPair',
   // traces, signals, light
   'pawTracks',
   'footsteps',
@@ -75,6 +85,7 @@ export const SUBJECT_ELEMENTS: ReadonlySet<SceneElement> = new Set([
   'bagAndCoat', 'patternRow',
   'fallingPapers', 'pebble', 'ballRolling', 'cushion', 'pawTracks', 'footsteps',
   'soundWaves', 'clueMarks', 'ghostEchoes', 'handReach', 'magnifyRings',
+  'cupTower', 'sockPuppet', 'monsterSketch', 'crayonPair',
 ]);
 
 // Elements that can carry a scene on their own. Deliberately narrower than
@@ -88,6 +99,7 @@ const FOCAL_ELEMENTS: ReadonlySet<SceneElement> = new Set([
   'softThings', 'blanketDrape', 'bookRow', 'sock', 'giantAsleep', 'clockFace',
   'gears', 'speechBubble', 'bagAndCoat', 'patternRow', 'fallingPapers', 'pebble',
   'ballRolling', 'cushion', 'handReach',
+  'cupTower', 'sockPuppet', 'monsterSketch',
 ]);
 
 // Where a Mission happens rather than what it is about. Room geometry and
@@ -133,13 +145,13 @@ const SCENE_BY_MISSION: Readonly<Record<string, readonly SceneElement[]>> = {
 
   // Creativity
   'creativity-01': ['paperSheet', 'pencil', 'soundWaves'],
-  'creativity-02': ['floor', 'blockTower', 'childTall'],
+  'creativity-02': ['floor', 'rug', 'plantPot', 'cupTower'],
   'creativity-04': ['hillBridge', 'toysScatter'],
-  'creativity-05': ['floor', 'sock', 'speechBubble'],
+  'creativity-05': ['wall', 'floor', 'sockPuppet', 'speechBubble'],
   'creativity-06': ['floor', 'blanketDrape', 'lightBeam'],
   'creativity-08': ['storyPanels', 'speechBubble'],
   'creativity-09': ['table', 'cup', 'soundWaves'],
-  'creativity-10': ['paperSheet', 'pencil', 'speechBubble'],
+  'creativity-10': ['floor', 'table', 'monsterSketch', 'crayonPair'],
   'creativity-11': ['hillBridge', 'bookRow', 'pebble'],
   'creativity-12': ['paperSheet', 'pencil', 'clueMarks'],
   'creativity-13': ['floor', 'cup', 'shoePair', 'lightBeam'],

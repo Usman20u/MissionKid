@@ -1,7 +1,9 @@
-import { fireEvent, render, screen, within } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { readFileSync } from 'node:fs';
 
-import { AGE_BANDS } from './ageBands';
+import { fireEvent, render, screen, within } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
+
+import { AGE_BANDS, type AgeBand } from './ageBands';
 import { MISSION_CATEGORIES, type MissionCategory, type MissionRecord } from './catalog';
 import { MISSION_CATALOG } from './catalogContent';
 import {
@@ -10,6 +12,12 @@ import {
   type MessageKey,
   type SupportedLanguage,
 } from './localization';
+import {
+  MISSION_IMAGE_FILE_COUNT,
+  MISSION_IMAGE_KEYS,
+  resolveMissionImage,
+} from './missionImages';
+import * as missionImages from './missionImages';
 import { MissionSuggestionSet } from './MissionSuggestionSet';
 import { deriveSuggestionSet, type SuggestionContext } from './missionSuggestions';
 
@@ -37,6 +45,23 @@ function expectedMissions(ctx: SuggestionContext): readonly MissionRecord[] {
 
 function cards() {
   return screen.getAllByRole('article');
+}
+
+// Exercise the retained missing-illustration fallback independently of today's
+// complete asset family, without changing the production catalog or assets.
+function renderAuthoredSceneSet() {
+  const ctx = context({ ageBand: '9–10', category: 'Learning' });
+  const first = deriveSuggestionSet(MISSION_CATALOG, ctx);
+  if (first.status !== 'complete') throw new Error('expected a complete production set');
+
+  const lookup = vi.spyOn(missionImages, 'resolveMissionImage').mockReturnValue(null);
+  try {
+    return render(
+      <MissionSuggestionSet context={ctx} shown={first.missions.map((mission) => mission.missionId)} />,
+    );
+  } finally {
+    lookup.mockRestore();
+  }
 }
 
 function localized(language: SupportedLanguage) {
@@ -196,7 +221,7 @@ describe('a complete suggestion set', () => {
   });
 
   it('gives each card a distinct scene while sharing the category atmosphere', () => {
-    render(<MissionSuggestionSet context={context()} />);
+    renderAuthoredSceneSet();
 
     const rendered = cards();
     const scenes = rendered.map((card) =>
@@ -220,7 +245,7 @@ describe('a complete suggestion set', () => {
       expect(card.querySelector('svg')!.getAttribute('aria-hidden')).toBe('true');
     }
     expect(new Set(rendered.map((card) => card.getAttribute('data-category')))).toEqual(
-      new Set(['Movement']),
+      new Set(['Learning']),
     );
   });
 
@@ -303,7 +328,7 @@ describe('a complete suggestion set', () => {
   });
 
   it('emphasises exactly one subject in each scene', () => {
-    render(<MissionSuggestionSet context={context()} />);
+    renderAuthoredSceneSet();
 
     for (const card of cards()) {
       const focal = card.querySelectorAll('.s-el[data-focal]');
@@ -757,5 +782,259 @@ describe('the insufficient-content state', () => {
     const heading = screen.getByRole('heading', { level: 2 }).textContent!;
     expect(heading.length).toBeGreaterThan(0);
     expect(screen.queryAllByRole('article')).toHaveLength(0);
+  });
+});
+// Each Mission's illustrations replace its authored scene for the age bands the
+// catalog approves it for, and for no others. They are decoration in exactly
+// the sense the scene was: the card's meaning stays in its text, and nothing
+// about eligibility, ordering or content moves because a picture exists.
+describe('Mission illustrations', () => {
+  const fileLabel = (ageBand: AgeBand) => ageBand.replace('–', '-');
+
+  it('covers exactly the approved pairs of Mission and age band, in both widths', () => {
+    const approved = MISSION_CATALOG.flatMap((mission) =>
+      mission.ageBands.map((ageBand) => `${mission.missionId}__${ageBand}`),
+    );
+    expect(approved).toHaveLength(102);
+    expect([...MISSION_IMAGE_KEYS].sort()).toEqual(approved.sort());
+    // Two widths of each, and no bundled file the map leaves unused.
+    expect(MISSION_IMAGE_FILE_COUNT).toBe(MISSION_IMAGE_KEYS.length * 2);
+
+    // No illustration stands in for an age band the catalog does not approve.
+    for (const mission of MISSION_CATALOG) {
+      for (const ageBand of AGE_BANDS) {
+        if (!mission.ageBands.includes(ageBand)) {
+          expect(resolveMissionImage(mission.missionId, ageBand)).toBeNull();
+        }
+      }
+    }
+  });
+
+  it("resolves each pair to its own two files, never another age band's or Mission's", () => {
+    for (const key of MISSION_IMAGE_KEYS) {
+      const [missionId, ageBand] = key.split('__') as [string, AgeBand];
+      const image = resolveMissionImage(missionId, ageBand)!;
+      const stem = `${missionId}__${fileLabel(ageBand)}`;
+
+      expect(image.src).toMatch(new RegExp(`/${stem}__768\\.webp$`));
+      expect(image.srcSet.startsWith(`${image.src} 768w, `)).toBe(true);
+      expect(image.srcSet).toMatch(new RegExp(`/${stem}__1536\\.webp 1536w$`));
+      expect([image.width, image.height]).toEqual([1536, 1024]);
+    }
+  });
+
+  it('presents an illustration as decoration and keeps the card readable without it', () => {
+    const mission = MISSION_CATALOG.find((record) => record.missionId === 'creativity-02')!;
+    const { container } = render(
+      <MissionSuggestionSet
+        catalog={MISSION_CATALOG}
+        context={context({ category: 'Creativity', ageBand: '4–6' })}
+      />,
+    );
+
+    const card = screen.getByRole('article', { name: mission.content.en.title });
+    const photo = card.querySelector('img')!;
+
+    expect(photo.getAttribute('alt')).toBe('');
+    expect(photo.getAttribute('aria-hidden')).toBe('true');
+    // The intrinsic size travels with it, so the card reserves the space before
+    // the file arrives instead of reflowing the text under it.
+    expect(photo.getAttribute('width')).toBe('1536');
+    expect(photo.getAttribute('height')).toBe('1024');
+    // Both widths are offered, and the window's drawn width picks between them.
+    expect(photo.getAttribute('srcset')).toBe(resolveMissionImage('creativity-02', '4–6')!.srcSet);
+    expect(photo.getAttribute('sizes')).toBeTruthy();
+    // Bundled by the build, not fetched from anywhere else.
+    expect(photo.getAttribute('src')).not.toMatch(/^https?:/);
+    expect(photo.getAttribute('srcset')).not.toMatch(/https?:/);
+
+    // Assistive technology is offered no image at all, here or anywhere in the set.
+    expect(screen.queryAllByRole('img')).toHaveLength(0);
+
+    // Every reviewed field is still present as text, independently of the file.
+    expect(within(card).getByRole('heading', { level: 3 }).textContent).toBe(mission.content.en.title);
+    expect(within(card).getByText(mission.content.en.instruction)).toBeTruthy();
+    expect(card.textContent).toContain(mission.content.en.safetyNote);
+    expect(card.textContent).toContain(translateMessage('en', 'discovery.category.creativity'));
+    expect(card.textContent).toContain(`${Math.round(mission.durationSeconds / 60)}`);
+
+    expect(container.querySelectorAll('.mission-card')).toHaveLength(3);
+  });
+
+  it("shows every reachable set in one kind of image, for the discovery context's age band", () => {
+    const sceneSets: string[] = [];
+    let sets = 0;
+
+    for (const ageBand of AGE_BANDS) {
+      for (const category of MISSION_CATEGORIES) {
+        const ctx = context({ ageBand, category });
+        let shown: string[] = [];
+
+        for (;;) {
+          const result = deriveSuggestionSet(MISSION_CATALOG, ctx, shown);
+          if (result.status !== 'complete') break;
+          const ids = result.missions.map((mission) => mission.missionId);
+
+          const { container, unmount } = render(
+            <MissionSuggestionSet catalog={MISSION_CATALOG} context={ctx} shown={shown} />,
+          );
+          const windows = [...container.querySelectorAll('.mission-card__window')];
+          expect(windows).toHaveLength(3);
+          const photos = windows.map((window) => window.querySelector('img'));
+
+          if (photos.every((photo) => photo !== null)) {
+            // Each card's own Mission, for the age band the set was chosen for.
+            photos.forEach((photo, index) => {
+              expect(photo!.getAttribute('src')).toBe(resolveMissionImage(ids[index]!, ageBand)!.src);
+              expect(photo!.getAttribute('src')).toMatch(
+                new RegExp(`/${ids[index]}__${fileLabel(ageBand)}__768\\.webp$`),
+              );
+            });
+          } else {
+            // Never a mix: a set without all three illustrations shows three
+            // authored scenes.
+            expect(photos.every((photo) => photo === null)).toBe(true);
+            for (const window of windows) {
+              expect(window.querySelectorAll('.mission-scene .s-el').length).toBeGreaterThan(0);
+            }
+            sceneSets.push(`${ageBand} ${category}: ${ids.join(', ')}`);
+          }
+
+          unmount();
+          sets += 1;
+          if (!result.anotherSetAvailable) break;
+          shown = [...shown, ...ids];
+        }
+      }
+    }
+
+    expect(sets).toBe(33);
+    expect(sceneSets).toEqual([]);
+  });
+
+  it('changes no Mission content, eligibility or ordering', () => {
+    // The set the family actually receives is the one the ordering rules give,
+    // derived here without any reference to the illustrations.
+    const result = deriveSuggestionSet(
+      MISSION_CATALOG,
+      context({ category: 'Creativity', ageBand: '4–6' }),
+    );
+    if (result.status !== 'complete') throw new Error('expected a complete set');
+
+    expect(result.missions.map((mission) => mission.missionId)).toEqual([
+      'creativity-02',
+      'creativity-05',
+      'creativity-10',
+    ]);
+    // Ordered by their own catalogOrder, not by which of them has a picture.
+    expect(result.missions.map((mission) => mission.catalogOrder)).toEqual([10, 30, 50]);
+  });
+
+  // The introduction's example is pictured there with its documented default.
+  // In Discovery it is one of three peers like any other: it shows the
+  // illustration for the discovery context's age band, exactly as they do, and
+  // nothing marks it as the Mission that had been the example.
+  it("pictures the introduction's example in Discovery exactly like its peers", () => {
+    const reached: string[] = [];
+    for (const ageBand of AGE_BANDS) {
+      const ctx = context({ category: 'Helping at Home', ageBand });
+      let shown: string[] = [];
+
+      for (;;) {
+        const result = deriveSuggestionSet(MISSION_CATALOG, ctx, shown);
+        if (result.status !== 'complete') break;
+        const ids = result.missions.map((mission) => mission.missionId);
+
+        if (ids.includes('helping-11')) {
+          const { container, unmount } = render(
+            <MissionSuggestionSet
+              catalog={MISSION_CATALOG}
+              context={ctx}
+              onChoose={() => {}}
+              shown={shown}
+            />,
+          );
+          const photos = [...container.querySelectorAll('.mission-card__window img')];
+          expect(photos).toHaveLength(3);
+          photos.forEach((photo, index) => {
+            expect(photo.getAttribute('src')).toMatch(
+              new RegExp(`/${ids[index]}__${fileLabel(ageBand)}__768\\.webp$`),
+            );
+            expect(photo.getAttribute('sizes')).toBe(photos[0]!.getAttribute('sizes'));
+          });
+          reached.push(`${ageBand}:${ids.indexOf('helping-11') + 1}`);
+          unmount();
+        }
+
+        if (!result.anotherSetAvailable) break;
+        shown = [...shown, ...ids];
+      }
+    }
+
+    // One set per age band, at the position the ordering rule gives it.
+    expect(reached).toEqual(['4–6:2', '7–8:1', '9–10:1']);
+  });
+});
+
+// A grid column's automatic minimum is its min-content width. A rule that makes
+// an element a grid and also clips its overflow will therefore cut its own
+// content off whenever a word is wider than the element, and nothing about the
+// page reports it: `document.scrollWidth` stays at zero overflow, because the
+// clipping happens inside the card.
+//
+// That is what removed reviewed instruction, adult-involvement and safety text
+// from Discovery cards at 320 CSS px with a 32px root — 13 clipped elements in
+// English, 19 in German and 20 in Russian, measured on the served build.
+//
+// jsdom has no layout engine, so this cannot be asserted by rendering: it is a
+// stylesheet invariant that encodes the cause rather than the symptom. The
+// rendered proof is the browser measurement recorded in the plan. Both grid
+// layers of the card need the minimum; naming it on the card alone left the
+// notes overflowing by exactly as much as before.
+describe('Mission card layout invariants', () => {
+  const stylesheet = readFileSync('src/styles.css', 'utf8');
+  const rules = [...stylesheet.matchAll(/([^{}]+)\{([^{}]*)\}/g)].map((match) => ({
+    selector: match[1]!.trim().split('\n').at(-1)!.trim(),
+    body: match[2]!,
+  }));
+  const cardRule = rules.find((rule) => rule.selector === '.mission-card');
+
+  it('clips the card, which is why its grid layers must name a column minimum', () => {
+    expect(cardRule).toBeDefined();
+    expect(cardRule!.body).toMatch(/overflow:\s*hidden/);
+    expect(cardRule!.body).toMatch(/display:\s*grid/);
+  });
+
+  it('names a minimum on every layout layer inside the Mission card', () => {
+    const layers = rules.filter(
+      (rule) =>
+        /^\.mission-card(__[\w-]+)?$/.test(rule.selector) &&
+        /display:\s*(grid|flex)/.test(rule.body),
+    );
+
+    // The full set is pinned, so a layout layer added inside the card cannot
+    // appear without this test being read again and the question answered.
+    expect(layers.map((rule) => rule.selector).sort()).toEqual([
+      '.mission-card',
+      '.mission-card__content',
+      '.mission-card__meta',
+    ]);
+
+    // Of those, these two are the chain that carries the text column from the
+    // card down to the instruction and the notes, and each must name a
+    // minimum. `.mission-card__meta` is a wrapping row of two short labels
+    // inside that column rather than part of it, so it sizes to the column
+    // instead of the column sizing to it.
+    const columnChain = ['.mission-card', '.mission-card__content'];
+
+    for (const layer of layers.filter((rule) => columnChain.includes(rule.selector))) {
+      // A grid column's automatic minimum is min-content, so it must be named.
+      // A flex container's automatic minimum is the same, so it must be able
+      // to shrink below the width of its longest word.
+      const guard = /display:\s*grid/.test(layer.body)
+        ? /grid-template-columns:\s*minmax\(\s*0\s*,/
+        : /min-width:\s*0/;
+      expect(layer.body).toMatch(guard);
+    }
   });
 });

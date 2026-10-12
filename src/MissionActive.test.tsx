@@ -8,6 +8,7 @@ import {
 import { MISSION_CATALOG } from './catalogContent';
 import { translateMessage, type MessageKey, type SupportedLanguage } from './localization';
 import { MissionActive } from './MissionActive';
+import { resolveMissionImage } from './missionImages';
 import type { ActiveMissionSession } from './persistence';
 
 const PROFILE_ID = 'profile-1';
@@ -419,4 +420,79 @@ describe('the running Mission presentation', () => {
     expect(container.querySelector('.mission-session')).toBeNull();
     expect(vi.getTimerCount()).toBe(0);
   });
+});
+
+describe("the running Mission's reminder picture", () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it('pictures the Mission that is running, after the instruction to leave the screen', () => {
+    const { clocks } = movableClocks(STARTED_AT + 60_000);
+    const { container } = renderActive(activeSession('creativity-02'), clocks);
+
+    const away = container.querySelector('.mission-session__away')!;
+    const picture = container.querySelector('.mission-session__reminder .mission-session__thumb')!;
+    expect(away.compareDocumentPosition(picture) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    // The illustration for the age band the session recorded, 7–8 here: the
+    // one its card and Ready showed.
+    const photo = picture.querySelector('img')!;
+    expect(photo.getAttribute('src')).toBe(resolveMissionImage('creativity-02', '7–8')!.src);
+    expect(photo.getAttribute('srcset')).toBe(resolveMissionImage('creativity-02', '7–8')!.srcSet);
+    expect(photo.getAttribute('alt')).toBe('');
+    expect(photo.getAttribute('aria-hidden')).toBe('true');
+    expect(screen.queryAllByRole('img')).toHaveLength(0);
+  });
+
+  it('keeps the age band the session recorded when the setup age band changes', () => {
+    const { clocks } = movableClocks(STARTED_AT + 60_000);
+    const state = {
+      language: 'en',
+      ageBand: '4–6',
+      localProfileId: PROFILE_ID,
+      status: 'ready',
+      setupView: 'handoff',
+      saveStatus: 'idle',
+      currentSession: activeSession('creativity-02'),
+    } as AppState;
+    const { container } = render(
+      <AppStateProvider initialState={state}>
+        <MissionActive clocks={clocks} />
+      </AppStateProvider>,
+    );
+
+    const photo = container.querySelector('.mission-session__thumb img')!;
+    expect(photo.getAttribute('src')).toMatch(/\/creativity-02__7-8__768\.webp$/);
+    expect(photo.getAttribute('src')).not.toBe(resolveMissionImage('creativity-02', '4–6')!.src);
+  });
+
+  it('pictures nothing for a Mission that cannot safely continue', () => {
+    const { clocks } = movableClocks(STARTED_AT + 60_000);
+    const { container } = renderActive(
+      activeSession('creativity-02', { missionId: 'movement-99' }),
+      clocks,
+    );
+
+    expect(screen.getByText(t('session.active.missionUnavailable'))).toBeTruthy();
+    expect(container.querySelector('.mission-session__thumb')).toBeNull();
+  });
+
+  it.each(['learning-04', 'learning-13', 'learning-14'])(
+    'keeps %s’s selected 9–10 illustration despite the current 7–8 profile',
+    (missionId) => {
+      const { clocks } = movableClocks(STARTED_AT + 60_000);
+      const { container } = renderActive(
+        activeSession(missionId, { ageBandAtSelection: '9–10' }),
+        clocks,
+      );
+
+      const photo = container.querySelector('.mission-session__thumb img')!;
+      expect(photo.getAttribute('src')).toBe(resolveMissionImage(missionId, '9–10')!.src);
+      expect(photo.getAttribute('aria-hidden')).toBe('true');
+    },
+  );
 });

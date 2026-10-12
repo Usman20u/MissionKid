@@ -1073,3 +1073,29 @@ describe('the month turning under an open record', () => {
     expect(h.writes).toHaveLength(0);
   });
 });
+
+describe("this month's goal bar in the record", () => {
+  it.each([
+    [0, '0%'],
+    [3, '15%'],
+    [20, '100%'],
+    [23, '100%'],
+  ])('mirrors %i completions this month exactly', (count, width) => {
+    const completedSessions = Array.from({ length: count }, (_unused, index) =>
+      completion({ sessionId: `session-bar-${index}`, completedAt: NOW - 400_000 - index * 1_000 }),
+    );
+    renderApp({ completedSessions });
+    openHistory();
+
+    const bar = document.querySelector('.mission-history__goal .goal-bar')!;
+    expect(bar.getAttribute('aria-hidden')).toBe('true');
+    expect((bar.querySelector('.goal-bar__fill') as HTMLElement).style.width).toBe(width);
+    expect(progressText()).toBe(
+      t('result.goal.progress')
+        .replace('{done}', String(Math.min(count, 20)))
+        .replace('{target}', '20'),
+    );
+    // The record pictures no Mission.
+    expect(document.querySelector('.mission-history img, .mission-history svg.mission-scene')).toBeNull();
+  });
+});

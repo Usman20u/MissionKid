@@ -29,6 +29,7 @@ import {
   type WallClock,
 } from './missionSession';
 import type { CompletedMissionSession } from './persistence';
+import { MonthlyGoalBar } from './MonthlyGoalBar';
 
 type DeriveHistory = (
   completedSessions: readonly CompletedMissionSession[],
@@ -255,6 +256,10 @@ function MissionHistoryView({
         <p className="mission-history__goal-period">
           {completionPeriodLabel(currentPeriodId, state.language)}
         </p>
+        <MonthlyGoalBar
+          displayedCount={progress.displayedCount}
+          target={progress.target}
+        />
         <p className="mission-history__goal-progress">
           {t('result.goal.progress')
             .replace('{done}', String(progress.displayedCount))

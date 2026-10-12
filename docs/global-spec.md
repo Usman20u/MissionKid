@@ -12,16 +12,17 @@ MissionKid is a global, parent-guided family product. It is not country-specific
 
 ## Core user flow
 
-1. The parent selects the interface language and the child's age band.
-2. The parent or child selects a Mission Category: Movement, Creativity, Helping at Home, Learning, or Calm.
-3. MissionKid presents exactly three short, predefined real-life missions.
-4. The child chooses one mission.
-5. The child reviews the mission in its `ready` state and deliberately starts it; the guidance timer begins.
-6. The child leaves the screen and completes the mission in real life.
-7. The child marks the mission as done.
-8. MissionKid shows a Reward Card.
-9. The completed mission is added to Mission History.
-10. The completion is applied once to Monthly Goal, whose display increases until `20 / 20`. At 20 completed missions, MissionKid shows one suggestion that the family choose an optional, parent-approved real-life reward.
+1. On first use, MissionKid introduces itself briefly to the parent and offers one action into setup.
+2. The parent selects the interface language and the child's age band.
+3. The parent or child selects a Mission Category: Movement, Creativity, Helping at Home, Learning, or Calm.
+4. MissionKid presents exactly three short, predefined real-life missions.
+5. The child chooses one mission.
+6. The child reviews the mission in its `ready` state and deliberately starts it; the guidance timer begins.
+7. The child leaves the screen and completes the mission in real life.
+8. The child marks the mission as done.
+9. MissionKid shows a Reward Card.
+10. The completed mission is added to Mission History.
+11. The completion is applied once to Monthly Goal, whose display increases until `20 / 20`. At 20 completed missions, MissionKid shows one suggestion that the family choose an optional, parent-approved real-life reward.
 
 ## Language and global requirements
 
@@ -61,6 +62,7 @@ The aggregation of completed Mission Sessions for the Child Profile during the c
 
 ## MVP features
 
+- A brief first-use parent introduction that explains what MissionKid does, shows one non-selectable example Mission, and leads into setup with one action.
 - Interface language selection for English, German, and Russian, defaulting to English.
 - Parent-guided setup without authentication.
 - Child age-band selection using 4–6, 7–8, or 9–10 without sensitive data.

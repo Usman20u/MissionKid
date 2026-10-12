@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+
 import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -14,6 +16,7 @@ import {
   useAppState,
   type AppStateAction,
 } from './appState';
+import { AGE_BANDS } from './ageBands';
 import { MISSION_CATEGORIES, type MissionCategory } from './catalog';
 import { MISSION_CATALOG } from './catalogContent';
 import {
@@ -819,7 +822,20 @@ describe('category selection and the discovery cycle', () => {
       expect(input.getAttribute('type')).toBe('radio');
       expect(input.getAttribute('name')).toBe('discovery-category');
     }
-    expect(container.querySelector('textarea, select, form, video, audio, img')).toBeNull();
+    expect(container.querySelector('textarea, select, form, video, audio')).toBeNull();
+    // The only pictures are decoration the specification authorizes: one
+    // image per Mission Category inside its label, and a Mission's
+    // illustration inside its card's window. None is exposed as an image, none is
+    // fetched from elsewhere, and nothing here can take or upload a picture.
+    for (const image of Array.from(container.querySelectorAll('img'))) {
+      expect(
+        image.closest('.mission-world') ?? image.closest('.mission-card__window'),
+      ).not.toBeNull();
+      expect(image.getAttribute('alt')).toBe('');
+      expect(image.getAttribute('aria-hidden')).toBe('true');
+      expect(image.getAttribute('src')).not.toMatch(/^https?:/);
+    }
+    expect(screen.queryAllByRole('img')).toHaveLength(0);
     expect(
       screen.queryByText(
         /chat|message|share|invite|friend|follow|like|leaderboard|rank|score|streak|buy|pay|price|premium|subscribe|upgrade|block|lock screen|photo|upload|prove/i,
@@ -1005,6 +1021,129 @@ describe('discovery accessibility', () => {
       }
 
       unmount();
+    }
+  });
+});
+
+describe('the Mission Category images', () => {
+  it('gives every category one image of one shared treatment, as decoration', () => {
+    renderShell(inDiscovery());
+
+    const images = MISSION_CATEGORIES.map(
+      (category) => radioFor(category).closest('label')!.querySelector('img')!,
+    );
+    expect(images.every(Boolean)).toBe(true);
+    expect(new Set(images.map((image) => image.getAttribute('src'))).size).toBe(5);
+    for (const image of images) {
+      expect(image.getAttribute('alt')).toBe('');
+      expect(image.getAttribute('aria-hidden')).toBe('true');
+      // One size for all five: no category is pictured larger or richer.
+      expect(image.getAttribute('width')).toBe('1024');
+      expect(image.getAttribute('height')).toBe('1024');
+      expect(image.getAttribute('src')).not.toMatch(/^https?:/);
+    }
+    // Each control is named by its label alone; no image is exposed.
+    expect(screen.queryAllByRole('img')).toHaveLength(0);
+    expect(screen.getAllByRole('radio').map((radio) => radio.getAttribute('aria-hidden'))).not.toContain('true');
+  });
+
+  it('keeps the same five images whichever category is chosen', () => {
+    renderShell(inDiscovery());
+    const before = [...document.querySelectorAll('.mission-world img')].map((image) => image.getAttribute('src'));
+
+    fireEvent.click(radioFor('Calm'));
+
+    const after = [...document.querySelectorAll('.mission-world img')].map((image) => image.getAttribute('src'));
+    expect(after).toEqual(before);
+  });
+
+  // One picture per category, not per age group: the category images stand for
+  // the whole category, whichever age group the family chose.
+  it('shows the same five images for every age group', () => {
+    const sources = AGE_BANDS.map((ageBand) => {
+      const { unmount } = renderShell(inDiscovery({ ageBand }));
+      const images = [...document.querySelectorAll('.mission-world img')].map((image) => [
+        image.getAttribute('src'),
+        image.getAttribute('srcset'),
+      ]);
+      unmount();
+      return images;
+    });
+
+    expect(sources[0]).toHaveLength(5);
+    expect(sources[1]).toEqual(sources[0]);
+    expect(sources[2]).toEqual(sources[0]);
+  });
+});
+
+// The category group's row structure is a layout property. jsdom has no layout
+// engine and cannot assert it by rendering: these are stylesheet invariants
+// that encode the cause of two defects measured on the served build.
+//
+// 1. A fixed reservation on the selected-state cue was wider than the whole
+//    control at a 32px root, which pushed the label out of a control that clips
+//    its own overflow. Measured at 320 CSS px: "Bewegung" rendered as "Be",
+//    "Zu Hause helfen" as "Zu Ha" — 10 clipped elements per language.
+// 2. Sizing the flex line from content made the group rewrap and reorder the
+//    moment a category was chosen, because the selected control alone gains the
+//    cue. Measured on desktop: one row became two in English and German and
+//    three in Russian, with controls changing places.
+//
+// The group is now a grid. The second cause cannot recur as long as every track
+// the group ever uses is definite — never sized from a label or from which
+// control is selected — and every control may shrink below its content.
+describe('Mission category group layout invariants', () => {
+  const stylesheet = readFileSync('src/styles.css', 'utf8');
+  const rules = [...stylesheet.matchAll(/([^{}]+)\{([^{}]*)\}/g)].map((match) => ({
+    selector: match[1]!.trim().split('\n').at(-1)!.trim(),
+    body: match[2]!,
+  }));
+  const ruleFor = (selector: string) =>
+    rules.filter((rule) => rule.selector === selector);
+
+  it('sizes the group from definite tracks rather than from its controls', () => {
+    const group = ruleFor('.mission-worlds');
+    expect(group.length).toBeGreaterThan(0);
+    expect(group[0]!.body).toMatch(/display:\s*grid/);
+
+    // Every layout the group takes, at every width, names its column minimum
+    // and never sizes a track from content.
+    const tracks = group
+      .map((rule) => /grid-template-columns:\s*([^;]+);/.exec(rule.body)?.[1]?.trim())
+      .filter((value): value is string => value !== undefined);
+    expect(tracks.length).toBeGreaterThan(0);
+    for (const value of tracks) {
+      expect(value).toMatch(/minmax\(\s*0\s*,/);
+      expect(value).not.toMatch(/\bauto\b|content|\bfit-content\b/);
+    }
+
+    // Without this, a grid item's automatic minimum is its min-content width,
+    // which would restore the content dependency the tracks just removed.
+    const [control] = ruleFor('.mission-world');
+    expect(control).toBeDefined();
+    expect(control!.body).toMatch(/min-width:\s*0/);
+  });
+
+  it('lets the label and the selected cue shrink instead of overflowing', () => {
+    const [label] = ruleFor('.mission-world__label');
+    const [state] = ruleFor('.mission-world__state');
+    expect(label).toBeDefined();
+    expect(state).toBeDefined();
+
+    expect(label!.body).toMatch(/min-width:\s*0/);
+    expect(state!.body).toMatch(/min-width:\s*0/);
+
+    // The cue is wider than the whole control at large text sizes, so it must
+    // be able to break rather than overflow a control that clips.
+    expect(state!.body).toMatch(/overflow-wrap:\s*anywhere/);
+  });
+
+  it('reserves no fixed width for the selected cue', () => {
+    // The reservation this replaces was `min-width: 5.5rem`, which at a 32px
+    // root was 176px inside a 170px control.
+    for (const rule of ruleFor('.mission-world__state')) {
+      const minWidth = /min-width:\s*([^;]+);/.exec(rule.body)?.[1]?.trim();
+      if (minWidth !== undefined) expect(minWidth).toBe('0');
     }
   });
 });

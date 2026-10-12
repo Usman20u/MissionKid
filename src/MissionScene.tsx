@@ -8,6 +8,13 @@ import { resolveMissionScene, resolveSceneFocus, type SceneElement } from './mis
 // then the trace the child leaves or the light that falls on it.
 const STAGE = { width: 200, height: 110, floor: 80 } as const;
 
+// The visible frame. Compositions are still authored in the 200x110 stage
+// above, so none of them is redrawn; the window simply shows a taller crop of
+// it, which gives the Mission image more presence without letterboxing and
+// without a second drawing grammar. `VIEW.width / VIEW.height` must stay equal
+// to the card window's `aspect-ratio`.
+const VIEW = { x: 17.5, y: 0, width: 165, height: 110 } as const;
+
 // Every shape is decorative and inherits the category atmosphere. Silhouettes
 // are simplified rather than illustrated, so the scene stays sculptural.
 const SCENE_SHAPES: Readonly<Record<SceneElement, ReactNode>> = {
@@ -36,6 +43,115 @@ const SCENE_SHAPES: Readonly<Record<SceneElement, ReactNode>> = {
     <>
       <path className="s-solid" d="M34 54h132v5H34z" />
       <path className="s-solid" d="M44 59h5v7h-5zM151 59h5v7h-5z" opacity="0.7" />
+    </>
+  ),
+  // A soft floor covering that gives the subject somewhere to stand. Drawn as
+  // an ellipse so it reads as a rug in perspective rather than a rectangle.
+  rug: (
+    <>
+      <ellipse className="s-plane" cx="100" cy="88" rx="74" ry="17" opacity="0.75" />
+      <ellipse className="s-haze" cx="100" cy="88" rx="74" ry="17" />
+      <ellipse className="s-edge-circle" cx="100" cy="88" rx="62" ry="13" opacity="0.35" />
+    </>
+  ),
+  plantPot: (
+    <>
+      <ellipse className="s-cast" cx="46" cy="81" rx="13" ry="3.5" />
+      <path className="s-solid" d="M38 66h16l-2.5 14h-11z" />
+      <path className="s-hi" d="M38 66h8l-1.5 14h-6.5z" />
+      <path className="s-top" d="M38 66h16v2.5H38z" />
+      {/* Leaves fan from one point, so the plant reads as growing. */}
+      <path className="s-solid" d="M46 66c-6-5-9-12-8-19 6 2 10 8 11 15zM46 66c6-6 9-13 8-20-6 2-10 9-11 16zM46 66c-1-8 1-15 5-20 2 6 1 14-2 20z" />
+      <path className="s-hi" d="M46 66c-1-8 1-15 5-20 2 6 1 14-2 20z" />
+    </>
+  ),
+  // The Mission's own subject: light, unbreakable things stacked as high as a
+  // child can reach, with the stack measured by hand afterwards.
+  cupTower: (
+    <>
+      <ellipse className="s-cast" cx="100" cy="81.5" rx="30" ry="5" />
+      {/* box */}
+      <path className="s-solid" d="M74 63h52v17H74z" />
+      <path className="s-hi" d="M74 63h20v17H74z" />
+      <path className="s-lo" d="M112 63h14v17h-14z" />
+      <path className="s-top" d="M74 63h52v3H74z" />
+      <path className="s-seam" d="M100 63v17" />
+      {/* cup, tapered */}
+      <path className="s-solid" d="M81 46h38l-4 17H85z" />
+      <path className="s-hi" d="M81 46h13l-3 17h-6z" />
+      <path className="s-lo" d="M109 46h10l-4 17h-7z" />
+      <ellipse className="s-top" cx="100" cy="46" rx="19" ry="3.6" />
+      <ellipse className="s-edge-circle" cx="100" cy="46" rx="19" ry="3.6" opacity="0.4" />
+      {/* box */}
+      <path className="s-solid" d="M80 32h40v14H80z" />
+      <path className="s-hi" d="M80 32h15v14H80z" />
+      <path className="s-lo" d="M108 32h12v14h-12z" />
+      <path className="s-top" d="M80 32h40v3H80z" />
+      {/* cup, crowning the stack */}
+      <path className="s-solid" d="M86 20h28l-3 12H89z" />
+      <path className="s-hi" d="M86 20h10l-2 12h-5z" />
+      <ellipse className="s-top" cx="100" cy="20" rx="14" ry="2.9" />
+      <ellipse className="s-edge-circle" cx="100" cy="20" rx="14" ry="2.9" opacity="0.4" />
+    </>
+  ),
+  // A clean sock on a raised hand, given a name and a voice.
+  sockPuppet: (
+    <>
+      <ellipse className="s-cast" cx="78" cy="82" rx="24" ry="5" />
+      {/* forearm rising into frame */}
+      <path className="s-solid" d="M66 110c-2-16 0-28 6-38l19 8c-6 10-8 21-7 30z" />
+      <path className="s-hi" d="M66 110c-2-16 0-28 6-38l6 2.5c-6 10-8 22-7 35.5z" />
+      {/* the sock: a soft tube folded into a mouth */}
+      <path className="s-solid" d="M70 72c-4-12-2-24 6-32 9-9 23-9 30 0 7 8 7 18 0 25l-8 7z" />
+      <path className="s-hi" d="M76 40c7-9 20-10 28-2-8-3-18-1-24 6z" />
+      <path className="s-lo" d="M98 72l8-7c7-7 7-17 0-25 4 10 3 19-4 26z" />
+      {/* the fold that makes it a mouth */}
+      <path className="s-rim" d="M82 57c8 4 16 4 24-1l-2 4c-7 4-14 4-20 0z" />
+      <path className="s-seam" d="M82 57c8 4 16 4 24-1" />
+      {/* eyes, kept as plain marks rather than a face with expression */}
+      <circle className="s-mark" cx="86" cy="43" r="2.5" />
+      <circle className="s-mark" cx="97" cy="41" r="2.5" />
+    </>
+  ),
+  // A sheet of paper carrying a drawn monster that is deliberately not scary.
+  // The sheet is part of this element so the drawing, not the paper, is what
+  // the scene is about.
+  monsterSketch: (
+    <>
+      <ellipse className="s-cast" cx="98" cy="61" rx="36" ry="4.5" />
+      <path className="s-sheet" d="M66 26h66v34H66z" />
+      <path className="s-edge" d="M66 26h66v34H66z" opacity="0.3" />
+      <path className="s-hi" d="M66 26h66v7H66z" />
+      {/* a round, fuzzy body: soft outline, no teeth, no sharp edges */}
+      <path
+        className="s-edge"
+        d="M84 52c-7-3-10-12-5-18 4-5 11-7 17-5 4-5 13-5 17 0 7-1 13 4 12 10-1 6-6 10-12 11z"
+        strokeWidth="2.8"
+        strokeLinecap="round"
+      />
+      <path
+        className="s-line"
+        d="M79 38l-5-3M83 31l-3-5M92 28l-1-5M103 27v-5M114 29l3-4M122 35l5-2"
+        strokeLinecap="round"
+      />
+      <circle className="s-mark" cx="94" cy="39" r="2.2" />
+      <circle className="s-mark" cx="108" cy="38" r="2.2" />
+      <path className="s-edge" d="M93 45c5 5 14 5 19 0" strokeWidth="2.4" strokeLinecap="round" />
+    </>
+  ),
+  crayonPair: (
+    <>
+      <ellipse className="s-cast" cx="56" cy="64" rx="16" ry="2.6" />
+      <g transform="rotate(-8 56 60)">
+        <path className="s-solid" d="M42 58h22v4.5H42z" />
+        <path className="s-hi" d="M42 58h22v1.8H42z" />
+        <path className="s-solid" d="M64 58l5.5 2.3-5.5 2.2z" />
+      </g>
+      <g transform="rotate(7 56 64)">
+        <path className="s-solid" d="M46 62h20v4.5H46z" opacity="0.82" />
+        <path className="s-hi" d="M46 62h20v1.8H46z" />
+        <path className="s-solid" d="M66 62l5.5 2.3-5.5 2.2z" opacity="0.82" />
+      </g>
     </>
   ),
   windowFrame: (
@@ -454,7 +570,7 @@ export function MissionScene({ category, missionId }: MissionSceneProps) {
       className="mission-scene"
       focusable="false"
       preserveAspectRatio="xMidYMid meet"
-      viewBox={`0 0 ${STAGE.width} ${STAGE.height}`}
+      viewBox={`${VIEW.x} ${VIEW.y} ${VIEW.width} ${VIEW.height}`}
     >
       {/* Scaled about the floor line so subjects fill the frame and the empty
           sky shrinks, without redrawing every shape. */}

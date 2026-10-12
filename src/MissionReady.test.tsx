@@ -3,6 +3,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { App } from './App';
+import { resolveMissionImage } from './missionImages';
 import {
   appStateReducer,
   isStartOutcomeUnknown,
@@ -1112,5 +1113,64 @@ describe('what settles an unknown start outcome', () => {
         expect(state.sessionIssue).toEqual({ operation, outcome });
       }
     }
+  });
+});
+
+describe("the chosen Mission's picture on Ready", () => {
+  it('follows the title as decoration, in the illustration its card showed', () => {
+    const { container } = renderReady('movement-02');
+
+    const title = screen.getByRole('heading', { level: 2 });
+    const picture = container.querySelector('.mission-session__picture')!;
+    expect(picture).not.toBeNull();
+    expect(title.compareDocumentPosition(picture) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    // The card was shown for the age band the session recorded, 7–8 here.
+    const photo = picture.querySelector('img')!;
+    expect(photo.getAttribute('src')).toBe(resolveMissionImage('movement-02', '7–8')!.src);
+    expect(photo.getAttribute('srcset')).toBe(resolveMissionImage('movement-02', '7–8')!.srcSet);
+    expect(photo.getAttribute('alt')).toBe('');
+    expect(photo.getAttribute('aria-hidden')).toBe('true');
+    expect(picture.querySelector('svg.mission-scene')).toBeNull();
+    expect(screen.queryAllByRole('img')).toHaveLength(0);
+  });
+
+  it('keeps the age band the session recorded when the setup age band changes', () => {
+    // F001: a later age change does not touch an existing session, so its
+    // picture stays the one the family chose from, not the new band's.
+    const h = harness(
+      JSON.stringify({
+        ...createEmptySnapshot(),
+        settings: { language: 'en' },
+        childProfile: { localProfileId: PROFILE_ID, ageBand: '4–6' },
+        currentSession: readySessionFor('movement-02'),
+      }),
+    );
+    const { container } = render(<App adapter={h.adapter} />);
+
+    const photo = container.querySelector('.mission-session__picture img')!;
+    expect(photo.getAttribute('src')).toMatch(/\/movement-02__7-8__768\.webp$/);
+    expect(photo.getAttribute('src')).not.toBe(resolveMissionImage('movement-02', '4–6')!.src);
+  });
+
+  it.each(['learning-04', 'learning-13', 'learning-14'])(
+    'restores %s with its selected 9–10 illustration despite the current 7–8 profile',
+    (missionId) => {
+      const { container } = renderReady(missionId, 'en', { ageBandAtSelection: '9–10' });
+
+      const picture = container.querySelector('.mission-session__picture')!;
+      expect(picture.querySelector('img')!.getAttribute('src')).toBe(
+        resolveMissionImage(missionId, '9–10')!.src,
+      );
+      expect(picture.querySelector('svg.mission-scene')).toBeNull();
+    },
+  );
+
+  it('pictures nothing that cannot be started', () => {
+    const { container } = renderReady('movement-02', 'en', { missionId: 'movement-99' });
+
+    expect(
+      screen.getByText(translateMessage('en', 'session.ready.missionUnavailable')),
+    ).toBeTruthy();
+    expect(container.querySelector('.mission-session__picture')).toBeNull();
   });
 });
