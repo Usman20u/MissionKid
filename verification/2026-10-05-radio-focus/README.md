@@ -1,6 +1,6 @@
 # Plan 06 — radio focus visibility, 2026-10-05
 
-Evidence for the bounded correction authorized in [Plan 06](../../plans/active/2026-09-29-whole-application-visual-design.md#bounded-focus-visibility-correction--2026-10-05). This verifies implementation; it records no human acceptance or release approval.
+Evidence for the bounded correction authorized in [Plan 06](../../plans/completed/2026-09-29-whole-application-visual-design.md#bounded-focus-visibility-correction--2026-10-05). This verifies implementation; it records no human acceptance or release approval.
 
 Baseline: clean `feat/reference-visual-redesign` at `0d6b485`, whose product inputs match `458c517`. The preserved production build is `index-DYJmmybd.js` / `index-CgkQDkLR.css`. Final checked build: **`index-C-2mnqdV.js` / `index-DIkimylC.css`**. [Build basis](build-basis.json) pins entrypoint and implementation-input SHA-256 hashes; all 219 other build files, including images/fonts, are unchanged.
 

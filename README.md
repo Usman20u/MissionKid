@@ -35,7 +35,7 @@ Child accounts, social features, chat, authentication, payments, native mobile a
 
 This repository is the home for MissionKid MVP v1 product specifications, execution rules, plans, and implementation artifacts.
 
-The [Business Context](docs/business-context.md) defines the problem, the [Global Specification](docs/global-spec.md) defines MVP scope, and [F001–F004](docs/functional-map.md#function-specification-traceability) own the core journey. [AGENTS.md](AGENTS.md) governs execution; [active plans](plans/active/) own current work and [completed plans](plans/completed/) retain historical evidence. The [roadmap](docs/roadmap.md) describes future scope without authorizing it.
+The [Business Context](docs/business-context.md) defines the problem, the [Global Specification](docs/global-spec.md) defines MVP scope, and [F001–F004](docs/functional-map.md#function-specification-traceability) own the core journey. [AGENTS.md](AGENTS.md) governs execution; the active plan under `plans/active/`, when one is open, owns current work and [completed plans](plans/completed/) retain historical evidence. The [roadmap](docs/roadmap.md) describes future scope without authorizing it.
 
 ## Runtime and persistence
 
