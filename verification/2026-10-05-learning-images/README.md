@@ -1,6 +1,6 @@
 # Plan 06 — restored Learning illustrations, 2026-10-05
 
-Evidence for the bounded [Held Learning-image set](../../plans/active/2026-09-29-whole-application-visual-design.md#held-learning-image-set--2026-10-05). This records implementation inspection and verification, without human acceptance or release approval.
+Evidence for the bounded [Held Learning-image set](../../plans/completed/2026-09-29-whole-application-visual-design.md#held-learning-image-set--2026-10-05). This records implementation inspection and verification, without human acceptance or release approval.
 
 Baseline: clean `feat/reference-visual-redesign` at `7b618bfdf059c2bb32901b6e2ea030b431589a5f`, production `index-C-2mnqdV.js` / `index-DIkimylC.css`. Checked build: **`index-TVY2kKpW.js` / `index-DIkimylC.css`**.
 
