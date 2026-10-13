@@ -39,7 +39,7 @@ The [Business Context](docs/business-context.md) defines the problem, the [Globa
 
 ## Runtime and persistence
 
-The implemented client is a React and TypeScript application built with Vite. It runs in the family's mobile or desktop browser at `/`; setup, Discovery, Mission sessions, the Reward Card and History are state-selected views, with no URL routing. [src/main.tsx](src/main.tsx) mounts the client, [src/AppShell.tsx](src/AppShell.tsx) selects the view, and [src/appState.tsx](src/appState.tsx) manages application state. Production delivery requires an HTTPS static host serving the built files; no deployment target is configured in this repository.
+The implemented client is a React and TypeScript application built with Vite. It runs in the family's mobile or desktop browser at `/`; setup, Discovery, Mission sessions, the Reward Card and History are state-selected views, with no URL routing. [src/main.tsx](src/main.tsx) mounts the client, [src/AppShell.tsx](src/AppShell.tsx) selects the view, and [src/appState.tsx](src/appState.tsx) manages application state. Production is served over HTTPS at [https://mission-kid.vercel.app](https://mission-kid.vercel.app), built from `main` by Vercel's Git integration with its Vite defaults; the repository holds no hosting configuration.
 
 There is no application backend, database, authentication or account system. A parent or caregiver controls setup and judges suitability; a child aged 4–10 chooses and performs a Mission with the required adult involvement. The supported model is one local family context with one minimal Child Profile and one active application tab.
 
