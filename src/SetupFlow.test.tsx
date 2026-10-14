@@ -428,7 +428,7 @@ describe('returning and editing setup', () => {
     },
   );
 
-  it('contains no unauthorized later-function interface', () => {
+  it('shows only the setup step, with no Mission, Reward Card, History or goal content', () => {
     const harness = createAdapterHarness();
     render(<App adapter={harness.adapter} />);
     // The setup form itself. The introduction before it does name Mission

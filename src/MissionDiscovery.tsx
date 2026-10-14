@@ -190,8 +190,8 @@ export function MissionCategorySelection({
             // learns the lifecycle state that session is actually in: `created`
             // is a new Mission Session in `selected`, while `resolved` is the
             // one that already exists, answering in `selected`, `ready` or
-            // `active`. Neither is republished as a state it is not in; the
-            // surface each state leads to is later F003 work. Every other
+            // `active`. Neither is republished as a state it is not in, and the
+            // shell then shows the view that state belongs to. Every other
             // outcome leaves the three Missions exactly as they are and is
             // explained rather than swallowed.
             if (result.status === 'created' || result.status === 'resolved') {

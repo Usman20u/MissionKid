@@ -206,15 +206,6 @@ describe('application shell', () => {
     expect(document.documentElement.lang).toBe('ru');
   });
 
-  it('contains no later-function interface', () => {
-    render(<App />);
-
-    expect(screen.queryByText('Mission Category')).toBeNull();
-    expect(screen.queryByText('Mission done')).toBeNull();
-    expect(screen.queryByText('Mission History')).toBeNull();
-    expect(screen.queryByText('Monthly Goal')).toBeNull();
-  });
-
   it('contains unexpected render failures at the application boundary', () => {
     const consoleError = vi
       .spyOn(console, 'error')
