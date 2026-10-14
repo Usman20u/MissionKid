@@ -1,7 +1,7 @@
 # MissionKid Plan 08 — V1 Post-Release Consistency Cleanup
 
 **Date:** 2026-10-14
-**Status:** Complete. All eight tasks are implemented and verified on 2026-10-14, as recorded under *Outcome* and *Verification*. V1 scope did not expand, and no BLOCKER remains. The new interface strings are listed for the owner's review; no human acceptance is recorded. Nothing is pushed, merged or deployed.
+**Status:** Complete. All eight tasks are implemented and verified on 2026-10-14, as recorded under *Outcome* and *Verification*. V1 scope did not expand, and no BLOCKER remains. The owner approved the Plan 08 English, German and Russian wording on 2026-10-14, while PR #9 was open and before any merge. Nothing is pushed, merged or deployed.
 **Branch:** `feat/v1-post-release-consistency-cleanup`, taken from `main` at `f9ec507`. The work is committed locally, in the order it was done.
 
 ## Purpose
@@ -345,7 +345,7 @@ Each change is non-semantic, and approved behavior and architecture are unchange
 
 - The browser checks ran in Chrome for Testing only. The changed Reward Card and recovery screen were not checked in Safari or Firefox, or on a physical phone. The physical-phone pass from Plan 06 predates this plan.
 - The recovery screen cannot be reached in a normal build, so it was checked on an instrumented copy and in unit tests.
-- The new English, German and Russian strings in Tasks 1 and 2 are new copy. They are listed above for the owner's review, and no owner acceptance is recorded.
+- The new English, German and Russian strings in Tasks 1 and 2 are new copy. The owner approved that wording on 2026-10-14, while PR #9 was open and before any merge.
 - The Visual & Ergonomic *reviewed still* clause is unchanged. It applies only to a Mission without an illustration, a case the release gate now excludes.
 
 ## Closure — 2026-10-14
