@@ -59,4 +59,4 @@ Each concept requires its own validation, safety review, privacy review, specifi
 
 The current project does not include authentication, payments, social features, chat, child accounts, photos or videos of children, public leaderboards, native mobile app work, AI mission generation, device blocking, or secrets. A future roadmap item cannot silently introduce any of these capabilities; any boundary change would require an explicit specification and safety decision before implementation.
 
-MissionKid remains a global family product. Future work must not make it country-specific, and any language expansion must preserve the English repository, code, specification, and commit language conventions.
+MissionKid remains a global family product. Future work must not make it country-specific. Any interface-language expansion still follows the repository's engineering-language rule in [AGENTS.md](../AGENTS.md).

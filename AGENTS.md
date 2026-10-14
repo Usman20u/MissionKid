@@ -10,14 +10,14 @@
 - `docs/specs/mission-catalog-and-safety.md` owns Mission content eligibility, writing, age suitability, adult-involvement meaning, localization equivalence, and content safety.
 - `docs/specs/visual-and-ergonomic.md` owns presentation, ergonomics, responsive presentation, accessibility presentation, and visual safety prominence.
 - `docs/roadmap.md` owns phased future scope; a roadmap item is not implementation authorization.
-- The repository plan system owns current execution status. Exactly one plan may be active under `plans/active/`; completed plans under `plans/completed/` are authoritative historical evidence. `AGENTS.md` defines policy, not live project status.
-- The active plan owns authorized execution scope but cannot override an owning specification. The dated changelog records factual completed project changes and does not authorize work.
+- The repository plan system owns current execution status. At most one plan may be active under `plans/active/`, and zero active plans is correct when no authorized work is in progress; completed plans under `plans/completed/` are authoritative historical evidence. `AGENTS.md` defines policy, not live project status.
+- The active plan owns authorized execution scope but cannot override an owning specification. The project changelog records factual completed project changes and does not authorize work.
 
 ## Governing workflow and implementation gate
 
 Before making changes, recover the actual branch, HEAD, worktree, active plan and applicable instructions, then read the specifications that own or constrain the requested work. Treat reported checkpoints as historical evidence, never as reset instructions; preserve existing work.
 
-Record newly authorized work in the existing active plan before editing implementation or other project documents. Identify its concrete outcome, owning specifications, verification intent and exclusions. A bounded authorization during a review hold applies only to that recorded scope; it does not lift unrelated holds or imply human acceptance.
+Record newly authorized work in the active plan before editing implementation or other project documents; when no plan is active, open one first. Identify its concrete outcome, owning specifications, verification intent and exclusions. A bounded authorization during a review hold applies only to that recorded scope; it does not lift unrelated holds or imply human acceptance.
 
 Progress new work through the applicable stages in this order; do not repeat stages that are already complete and still valid:
 
@@ -73,7 +73,8 @@ An active plan alone and Technical Specifications alone do not authorize code. I
 
 ## Plan discipline
 
-- Keep exactly one active work or implementation plan under `plans/active/`; move it to `plans/completed/` only when its status is truthfully complete.
+- Keep at most one active work or implementation plan under `plans/active/`; zero is correct when no authorized work is in progress. Move a plan to `plans/completed/` only when its status is truthfully complete.
+- Open a plan as `plans/active/YYYY-MM-DD-<slug>.md` with **Date**, **Status** and **Branch** lines at the top. An implementation plan also references the durable `SPEC COMPLETE` evidence in the completed specification/foundation plan.
 - Plan status must reflect repository reality.
 - Every plan task needs a concrete outcome, specification trace, and verification or test intent.
 - Distinguish authorized, implemented, verified, awaiting human review and completed work. Verification is not human acceptance, and completed implementation is not automatically a completed plan. Record human acceptance only when explicitly given for the reviewed scope.
@@ -99,7 +100,9 @@ one plan → one focused branch → work → tests/checks → audit → clean co
 - Create a branch only when it is useful, not to appear sophisticated. Do not mix unrelated work or casually rewrite Git history.
 - When a branch already contains earlier authorized work, preserve its history and record the inherited scope in the active plan and eventual PR. Do not reset, rewrite or split it solely to make the history look cleaner.
 - Do not push, create a PR, merge or deploy without explicit authorization for the current work. Local commit authorization does not authorize those actions.
-- Update the dated changelog for every meaningful change. Record factual project changes only; do not claim implementation that does not exist, rewrite history for presentation, turn the changelog into a shell-command diary, or include conversational coaching.
+- Production is the Vercel project connected to `main`. Merging into `main` can start a production deployment, so authorization to merge into `main` is deployment authorization. Never merge merely because work is ready.
+- Commit messages and pull-request text carry no AI co-author trailers or other AI attribution unless the owner explicitly requests attribution.
+- Record every meaningful completed change in the project changelog, `changelog/2026-08-17.md`, as one concise dated section of factual changes that references its plan where useful. Do not claim implementation that does not exist, rewrite history for presentation, or copy plan logs, verification transcripts, shell-command diaries or conversational coaching into it.
 
 ## Repository hygiene
 

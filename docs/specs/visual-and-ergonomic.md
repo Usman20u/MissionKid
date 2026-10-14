@@ -396,7 +396,7 @@ Literal translation is not required. Mission Catalog and Safety owns meaning equ
 
 ## Typography principles
 
-This document does not fix a font family; the active plan records the faces chosen and their licence and size review.
+This document does not fix a font family; the faces chosen, with their licence and size review, are recorded in the implementation plan that introduced them, [Plan 06](../../plans/completed/2026-09-29-whole-application-visual-design.md).
 
 - Headings may use an expressive serif display face and body text a readable sans-serif face.
 - Every face is served from the application's own origin, covers English, German, and Russian completely — Latin and Cyrillic letters, punctuation, and numerals — under a licence that permits bundling it, and falls back to a readable system face if it does not load.
@@ -653,7 +653,7 @@ A whole-application visual redesign against a supplied reference is not an ergon
 - Technical Specifications own architecture, persistence, application state, technical recovery, timer mechanics, localization mechanics, and implementation boundaries.
 - Mission Catalog and Safety owns Mission eligibility, content writing, age suitability, adult-involvement definitions, localization equivalence, and content safety.
 - This Visual & Ergonomic Specification owns visual hierarchy, ergonomic clarity, responsive presentation, accessibility presentation, visual safety prominence, parent/child presentation tone, and UI localization resilience.
-- Later implementation plans own concrete implementation work.
+- Implementation plans own concrete implementation work.
 
 If presentation would require new behavior, a new state, a new data fact, a changed recovery outcome, changed Mission eligibility, or a new product feature, the owning specification and active plan must be updated before implementation. This document must not be used to bypass those sources.
 

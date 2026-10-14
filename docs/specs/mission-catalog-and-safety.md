@@ -75,7 +75,7 @@ Each controlled Mission conceptually includes:
 | Optional controlled safety metadata | Adult involvement, materials, environment, space, and localized safety guidance when relevant. |
 | Content provenance | A catalog/content version or equivalent stable context indicating which controlled content and eligibility decision apply. |
 
-These are content requirements, not database columns, API fields, storage records, or runtime filtering steps. Localized strings are never identifiers. The actual catalog and its Mission entries are a separate later deliverable.
+These are content requirements, not database columns, API fields, storage records, or runtime filtering steps. Localized strings are never identifiers. The actual catalog and its Mission entries are separate controlled content, not part of this specification.
 
 ## Titles
 
@@ -225,7 +225,7 @@ The catalog uses only the minimum adult-involvement distinction needed for clear
 
 The least restrictive level must never be chosen merely to increase catalog eligibility. Required adult involvement must be explicit in the localized Mission content and must never rely on hidden metadata alone. The metadata, instruction, and safety note must agree.
 
-Exact presentation timing and placement are owned by the relevant interaction and later Visual/Ergonomic specifications.
+Exact presentation timing and placement are owned by the relevant interaction specifications and the [Visual & Ergonomic Specification](visual-and-ergonomic.md).
 
 This specification introduces no permission workflow, account approval, or supervision-verification mechanism.
 
@@ -326,9 +326,9 @@ Runtime recovery, presentation fallback, and persisted-session mechanics remain 
 
 ## Catalog coverage
 
-Every supported age-band × Mission Category context must eventually contain at least three approved Missions with complete English, German, and Russian content so the initial exactly-three discovery requirement can be satisfied without relaxing eligibility.
+Every supported age-band × Mission Category context must contain at least three approved Missions with complete English, German, and Russian content so the initial exactly-three discovery requirement can be satisfied without relaxing eligibility.
 
-Catalog planning should provide further eligible Missions in complete groups where bounded **Another set** is intended to be useful. A partial group, repeated content, or unsafe filler is not acceptable, and an infinite supply is not required. This specification sets no total catalog size beyond the existing initial exactly-three requirement. Actual quantities beyond that minimum and all actual Mission entries belong to later catalog work.
+Catalog planning should provide further eligible Missions in complete groups where bounded **Another set** is intended to be useful. A partial group, repeated content, or unsafe filler is not acceptable, and an infinite supply is not required. This specification sets no total catalog size beyond the existing initial exactly-three requirement. Actual quantities beyond that minimum and all actual Mission entries belong to the controlled catalog content, not to this specification.
 
 ## Acceptance criteria
 
@@ -340,7 +340,7 @@ Catalog planning should provide further eligible Missions in complete groups whe
 6. Every instruction states the real-world action and end condition concisely, works away from the screen, exposes required adult help, and admits no reasonably dangerous interpretation.
 7. Guidance duration is realistic, calm, and non-punitive and does not imply failure or encourage rushing when the actual activity is shorter or longer.
 8. Content containing any prohibited physical, household, travel, stranger, ingestion, exertion, body-image, fear, secret-keeping, data, purchase, gambling, or engagement condition is ineligible.
-9. Any Mission requiring an adult nearby or direct adult participation states that requirement explicitly in its localized Mission content and never relies on hidden metadata alone; exact presentation timing and placement remain owned by the relevant interaction and later Visual/Ergonomic specifications.
+9. Any Mission requiring an adult nearby or direct adult participation states that requirement explicitly in its localized Mission content and never relies on hidden metadata alone; exact presentation timing and placement remain owned by the relevant interaction specifications and the Visual & Ergonomic Specification.
 10. Required materials and environment are safe, common, purchase-free, globally realistic, and suitable for every approved age band.
 11. Each Mission meets the category-specific Movement, Creativity, Helping at Home, Learning, or Calm safety boundaries.
 12. No Mission requests child identity data, personal secrets, precise location, media, credentials, payment information, or completion proof.
@@ -377,5 +377,5 @@ This specification does not introduce or define:
 - The Technical Architecture owns bundled-catalog delivery and runtime validation, filtering, ordering, recovery, and exactly-three implementation.
 - The Data and State Model owns conceptual Mission and Mission Session data, persistence representation, relationships, and invariants.
 - This Mission Catalog and Safety Specification owns Mission content eligibility, content-writing rules, age-appropriateness, adult-involvement meaning, materials/environment boundaries, localization safety, and category-specific content safety.
-- Later Visual and Ergonomic specifications own detailed presentation and interaction design.
-- Actual Mission entries are a separate later content deliverable and are not created here.
+- The Visual & Ergonomic Specification owns detailed presentation and interaction design.
+- Actual Mission entries are separate controlled content and are not created here.

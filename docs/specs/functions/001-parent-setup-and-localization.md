@@ -195,4 +195,4 @@ Error handling must use calm, clear language, preserve valid choices where possi
 
 ## MVP boundaries
 
-This feature introduces no product code, UI design, database model, account system, authentication, analytics profile, payment, social behavior, child media, AI mission generation, device blocking, or native mobile capability. The setup remains parent-guided and private within the local family context.
+This feature introduces no database model, account system, authentication, analytics profile, payment, social behavior, child media, AI mission generation, device blocking, or native mobile capability. The setup remains parent-guided and private within the local family context.
