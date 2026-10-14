@@ -1130,7 +1130,6 @@ describe("the chosen Mission's picture on Ready", () => {
     expect(photo.getAttribute('srcset')).toBe(resolveMissionImage('movement-02', '7–8')!.srcSet);
     expect(photo.getAttribute('alt')).toBe('');
     expect(photo.getAttribute('aria-hidden')).toBe('true');
-    expect(picture.querySelector('svg.mission-scene')).toBeNull();
     expect(screen.queryAllByRole('img')).toHaveLength(0);
   });
 
@@ -1161,7 +1160,6 @@ describe("the chosen Mission's picture on Ready", () => {
       expect(picture.querySelector('img')!.getAttribute('src')).toBe(
         resolveMissionImage(missionId, '9–10')!.src,
       );
-      expect(picture.querySelector('svg.mission-scene')).toBeNull();
     },
   );
 

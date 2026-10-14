@@ -13,7 +13,6 @@ import type { AgeBand } from './ageBands';
 import { MissionLeaveConfirmation } from './MissionLeaveConfirmation';
 import { DurationMark } from './Marks';
 import { MissionPicture } from './MissionPicture';
-import { MissionSceneDefs } from './MissionScene';
 import type { MissionSelectionIssue } from './appState';
 import { deriveSuggestionSet, type SuggestionContext } from './missionSuggestions';
 
@@ -54,9 +53,8 @@ export function MissionCard({
       className="mission-card"
       data-category={mission.category}
     >
-      {/* The Mission's illustration for the age band the card is shown for,
-          or its authored scene where its set has none. Either way the window
-          is decoration: every word the card means is in the text below. */}
+      {/* The Mission's illustration for the age band the card is shown for.
+          It is decoration: every word the card means is in the text below. */}
       <MissionPicture
         ageBand={ageBand}
         category={mission.category}
@@ -242,7 +240,6 @@ export function MissionSuggestionSet({
       className="mission-suggestions"
       data-category={context.category}
     >
-      <MissionSceneDefs />
       <SuggestionAnnouncement
         category={context.category}
         language={context.language}

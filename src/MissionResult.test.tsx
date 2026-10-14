@@ -738,7 +738,6 @@ describe("the Reward Card's picture and Monthly Goal bar", () => {
     expect(photo.getAttribute('aria-hidden')).toBe('true');
     expect(photo.getAttribute('width')).toBe('1536');
     expect(photo.getAttribute('src')).not.toMatch(/^https?:/);
-    expect(picture.querySelector('svg.mission-scene')).toBeNull();
     expect(screen.queryAllByRole('img')).toHaveLength(0);
     // The words still say what was completed.
     expect(screen.getByRole('heading', { level: 2 }).textContent).toBe(MISSION.content.en.title);
@@ -762,7 +761,6 @@ describe("the Reward Card's picture and Monthly Goal bar", () => {
       expect(picture.querySelector('img')!.getAttribute('src')).toBe(
         resolveMissionImage(missionId, '9–10')!.src,
       );
-      expect(picture.querySelector('svg.mission-scene')).toBeNull();
     },
   );
 
@@ -773,7 +771,7 @@ describe("the Reward Card's picture and Monthly Goal bar", () => {
       t('result.missionUnavailable'),
     );
     expect(document.querySelector('.mission-result__picture')).toBeNull();
-    expect(document.querySelector('.mission-result img, .mission-result svg.mission-scene')).toBeNull();
+    expect(document.querySelector('.mission-result img')).toBeNull();
   });
 
   it.each([

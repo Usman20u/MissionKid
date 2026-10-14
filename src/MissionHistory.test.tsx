@@ -1096,6 +1096,6 @@ describe("this month's goal bar in the record", () => {
         .replace('{target}', '20'),
     );
     // The record pictures no Mission.
-    expect(document.querySelector('.mission-history img, .mission-history svg.mission-scene')).toBeNull();
+    expect(document.querySelector('.mission-history img')).toBeNull();
   });
 });

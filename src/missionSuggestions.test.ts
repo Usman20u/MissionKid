@@ -10,7 +10,6 @@ import {
 } from './catalog';
 import { MISSION_CATALOG } from './catalogContent';
 import { SUPPORTED_LANGUAGES, type SupportedLanguage } from './localization';
-import { resolveMissionScene, resolveSceneFocus, SUBJECT_ELEMENTS } from './missionScenes';
 import {
   compareMissionIdentifiers,
   deriveSuggestionSet,
@@ -435,78 +434,6 @@ describe('the production catalog', () => {
 
         expect(new Set(perLanguage).size).toBe(1);
       }
-    }
-  });
-
-  it('gives the three Missions of a set visibly different scenes', () => {
-    for (const ageBand of AGE_BANDS) {
-      for (const category of MISSION_CATEGORIES) {
-        const result = deriveSuggestionSet(MISSION_CATALOG, context({ ageBand, category }));
-        const scenes =
-          result.status === 'complete'
-            ? result.missions.map((m) => resolveMissionScene(m.missionId, m.category).join('+'))
-            : [];
-
-        // Distinct compositions, not merely a shared plane with one swap.
-        expect(new Set(scenes).size).toBe(SUGGESTION_SET_SIZE);
-        const subjects = scenes.map((scene) =>
-          scene.split('+').filter((element) => element !== 'floor').join('+'),
-        );
-        expect(new Set(subjects).size).toBe(SUGGESTION_SET_SIZE);
-      }
-    }
-  });
-
-  it('gives every production Mission a scene with a recognizable subject', () => {
-    for (const mission of MISSION_CATALOG) {
-      const scene = resolveMissionScene(mission.missionId, mission.category);
-      const subjects = scene.filter((element) => SUBJECT_ELEMENTS.has(element));
-
-      // A scene made only of atmosphere would be decoration, not a place.
-      expect(subjects.length).toBeGreaterThan(0);
-    }
-  });
-
-  it('gives every production Mission exactly one focal subject', () => {
-    // Where a Mission happens is not what it is about: emphasising the room, the
-    // furniture it stands in, or the adult present for it would misread the
-    // Mission and, in the adult's case, quietly move the Mission away from the
-    // child.
-    const setting = [
-      'table', 'shelfBoard', 'windowFrame', 'rampBook', 'bed', 'doorway',
-      'drawerOpen', 'ceilingRoom', 'hillBridge', 'adultFigure',
-    ];
-    const atmosphere = ['floor', 'wall', 'waterSurface', 'straightLine', 'lightBeam', 'puddle'];
-
-    for (const mission of MISSION_CATALOG) {
-      const scene = resolveMissionScene(mission.missionId, mission.category);
-      const focus = resolveSceneFocus(scene);
-
-      expect(focus).not.toBeNull();
-      expect(scene).toContain(focus);
-      expect(setting).not.toContain(focus);
-      expect(atmosphere).not.toContain(focus);
-    }
-  });
-
-  it('builds the repaired scenes around a subject rather than a trace', () => {
-    // Human visual review rejected these five as tracks, arcs and blobs: each
-    // now has to show the thing doing the action, not only its evidence.
-    const trace = [
-      'pawTracks', 'footsteps', 'soundWaves', 'rippleRings', 'dashTrail',
-      'clueMarks', 'ghostEchoes', 'magnifyRings',
-    ];
-    const repaired = ['movement-02', 'movement-06', 'creativity-05', 'helping-10', 'calm-10'];
-
-    for (const missionId of repaired) {
-      const mission = MISSION_CATALOG.find((entry) => entry.missionId === missionId);
-      if (!mission) throw new Error(`expected ${missionId} in the production catalog`);
-
-      const scene = resolveMissionScene(missionId, mission.category);
-      const focus = resolveSceneFocus(scene);
-
-      expect(trace).not.toContain(focus);
-      expect(scene.filter((element) => !trace.includes(element)).length).toBeGreaterThan(1);
     }
   });
 

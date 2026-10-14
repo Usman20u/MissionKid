@@ -155,7 +155,6 @@ function MissionResultCard({
             className="mission-result__picture mission-picture"
             missionId={session.missionId}
             surface="result"
-            withSceneDefs
           />
         ) : null}
         <h2 className="mission-result__mission" ref={missionRef} tabIndex={-1}>
