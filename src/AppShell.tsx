@@ -457,7 +457,15 @@ type ErrorBoundaryState = {
 
 type ApplicationErrorBoundaryProps = PropsWithChildren<{
   language?: SupportedLanguage;
+  // How the family recovers: a fresh load of the page, which reads what is
+  // stored again and changes none of it. Injected so a test can see that it
+  // was asked for.
+  reload?: () => void;
 }>;
+
+function reloadPage() {
+  window.location.reload();
+}
 
 export class ApplicationErrorBoundary extends Component<
   ApplicationErrorBoundaryProps,
@@ -473,6 +481,8 @@ export class ApplicationErrorBoundary extends Component<
     if (this.state.failed) {
       const language = this.props.language ?? DEFAULT_LANGUAGE;
 
+      // One calm sentence and one way back. Nothing here writes, clears or
+      // resets stored data, and the error itself is never shown.
       return (
         <main className="app-shell__main">
           <section aria-labelledby="application-error-heading">
@@ -482,6 +492,16 @@ export class ApplicationErrorBoundary extends Component<
             <h1 className="app-view__title" id="application-error-heading">
               {translateMessage(language, 'error.unexpected.title')}
             </h1>
+            <p className="application-error__body">
+              {translateMessage(language, 'error.unexpected.body')}
+            </p>
+            <button
+              className="button button--primary"
+              onClick={this.props.reload ?? reloadPage}
+              type="button"
+            >
+              {translateMessage(language, 'error.unexpected.reload')}
+            </button>
           </section>
         </main>
       );

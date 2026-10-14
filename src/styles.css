@@ -223,6 +223,17 @@ p {
   padding-top: 1.5rem;
 }
 
+/* Its one calm sentence and its one way back. */
+.application-error__body {
+  max-width: 40rem;
+  margin: 1rem 0 0;
+  line-height: 1.6;
+}
+
+.application-error__body + .button {
+  margin-top: 1.25rem;
+}
+
 /* Every view is one cream sheet on the ivory ground, across the whole shell,
    so every view shares one outer edge, and it reaches the foot of the window.
    Inside it, text keeps a readable measure and the extra width goes to
@@ -2513,6 +2524,14 @@ p {
   background: rgb(255 255 255 / 62%);
   color: var(--forest-900);
   line-height: 1.55;
+}
+
+/* The calm close of the flow, centred like the recognition above it. */
+.mission-result__leave {
+  max-width: 40rem;
+  margin: 1.1rem auto 0;
+  line-height: 1.6;
+  text-align: center;
 }
 
 .mission-result__issue,

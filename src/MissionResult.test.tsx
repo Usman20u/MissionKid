@@ -474,6 +474,26 @@ describe('the Reward Card', () => {
     ]);
   });
 
+  // The card is where the flow ends, so it closes rather than inviting another
+  // round: one calm sentence that the screen can be left, and a neutral
+  // finishing action that is the same navigation as before.
+  it.each(['en', 'de', 'ru'] as const)(
+    'ends the flow calmly in %s, inviting no further Mission',
+    (language) => {
+      completedHarness({}, language);
+
+      const action = screen.getByRole('button', { name: t('result.action.next', language) });
+      expect(screen.getAllByRole('button')).toEqual([action]);
+      expect(action.textContent).toBe(t('result.action.next', language));
+      expect(screen.getByText(t('result.leaveScreen', language))).toBeTruthy();
+
+      const card = document.querySelector('.mission-result')!.textContent!;
+      expect(card).not.toMatch(
+        /another|one more|next mission|noch eine|neue mission|weitere|ещё одн|другую|следующ/i,
+      );
+    },
+  );
+
   it('leaves the result by clearing only the pointer', () => {
     const h = completedHarness();
 

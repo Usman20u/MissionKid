@@ -31,6 +31,9 @@ const englishMessages = {
   'view.recovery.title': 'Recovery needed',
   'view.setupCompleteHandoff.title': 'Setup complete',
   'error.unexpected.title': 'MissionKid needs attention',
+  'error.unexpected.body':
+    'MissionKid could not show this page, but reloading it keeps everything already saved in this browser.',
+  'error.unexpected.reload': 'Reload MissionKid',
   'introduction.lead':
     'Choose a short activity together, do it away from the screen, then come back to record its completion.',
   'introduction.example.label': 'Example Mission',
@@ -171,7 +174,8 @@ const englishMessages = {
   'result.goal.progress': '{done} / {target} missions',
   'result.goal.complete':
     'You reached the goal for {period}. If you and your parent agree, you could choose a small real-life reward together.',
-  'result.action.next': 'Find another Mission',
+  'result.leaveScreen': 'You can leave the screen now.',
+  'result.action.next': 'Done',
   'result.unavailable':
     'This result cannot be shown right now. Your completed Mission is safe. Try again.',
   'result.exit.notCleared':
@@ -236,6 +240,9 @@ export const INTERFACE_MESSAGES: CompleteInterfaceMessages = {
     'view.recovery.title': 'Wiederherstellung erforderlich',
     'view.setupCompleteHandoff.title': 'Einrichtung abgeschlossen',
     'error.unexpected.title': 'MissionKid benötigt Ihre Aufmerksamkeit',
+    'error.unexpected.body':
+      'MissionKid konnte diese Seite nicht anzeigen, aber beim Neuladen bleibt alles erhalten, was in diesem Browser bereits gespeichert ist.',
+    'error.unexpected.reload': 'MissionKid neu laden',
     'introduction.lead':
       'Wählt gemeinsam eine kurze Aktivität aus, macht sie ohne Bildschirm und kommt danach zurück, um sie als erledigt zu markieren.',
     'introduction.example.label': 'Beispielmission',
@@ -376,7 +383,8 @@ export const INTERFACE_MESSAGES: CompleteInterfaceMessages = {
     'result.goal.progress': '{done} / {target} Missionen',
     'result.goal.complete':
       'Du hast das Ziel für {period} erreicht. Wenn deine Eltern einverstanden sind, könnt ihr zusammen eine kleine Belohnung im echten Leben aussuchen.',
-    'result.action.next': 'Neue Mission finden',
+    'result.leaveScreen': 'Du kannst jetzt vom Bildschirm weggehen.',
+    'result.action.next': 'Fertig',
     'result.unavailable':
       'Dieses Ergebnis kann gerade nicht angezeigt werden. Deine erledigte Mission ist sicher gespeichert. Versuche es noch einmal.',
     'result.exit.notCleared':
@@ -408,6 +416,9 @@ export const INTERFACE_MESSAGES: CompleteInterfaceMessages = {
     'view.recovery.title': 'Требуется восстановление',
     'view.setupCompleteHandoff.title': 'Настройка завершена',
     'error.unexpected.title': 'MissionKid требует вашего внимания',
+    'error.unexpected.body':
+      'MissionKid не смог показать эту страницу, но после перезагрузки всё, что уже сохранено в этом браузере, останется.',
+    'error.unexpected.reload': 'Перезагрузить MissionKid',
     'introduction.lead':
       'Выберите вместе короткое занятие, выполните его без экрана, а затем вернитесь и отметьте миссию как выполненную.',
     'introduction.example.label': 'Пример миссии',
@@ -547,7 +558,8 @@ export const INTERFACE_MESSAGES: CompleteInterfaceMessages = {
     'result.goal.progress': '{done} / {target} миссий',
     'result.goal.complete':
       'Цель за {period} выполнена. Если родители согласны, вы можете вместе выбрать небольшую награду в реальной жизни.',
-    'result.action.next': 'Найти другую миссию',
+    'result.leaveScreen': 'Теперь можно отойти от экрана.',
+    'result.action.next': 'Готово',
     'result.unavailable':
       'Этот результат сейчас нельзя показать. Твоя выполненная миссия сохранена. Попробуй ещё раз.',
     'result.exit.notCleared':
