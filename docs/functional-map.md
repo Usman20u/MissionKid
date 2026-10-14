@@ -22,7 +22,7 @@ This document defines the approved MissionKid MVP v1 capability structure for fa
 
 | Function | MVP behavior | Inputs | Result | MVP limits |
 | --- | --- | --- | --- | --- |
-| Language selection | Let the family use English, German, or Russian. English is the default. | Selected supported language | The planned interface and mission content use the selected language. | No other UI languages are in MVP v1. MissionKid remains globally positioned rather than country-specific. |
+| Language selection | Let the family use English, German, or Russian. English is the default. | Selected supported language | The interface and mission content use the selected language. | No other UI languages are in MVP v1. MissionKid remains globally positioned rather than country-specific. |
 | Parent setup | Introduce MissionKid to a first-time parent, then establish the minimal parent-guided context needed to begin. | A first visit, then parent confirmation and setup choices | The parent understands what MissionKid does and can continue to age band selection. | No account, authentication, payment, child account, or sensitive child data is required. |
 | Age band selection | Let the parent select 4–6, 7–8, or 9–10 for a child in the MVP target. | One supported age band | The selected band becomes an input to mission suggestions. | Bands are inclusive. Use an age band, not a birth date. |
 | Mission Category Selection | Let the parent or child choose from the five MVP Mission Categories: Movement, Creativity, Helping at Home, Learning, and Calm. | One selected Mission Category | The selected Mission Category becomes an input to mission suggestions. | No social, competitive, or public behavior. |
@@ -36,7 +36,7 @@ This document defines the approved MissionKid MVP v1 capability structure for fa
 
 ## Functional relationships
 
-- Language selection affects all planned interface labels and mission content.
+- Language selection affects all interface labels and mission content.
 - The selected age band is the minimal Child Profile context used for mission selection and belongs to the family/parent context.
 - Each predefined Mission belongs to one Mission Category and has age suitability; these determine the three eligible mission suggestions.
 - Choosing a Mission creates one Mission Session in `selected`; it then follows `selected → ready → active → completed`, and only a deliberate start moves it from `ready` to `active`.

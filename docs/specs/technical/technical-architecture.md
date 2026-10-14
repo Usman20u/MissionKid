@@ -8,7 +8,7 @@ The four Function Specifications under [docs/specs/functions/](../functions/) re
 
 ## Architecture goal
 
-The MVP architecture must deliver the complete parent-guided family flow reliably within a 15-day implementation window while keeping child data and operational complexity low. Decisions are ordered by:
+The MVP architecture delivers the complete parent-guided family flow reliably while keeping child data and operational complexity low; it was chosen to fit the original 15-day implementation window. Decisions are ordered by:
 
 1. reliability;
 2. clarity;
@@ -37,7 +37,7 @@ The architecture deliberately uses a static client application and browser-local
 
 Exact dependency versions must be pinned when an implementation plan authorizes package creation. This specification does not create or select a package lockfile. A router, external state library, heavy localization framework, date library, analytics SDK, or UI component framework is not required initially. Any later dependency must solve a documented need and pass privacy, accessibility, size, and maintenance review.
 
-This stack fits the 15-day MVP because one codebase can implement the complete flow, the catalog and translations can be validated as build content, and all required durable state is small enough for one local snapshot. The result remains separable: product rules do not depend on React, and the persistence adapter can be replaced in a future approved architecture without changing the feature behavior.
+This stack was chosen for the original 15-day MVP window because one codebase can implement the complete flow, the catalog and translations can be validated as build content, and all required durable state is small enough for one local snapshot. The result remains separable: product rules do not depend on React, and the persistence adapter can be replaced in a future approved architecture without changing the feature behavior.
 
 ## Deployment and runtime shape
 
@@ -215,7 +215,7 @@ Discovery first retains only valid reviewed Missions matching the selected age b
 
 Normal catalog retirement removes a Mission from future discovery but retains a history-compatible record for existing stable references. An unfinished session may resume from retained content only when that content remains complete, reviewed, and safe for that existing session. If safety approval was withdrawn, or the current reference cannot resolve, the application follows the unrecoverable-session path without completion instead of substituting or generating a Mission.
 
-The actual Mission catalog is a later content deliverable and is not created by this specification.
+The actual Mission entries are separate controlled catalog content; this specification defines the catalog's architecture, not its entries.
 
 ## Localization architecture
 
@@ -424,7 +424,7 @@ Screen changes and errors must move or announce focus deliberately without causi
 
 The document language and content language must match the selected supported language where applicable. Layouts must tolerate German and Russian expansion, wrapping, and larger user text without hiding primary actions or safety guidance.
 
-The responsive approach is mobile-first, with a clear single primary action and calm reading order at narrow widths before enhancements for wider screens. Parent-facing controls remain trustworthy and control-oriented; child-facing content remains simple, playful, age-appropriate, and not overstimulating. Detailed visual design is a later specification.
+The responsive approach is mobile-first, with a clear single primary action and calm reading order at narrow widths before enhancements for wider screens. Parent-facing controls remain trustworthy and control-oriented; child-facing content remains simple, playful, age-appropriate, and not overstimulating. Detailed visual design is owned by the [Visual & Ergonomic Specification](../visual-and-ergonomic.md).
 
 ## Performance boundary
 
@@ -443,9 +443,9 @@ No arbitrary benchmark is invented at this documentation stage. The implementati
 
 An authorized implementation produces a Vite production build suitable for an HTTPS static host. The host serves the application only at `/`; product views do not require path rewrites, history fallback, or deep-link handling. The base build assumes a modern browser with JavaScript, localStorage, wall/monotonic time and internationalization APIs, and access to the static application assets. If durable storage is unavailable, only the documented temporary in-memory mode is allowed.
 
-No backend, database, server-side rendering service, account provider, runtime environment variable, or secret is required. Hosting-specific cache, security-header, and domain settings must be reviewed when a deployment target is selected, but no SPA path fallback is needed and this stage creates no deployment files or provider configuration.
+No backend, database, server-side rendering service, account provider, runtime environment variable, or secret is required. Hosting-specific cache, security-header, and domain settings must be reviewed when a deployment target is selected, but no SPA path fallback is needed and this specification creates no deployment files or provider configuration.
 
-Changing the production origin changes the browser-local storage boundary and does not migrate family data automatically. That limitation must be considered before the first public deployment.
+Changing the production origin changes the browser-local storage boundary and does not migrate family data automatically. That limitation must be considered whenever the production origin is chosen or changed.
 
 ## Future architecture boundary
 

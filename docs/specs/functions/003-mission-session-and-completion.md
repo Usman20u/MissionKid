@@ -2,7 +2,7 @@
 
 ## Status and scope
 
-This document defines the planned MissionKid MVP v1 behavior from choosing one Mission through recording its completion. It is a product behavior specification only. It does not define UI implementation, runtime architecture, persistence technology, device controls, or database tables.
+This document defines the MissionKid MVP v1 behavior from choosing one Mission through recording its completion. It is a product behavior specification only. It does not define UI implementation, runtime architecture, persistence technology, device controls, or database tables.
 
 The flow is parent-guided and serves families with children aged 4–10. A Mission comes from the controlled predefined mission catalog and has already been filtered for the selected age band (`4–6`, `7–8`, or `9–10`), Mission Category, language, and safety suitability before its Mission Session begins.
 

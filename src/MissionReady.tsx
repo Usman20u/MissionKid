@@ -325,7 +325,6 @@ export function MissionReady({
           className="mission-session__picture mission-picture"
           missionId={session.missionId}
           surface="ready"
-          withSceneDefs
         />
       ) : null}
       {session.state === 'ready' && mission ? (

@@ -33,7 +33,7 @@ MissionKid treats the screen as a bridge, not a destination. Each interaction sh
 
 MissionKid is a global family product and is not tailored to Austria or any other single country. Missions should use culturally neutral, inclusive language and avoid assumptions about household structure, climate, location, resources, or purchasing power.
 
-The repository, specifications, code, and commit messages use English. The MVP user interface supports English, German, and Russian, with English as the default. Localization should preserve meaning and safety rather than depend on literal translation.
+The MVP user interface supports English, German, and Russian, with English as the default. Localization should preserve meaning and safety rather than depend on literal translation.
 
 ## Product ergonomics
 
@@ -43,7 +43,7 @@ The interface must help families understand and act, not merely look attractive.
 
 The MVP covers a parent-guided flow for selecting an age band and Mission Category, presenting three controlled predefined real-life missions, choosing and timing one mission, marking it complete, showing a Reward Card, saving completion in Mission History, and tracking progress toward a Monthly Goal of 20 missions. At 20 completed missions, MissionKid shows one suggestion that the parent choose an optional, parent-approved real-life reward.
 
-The MVP must not contain infinite feeds, manipulative engagement loops, pressure to remain inside the app, likes, public leaderboards, public child profiles, gambling or loot-box mechanics, paid competition, child photos or videos, or unnecessary sensitive or identifying child data. It also does not include authentication, payments, social features, chat, child accounts, native mobile applications, AI-generated missions, or device blocking. Day 1 is limited to planning and specifications; no product or UI implementation is included.
+The MVP must not contain infinite feeds, manipulative engagement loops, pressure to remain inside the app, likes, public leaderboards, public child profiles, gambling or loot-box mechanics, paid competition, child photos or videos, or unnecessary sensitive or identifying child data. It also does not include authentication, payments, social features, chat, child accounts, native mobile applications, AI-generated missions, or device blocking.
 
 ## Safety principles
 

@@ -19,7 +19,7 @@ On first use, a brief parent introduction leads into setup. The core journey is:
 
 ## Language
 
-Repository content, code, specifications, and commit messages use English. The MVP UI supports English, German, and Russian, with English as the default.
+The MVP UI supports English, German, and Russian, with English as the default. [AGENTS.md](AGENTS.md) owns the repository's engineering-language rule.
 
 MissionKid is a global product and is not specific to any country.
 
@@ -49,4 +49,4 @@ Persistence belongs to the same origin and browser profile. Clearing site data o
 
 ## Local development and checks
 
-Use Node.js `>=20.19.0`, as required by [package.json](package.json). Run `npm ci`, then `npm run dev` and open the root address Vite reports. `npm run typecheck` checks TypeScript, `npm test` runs the automated suite, and `npm run build` checks TypeScript and creates the static production artifact in `dist/`. Browser and ergonomic verification remains necessary for affected presentation work, as specified in the active plan.
+Use Node.js `>=20.19.0`, as required by [package.json](package.json). Run `npm ci`, then `npm run dev` and open the root address Vite reports. `npm run typecheck` checks TypeScript, `npm test` runs the automated suite, and `npm run build` checks TypeScript and creates the static production artifact in `dist/`. Browser and ergonomic verification remains necessary for affected presentation work, as the plan that authorizes the work specifies.

@@ -10,7 +10,6 @@ import {
   selectCurrentSession,
   selectDiscoveryCycle,
   selectSelectionIssue,
-  selectMissionStartAvailable,
   selectShownMissionIds,
   type AppState,
   useAppState,
@@ -464,7 +463,6 @@ describe('category selection and the discovery cycle', () => {
 
     expect(session?.missionId).toBe(missionId);
     expect(session?.state).toBe('selected');
-    expect(selectMissionStartAvailable(after)).toBe(true);
     // Choosing ends the cycle; the Mission Category choice is not disturbed.
     expect(selectShownMissionIds(after)).toEqual([]);
     expect(after.discovery?.category).toBe('Movement');
@@ -489,9 +487,8 @@ describe('category selection and the discovery cycle', () => {
     fireEvent.click(screen.getAllByRole('button', { name: 'Choose this Mission' })[0]!);
 
     // No false success, and the family keeps exactly what they were choosing
-    // from. Task 8 owns telling them what happened.
+    // from.
     expect(selectCurrentSession(captured.at(-1)!)).toBeNull();
-    expect(selectMissionStartAvailable(captured.at(-1)!)).toBe(false);
     expect(
       screen.getAllByRole('article').map((card) =>
         card.querySelector('.mission-card__title')!.textContent,
@@ -603,7 +600,6 @@ describe('category selection and the discovery cycle', () => {
     expect(screen.getByRole('alert')).toBeTruthy();
     // No false success, and the same three Missions to retry from.
     expect(selectCurrentSession(captured.at(-1)!)).toBeNull();
-    expect(selectMissionStartAvailable(captured.at(-1)!)).toBe(false);
     expect(
       screen.getAllByRole('article').map((card) =>
         card.querySelector('.mission-card__title')!.textContent,
@@ -692,11 +688,10 @@ describe('category selection and the discovery cycle', () => {
 
     // Runtime carries the lifecycle state storage actually holds: the session is
     // not republished as a fresh selection, no identifier is minted, and nothing
-    // is written. Task 1 adds no surface for either state.
+    // is written.
     const after = captured.at(-1)!;
     expect(selectCurrentSession(after)).toEqual(session);
     expect(selectCurrentSession(after)?.state).toBe(state);
-    expect(selectMissionStartAvailable(after)).toBe(state === 'ready');
     expect(createId).not.toHaveBeenCalled();
     expect(memory.values.get(MISSIONKID_STORAGE_KEY)).toBe(stored);
     expect(selectSelectionIssue(after)).toBeNull();
@@ -749,9 +744,9 @@ describe('category selection and the discovery cycle', () => {
     expect(stored.currentSession.state).toBe('selected');
     expect(stored.currentSession.sessionId).toBe('session-1');
     expect(stored.currentSession.selectedAt).toBe(1_700_000_000_000);
-    // The start experience is offered, but nothing about it has begun: no
+    // The selection is restored, and nothing about its start has begun: no
     // lifecycle timestamp beyond the selection itself exists to be recovered.
-    expect(selectMissionStartAvailable(captured.at(-1)!)).toBe(true);
+    expect(selectCurrentSession(captured.at(-1)!)?.state).toBe('selected');
     expect(Object.hasOwn(stored.currentSession, 'startedAt')).toBe(false);
     expect(Object.hasOwn(stored.currentSession, 'completedAt')).toBe(false);
     expect(Object.keys(stored.currentSession).sort()).toEqual([

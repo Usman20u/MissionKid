@@ -155,7 +155,6 @@ function MissionResultCard({
             className="mission-result__picture mission-picture"
             missionId={session.missionId}
             surface="result"
-            withSceneDefs
           />
         ) : null}
         <h2 className="mission-result__mission" ref={missionRef} tabIndex={-1}>
@@ -198,6 +197,10 @@ function MissionResultCard({
           ) : null}
         </section>
       </div>
+      {/* The flow ends here, and one calm sentence says so: the finishing
+          action below returns to Mission Category Selection, so without it
+          nothing on the card would tell the family they can stop. */}
+      <p className="mission-result__leave">{t('result.leaveScreen')}</p>
       {issue?.operation === 'result' ? (
         <p
           className="mission-result__issue"

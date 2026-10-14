@@ -1,6 +1,5 @@
 import type { AgeBand } from './ageBands';
 import type { MissionCategory } from './catalog';
-import { MissionScene, MissionSceneDefs } from './MissionScene';
 import { resolveMissionImage } from './missionImages';
 
 // Where a Mission's picture is shown. Only the introduction shows one example on
@@ -29,17 +28,14 @@ type MissionPictureProps = Readonly<{
   category: MissionCategory;
   className: string;
   surface: MissionPictureSurface;
-  // Views that show a lone Mission carry the scene filters themselves.
-  // Discovery and the introduction render them once for all their cards, and
-  // a second copy would repeat the filter identifiers in the document.
-  withSceneDefs?: boolean;
 }>;
 
-// One Mission's own image, wherever a Mission is shown: its illustration for
-// the age band in effect on this surface where one exists, its authored scene
-// otherwise. Decorative either way — every word the Mission means is in the
-// text beside it — and carried by its intrinsic size, so the space is reserved
-// before the file arrives.
+// One Mission's own illustration, wherever a Mission is shown, for the age band
+// in effect on this surface. Decorative — every word the Mission means is in
+// the text beside it — and carried by its intrinsic size, so the space is
+// reserved before the file arrives. A Mission without an illustration shows no
+// picture: the release gate requires one for every approved pair, and nothing
+// stands in for it.
 //
 // Session views pass the age band their session recorded when the Mission was
 // chosen, which is the one its card was shown for, so Ready, the running
@@ -50,30 +46,24 @@ export function MissionPicture({
   category,
   className,
   surface,
-  withSceneDefs = false,
 }: MissionPictureProps) {
   const image = resolveMissionImage(missionId, ageBand);
 
+  if (!image) return null;
+
   return (
     <div className={className} data-category={category}>
-      {image ? (
-        <img
-          alt=""
-          aria-hidden="true"
-          className="mission-picture__photo"
-          decoding="async"
-          height={image.height}
-          sizes={PICTURE_SIZES[surface]}
-          src={image.src}
-          srcSet={image.srcSet}
-          width={image.width}
-        />
-      ) : (
-        <>
-          {withSceneDefs ? <MissionSceneDefs /> : null}
-          <MissionScene category={category} missionId={missionId} />
-        </>
-      )}
+      <img
+        alt=""
+        aria-hidden="true"
+        className="mission-picture__photo"
+        decoding="async"
+        height={image.height}
+        sizes={PICTURE_SIZES[surface]}
+        src={image.src}
+        srcSet={image.srcSet}
+        width={image.width}
+      />
     </div>
   );
 }

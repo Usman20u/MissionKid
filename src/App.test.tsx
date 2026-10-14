@@ -1,8 +1,9 @@
-import { act, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
 import { App } from './App';
 import { ApplicationErrorBoundary, AppShell } from './AppShell';
+import { translateMessage } from './localization';
 import {
   AppStateProvider,
   appStateReducer,
@@ -205,15 +206,6 @@ describe('application shell', () => {
     expect(document.documentElement.lang).toBe('ru');
   });
 
-  it('contains no later-function interface', () => {
-    render(<App />);
-
-    expect(screen.queryByText('Mission Category')).toBeNull();
-    expect(screen.queryByText('Mission done')).toBeNull();
-    expect(screen.queryByText('Mission History')).toBeNull();
-    expect(screen.queryByText('Monthly Goal')).toBeNull();
-  });
-
   it('contains unexpected render failures at the application boundary', () => {
     const consoleError = vi
       .spyOn(console, 'error')
@@ -239,6 +231,56 @@ describe('application shell', () => {
       consoleError.mockRestore();
     }
   });
+
+  // The one way back from an unexpected failure is a fresh load of the page,
+  // which reads stored data again. It writes, clears and resets nothing, and
+  // the failure itself is never shown.
+  it.each(['en', 'de', 'ru'] as const)(
+    'offers one calm recovery action after an unexpected failure in %s',
+    (language) => {
+      const consoleError = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+      const setItem = vi.spyOn(Storage.prototype, 'setItem');
+      const removeItem = vi.spyOn(Storage.prototype, 'removeItem');
+      const clear = vi.spyOn(Storage.prototype, 'clear');
+      const reload = vi.fn();
+
+      function BrokenView(): never {
+        throw new Error('test render failure');
+      }
+
+      try {
+        render(
+          <ApplicationErrorBoundary language={language} reload={reload}>
+            <BrokenView />
+          </ApplicationErrorBoundary>,
+        );
+
+        expect(screen.getByRole('heading', { level: 1 }).textContent).toBe(
+          translateMessage(language, 'error.unexpected.title'),
+        );
+        expect(
+          screen.getByText(translateMessage(language, 'error.unexpected.body')),
+        ).toBeTruthy();
+        const action = screen.getByRole('button', {
+          name: translateMessage(language, 'error.unexpected.reload'),
+        });
+        expect(screen.getAllByRole('button')).toEqual([action]);
+        expect(document.body.textContent).not.toMatch(/test render failure|error|stack/i);
+
+        fireEvent.click(action);
+
+        expect(reload).toHaveBeenCalledTimes(1);
+        expect(setItem).not.toHaveBeenCalled();
+        expect(removeItem).not.toHaveBeenCalled();
+        expect(clear).not.toHaveBeenCalled();
+      } finally {
+        consoleError.mockRestore();
+        setItem.mockRestore();
+        removeItem.mockRestore();
+        clear.mockRestore();
+      }
+    },
+  );
 });
 
 describe('application state reducer', () => {

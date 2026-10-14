@@ -111,8 +111,8 @@
 }
 
 /* The five Mission Categories' restrained accents, for their tags, and the
-   hue that lights their authored scenes. Each label always carries the
-   meaning; these only reinforce it. */
+   hue behind their Mission pictures. Each label always carries the meaning;
+   these only reinforce it. */
 [data-category='Movement'] { --world-hue: 24; --cat-bg: #f6ded2; --cat-ink: #7a3a1f; }
 [data-category='Creativity'] { --world-hue: 286; --cat-bg: #ebe1f0; --cat-ink: #563a74; }
 [data-category='Helping at Home'] { --world-hue: 152; --cat-bg: #dfe9d9; --cat-ink: #2c553a; }
@@ -221,6 +221,17 @@ p {
   min-height: 100vh;
   min-height: 100dvh;
   padding-top: 1.5rem;
+}
+
+/* Its one calm sentence and its one way back. */
+.application-error__body {
+  max-width: 40rem;
+  margin: 1rem 0 0;
+  line-height: 1.6;
+}
+
+.application-error__body + .button {
+  margin-top: 1.25rem;
 }
 
 /* Every view is one cream sheet on the ivory ground, across the whole shell,
@@ -1693,12 +1704,11 @@ p {
 
 /* ---------- The Mission picture ---------- */
 
-/* One window for every Mission image — a reviewed still or an authored scene —
-   on cards, Ready, the running Mission and the Reward Card: the same ratio,
-   corners and edge. Behind an authored scene the category lights the air, as
-   the scene system requires, graded toward the warm ground so scenes stand in
-   the same daylight as the stills; a still covers it and is never filtered.
-   The plain category light comes first for an engine without `color-mix`. */
+/* One window for every Mission illustration on cards, Ready, the running
+   Mission and the Reward Card: the same ratio, corners and edge. The
+   category's light, graded toward the warm ground, fills it until the
+   illustration covers it, and is never drawn over it. The plain category
+   light comes first for an engine without `color-mix`. */
 .mission-picture {
   position: relative;
   overflow: hidden;
@@ -1722,12 +1732,6 @@ p {
   object-fit: cover;
 }
 
-.mission-scene {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
-
 /* One edge for every image, neutral rather than tinted by the category. */
 .mission-picture::after {
   position: absolute;
@@ -1738,401 +1742,6 @@ p {
   content: '';
   inset: 0;
   pointer-events: none;
-}
-
-/* The authored scenes' shared print: window light from the upper left and a
-   soft settling at the foot, so a set of three scenes reads as one kind of
-   picture in the same room as the photographs. Stills are never touched. */
-.mission-picture:has(> .mission-scene)::before {
-  position: absolute;
-  z-index: 1;
-  background:
-    radial-gradient(90% 70% at 16% 0%, rgb(255 250 240 / 38%) 0, transparent 60%),
-    linear-gradient(180deg, transparent 62%, rgb(92 66 34 / 10%) 100%);
-  content: '';
-  inset: 0;
-  pointer-events: none;
-}
-
-.mission-scene-defs {
-  position: absolute;
-  width: 0;
-  height: 0;
-}
-
-/* ---------- The authored scene grammar ----------
-   Carried over from the scene system: the stage elements, their local
-   materials, the lighting language and the single focal subject. What changes
-   is the room they stand in. Walls, floors, haze, light and shadow are graded
-   toward the plaster, pale wood and warm daylight of the photographs and the
-   product imagery, with the category's own light kept as a restrained share of
-   the air and the planes, as the scene system requires. No composition
-   changes. */
-
-/* --- Scene grammar. Silhouettes inherit the category atmosphere; depth comes
-   from layered planes, contact shadows and light falloff rather than motion. --- */
-.s-el {
-  color: hsl(var(--world-hue) 30% 30%);
-  color: color-mix(in oklab, hsl(var(--world-hue) 45% 28%) 35%, #5b4834);
-}
-
-/* The line where the floor meets the wall is a seam in the room, not a rule
-   drawn across the picture: it keeps its place and loses its weight. */
-.s-el--floor .s-edge {
-  opacity: 0.4;
-}
-
-/* Distant planes sit back and slightly desaturated. Walls and floors take the
-   same warm grade as the window behind them: the category tints them, and a
-   warm neutral — plaster, linen, wood — carries them, so a scene reads as a
-   room in daylight rather than a stage lit in one colour. The plain category
-   fill comes first for an engine without `color-mix`. */
-.s-back {
-  fill: hsl(var(--world-hue) 30% 84%);
-  fill: color-mix(in oklab, hsl(var(--world-hue) 30% 84%) 20%, #ece2d1);
-}
-
-.s-plane {
-  fill: hsl(var(--world-hue) 32% 72%);
-  fill: color-mix(in oklab, hsl(var(--world-hue) 32% 72%) 18%, #d8bf9b);
-}
-
-.s-water {
-  fill: hsl(var(--world-hue) 42% 66%);
-  fill: color-mix(in oklab, hsl(var(--world-hue) 42% 66%) 30%, #9dbfcb);
-}
-
-/* Paper keeps its own material everywhere; only the light on it is categorical. */
-.s-sheet {
-  fill: #f6f2ea;
-}
-
-.s-edge,
-.s-edge-circle {
-  fill: none;
-  stroke: currentcolor;
-  stroke-linejoin: round;
-  stroke-width: 2;
-}
-
-/* Foreground subjects: solid, shadowed, clearly in front. */
-.s-solid {
-  fill: currentcolor;
-}
-
-/* One lighting language for the whole product: key light from upper-left, so
-   left faces catch light, right faces fall into shade, and every subject drops
-   a soft contact shadow onto the plane it stands on. */
-.s-hi {
-  fill: #fff;
-  opacity: 0.3;
-}
-
-.s-lo {
-  fill: #2e2011;
-  opacity: 0.16;
-}
-
-.s-top {
-  fill: #fff;
-  opacity: 0.42;
-}
-
-.s-rim {
-  fill: #fff;
-  opacity: 0.55;
-}
-
-.s-seam {
-  fill: none;
-  opacity: 0.22;
-  stroke: #2e2011;
-  stroke-width: 1.5;
-}
-
-/* Contact shadows are soft and sit under the subject, never behind it. */
-.s-cast {
-  fill: #2e2011;
-  filter: url(#mk-soft);
-  opacity: 0.31;
-}
-
-/* Distance haze: the far edge of a plane fades into the atmosphere. */
-.s-haze {
-  fill: hsl(var(--world-hue) 46% 88%);
-  fill: color-mix(in oklab, hsl(var(--world-hue) 46% 88%) 25%, #f4ebdb);
-  opacity: 0.42;
-}
-
-/* Limbs read as strokes, not fills. */
-.s-arm {
-  fill: none;
-  stroke: currentcolor;
-  stroke-linecap: round;
-  stroke-width: 7;
-}
-
-.s-shadow {
-  fill: #3b2a18;
-  opacity: 0.2;
-}
-
-.s-line {
-  fill: none;
-  opacity: 0.45;
-  stroke: currentcolor;
-  stroke-linecap: round;
-  stroke-width: 2;
-}
-
-.s-mark {
-  fill: none;
-  opacity: 0.75;
-  stroke: currentcolor;
-  stroke-linecap: round;
-  stroke-width: 2.4;
-}
-
-.s-tape {
-  fill: none;
-  opacity: 0.5;
-  stroke: hsl(var(--world-hue) 40% 46%);
-  stroke-dasharray: 12 8;
-  stroke-linecap: round;
-  stroke-width: 3;
-}
-
-.s-trail {
-  fill: none;
-  opacity: 0.5;
-  stroke: currentcolor;
-  stroke-dasharray: 5 7;
-  stroke-linecap: round;
-  stroke-width: 2.5;
-}
-
-.s-wave {
-  fill: none;
-  stroke: currentcolor;
-  stroke-linecap: round;
-  stroke-width: 2.5;
-}
-
-/* Light is daylight first and category second. */
-.s-light {
-  fill: hsl(var(--world-hue) 90% 98%);
-  fill: color-mix(in oklab, hsl(var(--world-hue) 90% 98%) 20%, #fffaf0);
-  opacity: 0.72;
-}
-
-.s-glow {
-  fill: hsl(var(--world-hue) 90% 98%);
-  fill: color-mix(in oklab, hsl(var(--world-hue) 90% 98%) 20%, #fffaf0);
-  opacity: 0.55;
-}
-
-/* --- Local object colour. The category hue lights the world: sky, plane,
-   water, haze, beam and the window behind the card. An object standing in that
-   world keeps its own material instead, so a child and a table stay two things
-   rather than one silhouette. Saturation stays low and values stay mid-dark, so
-   five atmospheres can light the same objects without any of them turning
-   sweet. Colour never carries meaning here: the card's text does. --- */
-
-/* People. Warm clay for a child, cool slate for an adult, so the two never
-   merge into one shape. */
-.s-el--childTall,
-.s-el--childCurled,
-.s-el--childBalance,
-.s-el--childFigure,
-.s-el--handReach {
-  color: #a35f47;
-}
-
-.s-el--adultFigure {
-  color: #4d5c68;
-}
-
-/* Wood and standing furniture. */
-.s-el--table,
-.s-el--shelfBoard,
-.s-el--bed,
-.s-el--doorway,
-.s-el--drawerOpen,
-.s-el--rampBook {
-  color: #8a6242;
-}
-
-/* Paper, card and cloth-bound things. */
-.s-el--paperSheet,
-.s-el--storyPanels,
-.s-el--speechBubble,
-.s-el--fallingPapers {
-  color: #8d7a5f;
-}
-
-.s-el--bookRow {
-  color: #3f6f62;
-}
-
-/* A sock is cotton, not category paint. */
-.s-el--sock {
-  color: #9c6b84;
-}
-
-/* Imagined, and not a person in the room: stone rather than skin, so it never
-   reads as an adult the Mission has not asked for. */
-.s-el--giantAsleep {
-  color: #6b7566;
-}
-
-/* Soft goods keep a textile warmth rather than reading as spills. */
-.s-el--softThings {
-  color: #b0697a;
-}
-
-.s-el--cushion {
-  color: #b58a52;
-}
-
-.s-el--blanketDrape {
-  color: #6b72a3;
-}
-
-.s-el--bagAndCoat {
-  color: #6b7350;
-}
-
-.s-el--shoePair {
-  color: #5c4636;
-}
-
-/* The reference Missions' own materials: kraft board and paper cups, a knitted
-   sock, wax crayon. Each is the object's real colour, lit by the category
-   atmosphere around it rather than recoloured into it. */
-.s-el--plantPot {
-  color: #6f7f52;
-}
-
-.s-el--cupTower {
-  color: #b98d57;
-}
-
-.s-el--sockPuppet {
-  color: #c8922f;
-}
-
-.s-el--monsterSketch {
-  color: #7b5ea8;
-}
-
-.s-el--crayonPair {
-  color: #7d5fb2;
-}
-
-/* Handled objects. */
-.s-el--cup {
-  color: #5b8ba0;
-}
-
-.s-el--blockTower {
-  color: #bf8a49;
-}
-
-.s-el--toysScatter {
-  color: #b5674f;
-}
-
-.s-el--basket {
-  color: #a3763f;
-}
-
-.s-el--pencil {
-  color: #bd9337;
-}
-
-.s-el--ballRolling {
-  color: #a9543f;
-}
-
-.s-el--pebble {
-  color: #79736b;
-}
-
-/* Small counted things. Kept neutral: this row appears in four Missions, on
-   four different atmospheres, and must not fight any of them. */
-.s-el--patternRow {
-  color: #8a7a66;
-}
-
-/* Made things read as instruments rather than toys. */
-.s-el--clockFace {
-  color: #46505e;
-}
-
-.s-el--gears {
-  color: #6d7278;
-}
-
-/* A trace is the ground remembering an action, so it stays earth rather than
-   taking an object's colour. */
-.s-el--pawTracks,
-.s-el--footsteps {
-  color: #7d6551;
-}
-
-/* Environment recedes; subjects come forward with a soft cast shadow. */
-.s-el--wall,
-.s-el--ceilingRoom,
-.s-el--hillBridge {
-  opacity: 0.86;
-}
-
-.s-el--childTall,
-.s-el--childCurled,
-.s-el--childBalance,
-.s-el--childFigure,
-.s-el--adultFigure,
-.s-el--cup,
-.s-el--shoePair,
-.s-el--blockTower,
-.s-el--toysScatter,
-.s-el--basket,
-.s-el--pencil,
-.s-el--bookRow,
-.s-el--gears,
-.s-el--bagAndCoat,
-.s-el--ballRolling,
-.s-el--cushion,
-.s-el--softThings,
-.s-el--pebble,
-.s-el--handReach {
-  filter: drop-shadow(0 2px 2.5px rgb(58 40 20 / 26%));
-}
-
-/* --- Focal subject. Exactly one element per scene is what the Mission is
-   about, and it earns a firmer contact shadow, a cleaner edge and slightly more
-   light — the way a real object nearer the eye behaves. No glow, no outline, no
-   badge, no scale change and no motion: the other elements are not dimmed, so
-   this reads as depth rather than as a recommendation. --- */
-.s-el[data-focal] {
-  filter: drop-shadow(0 3px 4px rgb(52 36 18 / 34%));
-}
-
-.s-el[data-focal] .s-cast {
-  opacity: 0.34;
-}
-
-.s-el[data-focal] .s-shadow {
-  opacity: 0.24;
-}
-
-.s-el[data-focal] .s-hi {
-  opacity: 0.38;
-}
-
-.s-el[data-focal] .s-edge,
-.s-el[data-focal] .s-edge-circle {
-  stroke-width: 2.4;
 }
 
 /* ---------- The Mission Session: Ready and the running Mission ---------- */
@@ -2513,6 +2122,14 @@ p {
   background: rgb(255 255 255 / 62%);
   color: var(--forest-900);
   line-height: 1.55;
+}
+
+/* The calm close of the flow, centred like the recognition above it. */
+.mission-result__leave {
+  max-width: 40rem;
+  margin: 1.1rem auto 0;
+  line-height: 1.6;
+  text-align: center;
 }
 
 .mission-result__issue,

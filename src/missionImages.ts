@@ -3,8 +3,9 @@ import { AGE_BANDS, type AgeBand } from './ageBands';
 // Presentation only, keyed by the stable Mission identifier and one age band the
 // catalog approves that Mission for. This adds no field to Mission catalog
 // content, no persisted value and no snapshot data: the catalog remains the
-// single source of what a Mission is and whom it suits, and a Mission and age
-// band with no entry here renders its authored scene exactly as before.
+// single source of what a Mission is and whom it suits. A Mission and age band
+// with no entry here has no picture; the release gate requires an entry for
+// every approved pair.
 //
 // Each Mission illustration is a reviewed file bundled with the application by
 // the ordinary build, in two widths, named `<missionId>__<age band>__<width>`.

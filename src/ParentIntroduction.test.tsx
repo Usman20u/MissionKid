@@ -425,11 +425,9 @@ describe('F001 introduction example Mission', () => {
       const photo = card.querySelector('img');
 
       // No age band is chosen yet, so the example shows the documented
-      // default's illustration, the same file in every language, in the
-      // window an authored scene would otherwise fill.
+      // default's illustration, the same file in every language.
       expect(INTRODUCTION_EXAMPLE_AGE_BAND).toBe('4–6');
       expect(photo).not.toBeNull();
-      expect(card.querySelector('.mission-scene')).toBeNull();
       expect(photo!.getAttribute('src')).toMatch(/\/helping-11__4-6__768\.webp$/);
       expect(photo!.getAttribute('srcset')).toBe(
         resolveMissionImage(INTRODUCTION_EXAMPLE_MISSION_ID, '4–6')!.srcSet,

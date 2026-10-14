@@ -11,7 +11,6 @@ import {
   type MessageKey,
   type SupportedLanguage,
 } from './localization';
-import { MissionSceneDefs } from './MissionScene';
 import { MissionCard } from './MissionSuggestionSet';
 import { FLOW_STEP_IMAGES, INTRODUCTION_HERO_IMAGE } from './productImagery';
 import { revealFocusedChoice } from './focusedChoice';
@@ -203,7 +202,6 @@ export function ParentIntroduction({ catalog = MISSION_CATALOG }: ParentIntroduc
           <h2 className="introduction__heading" id={exampleHeadingId}>
             {t('introduction.example.label')}
           </h2>
-          <MissionSceneDefs />
           <MissionCard
             ageBand={state.ageBand ?? INTRODUCTION_EXAMPLE_AGE_BAND}
             language={language}

@@ -296,7 +296,6 @@ export function MissionActive({
           className="mission-session__thumb mission-picture"
           missionId={active.missionId}
           surface="active"
-          withSceneDefs
         />
         <div className="mission-session__reminder-text">
           <h2 className="mission-session__mission">{content.title}</h2>

@@ -26,7 +26,6 @@ MissionKid is a global, parent-guided family product. It is not country-specific
 
 ## Language and global requirements
 
-- Repository, specification, code, and commit language: English.
 - MVP interface languages: English, German, and Russian.
 - Default interface language: English.
 - Content must be understandable across regions and avoid unnecessary country-specific references, cultural assumptions, purchases, and location-dependent requirements.
@@ -103,7 +102,7 @@ The aggregation of completed Mission Sessions for the Child Profile during the c
 
 ## Product ergonomics
 
-The interface must help users understand and act, not merely look attractive. Later screen specifications and reviews must make the user's location, primary action, next action, overall flow, and mobile behavior clear while removing unnecessary visual or interaction noise. Parent-facing interfaces should feel calm, trustworthy, clear, and control-oriented. Child-facing mission interfaces should feel simple, playful, encouraging, age-appropriate, not overstimulating, and not manipulative.
+The interface must help users understand and act, not merely look attractive. Screen specifications and reviews must make the user's location, primary action, next action, overall flow, and mobile behavior clear while removing unnecessary visual or interaction noise. Parent-facing interfaces should feel calm, trustworthy, clear, and control-oriented. Child-facing mission interfaces should feel simple, playful, encouraging, age-appropriate, not overstimulating, and not manipulative.
 
 ## MVP success criteria
 

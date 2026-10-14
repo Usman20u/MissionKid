@@ -120,7 +120,7 @@ describe('F001 save operation', () => {
     }
     const current = hydration.value;
     const next = update[0];
-    // Only the approved empty reserved shape exists in Plan 01.
+    // Saving setup carries every lifecycle fact over unchanged.
     expect(next.completedSessions).toBe(current.snapshot.completedSessions);
     expect(next.currentSession).toBe(current.snapshot.currentSession);
     expect(next.currentResultSessionId).toBe(current.snapshot.currentResultSessionId);

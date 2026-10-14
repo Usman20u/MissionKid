@@ -96,9 +96,6 @@ type RecoveryContext = Readonly<{
   // wording, so without this the message is an unchanged node and assistive
   // technology stays silent on the retry the message itself invites.
   selectionAttempt?: number;
-  // The Mission a conflict is about. A stored session is not published into
-  // runtime by hydration, so without this the conflict could not name the
-  // Mission the family is being told to choose again.
   // The Mission Session a conflict is about, exactly as durable state holds it.
   // The whole session is kept rather than its Mission identifier alone, because
   // resolving the conflict means returning to that session or leaving it, and
@@ -300,16 +297,6 @@ export type DiscoveryCycle = Readonly<{
   language: SupportedLanguage;
   category: MissionCategory;
 }>;
-
-// A current session exists whose start is still ahead of it: `selected` has not
-// reached the start screen and `ready` is on it. An `active` session has already
-// been started, so the start experience is not what it leads back to. This is
-// the typed fact alone; the screens each state leads to are later F003 work.
-export function selectMissionStartAvailable(state: AppState): boolean {
-  const session = selectCurrentSession(state);
-
-  return session?.state === 'selected' || session?.state === 'ready';
-}
 
 export function selectCurrentSession(
   state: AppState,
