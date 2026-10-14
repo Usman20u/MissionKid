@@ -154,6 +154,58 @@ README no longer points to "the active plan" as if one always exists. No new ins
 - A before-and-after browser comparison of the introduction, Discovery, Ready and Active views, showing identical rendering.
 - Image assets byte-identical in the production build.
 
+## Task 8 — specification amendment and revalidation, recorded before any code is removed
+
+**Statements identified.** Visual & Ergonomic is the only specification that describes drawn ("authored") scenes or their fallback. The statements are:
+
+- the *Controlled Mission Mini-World scene system* introduction, where a scene was "one small, distinctive mini-world or diorama" and an illustration was the alternative;
+- the authored scene among the images allowed outside Discovery;
+- the diorama phrase in *Visual direction*;
+- the authored-scene *Three-layer color and material model*;
+- the authored-scene sentence in *Scene composition*;
+- the scene composition example in *Implementation neutrality*;
+- the set-level fallback in *Mission illustrations* ("the whole set keeps its authored scenes until it can");
+- the "three Mission illustrations or three authored scenes" rule under *F002 — Exactly-three Mission suggestions*;
+- the "scene system's figures" reference in *Bounded product imagery*;
+- acceptance criteria 21, 22 and 28, and the scene-system clause in *Explicit non-goals*.
+
+**Amendment.** Each statement above is changed in place to say three things:
+
+- The Mission image is the reviewed Mission illustration.
+- Every approved pair of a production Mission and an age band has its illustration before release, as the release gate requires, and a missing required illustration is a publication defect.
+- The authored scenes are retired, so V1 keeps no second, drawn-scene fallback.
+
+The authored three-layer model becomes *Color, light, and emphasis* for the illustrations. Its no-ranking rule for focal emphasis is kept word for word.
+
+The following are deliberately unchanged:
+
+- the section's name;
+- the scene authority limits, accessibility rules and composition grammar, which now apply to the illustration;
+- the *reviewed still* clause, which applies only to a Mission without an illustration — a case the release gate already excludes.
+
+No product behavior, Mission eligibility, safety rule, state, interaction or data fact changes.
+
+**Current production presentation.** Nothing currently visible changes:
+
+- All `102` approved pairs are illustrated, enforced by the coverage test in `MissionSuggestionSet.test.tsx`.
+- None of the `33` reachable production sets renders a drawn scene; the same file asserts `sceneSets` is empty.
+- `MissionPicture` renders the illustration whenever one resolves.
+- The only drawn-scene output in production is `MissionSceneDefs`, a zero-size SVG of filter definitions on the introduction and in Discovery. The before-and-after browser comparison in Task 8's verification must show that removing it has no visible effect.
+
+**Focused User Story / traceability check — PASSED.**
+
+- No user story (`P1`–`P8`, `C1`–`C6`) mentions an image, scene or illustration.
+- `F002` lets a Mission card present "a prominent controlled scene as authorized by" Visual & Ergonomic, which the illustration satisfies.
+- `F001`'s example Mission is unaffected.
+- The Functional Map, Technical Architecture, Data & State Model and Mission Catalog & Safety are unaffected:
+  - the static presentation assets stay within the performance boundary;
+  - there is no Mission presentation field;
+  - there is no snapshot data.
+
+**Focused specification consistency audit — PASSED.** A search of every governing document for scene, authored, diorama, mix, illustration and image leaves no statement that requires, describes or depends on a drawn scene or a mixed set. The F002 reference, the Visual inventory rows, the Ready, Active and Reward Card image rules, and acceptance criteria 21–28 agree with the amendment.
+
+**Renewed authorization.** The owner's decision of 2026-10-14 to retire the drawn-scene fallback authorizes removing the implementation now that this revalidation is recorded.
+
 ## Plan-wide verification
 
 - Commands: `npm run typecheck`, `npm test`, `npm run build` and `git diff --check`.
